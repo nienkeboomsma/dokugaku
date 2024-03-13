@@ -1,5 +1,5 @@
 {
-  "name": ".dokugaku",
+  "name": "dokugaku",
   "private": true,
   "scripts": {
     "build": "turbo build",

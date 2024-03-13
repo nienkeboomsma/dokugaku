@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ichiran:
+    container_name: ichiran
+    build:
+      context: .
+      dockerfile: ./services/ichiran/Dockerfile
+    environment:
+      - ICHIRAN_PORT=${ICHIRAN_PORT}
+    ports:
+      - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
+    # for development only
+    volumes:
+      - ./services/ichiran:/app/services/ichiran
