@@ -5,11 +5,27 @@ services:
     container_name: ichiran
     build:
       context: .
-      dockerfile: ./services/ichiran/Dockerfile
+      dockerfile: ./services/ichiran/docker/ichiran/Dockerfile
     environment:
       - ICHIRAN_PORT=${ICHIRAN_PORT}
     ports:
       - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
     # for development only
     volumes:
-      - ./services/ichiran:/app/services/ichiran
+      - ./services/ichiran/src:/app/services/ichiran/src
+  ichiran-db:
+    container_name: ichiran-db
+    build:
+      args:
+        ICHIRAN_PGDUMP: ${ICHIRAN_PGDUMP}
+      context: .
+      dockerfile: ./services/ichiran/docker/ichiran-db/Dockerfile
+    shm_size: 1gb
+    environment:
+      POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+    volumes:
+      - pgdump:/var/lib/postgresql/data
+
+volumes:
+  pgdump:

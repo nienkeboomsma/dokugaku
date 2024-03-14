@@ -1,14 +1,24 @@
 import express, { type Express } from 'express'
+import { execSync } from 'child_process'
 
 const port = process.env.ICHIRAN_PORT
-console.log(port)
 
 const app: Express = express()
 
 app.use(express.json())
 
-app.post('/test', (req, res) => {
-  res.status(200).send('Success!')
+app.post('/segmentation', (req, res) => {
+  const jpString = req.body.string
+
+  try {
+    const data = execSync(
+      `cd /root/quicklisp/local-projects/ichiran/ && ./ichiran-cli -f -- "${jpString}"`
+    ).toString()
+    res.status(200).json(JSON.parse(data))
+  } catch (error) {
+    console.log(error)
+    res.status(500).end()
+  }
 })
 
 app.listen(port)
