@@ -10,7 +10,7 @@ services:
       - ICHIRAN_PORT=${ICHIRAN_PORT}
     ports:
       - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
-    # for development only
+    ### for development use only ###
     volumes:
       - ./services/ichiran/src:/app/services/ichiran/src
   ichiran-db:

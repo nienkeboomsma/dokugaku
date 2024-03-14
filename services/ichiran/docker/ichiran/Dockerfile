@@ -1,87 +1,72 @@
-# Prune
-FROM node:21.7-alpine3.19 AS pruner
-RUN apk add --no-cache libc6-compat
-RUN apk update
+FROM node:21.7-alpine3.19 AS turbo-base
+
+RUN apk add --no-cache libc6-compat \
+    && apk update \
+    && yarn global add turbo
 
 WORKDIR /app
-RUN yarn global add turbo
+
+FROM turbo-base AS prune
+
 COPY . .
+
 RUN turbo prune --scope=ichiran --docker
 
-# Install server
-FROM node:21.7-alpine3.19 AS server-installer
-RUN apk add --no-cache libc6-compat
-RUN apk update
+FROM turbo-base AS build-server
 
-WORKDIR /app
-RUN yarn global add pnpm
-RUN yarn global add turbo
+COPY --from=prune /app/out/json/ .
+COPY --from=prune /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=prune /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-RUN pnpm install
+RUN yarn global add pnpm \
+    && pnpm install
 
-COPY --from=pruner /app/out/full/ .
+COPY --from=prune /app/out/full/ .
 COPY turbo.json turbo.json
 
-# production
+### for production use ###
 # RUN turbo build --filter=ichiran...
 
-# Install ichiran
-FROM clfoundation/sbcl:latest AS ichiran-installer
+FROM clfoundation/sbcl:2.2.4-buster AS install-ichiran
 
-RUN apt update && apt -y install locales
-RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment
-RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-RUN echo "LANG=en_US.UTF-8" > /etc/locale.conf
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+WORKDIR /root
 
 RUN DEBIAN_FRONTEND=noninteractive \
-    apt-get update \
-    && apt-get install -y wget postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+    && apt update \
+    && curl -fsSL https://deb.nodesource.com/setup_21.x | bash - \
+    && apt install --no-install-recommends -y locales nodejs postgresql-client wget \
+    && echo "LC_ALL=en_US.UTF-8" >> /etc/environment \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && echo "LANG=en_US.UTF-8" > /etc/locale.conf \
+    && locale-gen en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/* \
+    && wget https://beta.quicklisp.org/quicklisp.lisp \
+    && sbcl --load quicklisp.lisp --non-interactive \
+        --eval "(quicklisp-quickstart:install)" \
+        --eval "(ql-util:without-prompting (ql:add-to-init-file))" \
+        --eval "(sb-ext:quit)" \
+    && git clone https://gitlab.com/yamagoya/jmdictdb.git \
+    && cd ./quicklisp/local-projects \
+    && git clone https://github.com/tshatrov/ichiran.git
 
-WORKDIR /root
-RUN wget https://beta.quicklisp.org/quicklisp.lisp
-RUN sbcl --load quicklisp.lisp --non-interactive \
-    --eval "(quicklisp-quickstart:install)" \
-    --eval "(ql-util:without-prompting (ql:add-to-init-file))" \
-    --eval "(sb-ext:quit)"
+COPY ./services/ichiran/docker/ichiran ./quicklisp/local-projects/ichiran
 
-WORKDIR /root
-RUN git clone https://gitlab.com/yamagoya/jmdictdb.git
-
-WORKDIR /root/quicklisp/local-projects
-RUN git clone https://github.com/tshatrov/ichiran.git
-COPY ./services/ichiran/docker/ichiran/settings.lisp ./ichiran/settings.lisp
-COPY ./services/ichiran/docker/ichiran/init.sh ./ichiran/docker/ichiran-scripts/init.sh
 RUN sbcl --non-interactive --eval "(ql:quickload :ichiran)"
 
 ENV PATH=/root/quicklisp/local-projects/ichiran/docker/ichiran-scripts:$PATH
 
-# Run the server and ichiran
 WORKDIR /app
 
-RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash - && \
-    apt-get install -y \
-    nodejs
-
-# dev
+### for dev use ###
 RUN npm install -g pnpm
 
-# production
-# RUN addgroup --system --gid 1001 expressjs
-# RUN adduser --system --uid 1001 expressjs
-# USER expressjs
+COPY --from=build-server /app .
 
-COPY --from=server-installer /app .
+### for production use ###
+# CMD sh /root/quicklisp/local-projects/ichiran/init.sh \
+#     && node services/ichiran/dist/index.js
 
-# production
-# CMD sh /root/quicklisp/local-projects/ichiran/docker/ichiran-scripts/init.sh && node services/ichiran/dist/index.js
-
-# dev
-CMD sh /root/quicklisp/local-projects/ichiran/docker/ichiran-scripts/init.sh && cd services/ichiran && pnpm run dev
+### for dev use ###
+CMD sh /root/quicklisp/local-projects/ichiran/init.sh \
+    && cd services/ichiran \
+    && pnpm run dev

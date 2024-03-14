@@ -1,14 +1,12 @@
-FROM postgres:latest
+FROM postgres:13.14-alpine3.19
 
 ARG ICHIRAN_PGDUMP
 
-RUN    DEBIAN_FRONTEND=noninteractive \
-       apt-get update \
-    && apt-get install -y wget \
-    && rm -rf /var/lib/apt/lists/*
+ENV LANG=ja_JP.UTF-8
 
-RUN localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8
+RUN apk --no-cache add wget \
+    && wget $ICHIRAN_PGDUMP --quiet -O /ichiran.pgdump \
+    && chmod o+r /ichiran.pgdump \
+    && apk del wget
 
-RUN    wget $ICHIRAN_PGDUMP --quiet -O /ichiran.pgdump \
-    && chmod o+r /ichiran.pgdump 
 COPY services/ichiran/docker/ichiran-db/init-db.sh /docker-entrypoint-initdb.d/init-db.sh
