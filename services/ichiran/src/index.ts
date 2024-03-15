@@ -11,9 +11,7 @@ app.post('/segmentation', (req, res) => {
   const jpString = req.body.string
 
   try {
-    const data = execSync(
-      `cd /root/quicklisp/local-projects/ichiran/ && ./ichiran-cli -f -- "${jpString}"`
-    ).toString()
+    const data = execSync(`ichiran-cli -f -- "${jpString}"`).toString()
     res.status(200).json(JSON.parse(data))
   } catch (error) {
     console.log(error)

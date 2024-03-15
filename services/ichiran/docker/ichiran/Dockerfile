@@ -24,49 +24,53 @@ RUN yarn global add pnpm \
 COPY --from=prune /app/out/full/ .
 COPY turbo.json turbo.json
 
+##########################
 ### for production use ###
+##########################
 # RUN turbo build --filter=ichiran...
 
-FROM clfoundation/sbcl:2.2.4-buster AS install-ichiran
+FROM debian:sid-20240311-slim AS install-ichiran
 
-WORKDIR /root
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN DEBIAN_FRONTEND=noninteractive \
-    && apt update \
-    && curl -fsSL https://deb.nodesource.com/setup_21.x | bash - \
-    && apt install --no-install-recommends -y locales nodejs postgresql-client wget \
-    && echo "LC_ALL=en_US.UTF-8" >> /etc/environment \
-    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
-    && echo "LANG=en_US.UTF-8" > /etc/locale.conf \
-    && locale-gen en_US.UTF-8 \
-    && rm -rf /var/lib/apt/lists/* \
-    && wget https://beta.quicklisp.org/quicklisp.lisp \
-    && sbcl --load quicklisp.lisp --non-interactive \
-        --eval "(quicklisp-quickstart:install)" \
-        --eval "(ql-util:without-prompting (ql:add-to-init-file))" \
-        --eval "(sb-ext:quit)" \
-    && git clone https://gitlab.com/yamagoya/jmdictdb.git \
-    && cd ./quicklisp/local-projects \
-    && git clone https://github.com/tshatrov/ichiran.git
+    # Install packages
+RUN apt update && \
+    apt install -y git locales sbcl wget && \
+    wget -qO- https://deb.nodesource.com/setup_18.x | bash -  && \
+    apt install -y nodejs && \
+    # Set locale
+    localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8 && \
+    # Install Quicklisp
+    wget https://beta.quicklisp.org/quicklisp.lisp && \
+    sbcl --load /quicklisp.lisp \
+      --eval '(quicklisp-quickstart:install)' \
+      --eval '(ql:add-to-init-file)' \
+      --eval '(sb-ext:quit)' && \
+    # Download JMdictDB
+    cd /root && \
+    git clone https://gitlab.com/yamagoya/jmdictdb.git && \
+    # Download Ichiran
+    cd /root/quicklisp/local-projects/ && \
+    git clone https://github.com/tshatrov/ichiran.git && \
+    # Clean up
+    apt remove -y git locales wget
 
-COPY ./services/ichiran/docker/ichiran ./quicklisp/local-projects/ichiran
+COPY ./services/ichiran/docker/ichiran/settings.lisp /root/quicklisp/local-projects/ichiran/settings.lisp
+COPY --from=build-server /app /app
+COPY ./services/ichiran/docker/ichiran/init.sh /app/services/ichiran/init.sh
 
-RUN sbcl --non-interactive --eval "(ql:quickload :ichiran)"
+WORKDIR /app/services/ichiran
 
-ENV PATH=/root/quicklisp/local-projects/ichiran/docker/ichiran-scripts:$PATH
-
-WORKDIR /app
-
-### for dev use ###
-RUN npm install -g pnpm
-
-COPY --from=build-server /app .
-
+##########################
 ### for production use ###
-# CMD sh /root/quicklisp/local-projects/ichiran/init.sh \
-#     && node services/ichiran/dist/index.js
+##########################
+# CMD sh init.sh && \
+#     node dist/index.js
 
+###################
 ### for dev use ###
-CMD sh /root/quicklisp/local-projects/ichiran/init.sh \
-    && cd services/ichiran \
-    && pnpm run dev
+###################
+CMD sh init.sh && \
+    ichiran-cli -f これはペンです && \
+    npm install --global pnpm && \
+    pnpm run dev

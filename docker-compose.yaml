@@ -6,11 +6,16 @@ services:
     build:
       context: .
       dockerfile: ./services/ichiran/docker/ichiran/Dockerfile
+    depends_on:
+      ichiran-db:
+        condition: service_healthy
+        restart: true
     environment:
-      - ICHIRAN_PORT=${ICHIRAN_PORT}
+      ICHIRAN_PORT: ${ICHIRAN_PORT}
+      POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
     ports:
       - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
-    ### for development use only ###
+    ### for dev use only ###
     volumes:
       - ./services/ichiran/src:/app/services/ichiran/src
   ichiran-db:
@@ -20,10 +25,16 @@ services:
         ICHIRAN_PGDUMP: ${ICHIRAN_PGDUMP}
       context: .
       dockerfile: ./services/ichiran/docker/ichiran-db/Dockerfile
-    shm_size: 1gb
     environment:
-      POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
       PGDATA: '/var/lib/postgresql/data/pgdata'
+      POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
+    healthcheck:
+      test: pg_isready -h ichiran-db || exit 1
+      interval: 15s
+      timeout: 30s
+      retries: 999999
+      start_period: 15s
+    shm_size: 1gb
     volumes:
       - pgdump:/var/lib/postgresql/data
 
