@@ -16,6 +16,7 @@ services:
     ports:
       - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
     ### for dev use only ###
+    restart: always
     volumes:
       - ./services/ichiran/src:/app/services/ichiran/src
   ichiran-db:
@@ -34,6 +35,7 @@ services:
       timeout: 30s
       retries: 999999
       start_period: 15s
+    restart: always
     shm_size: 1gb
     volumes:
       - pgdump:/var/lib/postgresql/data

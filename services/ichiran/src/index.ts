@@ -1,23 +1,29 @@
 import express, { type Express } from 'express'
-import { execSync } from 'child_process'
+import { getConjugations, getSegmentation, getWordIdList } from './utils'
 
-const port = process.env.ICHIRAN_PORT
+async function main() {
+  const conjugations = await getConjugations()
 
-const app: Express = express()
+  const app: Express = express()
 
-app.use(express.json())
+  app.use(express.json())
 
-app.post('/segmentation', (req, res) => {
-  const jpString = req.body.string
+  app.post('/fullSegmentation', async (req, res) => {
+    const jpString = req.body.string
+    const segmentation = getSegmentation(jpString)
+    res.status(200).json(segmentation)
+  })
 
-  try {
-    const data = execSync(`ichiran-cli -f -- "${jpString}"`).toString()
-    res.status(200).json(JSON.parse(data))
-  } catch (error) {
-    console.log(error)
-    res.status(500).end()
-  }
-})
+  app.post('/wordIdsOnly', async (req, res) => {
+    const jpString = req.body.string
+    const segmentation = getSegmentation(jpString)
+    const idList = await getWordIdList(segmentation, conjugations)
+    res.status(200).json(idList)
+  })
 
-app.listen(port)
-console.log(`Listening on port ${port}`)
+  const port = process.env.ICHIRAN_PORT
+  app.listen(port)
+  console.log(`Listening on port ${port}`)
+}
+
+main()
