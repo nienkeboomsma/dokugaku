@@ -1,11 +1,16 @@
 import { Client } from 'pg'
 import { execSync } from 'child_process'
 import {
-  Entry,
+  hasAlternatives,
+  hasVia,
+  isCompoundWord,
+  isConjugatedWord,
+  isNonCompoundWord,
   isSentence,
-  isUnconjugated,
+  isUnconjugatedWord,
+  NonCompoundWord,
+  ProcessedWord,
   Segmentation,
-  WordInfo,
 } from './types'
 
 export async function getConjugations() {
@@ -48,32 +53,78 @@ export function getSegmentation(string: string): Segmentation {
   }
 }
 
-function getWordId(wordInfo: WordInfo, conjugations: Map<number, number>) {
-  if (isUnconjugated(wordInfo)) return wordInfo.seq
-  return conjugations.get(wordInfo.seq) ?? 0
+function getIdFromNonCompoundWord(
+  nonCompoundWord: NonCompoundWord,
+  conjugations: Map<number, number>
+) {
+  if (isConjugatedWord(nonCompoundWord)) {
+    return conjugations.get(nonCompoundWord.seq) ?? 0
+  }
+  return nonCompoundWord.seq
 }
 
-function getWordIdFromEntry(entry: Entry, conjugations: Map<number, number>) {
-  const wordInfo = entry[1]
-  return getWordId(wordInfo, conjugations)
+function stripFuriganaFromReading(reading: string) {
+  return reading.replace(/ 【.*】/g, '')
 }
 
-function filterSpuriousWordIds(id: number) {
-  return id !== 0
+function getReadingFromNonCompoundWord(nonCompoundWord: NonCompoundWord) {
+  if (isUnconjugatedWord(nonCompoundWord)) {
+    return stripFuriganaFromReading(nonCompoundWord.reading)
+  }
+
+  const conjInfo = nonCompoundWord.conj[0]
+
+  if (hasVia(conjInfo)) {
+    return stripFuriganaFromReading(conjInfo.via[0].reading)
+  }
+
+  return stripFuriganaFromReading(conjInfo.reading)
 }
 
-export async function getWordIdList(
+export function getWordListFromSegmentation(
   segmentation: Segmentation,
   conjugations: Map<number, number>
 ) {
   const sentences = segmentation.filter(isSentence)
+  const wordList = sentences.reduce<Array<ProcessedWord>>(
+    (wordList, sentence, sentenceIndex) => {
+      const entries = sentence[0][0]
 
-  const wordIdList = sentences.reduce<number[]>((totals, sentence) => {
-    const entries = sentence[0][0]
-    const wordIds = entries
-      .map((entry) => getWordIdFromEntry(entry, conjugations))
-      .filter((id) => filterSpuriousWordIds(id))
-    return totals.concat(wordIds)
-  }, [])
-  return wordIdList
+      const words = entries.flatMap((entry, entryIndex) => {
+        const entryContent = entry[1]
+
+        // if ichiran isn't sure which word it is, it is skipped to prevent spurious data
+        if (hasAlternatives(entryContent)) return []
+
+        if (isCompoundWord(entryContent)) {
+          return entryContent.components.map(
+            (componentWord, componentIndex) => {
+              return {
+                id: getIdFromNonCompoundWord(componentWord, conjugations),
+                reading: getReadingFromNonCompoundWord(componentWord),
+                sentenceIndex,
+                entryIndex,
+                componentIndex,
+              }
+            }
+          )
+        }
+
+        if (isNonCompoundWord(entryContent)) {
+          return {
+            id: getIdFromNonCompoundWord(entryContent, conjugations),
+            reading: getReadingFromNonCompoundWord(entryContent),
+            sentenceIndex,
+            entryIndex,
+          }
+        }
+
+        // exclude exclamations and other meaningless 'words' that have no id
+        return []
+      })
+      return wordList.concat(words)
+    },
+    []
+  )
+  return wordList
 }

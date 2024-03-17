@@ -10,44 +10,103 @@ type Gloss = {
   info?: string
 }
 
-type Conj = {
+type ConjCommon = {
   prop: Array<Prop>
-  reading: string
-  gloss: Array<Gloss>
   readok: boolean
 }
 
-type WordInfoCommon = {
+type Conj = ConjCommon & {
+  reading: string
+  gloss: Array<Gloss>
+}
+
+type ConjVia = ConjCommon & {
+  via: [Conj]
+}
+
+export const hasVia = (conj: Conj | ConjVia): conj is ConjVia => {
+  return 'via' in conj
+}
+
+type WordCommon = {
   reading: string
   text: string
   kana: string
   score: number
+}
+
+type UnconjugatedWord = WordCommon & {
   seq: number
-  gloss: Array<Gloss>
+  gloss?: Array<Gloss>
+  suffix?: string
+  conj: never[]
 }
 
-export type WordInfoUnconjugated = WordInfoCommon & {
-  conj: []
+export const isUnconjugatedWord = (
+  word: NonCompoundWord
+): word is UnconjugatedWord => {
+  return word.conj.length === 0
 }
 
-export type WordInfoConjugated = WordInfoCommon & {
-  conj: Array<Conj>
+type ConjugatedWord = WordCommon & {
+  seq: number
+  conj: [Conj | ConjVia]
+} & {
+  gloss: never
+  suffix: never
 }
 
-export type WordInfo = WordInfoUnconjugated | WordInfoConjugated
-
-export const isUnconjugated = (
-  wordInfo: WordInfo
-): wordInfo is WordInfoUnconjugated => {
-  return wordInfo.conj.length === 0
+export const isConjugatedWord = (
+  word: NonCompoundWord
+): word is ConjugatedWord => {
+  return word.conj.length > 0
 }
 
-export type Entry = [number, WordInfo, []]
+export type NonCompoundWord = UnconjugatedWord | ConjugatedWord
 
-export type Sentence = [[Array<Entry>, number]]
+export const isNonCompoundWord = (word: Word): word is NonCompoundWord => {
+  return 'seq' in word
+}
 
-export type Segmentation = Array<Sentence | string>
+type CompoundWord = WordCommon & {
+  compound: string[]
+  components: Array<UnconjugatedWord | ConjugatedWord>
+}
+
+export const isCompoundWord = (word: Word): word is CompoundWord => {
+  return 'compound' in word
+}
+
+type Word = NonCompoundWord | CompoundWord | WordCommon
+
+type Alternatives = {
+  alternative: Word[]
+}
+
+type EntryContent = Word | Alternatives
+
+export const hasAlternatives = (
+  entryContent: EntryContent
+): entryContent is Alternatives => {
+  return 'alternative' in entryContent
+}
+
+type Entry = [number, EntryContent, []]
+
+type Sentence = [[Array<Entry>, number]]
+
+type Punctuation = string
+
+export type Segmentation = Array<Sentence | Punctuation>
 
 export const isSentence = (
   element: Segmentation[number]
 ): element is Sentence => Array.isArray(element)
+
+export type ProcessedWord = {
+  id: number
+  reading: string
+  sentenceIndex: number
+  entryIndex: number
+  componentIndex?: number
+}

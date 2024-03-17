@@ -1,5 +1,9 @@
 import express, { type Express } from 'express'
-import { getConjugations, getSegmentation, getWordIdList } from './utils'
+import {
+  getConjugations,
+  getSegmentation,
+  getWordListFromSegmentation,
+} from './utils'
 
 async function main() {
   const conjugations = await getConjugations()
@@ -8,16 +12,30 @@ async function main() {
 
   app.use(express.json())
 
-  app.post('/fullSegmentation', async (req, res) => {
+  app.post('/originalSegmentation', async (req, res) => {
     const jpString = req.body.string
     const segmentation = getSegmentation(jpString)
     res.status(200).json(segmentation)
   })
 
-  app.post('/wordIdsOnly', async (req, res) => {
+  app.post('/processedSegmentation', async (req, res) => {
     const jpString = req.body.string
     const segmentation = getSegmentation(jpString)
-    const idList = await getWordIdList(segmentation, conjugations)
+    const processedSegmentation = getWordListFromSegmentation(
+      segmentation,
+      conjugations
+    )
+    res.status(200).json(processedSegmentation)
+  })
+
+  app.post('/idsOnly', async (req, res) => {
+    const jpString = req.body.string
+    const segmentation = getSegmentation(jpString)
+    const processedSegmentation = getWordListFromSegmentation(
+      segmentation,
+      conjugations
+    )
+    const idList = processedSegmentation.map((word) => word.id)
     res.status(200).json(idList)
   })
 
