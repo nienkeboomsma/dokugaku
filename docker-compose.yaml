@@ -13,10 +13,13 @@ services:
     environment:
       ICHIRAN_PORT: ${ICHIRAN_PORT}
       POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
+    networks:
+      - dokugaku
+      - ichiran
     ports:
       - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
-    ### for dev use only ###
     restart: always
+    ### for dev use only ###
     volumes:
       - ./services/ichiran/src:/app/services/ichiran/src
   ichiran-db:
@@ -35,10 +38,32 @@ services:
       timeout: 30s
       retries: 999999
       start_period: 15s
+    networks:
+      - ichiran
     restart: always
     shm_size: 1gb
     volumes:
-      - pgdump:/var/lib/postgresql/data
+      - ichiran-db:/var/lib/postgresql/data
+  mokuro:
+    container_name: mokuro
+    build:
+      context: .
+      dockerfile: ./services/mokuro/Dockerfile
+    environment:
+      MOKURO_PORT: ${MOKURO_PORT}
+    networks:
+      - dokugaku
+    ports:
+      - '${MOKURO_PORT}:${MOKURO_PORT}'
+    privileged: true
+    restart: always
+    volumes:
+      - files:/dokugaku
+
+networks:
+  dokugaku:
+  ichiran:
 
 volumes:
-  pgdump:
+  ichiran-db:
+  files:
