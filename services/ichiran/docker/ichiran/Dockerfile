@@ -1,6 +1,7 @@
 FROM node:21.7-alpine3.19 AS turbo-base
 
 RUN apk add --no-cache libc6-compat && \
+    apk update && \
     yarn global add turbo
 
 WORKDIR /app
@@ -23,18 +24,16 @@ RUN yarn global add pnpm && \
 COPY --from=prune /app/out/full/ .
 COPY turbo.json turbo.json
 
-##########################
-### for production use ###
-##########################
-# RUN turbo build --filter=ichiran...
+RUN turbo build --filter=ichiran...
 
 FROM debian:sid-20240311-slim AS install-ichiran
 
 ARG DEBIAN_FRONTEND=noninteractive
 
     # Install packages
-RUN apt install -y git locales sbcl wget && \
-    wget -qO- https://deb.nodesource.com/setup_18.x | bash -  && \
+RUN apt update && \
+    apt install -y git locales sbcl wget && \
+    wget -qO- https://deb.nodesource.com/setup_21.x | bash -  && \
     apt install -y nodejs && \
     # Set locale
     localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8 && \
@@ -54,21 +53,15 @@ RUN apt install -y git locales sbcl wget && \
     apt remove -y git locales wget
 
 COPY ./services/ichiran/docker/ichiran/settings.lisp /root/quicklisp/local-projects/ichiran/settings.lisp
-COPY --from=build-server /app /app
 COPY ./services/ichiran/docker/ichiran/init.sh /app/services/ichiran/init.sh
+COPY --from=build-server /app /app
 
 WORKDIR /app/services/ichiran
 
-##########################
-### for production use ###
-##########################
+# production
 # CMD sh init.sh && \
 #     node dist/index.js
 
-###################
-### for dev use ###
-###################
+# development
 CMD sh init.sh && \
-    ichiran-cli -f これはペンです && \
-    npm install --global pnpm && \
-    pnpm run dev
+    npm run dev

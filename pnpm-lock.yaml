@@ -200,7 +200,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  services/template:
+  services/mokuro:
     dependencies:
       express:
         specifier: ^4.18.3
