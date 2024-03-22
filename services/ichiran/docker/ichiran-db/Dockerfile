@@ -4,8 +4,7 @@ ARG ICHIRAN_PGDUMP
 
 ENV LANG=ja_JP.UTF-8
 
-RUN apk update && \
-    apk add --no-cache wget && \
+RUN apk add --no-cache wget && \
     wget $ICHIRAN_PGDUMP --quiet -O ichiran.pgdump && \
     chmod o+r ichiran.pgdump && \
     apk del wget

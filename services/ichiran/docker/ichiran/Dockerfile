@@ -1,8 +1,7 @@
 FROM node:21.7-alpine3.19 AS turbo-base
 
-RUN apk add --no-cache libc6-compat \
-    && apk update \
-    && yarn global add turbo
+RUN apk add --no-cache libc6-compat && \
+    yarn global add turbo
 
 WORKDIR /app
 
@@ -18,8 +17,8 @@ COPY --from=prune /app/out/json/ .
 COPY --from=prune /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=prune /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-RUN yarn global add pnpm \
-    && pnpm install
+RUN yarn global add pnpm && \
+    pnpm install
 
 COPY --from=prune /app/out/full/ .
 COPY turbo.json turbo.json
@@ -34,8 +33,7 @@ FROM debian:sid-20240311-slim AS install-ichiran
 ARG DEBIAN_FRONTEND=noninteractive
 
     # Install packages
-RUN apt update && \
-    apt install -y git locales sbcl wget && \
+RUN apt install -y git locales sbcl wget && \
     wget -qO- https://deb.nodesource.com/setup_18.x | bash -  && \
     apt install -y nodejs && \
     # Set locale

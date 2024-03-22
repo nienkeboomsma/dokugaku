@@ -51,9 +51,6 @@ export const isUnconjugatedWord = (
 type ConjugatedWord = WordCommon & {
   seq: number
   conj: [Conj | ConjVia]
-} & {
-  gloss: never
-  suffix: never
 }
 
 export const isConjugatedWord = (
