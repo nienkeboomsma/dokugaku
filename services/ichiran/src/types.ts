@@ -40,26 +40,32 @@ type UnconjugatedWord = WordCommon & {
   gloss?: Array<Gloss>
   suffix?: string
   conj: never[]
-}
-
-export const isUnconjugatedWord = (
-  word: NonCompoundWord
-): word is UnconjugatedWord => {
-  return word.conj.length === 0
+  counter: never
 }
 
 type ConjugatedWord = WordCommon & {
   seq: number
   conj: [Conj | ConjVia]
+  counter: never
 }
 
 export const isConjugatedWord = (
   word: NonCompoundWord
 ): word is ConjugatedWord => {
-  return word.conj.length > 0
+  return 'conj' in word && word.conj.length > 0
 }
 
-export type NonCompoundWord = UnconjugatedWord | ConjugatedWord
+type CounterWord = WordCommon & {
+  counter: {
+    value: string
+    ordinal: unknown
+  }
+  seq: number
+  gloss: Array<Gloss>
+  conj: never
+}
+
+export type NonCompoundWord = UnconjugatedWord | ConjugatedWord | CounterWord
 
 export const isNonCompoundWord = (word: Word): word is NonCompoundWord => {
   return 'seq' in word
@@ -103,7 +109,7 @@ export const isSentence = (
 export type ProcessedWord = {
   id: number
   reading: string
-  sentenceIndex: number
-  entryIndex: number
-  componentIndex?: number
+  sentenceNumber: number
+  entryNumber: number
+  componentNumber?: number
 }

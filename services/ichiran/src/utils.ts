@@ -7,7 +7,6 @@ import {
   isConjugatedWord,
   isNonCompoundWord,
   isSentence,
-  isUnconjugatedWord,
   NonCompoundWord,
   ProcessedWord,
   Segmentation,
@@ -46,6 +45,9 @@ export async function getConjugations() {
 
 export function getSegmentation(string: string): Segmentation {
   try {
+    console.log(
+      `Segmenting ${string.length > 500 ? string.slice(0, 500) + '... etc.' : string}`
+    )
     const data = execSync(`ichiran-cli -f -- "${string}"`).toString()
     return JSON.parse(data)
   } catch (error) {
@@ -68,17 +70,17 @@ function stripFuriganaFromReading(reading: string) {
 }
 
 function getReadingFromNonCompoundWord(nonCompoundWord: NonCompoundWord) {
-  if (isUnconjugatedWord(nonCompoundWord)) {
-    return stripFuriganaFromReading(nonCompoundWord.reading)
+  if (isConjugatedWord(nonCompoundWord)) {
+    const conjInfo = nonCompoundWord.conj[0]
+
+    if (hasVia(conjInfo)) {
+      return stripFuriganaFromReading(conjInfo.via[0].reading)
+    }
+
+    return stripFuriganaFromReading(conjInfo.reading)
   }
 
-  const conjInfo = nonCompoundWord.conj[0]
-
-  if (hasVia(conjInfo)) {
-    return stripFuriganaFromReading(conjInfo.via[0].reading)
-  }
-
-  return stripFuriganaFromReading(conjInfo.reading)
+  return stripFuriganaFromReading(nonCompoundWord.reading)
 }
 
 export function getWordListFromSegmentation(
@@ -102,9 +104,9 @@ export function getWordListFromSegmentation(
               return {
                 id: getIdFromNonCompoundWord(componentWord, conjugations),
                 reading: getReadingFromNonCompoundWord(componentWord),
-                sentenceIndex,
-                entryIndex,
-                componentIndex,
+                sentenceNumber: sentenceIndex + 1,
+                entryNumber: entryIndex + 1,
+                componentNumber: componentIndex + 1,
               }
             }
           )
@@ -114,8 +116,8 @@ export function getWordListFromSegmentation(
           return {
             id: getIdFromNonCompoundWord(entryContent, conjugations),
             reading: getReadingFromNonCompoundWord(entryContent),
-            sentenceIndex,
-            entryIndex,
+            sentenceNumber: sentenceIndex + 1,
+            entryNumber: entryIndex + 1,
           }
         }
 
