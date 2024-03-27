@@ -1,5 +1,6 @@
-import { execSync } from 'child_process'
 import express, { type Express } from 'express'
+import { execSync } from 'child_process'
+import path from 'path'
 
 async function main() {
   const app: Express = express()
@@ -7,13 +8,18 @@ async function main() {
   app.use(express.json())
 
   app.post('/mokuro', async (req, res) => {
-    const workPath = req.body.path
+    const volumePath = '/dokugaku'
+    const folderName = req.body.folderName
+
     try {
+      // TODO: validate whether there are image files in the folder to begin with
+      console.log(
+        `Processing the image files in ${path.join(volumePath, folderName)}`
+      )
       execSync(
-        `mokuro /dokugaku/${workPath} --disable_confirmation && \ 
-        mv /dokugaku/_ocr/${workPath}/* /dokugaku/${workPath}/ && \
-        rm -rf /dokugaku/_ocr && \
-        rm /dokugaku/${workPath}.html`
+        `mokuro ${path.join(volumePath, folderName)} --disable_confirmation &&
+        mv ${path.join(volumePath, '_ocr', folderName, '*')} ${path.join(volumePath, folderName)} &&
+        rm ${path.join(volumePath, folderName, '.html')}`
       )
       return res.status(200).send(`Mokuro has successfully processed the files`)
     } catch (error) {
