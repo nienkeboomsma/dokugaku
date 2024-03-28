@@ -51,7 +51,8 @@ export function getSegmentation(string: string): Segmentation {
     const data = execSync(`ichiran-cli -f -- "${string}"`).toString()
     return JSON.parse(data)
   } catch (error) {
-    throw Error('Unable to retrieve segmentation')
+    // restart the container
+    process.exit(1)
   }
 }
 
