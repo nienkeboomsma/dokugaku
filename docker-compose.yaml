@@ -16,6 +16,7 @@ services:
     networks:
       - dokugaku
       - ichiran
+    # change this to expose for production
     ports:
       - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
     restart: always
@@ -34,10 +35,10 @@ services:
       POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
     healthcheck:
       test: pg_isready -h ichiran-db || exit 1
-      interval: 15s
+      interval: 30s
       timeout: 30s
       retries: 999999
-      start_period: 15s
+      start_period: 5s
     networks:
       - ichiran
     restart: always
@@ -53,17 +54,35 @@ services:
       MOKURO_PORT: ${MOKURO_PORT}
     networks:
       - dokugaku
+    # change this to expose for production
     ports:
       - '${MOKURO_PORT}:${MOKURO_PORT}'
     privileged: true
     restart: always
     volumes:
+      - ./services/mokuro/src:/app/services/mokuro/src
       - files:/dokugaku
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    environment:
+      WEB_PORT: ${WEB_PORT}
+      WORK_PROCESSOR_PORT: ${WORK_PROCESSOR_PORT}
+    networks:
+      - dokugaku
+    ports:
+      - '${WEB_PORT}:${WEB_PORT}'
+    privileged: true
+    restart: always
+    volumes:
+      - ./apps/web/app:/app/apps/web/app
 
 networks:
   dokugaku:
   ichiran:
 
 volumes:
-  ichiran-db:
   files:
+  ichiran-db:
