@@ -60,8 +60,9 @@ services:
     privileged: true
     restart: always
     volumes:
-      - ./services/mokuro/src:/app/services/mokuro/src
       - files:/dokugaku
+      ### for dev use only ###
+      - ./services/mokuro/src:/app/services/mokuro/src
   web:
     container_name: web
     build:
@@ -78,6 +79,25 @@ services:
     restart: always
     volumes:
       - ./apps/web/app:/app/apps/web/app
+  work-processor:
+    container_name: work-processor
+    build:
+      context: .
+      dockerfile: ./services/work-processor/Dockerfile
+    environment:
+      ICHIRAN_PORT: ${ICHIRAN_PORT}
+      MOKURO_PORT: ${MOKURO_PORT}
+      WORK_PROCESSOR_PORT: ${WORK_PROCESSOR_PORT}
+    networks:
+      - dokugaku
+    ports:
+      - '${WORK_PROCESSOR_PORT}:${WORK_PROCESSOR_PORT}'
+    privileged: true
+    restart: always
+    volumes:
+      - files:/dokugaku
+      ### for dev use only ###
+      - ./services/work-processor/src:/app/services/work-processor/src
 
 networks:
   dokugaku:
