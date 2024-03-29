@@ -2,7 +2,11 @@ import multer from 'multer'
 import { randomUUID } from 'node:crypto'
 import { execSync } from 'node:child_process'
 import path from 'node:path'
-import { mangaExtensions, novelTextExtensions } from './utils/constants.js'
+import {
+  imageExtensions,
+  mangaExtensions,
+  novelTextExtensions,
+} from './utils/constants.js'
 import { RequestHandler } from 'express'
 
 const storage = multer.diskStorage({
@@ -44,7 +48,7 @@ export const processNovelFiles: RequestHandler = multer({
     const extension = path.extname(fileName).toLowerCase()
 
     if (file.fieldname === 'cover') {
-      const allowedExtensions = ['.png', '.jpg', '.jpeg']
+      const allowedExtensions = imageExtensions
       if (allowedExtensions.includes(extension)) return cb(null, true)
     }
 

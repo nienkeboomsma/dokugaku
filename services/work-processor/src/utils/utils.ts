@@ -2,6 +2,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import axios from 'axios'
 import { IchiranData } from './types.js'
+import sharp from 'sharp'
+import { mokuroExtensions } from './constants.js'
 
 export function getAllFilesByExtension(fullPath: string, extensions: string[]) {
   const allFiles = fs.readdirSync(fullPath)
@@ -62,5 +64,22 @@ export function concatToJson(
 
   if (isLastPass) {
     fs.appendFileSync(outputFilePath, `]`)
+  }
+}
+
+export async function convertImagesToWebP(fullPath: string) {
+  console.log('Converting images to WebP')
+
+  const images = getAllFilesByExtension(fullPath, mokuroExtensions)
+
+  for (const inputFile of images) {
+    const inputPath = path.join(fullPath, inputFile)
+
+    const inputFileName = path.parse(inputFile).name
+    const outputFile = path.format({ name: inputFileName, ext: '.webp' })
+    const outputPath = path.join(fullPath, outputFile)
+
+    await sharp(inputPath).toFormat('webp').toFile(outputPath)
+    fs.rmSync(inputPath)
   }
 }

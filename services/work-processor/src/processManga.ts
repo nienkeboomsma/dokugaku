@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import path from 'node:path'
 import { mokuroExtensions, volumePath } from './utils/constants.js'
-import { renameFilesSequentially } from './utils/utils.js'
+import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
   getTimeEstimate,
   runIchiranOnEachPage,
@@ -43,6 +43,7 @@ export async function processManga(req: Request, res: Response) {
 
   if (!filesAreMokurod) await runMokuro(folderName)
   await runIchiranOnEachPage(fullPath)
+  await convertImagesToWebP(fullPath)
 
   console.timeEnd(timeTaken)
 

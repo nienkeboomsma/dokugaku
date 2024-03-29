@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import path from 'node:path'
 import { novelTextExtensions, volumePath } from './utils/constants.js'
-import { renameFilesSequentially } from './utils/utils.js'
+import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
   divideTextStringIntoChunks,
   getTextStringFromHtml,
@@ -27,7 +27,7 @@ export async function processNovel(req: Request, res: Response) {
   })
 
   renameFilesSequentially(fullPath, novelTextExtensions, 'part')
-  stripAndCombineFiles(fullPath, req.body.jp_title)
+  stripAndCombineFiles(fullPath, req.body.title)
   await saveHtmlAsJson(fullPath)
   const text = getTextStringFromHtml(fullPath)
   const { chunks, totalChars } = divideTextStringIntoChunks(text, 2500)
@@ -39,6 +39,7 @@ export async function processNovel(req: Request, res: Response) {
   })
 
   await runIchiranOnEachChunk(chunks, fullPath)
+  await convertImagesToWebP(fullPath)
 
   console.timeEnd(timeTaken)
 

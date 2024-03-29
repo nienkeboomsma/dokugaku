@@ -4,6 +4,7 @@ export const volumePath = '/dokugaku'
 
 export const mokuroExtensions = ['.png', '.jpg', '.jpeg']
 export const mangaExtensions = [...mokuroExtensions, '.json']
+export const imageExtensions = [...mokuroExtensions, '.webp']
 export const novelTextExtensions = ['.html', '.md', '.txt']
 
 // times in milliseconds
