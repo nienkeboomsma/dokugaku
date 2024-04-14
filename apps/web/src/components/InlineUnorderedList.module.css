@@ -1,0 +1,13 @@
+.unorderedList {
+  margin: 0;
+  padding: 0;
+}
+
+.listItem {
+  display: inline;
+
+  &:not(:last-child)::after {
+    content: '・';
+    opacity: 0.3;
+  }
+}

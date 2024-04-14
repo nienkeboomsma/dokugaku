@@ -1,0 +1,21 @@
+.wrapper {
+  aspect-ratio: 2 / 3;
+  border: solid 1px;
+  border-color: light-dark(
+    var(--mantine-color-gray-3),
+    var(--mantine-color-dark-6)
+  );
+  position: relative;
+  flex-shrink: 0;
+  width: var(--wrapper-width);
+}
+
+.overlay {
+  background-color: light-dark(white, black);
+  height: 100%;
+  opacity: 0.5;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: var(--unread-width);
+}

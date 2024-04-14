@@ -1,0 +1,14 @@
+.header {
+  border-color: light-dark(
+    var(--mantine-color-gray-3),
+    var(--mantine-color-dark-6)
+  );
+}
+
+.main {
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-8)
+  );
+  isolation: isolate;
+}

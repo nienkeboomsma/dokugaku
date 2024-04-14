@@ -1,0 +1,122 @@
+import { useEffect } from 'react'
+import { useForm } from '@mantine/form'
+
+export type FormType = 'manga' | 'novel'
+
+export type FormValues = {
+  series: string
+  volume?: string
+  title: string
+  authors: string[]
+  mokuro?: boolean
+  cover?: File
+  files: File[]
+}
+const getInitialValues = (type: FormType) => {
+  const commonValues = {
+    series: '',
+    volume: '',
+    title: '',
+    authors: [],
+    files: [],
+  }
+
+  if (type === 'manga') return { ...commonValues, mokuro: false }
+  if (type === 'novel') return { ...commonValues, cover: undefined }
+}
+const volumeValidator = (value: FormValues['volume'], values: FormValues) => {
+  if (values.series && !value) {
+    return 'Please supply a volume number'
+  }
+  if (value && !/[0-9]/.test(value)) {
+    return 'Please supply an integer'
+  }
+  return null
+}
+
+const titleValidator = (value: FormValues['title']) =>
+  !value ? 'Please supply a title' : null
+
+const authorsValidator = (value: FormValues['authors']) =>
+  value.length === 0 ? 'Please supply at least one author' : null
+
+const mangaFilesValidator = (value: FormValues['files']) => {
+  return value.length === 0 ? `Please supply the manga's image files` : null
+}
+
+const novelFilesValidator = (value: FormValues['files']) => {
+  return value.length === 0 ? `Please supply the novel's text files` : null
+}
+
+const coverValidator = (value: FormValues['cover']) => {
+  return !value ? 'Please supply a cover image' : null
+}
+
+const getValidators = (type: FormType) => {
+  const commonValidators = {
+    volume: volumeValidator,
+    title: titleValidator,
+    authors: authorsValidator,
+  }
+
+  if (type === 'manga')
+    return {
+      ...commonValidators,
+      files: mangaFilesValidator,
+    }
+  if (type === 'novel')
+    return {
+      ...commonValidators,
+      files: novelFilesValidator,
+      cover: coverValidator,
+    }
+}
+
+export function useUploadForm(type: FormType) {
+  const uploadForm = useForm<FormValues>({
+    initialValues: getInitialValues(type),
+    validate: getValidators(type),
+  })
+
+  useEffect(() => {
+    if (uploadForm.values.series === '') {
+      uploadForm.setFieldValue('volume', '')
+    }
+  }, [uploadForm.values.series])
+
+  const sendFormData = async (
+    values: FormValues,
+    event: React.FormEvent<HTMLFormElement> | undefined
+  ) => {
+    if (!event) return
+    event.preventDefault()
+
+    const formData = new FormData()
+
+    formData.append('series', values.series)
+    formData.append('volume', values.volume ?? '')
+    formData.append('title', values.title)
+    values.authors.forEach((author) => {
+      formData.append('authors', author)
+    })
+    values.files.forEach((file) => formData.append('files', file))
+
+    if (type === 'manga') {
+      formData.append('mokuro', values.mokuro?.toString() ?? 'false')
+    }
+    if (type === 'novel') {
+      formData.append('cover', values.cover ?? '')
+    }
+
+    const res = await fetch(
+      `http://localhost:3004/process${type === 'manga' ? 'Manga' : 'Novel'}`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    )
+    console.log(await res.json())
+  }
+
+  return { uploadForm, submitHandler: sendFormData }
+}

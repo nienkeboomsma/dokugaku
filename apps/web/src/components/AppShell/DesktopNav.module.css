@@ -1,0 +1,22 @@
+.container {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-left: var(--mantine-spacing-xl);
+}
+
+.control {
+  display: block;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  font-weight: 500;
+
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
+}

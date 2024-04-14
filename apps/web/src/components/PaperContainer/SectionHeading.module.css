@@ -1,0 +1,10 @@
+.title {
+  color: var(--mantine-primary-color-filled);
+  font-weight: 600;
+  letter-spacing: 0.04rem;
+  line-height: 1;
+  margin-bottom: 1.25em;
+  margin-top: -0.125em;
+  text-align: left;
+  text-transform: uppercase;
+}

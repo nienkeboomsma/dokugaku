@@ -1,0 +1,55 @@
+.container {
+  --gap: 2rem;
+
+  align-items: flex-start;
+  display: flex;
+  gap: var(--gap);
+  max-width: calc(var(--cover-width) + var(--gap) + var(--second-column-width));
+
+  @media (max-width: 47em) {
+    --gap: 2.25rem;
+    --second-column-width: 100% !important;
+
+    align-items: center;
+    flex-direction: column;
+    max-width: 100%;
+  }
+}
+
+.firstColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.secondColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  justify-content: flex-start;
+  max-width: var(--second-column-max-width);
+  width: var(--second-column-width);
+
+  @media (max-width: 47em) {
+    --second-column-width: 100% !important;
+
+    align-items: center;
+    flex-direction: column;
+    max-width: revert;
+  }
+}
+
+.titleAndAuthors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 100%;
+
+  @media (max-width: 47em) {
+    align-items: center;
+  }
+}
+
+.frequencyListContainer {
+  width: 100%;
+}

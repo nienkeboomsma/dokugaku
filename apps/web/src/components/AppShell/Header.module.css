@@ -1,0 +1,16 @@
+.headerContent {
+  --spacing: var(--mantine-spacing-lg);
+  align-items: center;
+  display: flex;
+  gap: var(--spacing);
+  height: 100%;
+  padding-inline: var(--spacing);
+  width: 100%;
+}
+
+.logoAndNav {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: 'space-between';
+}

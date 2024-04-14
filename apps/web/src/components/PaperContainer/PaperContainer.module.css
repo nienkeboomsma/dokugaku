@@ -1,0 +1,11 @@
+.container {
+  --padding: var(--mantine-spacing-xl);
+
+  margin-inline: auto;
+  padding: var(--padding);
+  width: 100%;
+
+  & + & {
+    margin-top: var(--mantine-spacing-lg);
+  }
+}

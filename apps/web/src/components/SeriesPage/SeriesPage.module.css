@@ -1,0 +1,20 @@
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2.75rem;
+}
+
+.seriesInfo {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.titleAndAuthors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  max-width: 100%;
+}

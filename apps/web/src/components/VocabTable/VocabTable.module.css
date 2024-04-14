@@ -1,0 +1,27 @@
+.container {
+  --gap: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin: 0 auto;
+  max-width: var(--max-width);
+  width: 100%;
+}
+
+.noRecordsBox {
+  --padding: 0.25rem;
+
+  background: light-dark(
+    var(--mantine-colors-gray-1),
+    var(--mantine-colors-dark-6)
+  );
+  border: 2px solid
+    light-dark(var(--mantine-colors-gray-4), var(--mantine-colors-dark-5));
+  border-radius: var(--mantine-radius-md);
+  color: light-dark(var(--mantine-colors-dark-3), var(--mantine-colors-gray-5));
+  font-size: 0;
+  margin-bottom: 0.25rem;
+  max-width: calc(var(--max-width) - 2 * var(--padding));
+  padding: var(--padding);
+}

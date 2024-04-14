@@ -1,0 +1,9 @@
+.searchBar {
+  flex-grow: 1;
+  min-width: 15rem;
+}
+
+.searchBarText {
+  font-size: 1rem;
+  padding-bottom: 0.0625rem;
+}

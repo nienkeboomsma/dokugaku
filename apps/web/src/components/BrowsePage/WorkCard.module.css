@@ -1,0 +1,83 @@
+/* the min-width in the container queries is the same as MIN_WIDTH_DESKTOP */
+
+.card {
+  --min-width: var(--min-width-mobile);
+
+  max-width: var(--max-width);
+  min-width: var(--min-width);
+  overflow: clip;
+  width: 100%;
+
+  @container (min-width: 20em) {
+    --min-width: var(--min-width-desktop);
+  }
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  @container (min-width: 20em) {
+    flex-direction: row;
+  }
+}
+
+.coverWrapper {
+  border-style: solid;
+  border-color: light-dark(
+    var(--mantine-color-gray-3),
+    var(--mantine-color-dark-6)
+  );
+  border-width: 0 0 1px 0;
+  flex-shrink: 0;
+  height: 6rem;
+  position: relative;
+  width: 100%;
+
+  @container (min-width: 20em) {
+    --cover-width: 6rem;
+    border-width: 0 1px 0 0;
+    height: calc(1.5 * var(--cover-width));
+    width: var(--cover-width);
+  }
+}
+
+.cover {
+  object-fit: cover;
+
+  @container (min-width: 20em) {
+    object-fit: fill;
+  }
+}
+
+.description {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  height: 7.75rem;
+  justify-content: space-between;
+  padding: 1rem;
+  overflow: hidden;
+  width: 100%;
+
+  @container (min-width: 20em) {
+    height: revert;
+  }
+}
+
+.titleAuthorVolumes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.author {
+  font-size: rem(13);
+}
+
+.progress {
+  bottom: 0.6rem;
+  position: absolute;
+  right: 0.6rem;
+}

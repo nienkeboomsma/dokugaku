@@ -1,5 +1,9 @@
 # Uploading files
 
+## Cover
+
+When uploading manga, please note that the first image will be used as the cover image.
+
 ## Pre-mokuro'd manga
 
 It might make more sense to run Mokuro on your host machine instead of leaving it to the mokuro container (on my own machine it's about 8 times as fast). In that case, check the 'already mokurod' checkbox and upload the JSON files along with the images.

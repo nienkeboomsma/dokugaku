@@ -6,9 +6,9 @@ RUN apk update && apk add --no-cache libc6-compat
 # Start a new stage based on the base image for setting up pnpm (a package manager) and turbo (for monorepo management).
 FROM base as setup
 # Install pnpm and turbo globally using npm.
-RUN npm install -g pnpm turbo
 # Configure pnpm to use a specific directory for storing its package cache.
-RUN pnpm config set store-dir ~/.pnpm-store
+RUN npm install -g pnpm turbo && \
+    pnpm config set store-dir ~/.pnpm-store
 
 # Install all dependencies in the monorepo
 # Start a new stage for handling dependencies. This stage uses the previously setup image with pnpm and turbo installed.
@@ -26,9 +26,9 @@ RUN pnpm install --frozen-lockfile
 # Prune projects to focus on the specified project scope
 # Start a new stage to prune the monorepo, focusing only on the necessary parts for the specified project.
 FROM dependencies AS pruner
-RUN turbo prune --scope=web --docker
 # Remove all empty node_modules folders. This is a cleanup step to remove unnecessary directories and reduce image size.
-RUN rm -rf /app/out/full/*/*/node_modules
+RUN turbo prune --scope=web --docker && \
+    rm -rf /app/out/full/*/*/node_modules
 
 # Build the project using turbo
 # Start a new stage for building the project. This stage will compile and prepare the project for production.
@@ -51,17 +51,19 @@ COPY --from=pruner /app/out/full/ .
 
 # Build with turbo and prune dev dependencies
 # Use turbo to build the project, followed by pruning development dependencies to minimize the final image size.
-RUN turbo build --filter=web...
-RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
 # Remove source files to further reduce the image size, keeping only the compiled output and necessary runtime files.
-RUN rm -rf ./**/*/src
+
+# production
+# RUN turbo build --filter=web... && \
+#     --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional && \
+#     rm -rf ./**/*/src
 
 # Final production image
 # Start the final stage for the production-ready image.
 FROM base AS runner
 # Create a non-root user and group for better security.
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nodejs
 # Switch to the non-root user.
 USER nodejs
 

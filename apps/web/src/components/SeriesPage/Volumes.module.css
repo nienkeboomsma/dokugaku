@@ -1,0 +1,36 @@
+.spoilerRoot {
+  /* the control sticks out 50%, but it looks more balanced to compensate
+    for only half of that */
+  margin-bottom: calc(var(--control-height) / 4);
+  margin-right: calc(var(--indicator-offset) * -1);
+  margin-top: calc(var(--indicator-offset) * -1);
+  position: relative;
+}
+
+.volumesContainer {
+  --gap-size: 1rem;
+
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--volume-min-width), 1fr)
+  );
+  margin-bottom: calc(var(--gap-size) * -1);
+  padding-right: var(--indicator-offset);
+  padding-top: var(--indicator-offset);
+
+  &::after {
+    content: '';
+    grid-column: 1 / -1;
+  }
+}
+
+.spoilerControl {
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  padding-right: var(--indicator-offset);
+  position: absolute;
+  top: calc(100% - var(--control-height) / 2);
+  z-index: 1;
+}
