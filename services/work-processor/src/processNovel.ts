@@ -18,14 +18,6 @@ export async function processNovel(req: Request, res: Response) {
   const folderName = req.folderName
   const fullPath = path.join(volumePath, folderName)
 
-  // TODO: validate req.body contents
-  console.table({
-    series: req.body.series,
-    volume: req.body.volume,
-    title: req.body.title,
-    author: req.body.author,
-  })
-
   renameFilesSequentially(fullPath, novelTextExtensions, 'part')
   stripAndCombineFiles(fullPath, req.body.title)
   await saveHtmlAsJson(fullPath)
@@ -34,6 +26,7 @@ export async function processNovel(req: Request, res: Response) {
 
   const { estimatedDuration, timeWhenFinished } = getTimeEstimate(totalChars)
   res.status(200).json({
+    id: folderName,
     estimatedDurationInMin: estimatedDuration / 1000 / 60,
     estimatedFinishTime: timeWhenFinished,
   })

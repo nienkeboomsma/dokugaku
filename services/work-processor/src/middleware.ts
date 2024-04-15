@@ -3,6 +3,38 @@ import path from 'node:path'
 import { mokuroExtensions } from './utils/constants.js'
 
 // TODO: look into Zod for validation
+export function validateMetadata(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { authors, series, title, volumeNumber } = req.body
+
+  if (series && !volumeNumber) {
+    return res
+      .status(500)
+      .send({ error: 'Make sure to provide a volume number.' })
+  }
+
+  if (!series && volumeNumber) {
+    return res
+      .status(500)
+      .send({ error: 'Make sure to provide a series title.' })
+  }
+
+  if (!title) {
+    return res.status(500).send({ error: 'Make sure to provide a title.' })
+  }
+
+  if (!Array.isArray(authors) || authors.length === 0) {
+    return res.status(500).send({
+      error:
+        'Make sure to provide an array of authors (even if it is just a single one).',
+    })
+  }
+
+  next()
+}
 
 export function mokurodFilesAreValid(files: Express.Multer.File[]) {
   const images = files.filter((file) => {
@@ -37,19 +69,19 @@ export function validateMangaFiles(
   const filesAreMokurod = req.body.mokuro === 'on'
 
   if (!req.files) {
-    return res.status(500).send('Make sure to include the images.')
+    return res.status(500).send({ error: 'Make sure to include the images.' })
   }
 
   if (!Array.isArray(req.files)) {
     return res
       .status(500)
-      .send('Make sure there is only one "files" input in the form.')
+      .send({ error: 'Make sure there is only one "files" input in the form.' })
   }
 
   if (filesAreMokurod && !mokurodFilesAreValid(req.files)) {
-    return res
-      .status(500)
-      .send('Make sure there is a corresponding JSON file for each image.')
+    return res.status(500).send({
+      error: 'Make sure there is a corresponding JSON file for each image.',
+    })
   }
 
   next()
@@ -61,7 +93,9 @@ export function validateNovelFiles(
   next: NextFunction
 ) {
   if (!req.files) {
-    return res.status(500).send('Make sure to attach a cover and text file(s).')
+    return res
+      .status(500)
+      .send({ error: 'Make sure to attach a cover and text file(s).' })
   }
 
   if (Array.isArray(req.files)) {
@@ -75,7 +109,7 @@ export function validateNovelFiles(
   if (!req.files.cover || !req.files.files) {
     return res
       .status(500)
-      .send('Make sure to attach both a cover and text file(s).')
+      .send({ error: 'Make sure to attach both a cover and text file(s).' })
   }
 
   next()

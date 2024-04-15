@@ -15,15 +15,7 @@ export async function processManga(req: Request, res: Response) {
   const folderName = req.folderName
   const fullPath = path.join(volumePath, folderName)
 
-  // TODO: validate form contents
-  console.table({
-    series: req.body.series,
-    volume: req.body.volume,
-    title: req.body.title,
-    author: req.body.author,
-  })
-
-  const filesAreMokurod = req.body.mokuro === 'on'
+  const filesAreMokurod = req.body.mokuro === 'true'
 
   const numberOfImages = renameFilesSequentially(
     fullPath,
@@ -37,6 +29,7 @@ export async function processManga(req: Request, res: Response) {
     numberOfImages
   )
   res.status(200).json({
+    id: folderName,
     estimatedDurationInMin: estimatedDuration / 1000 / 60,
     estimatedFinishTime: timeWhenFinished,
   })
