@@ -5,7 +5,7 @@ export type FormType = 'manga' | 'novel'
 
 export type FormValues = {
   series: string
-  volume?: string
+  volumeNumber?: string
   title: string
   authors: string[]
   mokuro?: boolean
@@ -15,7 +15,7 @@ export type FormValues = {
 const getInitialValues = (type: FormType) => {
   const commonValues = {
     series: '',
-    volume: '',
+    volumeNumber: '',
     title: '',
     authors: [],
     files: [],
@@ -24,7 +24,10 @@ const getInitialValues = (type: FormType) => {
   if (type === 'manga') return { ...commonValues, mokuro: false }
   if (type === 'novel') return { ...commonValues, cover: undefined }
 }
-const volumeValidator = (value: FormValues['volume'], values: FormValues) => {
+const volumeNumberValidator = (
+  value: FormValues['volumeNumber'],
+  values: FormValues
+) => {
   if (values.series && !value) {
     return 'Please supply a volume number'
   }
@@ -54,7 +57,7 @@ const coverValidator = (value: FormValues['cover']) => {
 
 const getValidators = (type: FormType) => {
   const commonValidators = {
-    volume: volumeValidator,
+    volumeNumber: volumeNumberValidator,
     title: titleValidator,
     authors: authorsValidator,
   }
@@ -80,7 +83,7 @@ export function useUploadForm(type: FormType) {
 
   useEffect(() => {
     if (uploadForm.values.series === '') {
-      uploadForm.setFieldValue('volume', '')
+      uploadForm.setFieldValue('volumeNumber', '')
     }
   }, [uploadForm.values.series])
 
@@ -94,7 +97,7 @@ export function useUploadForm(type: FormType) {
     const formData = new FormData()
 
     formData.append('series', values.series)
-    formData.append('volume', values.volume ?? '')
+    formData.append('volumeNumber', values.volumeNumber ?? '')
     formData.append('title', values.title)
     values.authors.forEach((author) => {
       formData.append('authors', author)

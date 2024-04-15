@@ -14,7 +14,7 @@ export default function SeriesInput({
       inputMode='numeric'
       label='Volume number'
       withAsterisk={uploadForm.values.series !== ''}
-      {...uploadForm.getInputProps('volume')}
+      {...uploadForm.getInputProps('volumeNumber')}
     />
   )
 }
