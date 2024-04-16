@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import path from 'node:path'
+
 import { mokuroExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
@@ -7,6 +8,7 @@ import {
   runIchiranOnEachPage,
   runMokuro,
 } from './utils/manga-utils.js'
+import { insertIntoDatabase } from './db/insertIntoDatabase.js'
 
 export async function processManga(req: Request, res: Response) {
   const timeTaken = 'Time to process the entire request'
@@ -37,8 +39,15 @@ export async function processManga(req: Request, res: Response) {
   if (!filesAreMokurod) await runMokuro(folderName)
   await runIchiranOnEachPage(fullPath)
   await convertImagesToWebP(fullPath)
+  await insertIntoDatabase({
+    seriesTitle: req.body.series,
+    workId: folderName,
+    workType: 'manga',
+    workTitle: req.body.title,
+    workVolumeNumber: req.body.volumeNumber,
+    workMaxProgress: numberOfImages.toString(),
+    authors: req.body.authors,
+  })
 
   console.timeEnd(timeTaken)
-
-  // TODO: if all intermediate steps are successful, upload data to Postgres
 }

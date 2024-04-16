@@ -10,6 +10,7 @@ import {
   saveHtmlAsJson,
   stripAndCombineFiles,
 } from './utils/novel-utils.js'
+import { insertIntoDatabase } from './db/insertIntoDatabase.js'
 
 export async function processNovel(req: Request, res: Response) {
   const timeTaken = 'Time to process the entire request'
@@ -20,7 +21,7 @@ export async function processNovel(req: Request, res: Response) {
 
   renameFilesSequentially(fullPath, novelTextExtensions, 'part')
   stripAndCombineFiles(fullPath, req.body.title)
-  await saveHtmlAsJson(fullPath)
+  const numberOfParagraphs = await saveHtmlAsJson(fullPath)
   const text = getTextStringFromHtml(fullPath)
   const { chunks, totalChars } = divideTextStringIntoChunks(text, 2500)
 
@@ -33,8 +34,15 @@ export async function processNovel(req: Request, res: Response) {
 
   await runIchiranOnEachChunk(chunks, fullPath)
   await convertImagesToWebP(fullPath)
+  await insertIntoDatabase({
+    seriesTitle: req.body.series,
+    workId: folderName,
+    workType: 'novel',
+    workTitle: req.body.title,
+    workVolumeNumber: req.body.volumeNumber,
+    workMaxProgress: numberOfParagraphs.toString(),
+    authors: req.body.authors,
+  })
 
   console.timeEnd(timeTaken)
-
-  // TODO: if all intermediate steps are successful, upload data to Postgres
 }

@@ -30,6 +30,11 @@ export type MokuroData = {
   blocks: Array<Block>
 }
 
+export type NovelTextJson = {
+  type: string
+  content: Array<string | NovelTextJson>
+}
+
 type Word = {
   id: number
   reading: string
@@ -40,3 +45,37 @@ type Word = {
 }
 
 export type IchiranData = Array<Word>
+
+type WorkMetadataCommon = {
+  workId: string
+  workType: 'manga' | 'novel'
+  workTitle: string
+  workMaxProgress: string
+  authors: string[]
+  authorIds?: string[]
+}
+
+export type WorkMetadataNotSeries = WorkMetadataCommon & {
+  seriesTitle: undefined
+  workVolumeNumber: undefined
+}
+
+export type WorkMetadataSeries = WorkMetadataCommon & {
+  seriesAlreadyExists?: boolean
+  seriesId?: string
+  seriesTitle: string
+  workVolumeNumber: string
+}
+
+export type WorkMetadata = WorkMetadataNotSeries | WorkMetadataSeries
+
+export const isString = (param: any): param is string => {
+  return typeof param === 'string'
+}
+
+export const isPartOfSeries = (
+  workMetadata: WorkMetadata
+): workMetadata is WorkMetadataSeries => {
+  if (workMetadata.seriesTitle && workMetadata.workVolumeNumber) return true
+  return false
+}

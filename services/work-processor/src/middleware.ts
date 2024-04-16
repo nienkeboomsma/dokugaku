@@ -26,11 +26,14 @@ export function validateMetadata(
     return res.status(500).send({ error: 'Make sure to provide a title.' })
   }
 
-  if (!Array.isArray(authors) || authors.length === 0) {
+  if (!authors) {
     return res.status(500).send({
-      error:
-        'Make sure to provide an array of authors (even if it is just a single one).',
+      error: 'Make sure to provide one or more authors.',
     })
+  }
+
+  if (!Array.isArray(authors)) {
+    req.body.authors = [authors]
   }
 
   next()
