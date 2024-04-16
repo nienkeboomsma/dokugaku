@@ -1,0 +1,36 @@
+{
+  "name": "graphql",
+  "version": "1.0.0",
+  "description": "",
+  "exports": "./index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "dev": "tsup src/index.ts --format esm --watch --onSuccess \"node dist/index.js\"",
+    "lint": "tsc --noEmit && eslint \"src/**/*.ts*\"",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.10.2",
+    "express": "^4.19.1",
+    "graphql": "^16.8.1",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.30",
+    "@types/pg": "^8.11.4",
+    "eslint": "^8.57.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.3"
+  }
+}

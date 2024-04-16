@@ -1,6 +1,46 @@
 version: '3.8'
 
 services:
+  db:
+    container_name: db
+    build:
+      args:
+        DB_JMDICT: ${DB_JMDICT}
+      context: .
+      dockerfile: ./services/db/Dockerfile
+    environment:
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+      POSTGRES_DB: db
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=ja_JP.utf8 --lc-ctype=ja_JP.utf8'
+      POSTGRES_PASSWORD: ${DB_PG_PASSWORD}
+    healthcheck:
+      test: pg_isready -h db || exit 1
+      interval: 15s
+      timeout: 30s
+      retries: 999999
+      start_period: 10s
+    networks:
+      - backend
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
+  graphql:
+    container_name: graphql
+    build:
+      context: .
+      dockerfile: ./services/graphql/Dockerfile
+    environment:
+      GRAPHQL_PORT: ${GRAPHQL_PORT}
+    networks:
+      - backend
+      - frontend
+    # change this to expose for production
+    ports:
+      - '${GRAPHQL_PORT}:${GRAPHQL_PORT}'
+    restart: always
+    ### for dev use only ###
+    volumes:
+      - ./services/graphql/src:/app/services/graphql/src
   ichiran:
     container_name: ichiran
     build:
@@ -14,7 +54,7 @@ services:
       ICHIRAN_PORT: ${ICHIRAN_PORT}
       POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
     networks:
-      - dokugaku
+      - backend
       - ichiran
     # change this to expose for production
     ports:
@@ -38,7 +78,7 @@ services:
       interval: 30s
       timeout: 30s
       retries: 999999
-      start_period: 5s
+      start_period: 10s
     networks:
       - ichiran
     restart: always
@@ -53,7 +93,7 @@ services:
     environment:
       MOKURO_PORT: ${MOKURO_PORT}
     networks:
-      - dokugaku
+      - backend
     # change this to expose for production
     ports:
       - '${MOKURO_PORT}:${MOKURO_PORT}'
@@ -72,7 +112,8 @@ services:
       WEB_PORT: ${WEB_PORT}
       WORK_PROCESSOR_PORT: ${WORK_PROCESSOR_PORT}
     networks:
-      - dokugaku
+      - backend
+      - frontend
     ports:
       - '${WEB_PORT}:${WEB_PORT}'
     privileged: true
@@ -89,9 +130,10 @@ services:
     environment:
       ICHIRAN_PORT: ${ICHIRAN_PORT}
       MOKURO_PORT: ${MOKURO_PORT}
+      POSTGRES_PASSWORD: ${DB_PG_PASSWORD}
       WORK_PROCESSOR_PORT: ${WORK_PROCESSOR_PORT}
     networks:
-      - dokugaku
+      - backend
     ports:
       - '${WORK_PROCESSOR_PORT}:${WORK_PROCESSOR_PORT}'
     privileged: true
@@ -102,9 +144,11 @@ services:
       - ./services/work-processor/src:/app/services/work-processor/src
 
 networks:
-  dokugaku:
+  backend:
+  frontend:
   ichiran:
 
 volumes:
+  db:
   files:
   ichiran-db:
