@@ -56,11 +56,11 @@ export function concatToJson(
   const stringifiedJson = JSON.stringify(parsedJson).slice(1, -1)
 
   if (isFirstPass) {
-    fs.writeFileSync(outputFilePath, `[${stringifiedJson},`, 'utf8')
+    fs.writeFileSync(outputFilePath, `[${stringifiedJson}`, 'utf8')
   }
 
   if (!isFirstPass) {
-    fs.appendFileSync(outputFilePath, `${stringifiedJson},`)
+    fs.appendFileSync(outputFilePath, `,${stringifiedJson}`)
   }
 
   if (isLastPass) {
