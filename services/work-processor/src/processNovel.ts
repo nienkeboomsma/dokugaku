@@ -34,15 +34,18 @@ export async function processNovel(req: Request, res: Response) {
 
   await runIchiranOnEachChunk(chunks, fullPath)
   await convertImagesToWebP(fullPath)
-  await insertIntoDatabase({
-    seriesTitle: req.body.series,
-    workId: folderName,
-    workType: 'novel',
-    workTitle: req.body.title,
-    workVolumeNumber: req.body.volumeNumber,
-    workMaxProgress: numberOfParagraphs.toString(),
-    authors: req.body.authors,
-  })
+  await insertIntoDatabase(
+    {
+      seriesTitle: req.body.series,
+      workId: folderName,
+      workType: 'novel',
+      workTitle: req.body.title,
+      workVolumeNumber: req.body.volumeNumber,
+      workMaxProgress: numberOfParagraphs.toString(),
+      authors: req.body.authors,
+    },
+    req.body.userId
+  )
 
   console.timeEnd(timeTaken)
 }

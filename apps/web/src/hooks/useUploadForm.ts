@@ -111,6 +111,9 @@ export function useUploadForm(type: FormType) {
       formData.append('cover', values.cover ?? '')
     }
 
+    // TODO: the id should be supplied centrally via Docker Compose
+    formData.append('userId', '6e41e9fd-c813-40e9-91fd-c51e47efab42')
+
     const res = await fetch(
       `http://localhost:3004/process${type === 'manga' ? 'Manga' : 'Novel'}`,
       {

@@ -11,12 +11,11 @@ CSV HEADER;
 
 CREATE TABLE user_account (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  username text NOT NULL UNIQUE,
-  password_hash text NOT NULL,
-  email text NOT NULL UNIQUE,
-  name text NULL
+  display_name text NOT NULL UNIQUE
 );
 
+-- TODO: the id should be supplied centrally via Docker Compose
+INSERT INTO user_account(id, display_name) VALUES ('6e41e9fd-c813-40e9-91fd-c51e47efab42', 'Nienke');
 
 CREATE TABLE series (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -35,6 +34,25 @@ CREATE TABLE work (
   UNIQUE (series_id, volume_number)
 );
 
+CREATE TYPE readstatus AS ENUM ('want to read', 'reading', 'read', 'abandoned');
+
+CREATE TABLE user_series (
+  id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id uuid NOT NULL REFERENCES user_account,
+  series_id uuid NOT NULL REFERENCES series,
+  status readstatus NOT NULL DEFAULT 'want to read',
+  UNIQUE (user_id, series_id)
+ );
+
+CREATE TABLE user_work (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id uuid NOT NULL REFERENCES user_account,
+  work_id uuid NOT NULL REFERENCES work,
+  status readstatus NOT NULL DEFAULT 'want to read',
+  current_progress integer NULL DEFAULT 0,
+  UNIQUE (user_id, work_id)
+);
+
 CREATE TABLE author (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   author_name text NOT NULL UNIQUE
@@ -45,34 +63,6 @@ CREATE TABLE author_work (
   author_id uuid NOT NULL REFERENCES author,
   work_id uuid NOT NULL REFERENCES work,
   UNIQUE (author_id, work_id)
-);
-
-CREATE TABLE user_word (
-  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  user_id integer NOT NULL REFERENCES user_account,
-  word_id integer NOT NULL REFERENCES word,
-  excluded boolean NOT NULL DEFAULT false,
-  known boolean NOT NULL DEFAULT false,
-  UNIQUE (user_id, word_id)
-);
-
-CREATE TYPE readstatus AS ENUM ('want to read', 'reading', 'read', 'abandoned');
-
-CREATE TABLE user_series (
-  id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  user_id integer NOT NULL REFERENCES user_account,
-  series_id uuid NOT NULL REFERENCES series,
-  status readstatus NOT NULL DEFAULT 'want to read',
-  UNIQUE (user_id, series_id)
- );
-
-CREATE TABLE user_work (
-  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  user_id integer NOT NULL REFERENCES user_account,
-  work_id uuid NOT NULL REFERENCES work,
-  status readstatus NOT NULL DEFAULT 'want to read',
-  current_progress integer NULL DEFAULT 0,
-  UNIQUE (user_id, work_id)
 );
 
 CREATE TABLE word_work (
@@ -86,11 +76,20 @@ CREATE TABLE word_work (
   UNIQUE (word_id, work_id, page_number, sentence_number, entry_number, component_number)
 );
 
+CREATE TABLE user_word (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id uuid NOT NULL REFERENCES user_account,
+  word_id integer NOT NULL REFERENCES word,
+  excluded boolean NOT NULL DEFAULT false,
+  known boolean NOT NULL DEFAULT false,
+  UNIQUE (user_id, word_id)
+);
+
 CREATE TABLE ignored_in_work (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   word_id integer NOT NULL REFERENCES word,
   work_id uuid NOT NULL REFERENCES work,
-  user_id integer NOT NULL REFERENCES user_account,
+  user_id uuid NOT NULL REFERENCES user_account,
   ignored boolean NOT NULL DEFAULT false,
   UNIQUE (word_id, work_id, user_id)
 );
@@ -99,7 +98,7 @@ CREATE TABLE ignored_in_series (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   word_id integer NOT NULL REFERENCES word,
   series_id uuid NOT NULL REFERENCES series,
-  user_id integer NOT NULL REFERENCES user_account,
+  user_id uuid NOT NULL REFERENCES user_account,
   ignored boolean NOT NULL DEFAULT false,
   UNIQUE (word_id, series_id, user_id)
 );

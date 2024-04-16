@@ -61,7 +61,7 @@ export type WorkMetadataNotSeries = WorkMetadataCommon & {
 }
 
 export type WorkMetadataSeries = WorkMetadataCommon & {
-  seriesAlreadyExists?: boolean
+  // seriesAlreadyExists?: boolean
   seriesId?: string
   seriesTitle: string
   workVolumeNumber: string

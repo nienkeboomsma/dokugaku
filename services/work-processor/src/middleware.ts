@@ -8,7 +8,17 @@ export function validateMetadata(
   res: Response,
   next: NextFunction
 ) {
-  const { authors, series, title, volumeNumber } = req.body
+  const { authors, series, title, userId, volumeNumber } = req.body
+
+  if (!authors) {
+    return res.status(500).send({
+      error: 'Make sure to provide one or more authors.',
+    })
+  }
+
+  if (!Array.isArray(authors)) {
+    req.body.authors = [authors]
+  }
 
   if (series && !volumeNumber) {
     return res
@@ -26,14 +36,8 @@ export function validateMetadata(
     return res.status(500).send({ error: 'Make sure to provide a title.' })
   }
 
-  if (!authors) {
-    return res.status(500).send({
-      error: 'Make sure to provide one or more authors.',
-    })
-  }
-
-  if (!Array.isArray(authors)) {
-    req.body.authors = [authors]
+  if (!userId) {
+    return res.status(500).send({ error: 'Make sure to provide a user ID.' })
   }
 
   next()

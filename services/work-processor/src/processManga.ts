@@ -39,15 +39,18 @@ export async function processManga(req: Request, res: Response) {
   if (!filesAreMokurod) await runMokuro(folderName)
   await runIchiranOnEachPage(fullPath)
   await convertImagesToWebP(fullPath)
-  await insertIntoDatabase({
-    seriesTitle: req.body.series,
-    workId: folderName,
-    workType: 'manga',
-    workTitle: req.body.title,
-    workVolumeNumber: req.body.volumeNumber,
-    workMaxProgress: numberOfImages.toString(),
-    authors: req.body.authors,
-  })
+  await insertIntoDatabase(
+    {
+      seriesTitle: req.body.series,
+      workId: folderName,
+      workType: 'manga',
+      workTitle: req.body.title,
+      workVolumeNumber: req.body.volumeNumber,
+      workMaxProgress: numberOfImages.toString(),
+      authors: req.body.authors,
+    },
+    req.body.userId
+  )
 
   console.timeEnd(timeTaken)
 }
