@@ -14,7 +14,12 @@ export async function processManga(req: Request, res: Response) {
   const timeTaken = 'Time to process the entire request'
   console.time(timeTaken)
 
-  const folderName = req.folderName
+  const {
+    folderName,
+    body: { series, volumeNumber, title, authors, userId },
+  } = req
+  console.table({ folderName, userId, series, volumeNumber, title, authors })
+
   const fullPath = path.join(volumePath, folderName)
 
   const filesAreMokurod = req.body.mokuro === 'true'
