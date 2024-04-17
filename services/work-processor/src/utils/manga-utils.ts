@@ -7,6 +7,7 @@ import {
   ichiranTimePerPage,
   mokuroInitTime,
   mokuroTimePerPage,
+  webpConversionPerImage,
 } from './constants.js'
 
 export function getTimeEstimate(
@@ -14,8 +15,10 @@ export function getTimeEstimate(
   numberOfImages: number
 ) {
   const estimatedDuration = alreadyMokurod
-    ? numberOfImages * ichiranTimePerPage
-    : mokuroInitTime + numberOfImages * (mokuroTimePerPage + ichiranTimePerPage)
+    ? numberOfImages * (ichiranTimePerPage + webpConversionPerImage)
+    : mokuroInitTime +
+      numberOfImages *
+        (mokuroTimePerPage + ichiranTimePerPage + webpConversionPerImage)
 
   const timeWhenFinished = new Date(Date.now() + estimatedDuration)
 

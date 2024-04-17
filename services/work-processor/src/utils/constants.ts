@@ -12,3 +12,4 @@ export const mokuroInitTime = 30 * 1000
 export const mokuroTimePerPage = 25 * 1000
 export const ichiranTimePerPage = 2.5 * 1000
 export const ichiranTimePer100Char = 1.1 * 1000
+export const webpConversionPerImage = 0.25 * 1000
