@@ -41,7 +41,7 @@ export async function runMokuro(folderName: string) {
 function getTextFromMokuroData(data: MokuroData) {
   const blocks = data.blocks
   const linesString = blocks.reduce((string, block) => {
-    const line = block.lines.join('')
+    const line = block.lines.join(' ')
     return string + line + '。'
   }, '')
   return linesString
