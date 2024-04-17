@@ -55,6 +55,8 @@ export function concatToJson(
 ) {
   const stringifiedJson = JSON.stringify(parsedJson).slice(1, -1)
 
+  if (stringifiedJson === '') return
+
   if (isFirstPass) {
     fs.writeFileSync(outputFilePath, `[${stringifiedJson}`, 'utf8')
   }
@@ -73,6 +75,9 @@ export async function convertImagesToWebP(fullPath: string) {
 
   const images = getAllFilesByExtension(fullPath, mokuroExtensions)
 
+  const timeTaken = `Time to convert ${images.length} images to WebP`
+  console.time(timeTaken)
+
   for (const inputFile of images) {
     const inputPath = path.join(fullPath, inputFile)
 
@@ -83,4 +88,6 @@ export async function convertImagesToWebP(fullPath: string) {
     await sharp(inputPath).toFormat('webp').toFile(outputPath)
     fs.rmSync(inputPath)
   }
+
+  console.timeEnd(timeTaken)
 }
