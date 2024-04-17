@@ -11,7 +11,7 @@ CSV HEADER;
 
 CREATE TABLE user_account (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  display_name text NOT NULL UNIQUE
+  display_name text NOT NULL
 );
 
 -- TODO: the id should be supplied centrally via Docker Compose
@@ -69,11 +69,12 @@ CREATE TABLE word_work (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   word_id integer NOT NULL REFERENCES word,
   work_id uuid NOT NULL REFERENCES work,
-  page_number smallint NULL,
-  sentence_number integer NOT NULL,
+  volume_number smallint NULL DEFAULT NULL, 
+  page_number smallint NOT NULL,
+  sentence_number smallint NOT NULL,
   entry_number smallint NOT NULL,
-  component_number smallint NULL,
-  UNIQUE (word_id, work_id, page_number, sentence_number, entry_number, component_number)
+  component_number smallint NULL DEFAULT NULL,
+  UNIQUE (word_id, work_id, volume_number, page_number, sentence_number, entry_number, component_number)
 );
 
 CREATE TABLE user_word (

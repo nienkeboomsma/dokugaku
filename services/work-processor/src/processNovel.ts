@@ -44,7 +44,8 @@ export async function processNovel(req: Request, res: Response) {
       workMaxProgress: numberOfParagraphs.toString(),
       authors: req.body.authors,
     },
-    req.body.userId
+    req.body.userId,
+    fullPath
   )
 
   console.timeEnd(timeTaken)

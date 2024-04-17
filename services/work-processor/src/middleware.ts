@@ -1,6 +1,7 @@
 import { Express, Request, Response, NextFunction } from 'express'
 import path from 'node:path'
 import { mokuroExtensions } from './utils/constants.js'
+import { isNumber } from './utils/types.js'
 
 // TODO: look into Zod for validation
 export function validateMetadata(
@@ -30,6 +31,10 @@ export function validateMetadata(
     return res
       .status(500)
       .send({ error: 'Make sure to provide a series title.' })
+  }
+
+  if (!isNumber(volumeNumber)) {
+    req.body.volumeNumber = Number(req.body.volumeNumber)
   }
 
   if (!title) {

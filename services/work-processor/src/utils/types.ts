@@ -35,13 +35,13 @@ export type NovelTextJson = {
   content: Array<string | NovelTextJson>
 }
 
-type Word = {
+export type Word = {
   id: number
   reading: string
-  pageNumber?: number
-  sentenceIndex: number
-  entryIndex: number
-  componentIndex?: number
+  pageNumber: number
+  sentenceNumber: number
+  entryNumber: number
+  componentNumber?: number
 }
 
 export type IchiranData = Array<Word>
@@ -69,13 +69,17 @@ export type WorkMetadataSeries = WorkMetadataCommon & {
 
 export type WorkMetadata = WorkMetadataNotSeries | WorkMetadataSeries
 
-export const isString = (param: any): param is string => {
-  return typeof param === 'string'
-}
-
 export const isPartOfSeries = (
   workMetadata: WorkMetadata
 ): workMetadata is WorkMetadataSeries => {
   if (workMetadata.seriesTitle && workMetadata.workVolumeNumber) return true
   return false
+}
+
+export const isString = (param: any): param is string => {
+  return typeof param === 'string'
+}
+
+export const isNumber = (param: any): param is number => {
+  return typeof param === 'number'
 }

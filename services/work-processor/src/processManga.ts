@@ -49,7 +49,8 @@ export async function processManga(req: Request, res: Response) {
       workMaxProgress: numberOfImages.toString(),
       authors: req.body.authors,
     },
-    req.body.userId
+    req.body.userId,
+    fullPath
   )
 
   console.timeEnd(timeTaken)

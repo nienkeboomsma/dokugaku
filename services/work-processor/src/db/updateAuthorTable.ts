@@ -14,16 +14,12 @@ export async function updateAuthorTable(
     [authorNames]
   )
 
-  console.log('existing authors:', existingAuthors)
-
   const newAuthorInfo = authorNames.reduce<Row[]>((newAuthors, authorName) => {
     const authorAlreadyExists = existingAuthors.rows.some(
       (author) => author.author_name === authorName
     )
 
     if (authorAlreadyExists) return newAuthors
-
-    console.log('already exists?', authorAlreadyExists)
 
     return [...newAuthors, { id: randomUUID(), author_name: authorName }]
   }, [])

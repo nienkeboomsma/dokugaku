@@ -7,10 +7,12 @@ import { updateSeriesTable } from './updateSeriesTable.js'
 import { updateWorkTable } from './updateWorkTable.js'
 import { updateUserSeriesTable } from './updateUserSeriesTable.js'
 import { updateUserWorkTable } from './updateUserWorkTable.js'
+import { updateWordWorkTable } from './updateWordWorkTable.js'
 
 export async function insertIntoDatabase(
   workMetadata: WorkMetadata,
-  userId: string
+  userId: string,
+  fullPath: string
 ) {
   const config = {
     user: 'postgres',
@@ -42,6 +44,8 @@ export async function insertIntoDatabase(
   const authorIds = await updateAuthorTable(client, workMetadata.authors)
   workMetadata.authorIds = authorIds
   await updateAuthorWorkTable(client, workMetadata.workId, authorIds)
+
+  await updateWordWorkTable(client, workMetadata, fullPath)
 
   // const seriesInfo = await client.query('SELECT * FROM series')
   // const workInfo = await client.query('SELECT * FROM work')

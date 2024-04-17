@@ -6,6 +6,7 @@ export async function updateWorkTable(
   workMetadata: WorkMetadata
 ) {
   if (isPartOfSeries(workMetadata)) {
+    console.log('part of series')
     if (!workMetadata.seriesId) {
       throw new Error('No series ID provided.')
     }
