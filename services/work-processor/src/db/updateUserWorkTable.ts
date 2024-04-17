@@ -6,7 +6,9 @@ export async function updateUserWorkTable(
   workId: string
 ) {
   await client.query(
-    'INSERT INTO user_work(user_id, work_id) VALUES ($1, $2)',
+    'INSERT INTO user_work(user_id, work_id) VALUES ($1, $2);',
     [userId, workId]
   )
+
+  console.log('Updated user_work table')
 }

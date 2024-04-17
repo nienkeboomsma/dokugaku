@@ -18,7 +18,9 @@ export async function updateAuthorWorkTable(
   const queryValues = authorIds.flatMap((authorId) => [authorId, workId])
 
   await client.query(
-    `INSERT INTO author_work(author_id, work_id) VALUES ${queryParameters}`,
+    `INSERT INTO author_work(author_id, work_id) VALUES ${queryParameters};`,
     queryValues
   )
+
+  console.log('Updated author_work table')
 }

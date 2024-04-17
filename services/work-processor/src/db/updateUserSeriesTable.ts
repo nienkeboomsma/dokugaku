@@ -6,7 +6,9 @@ export async function updateUserSeriesTable(
   seriesId: string
 ) {
   await client.query(
-    'INSERT INTO user_series(user_id, series_id) VALUES ($1, $2)',
+    'INSERT INTO user_series(user_id, series_id) VALUES ($1, $2);',
     [userId, seriesId]
   )
+
+  console.log('Updated user_series table')
 }

@@ -6,13 +6,12 @@ export async function updateWorkTable(
   workMetadata: WorkMetadata
 ) {
   if (isPartOfSeries(workMetadata)) {
-    console.log('part of series')
     if (!workMetadata.seriesId) {
       throw new Error('No series ID provided.')
     }
 
     await client.query(
-      'INSERT INTO work(id, type, title, series_id, volume_number, max_progress) VALUES ($1, $2, $3, $4, $5, $6)',
+      'INSERT INTO work(id, type, title, series_id, volume_number, max_progress) VALUES ($1, $2, $3, $4, $5, $6);',
       [
         workMetadata.workId,
         workMetadata.workType,
@@ -25,9 +24,8 @@ export async function updateWorkTable(
   }
 
   if (!isPartOfSeries(workMetadata)) {
-    console.log('not part of series')
     await client.query(
-      'INSERT INTO work(id, type, title, max_progress) VALUES ($1, $2, $3, $4)',
+      'INSERT INTO work(id, type, title, max_progress) VALUES ($1, $2, $3, $4);',
       [
         workMetadata.workId,
         workMetadata.workType,
@@ -36,4 +34,6 @@ export async function updateWorkTable(
       ]
     )
   }
+
+  console.log('Updated work table')
 }

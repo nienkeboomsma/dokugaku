@@ -53,6 +53,7 @@ type WorkMetadataCommon = {
   workMaxProgress: string
   authors: string[]
   authorIds?: string[]
+  newAuthorIds?: string[]
 }
 
 export type WorkMetadataNotSeries = WorkMetadataCommon & {
@@ -61,7 +62,7 @@ export type WorkMetadataNotSeries = WorkMetadataCommon & {
 }
 
 export type WorkMetadataSeries = WorkMetadataCommon & {
-  // seriesAlreadyExists?: boolean
+  seriesAlreadyExists?: boolean
   seriesId?: string
   seriesTitle: string
   workVolumeNumber: string

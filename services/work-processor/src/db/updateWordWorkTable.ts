@@ -10,7 +10,7 @@
 import pg from 'pg'
 import fs from 'node:fs'
 import path from 'node:path'
-import { isPartOfSeries, Word, WorkMetadata } from '../utils/types.js'
+import { Word, WorkMetadata } from '../utils/types.js'
 
 export async function updateWordWorkTable(
   client: pg.Client,
@@ -62,7 +62,11 @@ export async function updateWordWorkTable(
 
   const queryText =
     'INSERT INTO word_work(word_id, work_id, volume_number, page_number, sentence_number, entry_number, component_number) ' +
-    'SELECT * FROM UNNEST ($1::int[], $2::uuid[], $3::smallint[], $4::smallint[], $5::smallint[], $6::smallint[], $7::smallint[])'
+    'SELECT * FROM UNNEST ($1::int[], $2::uuid[], $3::smallint[], $4::smallint[], $5::smallint[], $6::smallint[], $7::smallint[]) ' +
+    'AS data (word_id, work_id, volume_number, page_number, sentence_number, entry_number, component_number) ' +
+    // Ichiran parses some words into place names, which do not appear in the
+    // 'word' table. It is safe to skip these words; they are mostly spurious.
+    'WHERE EXISTS (SELECT 1 FROM word WHERE word.id = data.word_id);'
 
   const queryValueArrays = [
     wordIdArray,
@@ -78,4 +82,6 @@ export async function updateWordWorkTable(
     text: queryText,
     values: queryValueArrays,
   })
+
+  console.log('Updated word_work table')
 }

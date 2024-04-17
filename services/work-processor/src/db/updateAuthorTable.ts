@@ -10,7 +10,7 @@ export async function updateAuthorTable(
   type Row = { id: string; author_name: string }
 
   const existingAuthors = await client.query<Row>(
-    'SELECT id, author_name FROM author WHERE author_name = ANY($1)',
+    'SELECT id, author_name FROM author WHERE author_name = ANY($1);',
     [authorNames]
   )
 
@@ -35,7 +35,7 @@ export async function updateAuthorTable(
     ])
 
     await client.query(
-      `INSERT INTO author(id, author_name) VALUES ${queryParameters}`,
+      `INSERT INTO author(id, author_name) VALUES ${queryParameters};`,
       queryValues
     )
   }
@@ -44,5 +44,7 @@ export async function updateAuthorTable(
   const newAuthorIds = newAuthorInfo.map((author) => author.id)
   const allAuthorIds = existingAuthorIds.concat(newAuthorIds)
 
-  return allAuthorIds
+  console.log('Updated author table')
+
+  return { allAuthorIds, newAuthorIds }
 }

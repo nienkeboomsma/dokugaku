@@ -9,7 +9,7 @@ export async function updateSeriesTable(
 ) {
   type Row = { id: string }
   const existingSeries = await client.query<Row>(
-    'SELECT id FROM series WHERE title = $1',
+    'SELECT id FROM series WHERE title = $1;',
     [seriesTitle]
   )
 
@@ -19,11 +19,13 @@ export async function updateSeriesTable(
   const seriesId = seriesAlreadyExists ? existingSeriesId : randomUUID()
 
   if (!seriesAlreadyExists) {
-    await client.query('INSERT INTO series(id, title) VALUES ($1, $2)', [
+    await client.query('INSERT INTO series(id, title) VALUES ($1, $2);', [
       seriesId,
       seriesTitle,
     ])
   }
+
+  console.log('Updated series table')
 
   return { seriesAlreadyExists, seriesId }
 }
