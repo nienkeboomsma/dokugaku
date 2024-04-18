@@ -55,18 +55,18 @@ export function concatToJson(
 ) {
   const stringifiedJson = JSON.stringify(parsedJson).slice(1, -1)
 
-  if (stringifiedJson === '') return
-
   if (isFirstPass) {
-    fs.writeFileSync(outputFilePath, `[${stringifiedJson}`, 'utf8')
+    fs.writeFileSync(outputFilePath, '[', 'utf8')
   }
 
-  if (!isFirstPass) {
-    fs.appendFileSync(outputFilePath, `,${stringifiedJson}`)
+  if (stringifiedJson !== '') {
+    fs.appendFileSync(outputFilePath, `${stringifiedJson},`)
   }
 
   if (isLastPass) {
-    fs.appendFileSync(outputFilePath, `]`)
+    const json = fs.readFileSync(outputFilePath).toString()
+    const jsonWithoutTrailingComma = json.slice(0, -1)
+    fs.writeFileSync(outputFilePath, `${jsonWithoutTrailingComma}]`, 'utf8')
   }
 }
 
