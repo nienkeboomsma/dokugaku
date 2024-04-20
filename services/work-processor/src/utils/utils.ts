@@ -1,8 +1,9 @@
+import axios from 'axios'
 import fs from 'node:fs'
 import path from 'node:path'
-import axios from 'axios'
-import { IchiranData } from './types.js'
 import sharp from 'sharp'
+
+import { type IchiranData } from './types.js'
 import { mokuroExtensions } from './constants.js'
 
 export function getAllFilesByExtension(fullPath: string, extensions: string[]) {
@@ -55,15 +56,17 @@ export function concatToJson(
   const stringifiedJson = JSON.stringify(parsedJson).slice(1, -1)
 
   if (isFirstPass) {
-    fs.writeFileSync(outputFilePath, `[${stringifiedJson},`, 'utf8')
+    fs.writeFileSync(outputFilePath, '[', 'utf8')
   }
 
-  if (!isFirstPass) {
+  if (stringifiedJson !== '') {
     fs.appendFileSync(outputFilePath, `${stringifiedJson},`)
   }
 
   if (isLastPass) {
-    fs.appendFileSync(outputFilePath, `]`)
+    const json = fs.readFileSync(outputFilePath).toString()
+    const jsonWithoutTrailingComma = json.slice(0, -1)
+    fs.writeFileSync(outputFilePath, `${jsonWithoutTrailingComma}]`, 'utf8')
   }
 }
 
@@ -71,6 +74,9 @@ export async function convertImagesToWebP(fullPath: string) {
   console.log('Converting images to WebP')
 
   const images = getAllFilesByExtension(fullPath, mokuroExtensions)
+
+  const timeTaken = `Time to convert ${images.length} images to WebP`
+  console.time(timeTaken)
 
   for (const inputFile of images) {
     const inputPath = path.join(fullPath, inputFile)
@@ -82,4 +88,6 @@ export async function convertImagesToWebP(fullPath: string) {
     await sharp(inputPath).toFormat('webp').toFile(outputPath)
     fs.rmSync(inputPath)
   }
+
+  console.timeEnd(timeTaken)
 }

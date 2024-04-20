@@ -14,15 +14,15 @@ export default function TitleInput({
       label='Title'
       rightSection={
         uploadForm.values.series &&
-        uploadForm.values.volume &&
+        uploadForm.values.volumeNumber &&
         uploadForm.values.title !==
-          `${uploadForm.values.series} ${uploadForm.values.volume}` && (
+          `${uploadForm.values.series} ${uploadForm.values.volumeNumber}` && (
           <ActionIcon
             aria-label={'Autofill title'}
             onClick={() =>
               uploadForm.setFieldValue(
                 'title',
-                `${uploadForm.values.series} ${uploadForm.values.volume}`
+                `${uploadForm.values.series} ${uploadForm.values.volumeNumber}`
               )
             }
             variant='light'

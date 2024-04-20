@@ -1,13 +1,14 @@
+import { type RequestHandler } from 'express'
 import multer from 'multer'
 import { randomUUID } from 'node:crypto'
 import { execSync } from 'node:child_process'
 import path from 'node:path'
+
 import {
   imageExtensions,
   mangaExtensions,
   novelTextExtensions,
 } from './utils/constants.js'
-import { RequestHandler } from 'express'
 
 const storage = multer.diskStorage({
   destination: (req, _, cb) => {

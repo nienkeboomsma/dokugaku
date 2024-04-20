@@ -1,8 +1,61 @@
-import { Express, Request, Response, NextFunction } from 'express'
+import { Express, Response, NextFunction } from 'express'
 import path from 'node:path'
+
 import { mokuroExtensions } from './utils/constants.js'
+import { isNumber } from './utils/types.js'
 
 // TODO: look into Zod for validation
+export function validateMetadata(
+  req: Express.Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { authors, series, title, userId, volumeNumber } = req.body
+
+  if (!authors) {
+    return res.status(500).send({
+      error: 'Make sure to provide one or more authors.',
+    })
+  }
+
+  if (!Array.isArray(authors)) {
+    req.body.authors = [authors]
+  }
+
+  if (!series) {
+    req.body.series = undefined
+  }
+
+  if (!volumeNumber) {
+    req.body.volumeNumber = undefined
+  }
+
+  if (series && !volumeNumber) {
+    return res
+      .status(500)
+      .send({ error: 'Make sure to provide a volume number.' })
+  }
+
+  if (!series && volumeNumber) {
+    return res
+      .status(500)
+      .send({ error: 'Make sure to provide a series title.' })
+  }
+
+  if (volumeNumber && !isNumber(volumeNumber)) {
+    req.body.volumeNumber = Number(volumeNumber)
+  }
+
+  if (!title) {
+    return res.status(500).send({ error: 'Make sure to provide a title.' })
+  }
+
+  if (!userId) {
+    return res.status(500).send({ error: 'Make sure to provide a user ID.' })
+  }
+
+  next()
+}
 
 export function mokurodFilesAreValid(files: Express.Multer.File[]) {
   const images = files.filter((file) => {
@@ -30,38 +83,40 @@ export function mokurodFilesAreValid(files: Express.Multer.File[]) {
 }
 
 export function validateMangaFiles(
-  req: Request,
+  req: Express.Request,
   res: Response,
   next: NextFunction
 ) {
-  const filesAreMokurod = req.body.mokuro === 'on'
+  const filesAreMokurod = req.body.mokuro === 'true'
 
   if (!req.files) {
-    return res.status(500).send('Make sure to include the images.')
+    return res.status(500).send({ error: 'Make sure to include the images.' })
   }
 
   if (!Array.isArray(req.files)) {
     return res
       .status(500)
-      .send('Make sure there is only one "files" input in the form.')
+      .send({ error: 'Make sure there is only one "files" input in the form.' })
   }
 
   if (filesAreMokurod && !mokurodFilesAreValid(req.files)) {
-    return res
-      .status(500)
-      .send('Make sure there is a corresponding JSON file for each image.')
+    return res.status(500).send({
+      error: 'Make sure there is a corresponding JSON file for each image.',
+    })
   }
 
   next()
 }
 
 export function validateNovelFiles(
-  req: Request,
+  req: Express.Request,
   res: Response,
   next: NextFunction
 ) {
   if (!req.files) {
-    return res.status(500).send('Make sure to attach a cover and text file(s).')
+    return res
+      .status(500)
+      .send({ error: 'Make sure to attach a cover and text file(s).' })
   }
 
   if (Array.isArray(req.files)) {
@@ -75,7 +130,7 @@ export function validateNovelFiles(
   if (!req.files.cover || !req.files.files) {
     return res
       .status(500)
-      .send('Make sure to attach both a cover and text file(s).')
+      .send({ error: 'Make sure to attach both a cover and text file(s).' })
   }
 
   next()

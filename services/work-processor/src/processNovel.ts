@@ -1,5 +1,6 @@
-import { Request, Response } from 'express'
+import { type Express, type Response } from 'express'
 import path from 'node:path'
+
 import { novelTextExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
@@ -10,38 +11,49 @@ import {
   saveHtmlAsJson,
   stripAndCombineFiles,
 } from './utils/novel-utils.js'
+import { insertIntoDatabase } from './db/insertIntoDatabase.js'
 
-export async function processNovel(req: Request, res: Response) {
+export async function processNovel(req: Express.Request, res: Response) {
   const timeTaken = 'Time to process the entire request'
   console.time(timeTaken)
 
-  const folderName = req.folderName
-  const fullPath = path.join(volumePath, folderName)
+  const {
+    folderName,
+    body: { series, volumeNumber, title, authors, userId },
+  } = req
 
-  // TODO: validate req.body contents
-  console.table({
-    series: req.body.series,
-    volume: req.body.volume,
-    title: req.body.title,
-    author: req.body.author,
-  })
+  console.table({ folderName, userId, series, volumeNumber, title, authors })
+
+  const fullPath = path.join(volumePath, folderName)
 
   renameFilesSequentially(fullPath, novelTextExtensions, 'part')
   stripAndCombineFiles(fullPath, req.body.title)
-  await saveHtmlAsJson(fullPath)
+  const numberOfParagraphs = await saveHtmlAsJson(fullPath)
   const text = getTextStringFromHtml(fullPath)
   const { chunks, totalChars } = divideTextStringIntoChunks(text, 2500)
 
   const { estimatedDuration, timeWhenFinished } = getTimeEstimate(totalChars)
   res.status(200).json({
+    id: folderName,
     estimatedDurationInMin: estimatedDuration / 1000 / 60,
     estimatedFinishTime: timeWhenFinished,
   })
 
   await runIchiranOnEachChunk(chunks, fullPath)
   await convertImagesToWebP(fullPath)
+  await insertIntoDatabase(
+    {
+      authors: authors,
+      seriesTitle: series,
+      workId: folderName,
+      workMaxProgress: numberOfParagraphs.toString(),
+      workTitle: title,
+      workType: 'novel',
+      workVolumeNumber: volumeNumber,
+    },
+    userId,
+    fullPath
+  )
 
   console.timeEnd(timeTaken)
-
-  // TODO: if all intermediate steps are successful, upload data to Postgres
 }

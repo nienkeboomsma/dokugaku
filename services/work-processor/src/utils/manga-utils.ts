@@ -1,12 +1,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import axios from 'axios'
-import { MokuroData } from './types.js'
+
+import { type MokuroData } from './types.js'
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 import {
   ichiranTimePerPage,
   mokuroInitTime,
   mokuroTimePerPage,
+  webpConversionPerImage,
 } from './constants.js'
 
 export function getTimeEstimate(
@@ -14,8 +16,10 @@ export function getTimeEstimate(
   numberOfImages: number
 ) {
   const estimatedDuration = alreadyMokurod
-    ? numberOfImages * ichiranTimePerPage
-    : mokuroInitTime + numberOfImages * (mokuroTimePerPage + ichiranTimePerPage)
+    ? numberOfImages * (ichiranTimePerPage + webpConversionPerImage)
+    : mokuroInitTime +
+      numberOfImages *
+        (mokuroTimePerPage + ichiranTimePerPage + webpConversionPerImage)
 
   const timeWhenFinished = new Date(Date.now() + estimatedDuration)
 
@@ -41,7 +45,7 @@ export async function runMokuro(folderName: string) {
 function getTextFromMokuroData(data: MokuroData) {
   const blocks = data.blocks
   const linesString = blocks.reduce((string, block) => {
-    const line = block.lines.join('')
+    const line = block.lines.join(' ')
     return string + line + '。'
   }, '')
   return linesString

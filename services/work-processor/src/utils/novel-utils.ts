@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { JSDOM } from 'jsdom'
 import DOMPurify from 'dompurify'
 import { fromHtml } from 'hast-util-from-html'
@@ -6,12 +8,12 @@ import { toMarkdown } from 'mdast-util-to-markdown'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toHast } from 'mdast-util-to-hast'
 import { toHtml } from 'hast-util-to-html'
-import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 // @ts-expect-error
 import { HTMLToJSON } from 'html-to-json-parser'
-import path from 'node:path'
-import fs from 'node:fs'
+
+import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 import { ichiranTimePer100Char, novelTextExtensions } from './constants.js'
+import { type NovelTextJson } from './types.js'
 
 function markdownToHtml(markdown: string) {
   const strippedMdast = fromMarkdown(markdown)
@@ -118,8 +120,12 @@ export async function saveHtmlAsJson(fullPath: string) {
   const filePath = path.join(fullPath, 'index.html')
   const html = fs.readFileSync(filePath).toString()
   const singleLine = html.replaceAll('\n', '')
-  const json = await HTMLToJSON(singleLine, true)
-  fs.writeFileSync(path.join(fullPath, 'text.json'), json, 'utf8')
+  const jsonString = await HTMLToJSON(singleLine, true)
+  fs.writeFileSync(path.join(fullPath, 'text.json'), jsonString, 'utf8')
+
+  const jsonObject: NovelTextJson = JSON.parse(jsonString)
+
+  return jsonObject.content.length
 }
 
 export function getTextStringFromHtml(fullPath: string) {
