@@ -1,9 +1,9 @@
+import axios from 'axios'
 import fs from 'node:fs'
 import path from 'node:path'
-import axios from 'axios'
 import sharp from 'sharp'
 
-import { IchiranData } from './types.js'
+import { type IchiranData } from './types.js'
 import { mokuroExtensions } from './constants.js'
 
 export function getAllFilesByExtension(fullPath: string, extensions: string[]) {

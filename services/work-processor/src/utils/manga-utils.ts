@@ -1,7 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import axios from 'axios'
-import { MokuroData } from './types.js'
+
+import { type MokuroData } from './types.js'
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 import {
   ichiranTimePerPage,
