@@ -1,85 +1,36 @@
-import pg from 'pg'
-
-import { WorkMetadata, isPartOfSeries } from '../utils/types.js'
+import sql from './sql.js'
+import { isPartOfSeries, type WorkMetadata } from '../utils/types.js'
 import { updateAuthorTable } from './updateAuthorTable.js'
 import { updateAuthorWorkTable } from './updateAuthorWorkTable.js'
 import { updateSeriesTable } from './updateSeriesTable.js'
-import { updateWorkTable } from './updateWorkTable.js'
 import { updateUserSeriesTable } from './updateUserSeriesTable.js'
 import { updateUserWorkTable } from './updateUserWorkTable.js'
 import { updateWordWorkTable } from './updateWordWorkTable.js'
-import { removePartialEntry } from './removePartialEntry.js'
+import { updateWorkTable } from './updateWorkTable.js'
 
 export async function insertIntoDatabase(
   workMetadata: WorkMetadata,
   userId: string,
   fullPath: string
 ) {
-  const config = {
-    user: 'postgres',
-    password: process.env.POSTGRES_PASSWORD,
-    database: 'db',
-    host: 'db',
-    port: 5432,
-  }
-  const { Client } = pg
-  const client = new Client(config)
-  await client.connect()
-
-  try {
+  sql.begin(async (sql) => {
     if (isPartOfSeries(workMetadata)) {
-      const { seriesAlreadyExists, seriesId } = await updateSeriesTable(
-        client,
+      const { seriesId } = await updateSeriesTable(
+        sql,
         workMetadata.seriesTitle
       )
 
-      if (!seriesAlreadyExists) {
-        await updateUserSeriesTable(client, userId, seriesId)
-      }
+      await updateUserSeriesTable(sql, userId, seriesId)
 
       workMetadata.seriesId = seriesId
-      workMetadata.seriesAlreadyExists = seriesAlreadyExists
     }
 
-    await updateWorkTable(client, workMetadata)
-    await updateUserWorkTable(client, userId, workMetadata.workId)
+    await updateWorkTable(sql, workMetadata)
+    const authorIds = await updateAuthorTable(sql, workMetadata.authors)
+    await updateUserWorkTable(sql, userId, workMetadata.workId)
+    await updateAuthorWorkTable(sql, workMetadata.workId, authorIds)
+    await updateWordWorkTable(sql, workMetadata, fullPath)
 
-    const { allAuthorIds, newAuthorIds } = await updateAuthorTable(
-      client,
-      workMetadata.authors
-    )
-    workMetadata.authorIds = allAuthorIds
-    workMetadata.newAuthorIds = newAuthorIds
-
-    await updateAuthorWorkTable(client, workMetadata.workId, allAuthorIds)
-
-    await updateWordWorkTable(client, workMetadata, fullPath)
-  } catch (err) {
-    console.log(err)
-    await removePartialEntry(client, workMetadata)
-  } finally {
-    const seriesInfo = await client.query('SELECT * FROM series')
-    const workInfo = await client.query('SELECT * FROM work')
-    const authorInfo = await client.query('SELECT * FROM author')
-    const authorWorkInfo = await client.query('SELECT * FROM author_work')
-    const user = await client.query('SELECT * FROM user_account')
-    const words = await client.query('SELECT * FROM word_work')
-
-    console.log(
-      'series:',
-      seriesInfo.rows,
-      'work:',
-      workInfo.rows,
-      'author:',
-      authorInfo.rows,
-      'author_work:',
-      authorWorkInfo.rows,
-      'user:',
-      user.rows,
-      'words:',
-      words.rows
-    )
-
-    await client.end()
-  }
+    console.log('Work was successfully added to the database')
+  })
 }

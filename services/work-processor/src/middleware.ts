@@ -1,11 +1,12 @@
-import { Express, Request, Response, NextFunction } from 'express'
+import { Express, Response, NextFunction } from 'express'
 import path from 'node:path'
+
 import { mokuroExtensions } from './utils/constants.js'
 import { isNumber } from './utils/types.js'
 
 // TODO: look into Zod for validation
 export function validateMetadata(
-  req: Request,
+  req: Express.Request,
   res: Response,
   next: NextFunction
 ) {
@@ -21,6 +22,14 @@ export function validateMetadata(
     req.body.authors = [authors]
   }
 
+  if (!series) {
+    req.body.series = undefined
+  }
+
+  if (!volumeNumber) {
+    req.body.volumeNumber = undefined
+  }
+
   if (series && !volumeNumber) {
     return res
       .status(500)
@@ -33,8 +42,8 @@ export function validateMetadata(
       .send({ error: 'Make sure to provide a series title.' })
   }
 
-  if (!isNumber(volumeNumber)) {
-    req.body.volumeNumber = Number(req.body.volumeNumber)
+  if (volumeNumber && !isNumber(volumeNumber)) {
+    req.body.volumeNumber = Number(volumeNumber)
   }
 
   if (!title) {
@@ -74,11 +83,11 @@ export function mokurodFilesAreValid(files: Express.Multer.File[]) {
 }
 
 export function validateMangaFiles(
-  req: Request,
+  req: Express.Request,
   res: Response,
   next: NextFunction
 ) {
-  const filesAreMokurod = req.body.mokuro === 'on'
+  const filesAreMokurod = req.body.mokuro === 'true'
 
   if (!req.files) {
     return res.status(500).send({ error: 'Make sure to include the images.' })
@@ -100,7 +109,7 @@ export function validateMangaFiles(
 }
 
 export function validateNovelFiles(
-  req: Request,
+  req: Express.Request,
   res: Response,
   next: NextFunction
 ) {

@@ -1,14 +1,13 @@
-import pg from 'pg'
+import { type TransactionSql } from 'postgres'
 
 export async function updateUserWorkTable(
-  client: pg.Client,
+  sql: TransactionSql,
   userId: string,
   workId: string
 ) {
-  await client.query(
-    'INSERT INTO user_work(user_id, work_id) VALUES ($1, $2);',
-    [userId, workId]
-  )
+  const userWork = { user_id: userId, work_id: workId }
+
+  await sql`INSERT INTO user_work ${sql(userWork)}`
 
   console.log('Updated user_work table')
 }

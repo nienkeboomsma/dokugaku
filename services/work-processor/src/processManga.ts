@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { type Express, type Response } from 'express'
 import path from 'node:path'
 
 import { mokuroExtensions, volumePath } from './utils/constants.js'
@@ -10,7 +10,7 @@ import {
 } from './utils/manga-utils.js'
 import { insertIntoDatabase } from './db/insertIntoDatabase.js'
 
-export async function processManga(req: Request, res: Response) {
+export async function processManga(req: Express.Request, res: Response) {
   const timeTaken = 'Time to process the entire request'
   console.time(timeTaken)
 
@@ -46,13 +46,13 @@ export async function processManga(req: Request, res: Response) {
   await convertImagesToWebP(fullPath)
   await insertIntoDatabase(
     {
+      authors: req.body.authors,
       seriesTitle: req.body.series,
       workId: folderName,
-      workType: 'manga',
-      workTitle: req.body.title,
-      workVolumeNumber: req.body.volumeNumber,
       workMaxProgress: numberOfImages.toString(),
-      authors: req.body.authors,
+      workTitle: req.body.title,
+      workType: 'manga',
+      workVolumeNumber: req.body.volumeNumber,
     },
     req.body.userId,
     fullPath

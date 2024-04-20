@@ -1,5 +1,6 @@
-import { Request, Response } from 'express'
+import { type Express, type Response } from 'express'
 import path from 'node:path'
+
 import { novelTextExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
@@ -12,7 +13,7 @@ import {
 } from './utils/novel-utils.js'
 import { insertIntoDatabase } from './db/insertIntoDatabase.js'
 
-export async function processNovel(req: Request, res: Response) {
+export async function processNovel(req: Express.Request, res: Response) {
   const timeTaken = 'Time to process the entire request'
   console.time(timeTaken)
 
@@ -20,6 +21,7 @@ export async function processNovel(req: Request, res: Response) {
     folderName,
     body: { series, volumeNumber, title, authors, userId },
   } = req
+
   console.table({ folderName, userId, series, volumeNumber, title, authors })
 
   const fullPath = path.join(volumePath, folderName)
@@ -41,15 +43,15 @@ export async function processNovel(req: Request, res: Response) {
   await convertImagesToWebP(fullPath)
   await insertIntoDatabase(
     {
-      seriesTitle: req.body.series,
+      authors: authors,
+      seriesTitle: series,
       workId: folderName,
-      workType: 'novel',
-      workTitle: req.body.title,
-      workVolumeNumber: req.body.volumeNumber,
       workMaxProgress: numberOfParagraphs.toString(),
-      authors: req.body.authors,
+      workTitle: title,
+      workType: 'novel',
+      workVolumeNumber: volumeNumber,
     },
-    req.body.userId,
+    userId,
     fullPath
   )
 

@@ -1,50 +1,26 @@
-import pg from 'pg'
-import { randomUUID } from 'node:crypto'
+import { type TransactionSql } from 'postgres'
 
-import { WorkMetadataSeries } from '../utils/types.js'
+import { type WorkMetadata } from '../utils/types.js'
+
+type AuthorId = {
+  id: string
+}
 
 export async function updateAuthorTable(
-  client: pg.Client,
-  authorNames: WorkMetadataSeries['authors']
+  sql: TransactionSql,
+  authorNames: WorkMetadata['authors']
 ) {
-  type Row = { id: string; author_name: string }
+  const values = authorNames.map((authorName) => {
+    return { author_name: authorName }
+  })
 
-  const existingAuthors = await client.query<Row>(
-    'SELECT id, author_name FROM author WHERE author_name = ANY($1);',
-    [authorNames]
-  )
-
-  const newAuthorInfo = authorNames.reduce<Row[]>((newAuthors, authorName) => {
-    const authorAlreadyExists = existingAuthors.rows.some(
-      (author) => author.author_name === authorName
-    )
-
-    if (authorAlreadyExists) return newAuthors
-
-    return [...newAuthors, { id: randomUUID(), author_name: authorName }]
-  }, [])
-
-  if (newAuthorInfo.length > 0) {
-    const queryParameters = newAuthorInfo
-      .map((author, index) => `($${index * 2 + 1}, $${index * 2 + 2})`)
-      .join(',')
-
-    const queryValues = newAuthorInfo.flatMap((author) => [
-      author.id,
-      author.author_name,
-    ])
-
-    await client.query(
-      `INSERT INTO author(id, author_name) VALUES ${queryParameters};`,
-      queryValues
-    )
-  }
-
-  const existingAuthorIds = existingAuthors.rows.map((author) => author.id)
-  const newAuthorIds = newAuthorInfo.map((author) => author.id)
-  const allAuthorIds = existingAuthorIds.concat(newAuthorIds)
+  const authorIds = await sql<AuthorId[]>`
+    INSERT INTO author ${sql(values)}
+    ON CONFLICT (author_name) DO UPDATE
+    SET author_name = EXCLUDED.author_name
+    RETURNING id
+  `
 
   console.log('Updated author table')
-
-  return { allAuthorIds, newAuthorIds }
+  return authorIds
 }

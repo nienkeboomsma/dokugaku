@@ -1,31 +1,24 @@
-import pg from 'pg'
-import { randomUUID } from 'crypto'
+import { type TransactionSql } from 'postgres'
 
-import { WorkMetadataSeries, isString } from '../utils/types.js'
+type SeriesId = {
+  id: string
+}
 
 export async function updateSeriesTable(
-  client: pg.Client,
-  seriesTitle: WorkMetadataSeries['seriesTitle']
+  sql: TransactionSql,
+  seriesTitle: string
 ) {
-  type Row = { id: string }
-  const existingSeries = await client.query<Row>(
-    'SELECT id FROM series WHERE title = $1;',
-    [seriesTitle]
-  )
+  const series = { title: seriesTitle }
 
-  const existingSeriesId = existingSeries.rows[0]?.id
-  const seriesAlreadyExists = isString(existingSeriesId)
-
-  const seriesId = seriesAlreadyExists ? existingSeriesId : randomUUID()
-
-  if (!seriesAlreadyExists) {
-    await client.query('INSERT INTO series(id, title) VALUES ($1, $2);', [
-      seriesId,
-      seriesTitle,
-    ])
-  }
+  const res = await sql<[SeriesId]>`
+    INSERT INTO series ${sql(series)} 
+    ON CONFLICT (title) DO UPDATE 
+    SET title = EXCLUDED.title 
+    RETURNING id
+  `
 
   console.log('Updated series table')
 
-  return { seriesAlreadyExists, seriesId }
+  const seriesId = res[0].id
+  return { seriesId }
 }

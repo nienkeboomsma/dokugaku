@@ -3,6 +3,14 @@ declare global {
   namespace Express {
     // eslint-disable-next-line no-unused-vars
     interface Request {
+      body: {
+        authors: string[]
+        mokuro: 'true' | 'false'
+        series?: string
+        userId: string
+        volumeNumber?: number
+        title: string
+      }
       folderName: string
     }
   }
@@ -46,29 +54,21 @@ export type Word = {
 
 export type IchiranData = Array<Word>
 
-type WorkMetadataCommon = {
-  workId: string
-  workType: 'manga' | 'novel'
-  workTitle: string
-  workMaxProgress: string
+export interface WorkMetadata {
   authors: string[]
-  authorIds?: string[]
-  newAuthorIds?: string[]
-}
-
-export type WorkMetadataNotSeries = WorkMetadataCommon & {
-  seriesTitle: undefined
-  workVolumeNumber: undefined
-}
-
-export type WorkMetadataSeries = WorkMetadataCommon & {
-  seriesAlreadyExists?: boolean
   seriesId?: string
-  seriesTitle: string
-  workVolumeNumber: string
+  seriesTitle?: string
+  workId: string
+  workMaxProgress: string
+  workTitle: string
+  workType: 'manga' | 'novel'
+  workVolumeNumber?: number
 }
 
-export type WorkMetadata = WorkMetadataNotSeries | WorkMetadataSeries
+export interface WorkMetadataSeries extends WorkMetadata {
+  seriesTitle: string
+  workVolumeNumber: number
+}
 
 export const isPartOfSeries = (
   workMetadata: WorkMetadata

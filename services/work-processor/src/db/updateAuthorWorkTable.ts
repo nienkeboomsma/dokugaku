@@ -1,26 +1,28 @@
-import pg from 'pg'
+import { type TransactionSql } from 'postgres'
 
-import { WorkMetadata } from '../utils/types.js'
+import { type WorkMetadata } from '../utils/types.js'
+
+type AuthorId = {
+  id: string
+}
 
 export async function updateAuthorWorkTable(
-  client: pg.Client,
+  sql: TransactionSql,
   workId: WorkMetadata['workId'],
-  authorIds: string[]
+  authorIds: AuthorId[]
 ) {
   if (!authorIds || authorIds.length === 0) {
     throw new Error('No author IDs provided.')
   }
 
-  const queryParameters = authorIds
-    .map((authorId, index) => `($${index * 2 + 1}, $${index * 2 + 2})`)
-    .join(',')
+  const values = authorIds.map((authorId) => {
+    return {
+      author_id: authorId.id,
+      work_id: workId,
+    }
+  })
 
-  const queryValues = authorIds.flatMap((authorId) => [authorId, workId])
-
-  await client.query(
-    `INSERT INTO author_work(author_id, work_id) VALUES ${queryParameters};`,
-    queryValues
-  )
+  await sql`INSERT INTO author_work ${sql(values)}`
 
   console.log('Updated author_work table')
 }

@@ -1,39 +1,40 @@
-import pg from 'pg'
-import { WorkMetadata, isPartOfSeries } from '../utils/types.js'
+import { type TransactionSql } from 'postgres'
+import {
+  isPartOfSeries,
+  type WorkMetadata,
+  type WorkMetadataSeries,
+} from '../utils/types.js'
+
+type Work = {
+  id: WorkMetadataSeries['workId']
+  type: WorkMetadataSeries['workType']
+  title: WorkMetadataSeries['workTitle']
+  max_progress: WorkMetadataSeries['workMaxProgress']
+  series_id?: WorkMetadataSeries['seriesId']
+  volume_number?: WorkMetadataSeries['workVolumeNumber']
+}
 
 export async function updateWorkTable(
-  client: pg.Client,
+  sql: TransactionSql,
   workMetadata: WorkMetadata
 ) {
+  const work: Work = {
+    id: workMetadata.workId,
+    max_progress: workMetadata.workMaxProgress,
+    title: workMetadata.workTitle,
+    type: workMetadata.workType,
+  }
+
   if (isPartOfSeries(workMetadata)) {
     if (!workMetadata.seriesId) {
       throw new Error('No series ID provided.')
     }
 
-    await client.query(
-      'INSERT INTO work(id, type, title, series_id, volume_number, max_progress) VALUES ($1, $2, $3, $4, $5, $6);',
-      [
-        workMetadata.workId,
-        workMetadata.workType,
-        workMetadata.workTitle,
-        workMetadata.seriesId,
-        workMetadata.workVolumeNumber,
-        workMetadata.workMaxProgress,
-      ]
-    )
+    work.series_id = workMetadata.seriesId
+    work.volume_number = workMetadata.workVolumeNumber
   }
 
-  if (!isPartOfSeries(workMetadata)) {
-    await client.query(
-      'INSERT INTO work(id, type, title, max_progress) VALUES ($1, $2, $3, $4);',
-      [
-        workMetadata.workId,
-        workMetadata.workType,
-        workMetadata.workTitle,
-        workMetadata.workMaxProgress,
-      ]
-    )
-  }
+  await sql`INSERT INTO work ${sql(work)}`
 
   console.log('Updated work table')
 }
