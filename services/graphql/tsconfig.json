@@ -2,10 +2,11 @@
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
     "lib": ["ES2015"],
-    "module": "NodeNext",
+    "module": "ES2015",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": ".",
+    "moduleResolution": "bundler"
   },
   "exclude": ["node_modules"],
-  "include": ["src"]
+  "include": ["./src", "./codegen.ts"]
 }

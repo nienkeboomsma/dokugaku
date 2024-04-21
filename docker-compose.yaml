@@ -5,7 +5,7 @@ services:
     container_name: db
     build:
       args:
-        DB_JMDICT: ${DB_JMDICT}
+        DB_JMDICT: https://github.com/scriptin/jmdict-simplified/releases/download/3.5.0%2B20240311121612/jmdict-eng-3.5.0+20240311121612.json.zip
       context: .
       dockerfile: ./services/db/Dockerfile
     environment:
@@ -31,9 +31,9 @@ services:
       dockerfile: ./services/graphql/Dockerfile
     environment:
       GRAPHQL_PORT: ${GRAPHQL_PORT}
+      POSTGRES_PASSWORD: ${DB_PG_PASSWORD}
     networks:
       - backend
-      - frontend
     # change this to expose for production
     ports:
       - '${GRAPHQL_PORT}:${GRAPHQL_PORT}'
@@ -67,7 +67,7 @@ services:
     container_name: ichiran-db
     build:
       args:
-        ICHIRAN_PGDUMP: ${ICHIRAN_PGDUMP}
+        ICHIRAN_PGDUMP: https://github.com/tshatrov/ichiran/releases/download/ichiran-240107/jmdict-070124.pgdump
       context: .
       dockerfile: ./services/ichiran/docker/ichiran-db/Dockerfile
     environment:
@@ -113,7 +113,6 @@ services:
       WORK_PROCESSOR_PORT: ${WORK_PROCESSOR_PORT}
     networks:
       - backend
-      - frontend
     ports:
       - '${WEB_PORT}:${WEB_PORT}'
     privileged: true
@@ -145,7 +144,6 @@ services:
 
 networks:
   backend:
-  frontend:
   ichiran:
 
 volumes:

@@ -1,15 +1,21 @@
-export const typeDefs = `#graphql
+input AuthorInput {
+  id: String!
+}
 
 type Query {
-  excludedVocab: [Word]
-  knownVocab: [Word]
-  seriesInfo: Series
-  workCards: [Media]
-  workInfo: Volume
+  author(input: AuthorInput!): Author
+  authorList: [Author]!
+  series: Series
+  seriesList: [Series]!
+  work: Work
+  workList: [Work]!
+  word: Word
+  wordList: [Word]!
 }
 
 type Mutation {
-  setReadStatus(id: ID!, isSeries: Boolean!, value: String!): SetReadStatusResponse!
+  updateReadStatus: SetReadStatusResponse!
+  updateWord: WordChangeResponse!
 }
 
 type SetReadStatusResponse {
@@ -19,7 +25,14 @@ type SetReadStatusResponse {
   readStatus: ReadStatus
 }
 
-union Media = Series | Volume
+type WordChangeResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  wordId: String
+}
+
+union Media = Series | Work
 
 enum ReadStatus {
   WANT_TO_READ
@@ -34,18 +47,19 @@ enum WorkType {
 }
 
 type Author {
-  name: String
+  id: ID!
+  name: String!
 }
 
 type Series {
   id: ID!
   status: ReadStatus!
   title: String!
-  volumes: [Volume!]!
+  volumes: [Work!]!
   vocab: [Word!]!
 }
 
-type Volume {
+type Work {
   authors: [Author!]!
   id: ID!
   maxProgress: Int!
@@ -65,9 +79,8 @@ type Word {
   excluded: Boolean!
   frequency: Int
   volumeNumber: Int
-  pageNumber: Int
-  sentenceNumber: Int
-  entryNumber: Int
+  pageNumber: Int!
+  sentenceNumber: Int!
+  entryNumber: Int!
   componentNumber: Int
 }
-`
