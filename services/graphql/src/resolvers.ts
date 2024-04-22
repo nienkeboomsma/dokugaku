@@ -27,12 +27,13 @@ export const resolvers: Resolvers = {
     seriesList: (_, { input }, { dataSources: { series } }) => {
       return series.getSeriesList(input)
     },
-    word: (
-      _,
-      { input: { userId, wordId, workId } },
-      { dataSources: { word } }
-    ) => {
-      return word.getWord(userId, wordId, workId)
+    word: (_, { input }, { dataSources: { word } }) => {
+      return word.getWord(input)
+    },
+    wordList: async (_, { input }, { dataSources: { word } }) => {
+      const words = await word.getWords(input)
+      console.log(words)
+      return words
     },
     work: (_, { input }, { dataSources: { work } }) => {
       return work.getWork(input)

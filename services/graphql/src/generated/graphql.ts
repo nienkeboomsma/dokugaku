@@ -77,6 +77,11 @@ export type QueryWordArgs = {
 };
 
 
+export type QueryWordListArgs = {
+  input?: InputMaybe<WordListInput>;
+};
+
+
 export type QueryWorkArgs = {
   input: WorkInput;
 };
@@ -152,7 +157,14 @@ export type WordChangeResponse = {
 export type WordInput = {
   userId?: InputMaybe<Scalars['String']['input']>;
   wordId: Scalars['Int']['input'];
-  workId?: InputMaybe<Scalars['String']['input']>;
+  workIds?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type WordListInput = {
+  distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+  wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type Work = {
@@ -286,6 +298,7 @@ export type ResolversTypes = ResolversObject<{
   Word: ResolverTypeWrapper<Word>;
   WordChangeResponse: ResolverTypeWrapper<WordChangeResponse>;
   WordInput: WordInput;
+  WordListInput: WordListInput;
   Work: ResolverTypeWrapper<Work>;
   WorkInput: WorkInput;
   WorkListInput: WorkListInput;
@@ -312,6 +325,7 @@ export type ResolversParentTypes = ResolversObject<{
   Word: Word;
   WordChangeResponse: WordChangeResponse;
   WordInput: WordInput;
+  WordListInput: WordListInput;
   Work: Work;
   WorkInput: WorkInput;
   WorkListInput: WorkListInput;
@@ -342,7 +356,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType, RequireFields<QuerySeriesArgs, 'input'>>;
   seriesList?: Resolver<Array<Maybe<ResolversTypes['Series']>>, ParentType, ContextType, Partial<QuerySeriesListArgs>>;
   word?: Resolver<Maybe<ResolversTypes['Word']>, ParentType, ContextType, RequireFields<QueryWordArgs, 'input'>>;
-  wordList?: Resolver<Array<Maybe<ResolversTypes['Word']>>, ParentType, ContextType>;
+  wordList?: Resolver<Array<Maybe<ResolversTypes['Word']>>, ParentType, ContextType, Partial<QueryWordListArgs>>;
   work?: Resolver<Maybe<ResolversTypes['Work']>, ParentType, ContextType, RequireFields<QueryWorkArgs, 'input'>>;
   workList?: Resolver<Array<Maybe<ResolversTypes['Work']>>, ParentType, ContextType, Partial<QueryWorkListArgs>>;
 }>;
