@@ -22,10 +22,12 @@
     "@apollo/server": "^4.10.2",
     "express": "^4.19.1",
     "graphql": "^16.8.1",
+    "graphql-type-json": "^0.3.2",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/introspection": "4.0.3",
     "@graphql-codegen/typescript": "4.0.6",
     "@graphql-codegen/typescript-resolvers": "4.0.6",
     "@repo/eslint-config": "workspace:*",
@@ -35,7 +37,6 @@
     "@types/pg": "^8.11.4",
     "eslint": "^8.57.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.3",
-    "@graphql-codegen/introspection": "4.0.3"
+    "typescript": "^5.4.3"
   }
 }

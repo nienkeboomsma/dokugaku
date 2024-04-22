@@ -1,16 +1,50 @@
+scalar JSON
+
 input AuthorInput {
-  id: String!
+  authorId: String!
+}
+
+input AuthorListInput {
+  authorIds: [String!]
+}
+
+input SeriesInput {
+  seriesId: String!
+  userId: String
+}
+
+input SeriesListInput {
+  seriesIds: [String!]
+  userId: String
+}
+
+input WordInput {
+  userId: String
+  wordId: Int!
+  workId: String
+}
+
+input WorkInput {
+  excludeVolumesInSeries: Boolean
+  userId: String
+  workId: String!
+}
+
+input WorkListInput {
+  excludeVolumesInSeries: Boolean
+  userId: String
+  workIds: [String!]
 }
 
 type Query {
   author(input: AuthorInput!): Author
-  authorList: [Author]!
-  series: Series
-  seriesList: [Series]!
-  work: Work
-  workList: [Work]!
-  word: Word
+  authorList(input: AuthorListInput): [Author]!
+  series(input: SeriesInput!): Series
+  seriesList(input: SeriesListInput): [Series]!
+  word(input: WordInput!): Word
   wordList: [Word]!
+  work(input: WorkInput!): Work
+  workList(input: WorkListInput): [Work]!
 }
 
 type Mutation {
@@ -53,10 +87,11 @@ type Author {
 
 type Series {
   id: ID!
-  status: ReadStatus!
+  authors: [Author!]!
+  status: ReadStatus
   title: String!
-  volumes: [Work!]!
   vocab: [Word!]!
+  volumes(userId: String): [Work!]!
 }
 
 type Work {
@@ -65,7 +100,8 @@ type Work {
   maxProgress: Int!
   numberInSeries: Int
   progress: Int
-  status: ReadStatus!
+  series(userId: String): Series
+  status: ReadStatus
   title: String!
   type: WorkType!
   vocab: [Word!]!
@@ -73,14 +109,14 @@ type Work {
 
 type Word {
   id: ID!
-  info: String!
-  known: Boolean!
-  ignored: Boolean!
-  excluded: Boolean!
+  info: JSON!
+  known: Boolean
+  ignored: Boolean
+  excluded: Boolean
   frequency: Int
   volumeNumber: Int
-  pageNumber: Int!
-  sentenceNumber: Int!
-  entryNumber: Int!
+  pageNumber: Int
+  sentenceNumber: Int
+  entryNumber: Int
   componentNumber: Int
 }

@@ -1,14 +1,29 @@
-import sql from '../data/sql.js'
+import getAuthorsQuery from './authorsQuery'
 
 class Author {
-  async getAuthor(id: string) {
-    const [author] =
-      await sql`SELECT id, author_name AS name FROM author WHERE id = ${id}`
+  async getAuthor(input: { authorId: string }) {
+    const [author] = await getAuthorsQuery({
+      authorId: input.authorId,
+      return: 'single',
+    })
     return author
   }
-  async getAuthors() {
-    const authors = await sql`SELECT id, author_name AS name FROM author`
-    return authors
+
+  async getAuthors(
+    input: {
+      authorIds?: string[]
+    } = {}
+  ) {
+    if (input.authorIds && input.authorIds.length > 0) {
+      return getAuthorsQuery({
+        authorIds: input.authorIds,
+        return: 'multiple' as const,
+      })
+    }
+
+    return getAuthorsQuery({
+      return: 'all' as const,
+    })
   }
 }
 

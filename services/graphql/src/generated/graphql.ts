@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -14,6 +14,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  JSON: { input: any; output: any; }
 };
 
 export type Author = {
@@ -23,7 +24,11 @@ export type Author = {
 };
 
 export type AuthorInput = {
-  id: Scalars['String']['input'];
+  authorId: Scalars['String']['input'];
+};
+
+export type AuthorListInput = {
+  authorIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type Media = Series | Work;
@@ -51,6 +56,36 @@ export type QueryAuthorArgs = {
   input: AuthorInput;
 };
 
+
+export type QueryAuthorListArgs = {
+  input?: InputMaybe<AuthorListInput>;
+};
+
+
+export type QuerySeriesArgs = {
+  input: SeriesInput;
+};
+
+
+export type QuerySeriesListArgs = {
+  input?: InputMaybe<SeriesListInput>;
+};
+
+
+export type QueryWordArgs = {
+  input: WordInput;
+};
+
+
+export type QueryWorkArgs = {
+  input: WorkInput;
+};
+
+
+export type QueryWorkListArgs = {
+  input?: InputMaybe<WorkListInput>;
+};
+
 export enum ReadStatus {
   Abandoned = 'ABANDONED',
   Read = 'READ',
@@ -60,11 +95,27 @@ export enum ReadStatus {
 
 export type Series = {
   __typename?: 'Series';
+  authors: Array<Author>;
   id: Scalars['ID']['output'];
-  status: ReadStatus;
+  status?: Maybe<ReadStatus>;
   title: Scalars['String']['output'];
   vocab: Array<Word>;
   volumes: Array<Work>;
+};
+
+
+export type SeriesVolumesArgs = {
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SeriesInput = {
+  seriesId: Scalars['String']['input'];
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SeriesListInput = {
+  seriesIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SetReadStatusResponse = {
@@ -78,15 +129,15 @@ export type SetReadStatusResponse = {
 export type Word = {
   __typename?: 'Word';
   componentNumber?: Maybe<Scalars['Int']['output']>;
-  entryNumber: Scalars['Int']['output'];
-  excluded: Scalars['Boolean']['output'];
+  entryNumber?: Maybe<Scalars['Int']['output']>;
+  excluded?: Maybe<Scalars['Boolean']['output']>;
   frequency?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
-  ignored: Scalars['Boolean']['output'];
-  info: Scalars['String']['output'];
-  known: Scalars['Boolean']['output'];
-  pageNumber: Scalars['Int']['output'];
-  sentenceNumber: Scalars['Int']['output'];
+  ignored?: Maybe<Scalars['Boolean']['output']>;
+  info: Scalars['JSON']['output'];
+  known?: Maybe<Scalars['Boolean']['output']>;
+  pageNumber?: Maybe<Scalars['Int']['output']>;
+  sentenceNumber?: Maybe<Scalars['Int']['output']>;
   volumeNumber?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -98,6 +149,12 @@ export type WordChangeResponse = {
   wordId?: Maybe<Scalars['String']['output']>;
 };
 
+export type WordInput = {
+  userId?: InputMaybe<Scalars['String']['input']>;
+  wordId: Scalars['Int']['input'];
+  workId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Work = {
   __typename?: 'Work';
   authors: Array<Author>;
@@ -105,10 +162,28 @@ export type Work = {
   maxProgress: Scalars['Int']['output'];
   numberInSeries?: Maybe<Scalars['Int']['output']>;
   progress?: Maybe<Scalars['Int']['output']>;
-  status: ReadStatus;
+  series?: Maybe<Series>;
+  status?: Maybe<ReadStatus>;
   title: Scalars['String']['output'];
   type: WorkType;
   vocab: Array<Word>;
+};
+
+
+export type WorkSeriesArgs = {
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type WorkInput = {
+  excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+  workId: Scalars['String']['input'];
+};
+
+export type WorkListInput = {
+  excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+  workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export enum WorkType {
@@ -194,19 +269,26 @@ export type ResolversUnionTypes<RefType extends Record<string, unknown>> = Resol
 export type ResolversTypes = ResolversObject<{
   Author: ResolverTypeWrapper<Author>;
   AuthorInput: AuthorInput;
+  AuthorListInput: AuthorListInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Media: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Media']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   ReadStatus: ReadStatus;
   Series: ResolverTypeWrapper<Series>;
+  SeriesInput: SeriesInput;
+  SeriesListInput: SeriesListInput;
   SetReadStatusResponse: ResolverTypeWrapper<SetReadStatusResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Word: ResolverTypeWrapper<Word>;
   WordChangeResponse: ResolverTypeWrapper<WordChangeResponse>;
+  WordInput: WordInput;
   Work: ResolverTypeWrapper<Work>;
+  WorkInput: WorkInput;
+  WorkListInput: WorkListInput;
   WorkType: WorkType;
 }>;
 
@@ -214,18 +296,25 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Author: Author;
   AuthorInput: AuthorInput;
+  AuthorListInput: AuthorListInput;
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
+  JSON: Scalars['JSON']['output'];
   Media: ResolversUnionTypes<ResolversParentTypes>['Media'];
   Mutation: {};
   Query: {};
   Series: Series;
+  SeriesInput: SeriesInput;
+  SeriesListInput: SeriesListInput;
   SetReadStatusResponse: SetReadStatusResponse;
   String: Scalars['String']['output'];
   Word: Word;
   WordChangeResponse: WordChangeResponse;
+  WordInput: WordInput;
   Work: Work;
+  WorkInput: WorkInput;
+  WorkListInput: WorkListInput;
 }>;
 
 export type AuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = ResolversObject<{
@@ -233,6 +322,10 @@ export type AuthorResolvers<ContextType = any, ParentType extends ResolversParen
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
+
+export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON';
+}
 
 export type MediaResolvers<ContextType = any, ParentType extends ResolversParentTypes['Media'] = ResolversParentTypes['Media']> = ResolversObject<{
   __resolveType: TypeResolveFn<'Series' | 'Work', ParentType, ContextType>;
@@ -245,21 +338,22 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorArgs, 'input'>>;
-  authorList?: Resolver<Array<Maybe<ResolversTypes['Author']>>, ParentType, ContextType>;
-  series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType>;
-  seriesList?: Resolver<Array<Maybe<ResolversTypes['Series']>>, ParentType, ContextType>;
-  word?: Resolver<Maybe<ResolversTypes['Word']>, ParentType, ContextType>;
+  authorList?: Resolver<Array<Maybe<ResolversTypes['Author']>>, ParentType, ContextType, Partial<QueryAuthorListArgs>>;
+  series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType, RequireFields<QuerySeriesArgs, 'input'>>;
+  seriesList?: Resolver<Array<Maybe<ResolversTypes['Series']>>, ParentType, ContextType, Partial<QuerySeriesListArgs>>;
+  word?: Resolver<Maybe<ResolversTypes['Word']>, ParentType, ContextType, RequireFields<QueryWordArgs, 'input'>>;
   wordList?: Resolver<Array<Maybe<ResolversTypes['Word']>>, ParentType, ContextType>;
-  work?: Resolver<Maybe<ResolversTypes['Work']>, ParentType, ContextType>;
-  workList?: Resolver<Array<Maybe<ResolversTypes['Work']>>, ParentType, ContextType>;
+  work?: Resolver<Maybe<ResolversTypes['Work']>, ParentType, ContextType, RequireFields<QueryWorkArgs, 'input'>>;
+  workList?: Resolver<Array<Maybe<ResolversTypes['Work']>>, ParentType, ContextType, Partial<QueryWorkListArgs>>;
 }>;
 
 export type SeriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series']> = ResolversObject<{
+  authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  status?: Resolver<ResolversTypes['ReadStatus'], ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType>;
-  volumes?: Resolver<Array<ResolversTypes['Work']>, ParentType, ContextType>;
+  volumes?: Resolver<Array<ResolversTypes['Work']>, ParentType, ContextType, Partial<SeriesVolumesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -273,15 +367,15 @@ export type SetReadStatusResponseResolvers<ContextType = any, ParentType extends
 
 export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = ResolversObject<{
   componentNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  entryNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  excluded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  entryNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  excluded?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   frequency?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  ignored?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  info?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  known?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  pageNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  sentenceNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  ignored?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  info?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  known?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  pageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  sentenceNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   volumeNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -300,7 +394,8 @@ export type WorkResolvers<ContextType = any, ParentType extends ResolversParentT
   maxProgress?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   numberInSeries?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   progress?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  status?: Resolver<ResolversTypes['ReadStatus'], ParentType, ContextType>;
+  series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType, Partial<WorkSeriesArgs>>;
+  status?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['WorkType'], ParentType, ContextType>;
   vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType>;
@@ -309,6 +404,7 @@ export type WorkResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Author?: AuthorResolvers<ContextType>;
+  JSON?: GraphQLScalarType;
   Media?: MediaResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
