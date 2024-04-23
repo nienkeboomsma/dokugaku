@@ -20,6 +20,8 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.10.2",
+    "@graphql-tools/load-files": "^7.0.0",
+    "@graphql-tools/merge": "^9.0.3",
     "express": "^4.19.1",
     "graphql": "^16.8.1",
     "graphql-type-json": "^0.3.2",

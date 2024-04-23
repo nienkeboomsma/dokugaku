@@ -1,0 +1,17 @@
+type Author {
+  id: ID!
+  name: String!
+}
+
+input AuthorInput {
+  authorId: String!
+}
+
+input AuthorListInput {
+  authorIds: [String!]
+}
+
+extend type Query {
+  author(input: AuthorInput!): Author
+  authorList(input: AuthorListInput): [Author]!
+}

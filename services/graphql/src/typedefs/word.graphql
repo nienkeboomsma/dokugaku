@@ -1,27 +1,15 @@
-scalar JSON
-
-input AuthorInput {
-  authorId: String!
-}
-
-input AuthorListInput {
-  authorIds: [String!]
-}
-
-input SeriesInput {
-  seriesId: String!
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
-}
-
-input SeriesListInput {
-  seriesIds: [String!]
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
+type Word {
+  id: ID!
+  info: JSON!
+  known: Boolean
+  ignored: Boolean
+  excluded: Boolean
+  frequency: Int
+  volumeNumber: Int
+  pageNumber: Int
+  sentenceNumber: Int
+  entryNumber: Int
+  componentNumber: Int
 }
 
 input WordInput {
@@ -93,51 +81,13 @@ input WordListInput {
   workIds: [String!]
 }
 
-input WorkInput {
-  """
-  Get only those works that are not part of a series.
-  """
-  excludeVolumesInSeries: Boolean
-  """
-  If no userId value is supplied 'progress' and 'status' will default to null.
-  """
-  userId: String
-  workId: String!
-}
-
-input WorkListInput {
-  """
-  Get only those works that are not part of a series.
-  """
-  excludeVolumesInSeries: Boolean
-  """
-  If no userId value is supplied 'progress' and 'status' will default to null.
-  """
-  userId: String
-  workIds: [String!]
-}
-
-type Query {
-  author(input: AuthorInput!): Author
-  authorList(input: AuthorListInput): [Author]!
-  series(input: SeriesInput!): Series
-  seriesList(input: SeriesListInput): [Series]!
+extend type Query {
   word(input: WordInput!): Word
   wordList(input: WordListInput): [Word]!
-  work(input: WorkInput!): Work
-  workList(input: WorkListInput): [Work]!
 }
 
-type Mutation {
-  updateReadStatus: SetReadStatusResponse!
+extend type Mutation {
   updateWord: WordChangeResponse!
-}
-
-type SetReadStatusResponse {
-  code: Int!
-  success: Boolean!
-  message: String
-  readStatus: ReadStatus
 }
 
 type WordChangeResponse {
@@ -145,60 +95,4 @@ type WordChangeResponse {
   success: Boolean!
   message: String
   wordId: String
-}
-
-union Media = Series | Work
-
-enum ReadStatus {
-  NONE
-  WANT_TO_READ
-  READING
-  READ
-  ABANDONED
-}
-
-enum WorkType {
-  MANGA
-  NOVEL
-}
-
-type Author {
-  id: ID!
-  name: String!
-}
-
-type Series {
-  id: ID!
-  authors: [Author!]!
-  status: ReadStatus
-  title: String!
-  vocab: [Word!]!
-  volumes(userId: String): [Work!]!
-}
-
-type Work {
-  authors: [Author!]!
-  id: ID!
-  maxProgress: Int!
-  numberInSeries: Int
-  progress: Int
-  series(userId: String): Series
-  status: ReadStatus
-  title: String!
-  type: WorkType!
-  vocab: [Word!]!
-}
-
-type Word {
-  id: ID!
-  info: JSON!
-  known: Boolean
-  ignored: Boolean
-  excluded: Boolean
-  frequency: Int
-  volumeNumber: Int
-  pageNumber: Int
-  sentenceNumber: Int
-  entryNumber: Int
-  componentNumber: Int
 }

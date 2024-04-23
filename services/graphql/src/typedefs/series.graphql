@@ -1,0 +1,33 @@
+type Series {
+  id: ID!
+  authors: [Author!]!
+  status: ReadStatus
+  title: String!
+  vocab(userId: String): [Word!]!
+  volumes(userId: String): [Work!]!
+}
+
+input SeriesInput {
+  seriesId: String!
+  """
+  If no userId value is supplied 'status' will default to null.
+  """
+  userId: String
+}
+
+input SeriesListInput {
+  seriesIds: [String!]
+  """
+  If no userId value is supplied 'status' will default to null.
+  """
+  userId: String
+}
+
+extend type Query {
+  series(input: SeriesInput!): Series
+  seriesList(input: SeriesListInput): [Series]!
+}
+
+extend type Mutation {
+  updateSeriesReadStatus: SetReadStatusResponse!
+}

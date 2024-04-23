@@ -31,11 +31,9 @@ export type AuthorListInput = {
   authorIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export type Media = Series | Work;
-
 export type Mutation = {
   __typename?: 'Mutation';
-  updateReadStatus: SetReadStatusResponse;
+  updateSeriesReadStatus: SetReadStatusResponse;
   updateWord: WordChangeResponse;
 };
 
@@ -339,10 +337,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-/** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = ResolversObject<{
-  Media: ( Series ) | ( Work );
-}>;
 
 
 /** Mapping between all available schema types and the resolvers types */
@@ -354,7 +348,6 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
-  Media: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['Media']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   ReadStatus: ReadStatus;
@@ -382,7 +375,6 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
-  Media: ResolversUnionTypes<ResolversParentTypes>['Media'];
   Mutation: {};
   Query: {};
   Series: Series;
@@ -409,12 +401,8 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
-export type MediaResolvers<ContextType = any, ParentType extends ResolversParentTypes['Media'] = ResolversParentTypes['Media']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'Series' | 'Work', ParentType, ContextType>;
-}>;
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  updateReadStatus?: Resolver<ResolversTypes['SetReadStatusResponse'], ParentType, ContextType>;
+  updateSeriesReadStatus?: Resolver<ResolversTypes['SetReadStatusResponse'], ParentType, ContextType>;
   updateWord?: Resolver<ResolversTypes['WordChangeResponse'], ParentType, ContextType>;
 }>;
 
@@ -487,7 +475,6 @@ export type WorkResolvers<ContextType = any, ParentType extends ResolversParentT
 export type Resolvers<ContextType = any> = ResolversObject<{
   Author?: AuthorResolvers<ContextType>;
   JSON?: GraphQLScalarType;
-  Media?: MediaResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Series?: SeriesResolvers<ContextType>;
