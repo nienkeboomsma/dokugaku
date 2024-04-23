@@ -22,11 +22,40 @@ type QueryParamsCommon = {
 type QueryParams = QueryParamsCommon &
   (ReturnSingle | ReturnMultiple | ReturnAll)
 
-const filterByWorkId = (params: QueryParams) => {
+const userIdColumns = (params: QueryParams) => {
+  if (!params.userId) {
+    return sql`
+      NULL AS progress,
+      NULL AS status
+    `
+  }
+  return sql`
+    COALESCE (user_work.current_progress, 0) AS progress,
+    COALESCE (user_work.status, 'none') AS status
+  `
+}
+
+const userIdJoin = (params: QueryParams) => {
+  if (!params.userId) return sql``
+
+  return sql`
+    LEFT JOIN user_work 
+      ON work.id = user_work.work_id
+      AND (user_work.user_id = ${params.userId}
+        OR user_work.user_id IS NULL
+      )
+  `
+}
+
+let useAnd = false
+
+const workIdFilter = (params: QueryParams) => {
   switch (params.return) {
     case 'single':
+      useAnd = true
       return sql`WHERE work.id = ${params.workId}`
     case 'multiple':
+      useAnd = true
       return sql`WHERE work.id IN ${sql(params.workIds)}`
     case 'all':
       return sql``
@@ -38,48 +67,11 @@ const excludeVolumesInSeries = (params: QueryParams) => {
     return sql``
   }
 
-  if (params.return === 'all') {
-    return sql`
-      WHERE work.series_id IS NULL
-      AND work.volume_number IS NULL
-    `
-  }
-
   return sql`
-    AND work.series_id IS NULL
+    ${useAnd ? sql`AND` : sql`WHERE`} 
+    work.series_id IS NULL
     AND work.volume_number IS NULL
   `
-}
-
-const userInfoColumns = (params: QueryParams) => {
-  if (!params.userId) {
-    return sql`
-      NULL AS "progress",
-      NULL AS "status"
-    `
-  }
-  return sql`
-    user_work.current_progress AS "progress",
-    user_work.status AS "status"
-  `
-}
-
-const userInfoJoin = (params: QueryParams) => {
-  if (!params.userId) return sql``
-
-  return sql`JOIN user_work ON work.id = user_work.work_id`
-}
-
-const userInfoFilter = (params: QueryParams) => {
-  if (!params.userId) {
-    return sql``
-  }
-
-  if (params.return === 'all' && !params.excludeVolumesInSeries) {
-    return sql`WHERE user_work.user_id = ${params.userId}`
-  }
-
-  return sql`AND user_work.user_id = ${params.userId}`
 }
 
 const getWorksQuery = (params: QueryParams) => {
@@ -97,14 +89,13 @@ const getWorksQuery = (params: QueryParams) => {
       work.title,
       work.type,
       work.volume_number AS "numberInSeries",
-      ${userInfoColumns(params)}
+      ${userIdColumns(params)}
     FROM work
     JOIN author_work ON work.id = author_work.work_id
     JOIN author ON author_work.author_id = author.id
-    ${userInfoJoin(params)}
-    ${filterByWorkId(params)}
+    ${userIdJoin(params)}
+    ${workIdFilter(params)}
     ${excludeVolumesInSeries(params)}
-    ${userInfoFilter(params)}
     GROUP BY 
       work.id,
       work.max_progress,

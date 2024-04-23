@@ -75,8 +75,8 @@ const ignoredColumn = (params: QueryParams) => {
 const userIdColumns = (params: QueryParams) => {
   if (!params.userId) {
     return sql`
-      NULL AS "excluded",
-      NULL AS "known",
+      NULL AS excluded,
+      NULL AS known,
     `
   }
   return sql`
@@ -86,12 +86,12 @@ const userIdColumns = (params: QueryParams) => {
 }
 
 const workIdColumns = sql`
-  COALESCE (word_frequency.frequency, 0) AS "frequency",
+  COALESCE (word_frequency.frequency, 0) AS frequency,
   word_work.volume_number AS "volumeNumber",
   word_work.page_number AS "pageNumber",
   word_work.sentence_number AS "sentenceNumber",
   word_work.entry_number AS "entryNumber",
-  word_work.component_number AS componentNumber,
+  word_work.component_number AS "componentNumber",
 `
 
 const ignoredJoin = (params: QueryParams) => {
@@ -173,11 +173,15 @@ const workIdJoin = (params: QueryParams) => {
   `
 }
 
+let useAnd = false
+
 const wordIdFilter = (params: QueryParams) => {
   switch (params.return) {
     case 'single':
+      useAnd = true
       return sql`WHERE word.id = ${params.wordId}`
     case 'multiple':
+      useAnd = true
       return sql`WHERE word.id IN ${sql(params.wordIds)}`
     case 'all':
       return sql``

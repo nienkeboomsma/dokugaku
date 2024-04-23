@@ -93,6 +93,7 @@ export type QueryWorkListArgs = {
 
 export enum ReadStatus {
   Abandoned = 'ABANDONED',
+  None = 'NONE',
   Read = 'READ',
   Reading = 'READING',
   WantToRead = 'WANT_TO_READ'
@@ -106,6 +107,11 @@ export type Series = {
   title: Scalars['String']['output'];
   vocab: Array<Word>;
   volumes: Array<Work>;
+};
+
+
+export type SeriesVocabArgs = {
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -191,12 +197,7 @@ export type WordListInput = {
    * occurrence.
    */
   distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
-  excluded?: InputMaybe<Scalars['Boolean']['input']>;
   ignored?: InputMaybe<Scalars['Boolean']['input']>;
-  known?: InputMaybe<Scalars['Boolean']['input']>;
-  minFrequency?: InputMaybe<Scalars['Int']['input']>;
-  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
-  pageNumber?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Determines what series the 'ignored' value should be based on. If no
    * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
@@ -241,6 +242,11 @@ export type Work = {
 
 
 export type WorkSeriesArgs = {
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type WorkVocabArgs = {
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -428,7 +434,7 @@ export type SeriesResolvers<ContextType = any, ParentType extends ResolversParen
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType>;
+  vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<SeriesVocabArgs>>;
   volumes?: Resolver<Array<ResolversTypes['Work']>, ParentType, ContextType, Partial<SeriesVolumesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -474,7 +480,7 @@ export type WorkResolvers<ContextType = any, ParentType extends ResolversParentT
   status?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['WorkType'], ParentType, ContextType>;
-  vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType>;
+  vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<WorkVocabArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

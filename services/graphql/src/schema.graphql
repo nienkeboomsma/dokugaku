@@ -150,6 +150,7 @@ type WordChangeResponse {
 union Media = Series | Work
 
 enum ReadStatus {
+  NONE
   WANT_TO_READ
   READING
   READ

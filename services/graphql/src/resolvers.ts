@@ -5,10 +5,11 @@ import { type Resolvers } from './generated/graphql'
 export const resolvers: Resolvers = {
   JSON: GraphQLJSON,
   ReadStatus: {
-    WANT_TO_READ: 'want to read',
-    READING: 'reading',
-    READ: 'read',
     ABANDONED: 'abandoned',
+    NONE: 'none',
+    READ: 'read',
+    READING: 'reading',
+    WANT_TO_READ: 'want to read',
   },
   WorkType: {
     MANGA: 'manga',
@@ -32,7 +33,7 @@ export const resolvers: Resolvers = {
     },
     wordList: async (_, { input }, { dataSources: { word } }) => {
       const words = await word.getWords(input)
-      console.log(words)
+      console.log(words.slice(0, 5))
       return words
     },
     work: (_, { input }, { dataSources: { work } }) => {
