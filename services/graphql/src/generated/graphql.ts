@@ -115,11 +115,13 @@ export type SeriesVolumesArgs = {
 
 export type SeriesInput = {
   seriesId: Scalars['String']['input'];
+  /** If no userId value is supplied 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SeriesListInput = {
   seriesIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** If no userId value is supplied 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -155,15 +157,71 @@ export type WordChangeResponse = {
 };
 
 export type WordInput = {
+  /**
+   * Determines what series the 'ignored' value should be based on. If no
+   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+   * to null.
+   */
   userId?: InputMaybe<Scalars['String']['input']>;
   wordId: Scalars['Int']['input'];
+  /**
+   * Determines what work the 'ignored' value should be based on. If no
+   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * If no workIds value is supplied information will be drawn from the entire
+   * corpus. Filtering by workIds is most useful for works within the same series;
+   * combining random works will yield uninformative values for
+   * 'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
+   * 'componentNumber'.
+   */
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type WordListInput = {
+  /**
+   * Get only the first occurrence of each word, instead of each individual
+   * occurrence.
+   */
   distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  excluded?: InputMaybe<Scalars['Boolean']['input']>;
+  ignored?: InputMaybe<Scalars['Boolean']['input']>;
+  known?: InputMaybe<Scalars['Boolean']['input']>;
+  minFrequency?: InputMaybe<Scalars['Int']['input']>;
+  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
+  pageNumber?: InputMaybe<Scalars['Int']['input']>;
+  /**
+   * Determines what series the 'ignored' value should be based on. If no
+   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+   * to null.
+   */
   userId?: InputMaybe<Scalars['String']['input']>;
   wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /**
+   * Determines what work the 'ignored' value should be based on. If no
+   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * If no workIds value is supplied information will be drawn from the entire
+   * corpus. Filtering by workIds is most useful for works within the same series;
+   * combining random works will yield uninformative values for
+   * 'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
+   * 'componentNumber'.
+   */
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -187,13 +245,17 @@ export type WorkSeriesArgs = {
 };
 
 export type WorkInput = {
+  /** Get only those works that are not part of a series. */
   excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  /** If no userId value is supplied 'progress' and 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
   workId: Scalars['String']['input'];
 };
 
 export type WorkListInput = {
+  /** Get only those works that are not part of a series. */
   excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  /** If no userId value is supplied 'progress' and 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };

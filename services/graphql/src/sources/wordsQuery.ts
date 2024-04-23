@@ -1,25 +1,3 @@
-// ALWAYS
-// id: ID!
-// info: JSON!
-
-// USERID
-// known: Boolean
-// excluded: Boolean
-
-// USERID AND WORKID/SERIESID
-// ignored: Boolean
-
-// WORKID/SERIESID    // distinct or all?
-// frequency: Int
-// volumeNumber: Int
-// pageNumber: Int
-// sentenceNumber: Int
-// entryNumber: Int
-// componentNumber: Int
-
-// getWord (by ID)
-// getWords (by IDs or all words)
-
 import sql from '../data/sql.js'
 
 type ReturnSingle = {
@@ -28,45 +6,73 @@ type ReturnSingle = {
 }
 
 type ReturnMultiple = {
+  distinctOnly?: boolean
+  excluded?: boolean
+  ignored?: boolean
+  known?: boolean
+  minFrequency?: number
+  minPageNumber?: number
+  pageNumber?: number
   return: 'multiple'
   wordIds: string[]
 }
 
 type ReturnAll = {
+  distinctOnly?: boolean
+  excluded?: boolean
+  ignored?: boolean
+  known?: boolean
+  minFrequency?: number
+  minPageNumber?: number
+  pageNumber?: number
   return: 'all'
 }
 
 type QueryParamsCommon = {
-  distinctOnly?: boolean
+  seriesIdInWhichIgnored?: string
   userId?: string
+  workIdInWhichIgnored?: string
   workIds?: string[]
 }
 
 type QueryParams = QueryParamsCommon &
   (ReturnSingle | ReturnMultiple | ReturnAll)
 
-const filterByWordId = (params: QueryParams) => {
-  switch (params.return) {
-    case 'single':
-      return sql`WHERE word.id = ${params.wordId}`
-    case 'multiple':
-      return sql`WHERE word.id IN ${sql(params.wordIds)}`
-    case 'all':
-      return sql``
-  }
-}
-
 const selectDistinctWordsOnly = (params: QueryParams) => {
-  if (params.distinctOnly) {
+  if ('distinctOnly' in params && params.distinctOnly) {
     return sql`SELECT DISTINCT ON (word.id)`
   }
 
   return sql`SELECT`
 }
 
-const filterBySeriesIds = (params: QueryParams) => {}
+const ignoredColumn = (params: QueryParams) => {
+  if (
+    (!params.seriesIdInWhichIgnored && !params.workIdInWhichIgnored) ||
+    !params.userId
+  ) {
+    console.table({ ...params })
+    return sql`
+      NULL AS "ignored",
+    `
+  }
 
-const userInfoColumns = (params: QueryParams) => {
+  if (params.seriesIdInWhichIgnored && params.userId) {
+    return sql`
+      COALESCE (ignored_in_series.ignored, false) AS "ignored",
+    `
+  }
+
+  if (params.workIdInWhichIgnored && params.userId) {
+    return sql`
+      COALESCE (ignored_in_work.ignored, false) AS "ignored",
+    `
+  }
+
+  return sql``
+}
+
+const userIdColumns = (params: QueryParams) => {
   if (!params.userId) {
     return sql`
       NULL AS "excluded",
@@ -79,84 +85,120 @@ const userInfoColumns = (params: QueryParams) => {
   `
 }
 
-const workInfoColumns = (params: QueryParams) => {
-  if (!params.workIds || !params.workIds.length) {
-    return sql`
-      NULL AS "volumeNumber",
-      NULL AS "pageNumber",
-      NULL AS "sentenceNumber",
-      NULL AS "entryNumber",
-      NULL AS "componentNumber",
-    `
-  }
-  return sql`
-    word_work.volume_number AS "volumeNumber",
-    word_work.page_number AS "pageNumber",
-    word_work.sentence_number AS "sentenceNumber",
-    word_work.entry_number AS "entryNumber",
-    word_work.component_number AS componentNumber,
-  `
-}
+const workIdColumns = sql`
+  COALESCE (word_frequency.frequency, 0) AS "frequency",
+  word_work.volume_number AS "volumeNumber",
+  word_work.page_number AS "pageNumber",
+  word_work.sentence_number AS "sentenceNumber",
+  word_work.entry_number AS "entryNumber",
+  word_work.component_number AS componentNumber,
+`
 
-const userInfoJoin = (params: QueryParams) => {
-  if (!params.userId) return sql``
-
-  return sql`LEFT JOIN user_word ON word.id = user_word.word_id`
-}
-
-const workInfoJoin = (params: QueryParams) => {
-  if (!params.workIds || !params.workIds.length) return sql``
-
-  return sql`LEFT JOIN word_work ON word.id = word_work.word_id`
-}
-
-const userInfoFilter = (params: QueryParams) => {
-  if (!params.userId) {
+const ignoredJoin = (params: QueryParams) => {
+  if (
+    (!params.seriesIdInWhichIgnored && !params.workIdInWhichIgnored) ||
+    !params.userId
+  ) {
     return sql``
   }
 
-  if (params.return === 'all') {
+  if (params.seriesIdInWhichIgnored && params.userId) {
     return sql`
-      WHERE (
-        user_word.user_id = ${params.userId}
-        OR user_word.user_id IS NULL
-      )
+      LEFT JOIN ignored_in_series 
+        ON word.id = ignored_in_series.word_id
+        AND ( ignored_in_series.user_id = ${params.userId}
+          OR ignored_in_series.user_id IS NULL
+        )
+        AND ( ignored_in_series.series_id = ${params.seriesIdInWhichIgnored}
+          OR ignored_in_series.series_id IS NULL
+        )
     `
   }
 
+  if (params.workIdInWhichIgnored && params.userId) {
+    return sql`
+      LEFT JOIN ignored_in_work 
+        ON word.id = ignored_in_work.word_id
+        AND ( ignored_in_work.user_id = ${params.userId}
+          OR ignored_in_work.user_id IS NULL
+        )
+        AND ( ignored_in_work.work_id = ${params.workIdInWhichIgnored}
+          OR ignored_in_work.work_id IS NULL
+        )
+    `
+  }
+
+  return sql``
+}
+
+const userIdJoin = (params: QueryParams) => {
+  if (!params.userId) return sql``
+
   return sql`
-    AND ( 
-      user_word.user_id = ${params.userId}
-      OR user_word.user_id IS NULL 
-    )
+    LEFT JOIN user_word 
+      ON word.id = user_word.word_id
+      AND ( user_word.user_id = ${params.userId}
+        OR user_word.user_id IS NULL
+      )
+    `
+}
+
+const workIdJoin = (params: QueryParams) => {
+  return sql`
+    JOIN word_work 
+      ON word.id = word_work.word_id
+      ${
+        params.workIds && params.workIds.length
+          ? sql`
+      AND word_work.work_id IN ${sql(params.workIds)}`
+          : sql``
+      }
+    LEFT JOIN (
+      SELECT
+        word_id,
+        COUNT(*) AS frequency
+      FROM (
+        SELECT 
+         word_id
+        FROM word_work
+        ${
+          params.workIds && params.workIds.length
+            ? sql`
+        WHERE work_id IN ${sql(params.workIds)}`
+            : sql``
+        }
+      )
+      GROUP BY word_id
+    ) AS word_frequency ON word.id = word_frequency.word_id
   `
 }
 
-const workInfoFilter = (params: QueryParams) => {
-  if (!params.workIds || !params.workIds.length) return sql``
-
-  if (params.return === 'all' && !params.userId) {
-    return sql`WHERE word_work.work_id IN ${sql(params.workIds)}`
+const wordIdFilter = (params: QueryParams) => {
+  switch (params.return) {
+    case 'single':
+      return sql`WHERE word.id = ${params.wordId}`
+    case 'multiple':
+      return sql`WHERE word.id IN ${sql(params.wordIds)}`
+    case 'all':
+      return sql``
   }
-
-  return sql`AND word_work.work_id IN ${sql(params.workIds)}`
 }
 
 const getWordsQuery = (params: QueryParams) => {
   return sql`
     ${selectDistinctWordsOnly(params)}
       word.id,
-      ${userInfoColumns(params)}
-      ${workInfoColumns(params)}
+      ${ignoredColumn(params)}
+      ${userIdColumns(params)}
+      ${workIdColumns}
       word.info
     FROM word 
-    ${userInfoJoin(params)}
-    ${workInfoJoin(params)}
-    ${filterByWordId(params)}
-    ${userInfoFilter(params)}
-    ${workInfoFilter(params)}
+    ${ignoredJoin(params)}
+    ${userIdJoin(params)}
+    ${workIdJoin(params)}
+    ${wordIdFilter(params)}
     ORDER BY
-      ${params.distinctOnly ? sql`word.id,` : sql``}
+      ${'distinctOnly' in params && params.distinctOnly ? sql`word.id,` : sql``}
       word_work.volume_number ASC,
       word_work.page_number ASC,
       word_work.sentence_number ASC,

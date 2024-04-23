@@ -10,35 +10,109 @@ input AuthorListInput {
 
 input SeriesInput {
   seriesId: String!
+  """
+  If no userId value is supplied 'status' will default to null.
+  """
   userId: String
 }
 
 input SeriesListInput {
   seriesIds: [String!]
+  """
+  If no userId value is supplied 'status' will default to null.
+  """
   userId: String
 }
 
 input WordInput {
+  """
+  Determines what series the 'ignored' value should be based on. If no
+  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+  to null.
+  """
   userId: String
   wordId: Int!
+  """
+  Determines what work the 'ignored' value should be based on. If no
+  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  workIdInWhichIgnored: String
+  """
+  If no workIds value is supplied information will be drawn from the entire
+  corpus. Filtering by workIds is most useful for works within the same series;
+  combining random works will yield uninformative values for
+  'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
+  'componentNumber'.
+  """
   workIds: [String!]
 }
 
 input WordListInput {
+  """
+  Get only the first occurrence of each word, instead of each individual
+  occurrence.
+  """
   distinctOnly: Boolean
+  # excluded: Boolean   WIP
+  # known: Boolean   WIP
+  ignored: Boolean
+  # minFrequency: Int   WIP
+  # minPageNumber: Int   WIP
+  # pageNumber: Int   WIP
+  """
+  Determines what series the 'ignored' value should be based on. If no
+  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+  to null.
+  """
   userId: String
   wordIds: [Int!]
+  """
+  Determines what work the 'ignored' value should be based on. If no
+  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  workIdInWhichIgnored: String
+  """
+  If no workIds value is supplied information will be drawn from the entire
+  corpus. Filtering by workIds is most useful for works within the same series;
+  combining random works will yield uninformative values for
+  'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
+  'componentNumber'.
+  """
   workIds: [String!]
 }
 
 input WorkInput {
+  """
+  Get only those works that are not part of a series.
+  """
   excludeVolumesInSeries: Boolean
+  """
+  If no userId value is supplied 'progress' and 'status' will default to null.
+  """
   userId: String
   workId: String!
 }
 
 input WorkListInput {
+  """
+  Get only those works that are not part of a series.
+  """
   excludeVolumesInSeries: Boolean
+  """
+  If no userId value is supplied 'progress' and 'status' will default to null.
+  """
   userId: String
   workIds: [String!]
 }

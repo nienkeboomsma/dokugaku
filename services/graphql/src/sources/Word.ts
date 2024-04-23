@@ -2,15 +2,15 @@ import getWordsQuery from './wordsQuery.js'
 
 class Word {
   async getWord(input: {
+    seriesIdInWhichIgnored?: string
     userId?: string
     wordId: string
+    workIdInWhichIgnored?: string
     workIds?: string[]
   }) {
     const [word] = await getWordsQuery({
+      ...input,
       return: 'single',
-      userId: input.userId,
-      wordId: input.wordId,
-      workIds: input.workIds,
     })
     return word
   }
@@ -18,26 +18,30 @@ class Word {
   async getWords(
     input: {
       distinctOnly?: boolean
+      excluded?: boolean
+      ignored?: boolean
+      known?: boolean
+      minFrequency?: number
+      minPageNumber?: number
+      pageNumber?: number
+      seriesIdInWhichIgnored?: string
       userId?: string
       wordIds?: string[]
+      workIdInWhichIgnored?: string
       workIds?: string[]
     } = {}
   ) {
     if (input.wordIds && input.wordIds.length > 0) {
       return getWordsQuery({
-        distinctOnly: input.distinctOnly,
+        ...input,
         return: 'multiple' as const,
-        userId: input.userId,
         wordIds: input.wordIds,
-        workIds: input.workIds,
       })
     }
 
     return getWordsQuery({
-      distinctOnly: input.distinctOnly,
+      ...input,
       return: 'all' as const,
-      userId: input.userId,
-      workIds: input.workIds,
     })
   }
 }
