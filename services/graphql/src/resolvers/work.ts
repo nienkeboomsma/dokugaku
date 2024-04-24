@@ -14,9 +14,9 @@ const resolvers: Resolvers = {
       if (!parent.series) return null
       return series.getSeries({ seriesId: parent.series, userId })
     },
-    vocab: (parent, { userId }, { dataSources: { word } }) => {
+    vocab: (parent, { input }, { dataSources: { word } }) => {
       return word.getWords({
-        userId: userId,
+        ...input,
         workIds: [parent.id],
       })
     },

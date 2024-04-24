@@ -16,9 +16,9 @@ const resolvers: Resolvers = {
         workIds: parent.volumes,
       })
     },
-    vocab: (parent, { userId }, { dataSources: { word } }) => {
+    vocab: (parent, { input }, { dataSources: { word } }) => {
       return word.getWords({
-        userId: userId,
+        ...input,
         workIds: parent.volumes,
       })
     },

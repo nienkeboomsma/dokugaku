@@ -109,7 +109,7 @@ export type Series = {
 
 
 export type SeriesVocabArgs = {
-  userId?: InputMaybe<Scalars['String']['input']>;
+  input?: InputMaybe<SeriesVocabInput>;
 };
 
 
@@ -127,6 +127,38 @@ export type SeriesListInput = {
   seriesIds?: InputMaybe<Array<Scalars['String']['input']>>;
   /** If no userId value is supplied 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SeriesVocabInput = {
+  /**
+   * Get only the first occurrence of each word, instead of each individual
+   * occurrence.
+   */
+  distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  excluded?: InputMaybe<Scalars['Boolean']['input']>;
+  ignored?: InputMaybe<Scalars['Boolean']['input']>;
+  known?: InputMaybe<Scalars['Boolean']['input']>;
+  minFrequency?: InputMaybe<Scalars['Int']['input']>;
+  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
+  pageNumber?: InputMaybe<Scalars['Int']['input']>;
+  /**
+   * Determines what series the 'ignored' value should be based on. If no
+   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+   * to null.
+   */
+  userId?: InputMaybe<Scalars['String']['input']>;
+  wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /**
+   * Determines what work the 'ignored' value should be based on. If no
+   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SetReadStatusResponse = {
@@ -250,7 +282,7 @@ export type WorkSeriesArgs = {
 
 
 export type WorkVocabArgs = {
-  userId?: InputMaybe<Scalars['String']['input']>;
+  input?: InputMaybe<WorkVocabInput>;
 };
 
 export type WorkInput = {
@@ -273,6 +305,38 @@ export enum WorkType {
   Manga = 'MANGA',
   Novel = 'NOVEL'
 }
+
+export type WorkVocabInput = {
+  /**
+   * Get only the first occurrence of each word, instead of each individual
+   * occurrence.
+   */
+  distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  excluded?: InputMaybe<Scalars['Boolean']['input']>;
+  ignored?: InputMaybe<Scalars['Boolean']['input']>;
+  known?: InputMaybe<Scalars['Boolean']['input']>;
+  minFrequency?: InputMaybe<Scalars['Int']['input']>;
+  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
+  pageNumber?: InputMaybe<Scalars['Int']['input']>;
+  /**
+   * Determines what series the 'ignored' value should be based on. If no
+   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+   * to null.
+   */
+  userId?: InputMaybe<Scalars['String']['input']>;
+  wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /**
+   * Determines what work the 'ignored' value should be based on. If no
+   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+   * will default to null.
+   */
+  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -359,6 +423,7 @@ export type ResolversTypes = ResolversObject<{
   Series: ResolverTypeWrapper<Series>;
   SeriesInput: SeriesInput;
   SeriesListInput: SeriesListInput;
+  SeriesVocabInput: SeriesVocabInput;
   SetReadStatusResponse: ResolverTypeWrapper<SetReadStatusResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Word: ResolverTypeWrapper<Word>;
@@ -369,6 +434,7 @@ export type ResolversTypes = ResolversObject<{
   WorkInput: WorkInput;
   WorkListInput: WorkListInput;
   WorkType: WorkType;
+  WorkVocabInput: WorkVocabInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -385,6 +451,7 @@ export type ResolversParentTypes = ResolversObject<{
   Series: Series;
   SeriesInput: SeriesInput;
   SeriesListInput: SeriesListInput;
+  SeriesVocabInput: SeriesVocabInput;
   SetReadStatusResponse: SetReadStatusResponse;
   String: Scalars['String']['output'];
   Word: Word;
@@ -394,6 +461,7 @@ export type ResolversParentTypes = ResolversObject<{
   Work: Work;
   WorkInput: WorkInput;
   WorkListInput: WorkListInput;
+  WorkVocabInput: WorkVocabInput;
 }>;
 
 export type AuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = ResolversObject<{
