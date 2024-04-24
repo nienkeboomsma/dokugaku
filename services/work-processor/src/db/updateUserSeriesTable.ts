@@ -5,7 +5,11 @@ export async function updateUserSeriesTable(
   userId: string,
   seriesId: string
 ) {
-  const userSeries = { user_id: userId, series_id: seriesId }
+  const userSeries = {
+    status: 'want to read',
+    user_id: userId,
+    series_id: seriesId,
+  }
 
   await sql`
     INSERT INTO user_series ${sql(userSeries)} 

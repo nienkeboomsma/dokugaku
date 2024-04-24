@@ -1,0 +1,98 @@
+type Word {
+  id: ID!
+  info: JSON!
+  known: Boolean
+  ignored: Boolean
+  excluded: Boolean
+  frequency: Int
+  volumeNumber: Int
+  pageNumber: Int
+  sentenceNumber: Int
+  entryNumber: Int
+  componentNumber: Int
+}
+
+input WordInput {
+  """
+  Determines what series the 'ignored' value should be based on. If no
+  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+  to null.
+  """
+  userId: String
+  wordId: Int!
+  """
+  Determines what work the 'ignored' value should be based on. If no
+  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  workIdInWhichIgnored: String
+  """
+  If no workIds value is supplied information will be drawn from the entire
+  corpus. Filtering by workIds is most useful for works within the same series;
+  combining random works will yield uninformative values for
+  'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
+  'componentNumber'.
+  """
+  workIds: [String!]
+}
+
+input WordListInput {
+  """
+  Get only the first occurrence of each word, instead of each individual
+  occurrence.
+  """
+  distinctOnly: Boolean
+  excluded: Boolean
+  known: Boolean
+  ignored: Boolean
+  minFrequency: Int
+  minPageNumber: Int
+  pageNumber: Int
+  """
+  Determines what series the 'ignored' value should be based on. If no
+  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+  to null.
+  """
+  userId: String
+  wordIds: [Int!]
+  """
+  Determines what work the 'ignored' value should be based on. If no
+  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  workIdInWhichIgnored: String
+  """
+  If no workIds value is supplied information will be drawn from the entire
+  corpus. Filtering by workIds is most useful for works within the same series;
+  combining random works will yield uninformative values for
+  'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
+  'componentNumber'.
+  """
+  workIds: [String!]
+}
+
+extend type Query {
+  word(input: WordInput!): Word
+  wordList(input: WordListInput): [Word]!
+}
+
+extend type Mutation {
+  updateWord: WordChangeResponse!
+}
+
+type WordChangeResponse {
+  code: Int!
+  success: Boolean!
+  message: String
+  wordId: String
+}

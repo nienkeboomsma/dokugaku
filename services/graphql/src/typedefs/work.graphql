@@ -1,0 +1,74 @@
+# Almost the same as WordListInput, except for workIds
+input WorkVocabInput {
+  """
+  Get only the first occurrence of each word, instead of each individual
+  occurrence.
+  """
+  distinctOnly: Boolean
+  excluded: Boolean
+  known: Boolean
+  ignored: Boolean
+  minFrequency: Int
+  minPageNumber: Int
+  pageNumber: Int
+  """
+  Determines what series the 'ignored' value should be based on. If no
+  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+  to null.
+  """
+  userId: String
+  wordIds: [Int!]
+  """
+  Determines what work the 'ignored' value should be based on. If no
+  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
+  will default to null.
+  """
+  workIdInWhichIgnored: String
+}
+
+type Work {
+  authors: [Author!]!
+  id: ID!
+  maxProgress: Int!
+  numberInSeries: Int
+  progress: Int
+  series(userId: String): Series
+  status: ReadStatus
+  title: String!
+  type: WorkType!
+  vocab(input: WorkVocabInput): [Word!]!
+}
+
+input WorkInput {
+  """
+  Get only those works that are not part of a series.
+  """
+  excludeVolumesInSeries: Boolean
+  """
+  If no userId value is supplied 'progress' and 'status' will default to null.
+  """
+  userId: String
+  workId: String!
+}
+
+input WorkListInput {
+  """
+  Get only those works that are not part of a series.
+  """
+  excludeVolumesInSeries: Boolean
+  """
+  If no userId value is supplied 'progress' and 'status' will default to null.
+  """
+  userId: String
+  workIds: [String!]
+}
+
+extend type Query {
+  work(input: WorkInput!): Work
+  workList(input: WorkListInput): [Work]!
+}

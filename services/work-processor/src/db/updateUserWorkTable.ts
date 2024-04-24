@@ -5,7 +5,11 @@ export async function updateUserWorkTable(
   userId: string,
   workId: string
 ) {
-  const userWork = { user_id: userId, work_id: workId }
+  const userWork = {
+    status: 'want to read',
+    user_id: userId,
+    work_id: workId,
+  }
 
   await sql`INSERT INTO user_work ${sql(userWork)}`
 

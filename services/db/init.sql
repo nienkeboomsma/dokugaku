@@ -26,29 +26,29 @@ CREATE TYPE worktype AS ENUM ('manga', 'novel');
 
 CREATE TABLE work (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  max_progress integer NOT NULL,
   type worktype NOT NULL,
   title text NOT NULL,
   series_id uuid NULL DEFAULT NULL REFERENCES series,
   volume_number smallint NULL DEFAULT NULL,
-  max_progress integer NOT NULL,
   UNIQUE (series_id, volume_number)
 );
 
-CREATE TYPE readstatus AS ENUM ('want to read', 'reading', 'read', 'abandoned');
+CREATE TYPE readstatus AS ENUM ('none', 'want to read', 'reading', 'read', 'abandoned');
 
 CREATE TABLE user_series (
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id uuid NOT NULL REFERENCES user_account,
-  series_id uuid NOT NULL REFERENCES series,
-  status readstatus NOT NULL DEFAULT 'want to read',
+  series_id uuid NOT NULL REFERENCES series ON DELETE CASCADE,
+  status readstatus NOT NULL DEFAULT 'none',
   UNIQUE (user_id, series_id)
  );
 
 CREATE TABLE user_work (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id uuid NOT NULL REFERENCES user_account,
-  work_id uuid NOT NULL REFERENCES work,
-  status readstatus NOT NULL DEFAULT 'want to read',
+  work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
+  status readstatus NOT NULL DEFAULT 'none',
   current_progress integer NULL DEFAULT 0,
   UNIQUE (user_id, work_id)
 );
@@ -61,14 +61,14 @@ CREATE TABLE author (
 CREATE TABLE author_work (
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   author_id uuid NOT NULL REFERENCES author,
-  work_id uuid NOT NULL REFERENCES work,
+  work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
   UNIQUE (author_id, work_id)
 );
 
 CREATE TABLE word_work (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   word_id integer NOT NULL REFERENCES word,
-  work_id uuid NOT NULL REFERENCES work,
+  work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
   volume_number smallint NULL DEFAULT NULL, 
   page_number smallint NOT NULL,
   sentence_number smallint NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE user_word (
 CREATE TABLE ignored_in_work (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   word_id integer NOT NULL REFERENCES word,
-  work_id uuid NOT NULL REFERENCES work,
+  work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
   user_id uuid NOT NULL REFERENCES user_account,
   ignored boolean NOT NULL DEFAULT false,
   UNIQUE (word_id, work_id, user_id)
