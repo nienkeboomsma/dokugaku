@@ -47,12 +47,12 @@ input WordListInput {
   occurrence.
   """
   distinctOnly: Boolean
-  # excluded: Boolean   WIP
-  # known: Boolean   WIP
+  excluded: Boolean
+  known: Boolean
   ignored: Boolean
   # minFrequency: Int   WIP
   # minPageNumber: Int   WIP
-  # pageNumber: Int   WIP
+  pageNumber: Int
   """
   Determines what series the 'ignored' value should be based on. If no
   seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'

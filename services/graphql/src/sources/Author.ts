@@ -1,4 +1,4 @@
-import getAuthorsQuery from './authorsQuery'
+import getAuthorsQuery from '../queries/authorsQuery'
 
 class Author {
   async getAuthor(input: { authorId: string }) {

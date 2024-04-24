@@ -1,4 +1,4 @@
-import getWordsQuery from './wordsQuery.js'
+import WordsQuery from '../queries/WordQuery.js'
 
 class Word {
   async getWord(input: {
@@ -8,10 +8,11 @@ class Word {
     workIdInWhichIgnored?: string
     workIds?: string[]
   }) {
-    const [word] = await getWordsQuery({
+    const wordsQuery = new WordsQuery({
       ...input,
       return: 'single',
     })
+    const [word] = await wordsQuery.getQuery()
     return word
   }
 
@@ -32,17 +33,19 @@ class Word {
     } = {}
   ) {
     if (input.wordIds && input.wordIds.length > 0) {
-      return getWordsQuery({
+      const wordsQuery = new WordsQuery({
         ...input,
         return: 'multiple' as const,
         wordIds: input.wordIds,
       })
+      return wordsQuery.getQuery()
     }
 
-    return getWordsQuery({
+    const wordsQuery = new WordsQuery({
       ...input,
       return: 'all' as const,
     })
+    return wordsQuery.getQuery()
   }
 }
 

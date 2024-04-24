@@ -1,4 +1,4 @@
-import getWorksQuery from './worksQuery.js'
+import getWorksQuery from '../queries/worksQuery.js'
 
 class Work {
   async getWork(input: {

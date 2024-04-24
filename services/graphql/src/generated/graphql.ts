@@ -195,7 +195,10 @@ export type WordListInput = {
    * occurrence.
    */
   distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  excluded?: InputMaybe<Scalars['Boolean']['input']>;
   ignored?: InputMaybe<Scalars['Boolean']['input']>;
+  known?: InputMaybe<Scalars['Boolean']['input']>;
+  pageNumber?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Determines what series the 'ignored' value should be based on. If no
    * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
