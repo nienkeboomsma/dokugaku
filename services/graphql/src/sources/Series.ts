@@ -1,13 +1,14 @@
-import getSeriesQuery from '../queries/seriesQuery'
+import SeriesQuery from '../queries/seriesQuery'
 
 class Series {
   async getSeries(input: { userId?: string; seriesId: string }) {
-    const [work] = await getSeriesQuery({
+    const seriesQuery = new SeriesQuery({
       return: 'single',
       userId: input.userId,
       seriesId: input.seriesId,
     })
-    return work
+    const [series] = await seriesQuery.getQuery()
+    return series
   }
 
   async getSeriesList(
@@ -17,17 +18,19 @@ class Series {
     } = {}
   ) {
     if (input.seriesIds && input.seriesIds.length > 0) {
-      return getSeriesQuery({
+      const seriesQuery = new SeriesQuery({
         return: 'multiple' as const,
         userId: input.userId,
         seriesIds: input.seriesIds,
       })
+      return seriesQuery.getQuery()
     }
 
-    return getSeriesQuery({
+    const seriesQuery = new SeriesQuery({
       return: 'all' as const,
       userId: input.userId,
     })
+    return seriesQuery.getQuery()
   }
 }
 

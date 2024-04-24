@@ -1,11 +1,12 @@
-import getAuthorsQuery from '../queries/authorsQuery'
+import AuthorQuery from '../queries/AuthorQuery'
 
 class Author {
   async getAuthor(input: { authorId: string }) {
-    const [author] = await getAuthorsQuery({
+    const authorQuery = new AuthorQuery({
       authorId: input.authorId,
       return: 'single',
     })
+    const [author] = await authorQuery.getQuery()
     return author
   }
 
@@ -15,15 +16,17 @@ class Author {
     } = {}
   ) {
     if (input.authorIds && input.authorIds.length > 0) {
-      return getAuthorsQuery({
+      const authorQuery = new AuthorQuery({
         authorIds: input.authorIds,
         return: 'multiple' as const,
       })
+      return authorQuery.getQuery()
     }
 
-    return getAuthorsQuery({
+    const authorQuery = new AuthorQuery({
       return: 'all' as const,
     })
+    return authorQuery.getQuery()
   }
 }
 
