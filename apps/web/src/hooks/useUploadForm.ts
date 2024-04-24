@@ -87,6 +87,8 @@ export function useUploadForm(type: FormType) {
     }
   }, [uploadForm.values.series])
 
+  // TODO: add magic autofill button for author name if a pre-existing series is selected
+
   const sendFormData = async (
     values: FormValues,
     event: React.FormEvent<HTMLFormElement> | undefined

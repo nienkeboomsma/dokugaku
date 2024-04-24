@@ -1,6 +1,6 @@
 import { mergeResolvers } from '@graphql-tools/merge'
+import { type Resolvers } from '@repo/graphql-types/generated/resolvers'
 
-import { Resolvers } from '../generated/graphql'
 import author from './author'
 import common from './common'
 import series from './series'

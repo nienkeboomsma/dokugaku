@@ -97,9 +97,13 @@ CREATE TABLE ignored_in_work (
 
 CREATE TABLE ignored_in_series (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  word_id integer NOT NULL REFERENCES word,
   series_id uuid NOT NULL REFERENCES series,
   user_id uuid NOT NULL REFERENCES user_account,
+  word_id integer NOT NULL REFERENCES word,
   ignored boolean NOT NULL DEFAULT false,
   UNIQUE (word_id, series_id, user_id)
 );
+
+INSERT INTO user_word (user_id, word_id, known) VALUES ('6e41e9fd-c813-40e9-91fd-c51e47efab42', 2089020, true);
+INSERT INTO user_word (user_id, word_id, excluded) VALUES ('6e41e9fd-c813-40e9-91fd-c51e47efab42', 2029080, true);
+INSERT INTO ignored_in_series (series_id, user_id, word_id, ignored) VALUES ('30a885a7-09a5-4abf-9af3-d63e17c3f6d1', '6e41e9fd-c813-40e9-91fd-c51e47efab42', 1172280, true);

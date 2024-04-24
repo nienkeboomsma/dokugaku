@@ -10,6 +10,6 @@ export const novelTextExtensions = ['.html', '.md', '.txt']
 // times in milliseconds
 export const mokuroInitTime = 30 * 1000
 export const mokuroTimePerPage = 25 * 1000
-export const ichiranTimePerPage = 2.5 * 1000
+export const ichiranTimePerPage = 2.5 * 1000 // 2.8-3 for Shinchan
 export const ichiranTimePer100Char = 1.1 * 1000
 export const webpConversionPerImage = 0.25 * 1000

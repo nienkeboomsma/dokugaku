@@ -1,5 +1,6 @@
-import express, { type Express } from 'express'
 import cors from 'cors'
+import express, { type Express } from 'express'
+
 import { processMangaFiles, processNovelFiles } from './multer.js'
 import {
   validateMangaFiles,
@@ -8,6 +9,7 @@ import {
 } from './middleware.js'
 import { processManga } from './processManga.js'
 import { processNovel } from './processNovel.js'
+import sql from './db/sql.js'
 
 async function main() {
   const app: Express = express()
@@ -39,4 +41,6 @@ async function main() {
   console.log(`Listening on port ${port}`)
 }
 
+const test = await sql`SELECT * FROM work;`
+console.log(test)
 main()

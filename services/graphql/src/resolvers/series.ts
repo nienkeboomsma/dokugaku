@@ -1,4 +1,4 @@
-import { type Resolvers } from '../generated/graphql'
+import { type Resolvers } from '@repo/graphql-types/generated/resolvers'
 
 const resolvers: Resolvers = {
   Query: {
@@ -6,21 +6,25 @@ const resolvers: Resolvers = {
       return series.getSeries(input)
     },
     seriesList: (_, { input }, { dataSources: { series } }) => {
-      return series.getSeriesList(input)
+      return series.getSeriesList(input) ?? []
     },
   },
   Series: {
     volumes: async (parent, { userId }, { dataSources: { work } }) => {
-      return work.getWorks({
-        userId,
-        workIds: parent.volumes,
-      })
+      return (
+        work.getWorks({
+          userId,
+          workIds: parent.volumes,
+        }) ?? []
+      )
     },
     vocab: (parent, { input }, { dataSources: { word } }) => {
-      return word.getWords({
-        ...input,
-        workIds: parent.volumes,
-      })
+      return (
+        word.getWords({
+          ...input,
+          workIds: parent.volumes,
+        }) ?? []
+      )
     },
   },
 }

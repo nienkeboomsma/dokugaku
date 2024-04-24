@@ -1,6 +1,8 @@
 type Author {
   id: ID!
   name: String!
+  # TODO: series: [Series!]
+  # TODO: works: [Work!]!
 }
 
 input AuthorInput {
@@ -13,5 +15,5 @@ input AuthorListInput {
 
 extend type Query {
   author(input: AuthorInput!): Author
-  authorList(input: AuthorListInput): [Author]!
+  authorList(input: AuthorListInput): [Author!]!
 }

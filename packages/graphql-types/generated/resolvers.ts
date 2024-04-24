@@ -40,13 +40,13 @@ export type Mutation = {
 export type Query = {
   __typename?: 'Query';
   author?: Maybe<Author>;
-  authorList: Array<Maybe<Author>>;
+  authorList: Array<Author>;
   series?: Maybe<Series>;
-  seriesList: Array<Maybe<Series>>;
+  seriesList: Array<Series>;
   word?: Maybe<Word>;
-  wordList: Array<Maybe<Word>>;
+  wordList: Array<Word>;
   work?: Maybe<Work>;
-  workList: Array<Maybe<Work>>;
+  workList: Array<Work>;
 };
 
 
@@ -90,11 +90,11 @@ export type QueryWorkListArgs = {
 };
 
 export enum ReadStatus {
-  Abandoned = 'ABANDONED',
-  None = 'NONE',
-  Read = 'READ',
-  Reading = 'READING',
-  WantToRead = 'WANT_TO_READ'
+  Abandoned = 'abandoned',
+  None = 'none',
+  Read = 'read',
+  Reading = 'reading',
+  WantToRead = 'want to read'
 }
 
 export type Series = {
@@ -302,8 +302,8 @@ export type WorkListInput = {
 };
 
 export enum WorkType {
-  Manga = 'MANGA',
-  Novel = 'NOVEL'
+  Manga = 'manga',
+  Novel = 'novel'
 }
 
 export type WorkVocabInput = {
@@ -338,8 +338,7 @@ export type WorkVocabInput = {
   workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type WithIndex<TObject> = TObject & Record<string, any>;
-export type ResolversObject<TObject> = WithIndex<TObject>;
+
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -409,7 +408,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 
 /** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = ResolversObject<{
+export type ResolversTypes = {
   Author: ResolverTypeWrapper<Author>;
   AuthorInput: AuthorInput;
   AuthorListInput: AuthorListInput;
@@ -435,10 +434,10 @@ export type ResolversTypes = ResolversObject<{
   WorkListInput: WorkListInput;
   WorkType: WorkType;
   WorkVocabInput: WorkVocabInput;
-}>;
+};
 
 /** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = ResolversObject<{
+export type ResolversParentTypes = {
   Author: Author;
   AuthorInput: AuthorInput;
   AuthorListInput: AuthorListInput;
@@ -462,35 +461,37 @@ export type ResolversParentTypes = ResolversObject<{
   WorkInput: WorkInput;
   WorkListInput: WorkListInput;
   WorkVocabInput: WorkVocabInput;
-}>;
+};
 
-export type AuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = ResolversObject<{
+export type AuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   updateSeriesReadStatus?: Resolver<ResolversTypes['SetReadStatusResponse'], ParentType, ContextType>;
   updateWord?: Resolver<ResolversTypes['WordChangeResponse'], ParentType, ContextType>;
-}>;
+};
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorArgs, 'input'>>;
-  authorList?: Resolver<Array<Maybe<ResolversTypes['Author']>>, ParentType, ContextType, Partial<QueryAuthorListArgs>>;
+  authorList?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType, Partial<QueryAuthorListArgs>>;
   series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType, RequireFields<QuerySeriesArgs, 'input'>>;
-  seriesList?: Resolver<Array<Maybe<ResolversTypes['Series']>>, ParentType, ContextType, Partial<QuerySeriesListArgs>>;
+  seriesList?: Resolver<Array<ResolversTypes['Series']>, ParentType, ContextType, Partial<QuerySeriesListArgs>>;
   word?: Resolver<Maybe<ResolversTypes['Word']>, ParentType, ContextType, RequireFields<QueryWordArgs, 'input'>>;
-  wordList?: Resolver<Array<Maybe<ResolversTypes['Word']>>, ParentType, ContextType, Partial<QueryWordListArgs>>;
+  wordList?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<QueryWordListArgs>>;
   work?: Resolver<Maybe<ResolversTypes['Work']>, ParentType, ContextType, RequireFields<QueryWorkArgs, 'input'>>;
-  workList?: Resolver<Array<Maybe<ResolversTypes['Work']>>, ParentType, ContextType, Partial<QueryWorkListArgs>>;
-}>;
+  workList?: Resolver<Array<ResolversTypes['Work']>, ParentType, ContextType, Partial<QueryWorkListArgs>>;
+};
 
-export type SeriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series']> = ResolversObject<{
+export type ReadStatusResolvers = { ABANDONED: 'abandoned', NONE: 'none', READ: 'read', READING: 'reading', WANT_TO_READ: 'want to read' };
+
+export type SeriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series']> = {
   authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
@@ -498,17 +499,17 @@ export type SeriesResolvers<ContextType = any, ParentType extends ResolversParen
   vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<SeriesVocabArgs>>;
   volumes?: Resolver<Array<ResolversTypes['Work']>, ParentType, ContextType, Partial<SeriesVolumesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type SetReadStatusResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetReadStatusResponse'] = ResolversParentTypes['SetReadStatusResponse']> = ResolversObject<{
+export type SetReadStatusResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetReadStatusResponse'] = ResolversParentTypes['SetReadStatusResponse']> = {
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   readStatus?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = ResolversObject<{
+export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = {
   componentNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   entryNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   excluded?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -521,17 +522,17 @@ export type WordResolvers<ContextType = any, ParentType extends ResolversParentT
   sentenceNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   volumeNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type WordChangeResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['WordChangeResponse'] = ResolversParentTypes['WordChangeResponse']> = ResolversObject<{
+export type WordChangeResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['WordChangeResponse'] = ResolversParentTypes['WordChangeResponse']> = {
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   wordId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type WorkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Work'] = ResolversParentTypes['Work']> = ResolversObject<{
+export type WorkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Work'] = ResolversParentTypes['Work']> = {
   authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   maxProgress?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -543,17 +544,21 @@ export type WorkResolvers<ContextType = any, ParentType extends ResolversParentT
   type?: Resolver<ResolversTypes['WorkType'], ParentType, ContextType>;
   vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<WorkVocabArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
+};
 
-export type Resolvers<ContextType = any> = ResolversObject<{
+export type WorkTypeResolvers = { MANGA: 'manga', NOVEL: 'novel' };
+
+export type Resolvers<ContextType = any> = {
   Author?: AuthorResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  ReadStatus?: ReadStatusResolvers;
   Series?: SeriesResolvers<ContextType>;
   SetReadStatusResponse?: SetReadStatusResponseResolvers<ContextType>;
   Word?: WordResolvers<ContextType>;
   WordChangeResponse?: WordChangeResponseResolvers<ContextType>;
   Work?: WorkResolvers<ContextType>;
-}>;
+  WorkType?: WorkTypeResolvers;
+};
 

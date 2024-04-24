@@ -70,5 +70,5 @@ input WorkListInput {
 
 extend type Query {
   work(input: WorkInput!): Work
-  workList(input: WorkListInput): [Work]!
+  workList(input: WorkListInput): [Work!]!
 }

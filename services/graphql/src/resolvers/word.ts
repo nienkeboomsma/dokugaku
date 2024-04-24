@@ -1,4 +1,4 @@
-import { type Resolvers } from '../generated/graphql'
+import { type Resolvers } from '@repo/graphql-types/generated/resolvers'
 
 const resolvers: Resolvers = {
   Query: {
@@ -6,7 +6,7 @@ const resolvers: Resolvers = {
       return word.getWord(input)
     },
     wordList: async (_, { input }, { dataSources: { word } }) => {
-      return word.getWords(input)
+      return word.getWords(input) ?? []
     },
   },
 }

@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
 import { loadFiles } from '@graphql-tools/load-files'
 import { mergeTypeDefs } from '@graphql-tools/merge'
+import { type Resolvers } from '@repo/graphql-types/generated/resolvers.js'
 
 import { resolvers } from './resolvers/index.js'
 import Author from './sources/Author.js'
@@ -13,7 +14,7 @@ async function main() {
   const typesArray = await loadFiles('./src/typedefs/*.graphql')
   const typeDefs = mergeTypeDefs(typesArray)
 
-  const server = new ApolloServer({
+  const server = new ApolloServer<Resolvers>({
     typeDefs,
     resolvers,
   })

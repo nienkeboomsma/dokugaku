@@ -58,7 +58,7 @@ input SeriesListInput {
 
 extend type Query {
   series(input: SeriesInput!): Series
-  seriesList(input: SeriesListInput): [Series]!
+  seriesList(input: SeriesListInput): [Series!]!
 }
 
 extend type Mutation {

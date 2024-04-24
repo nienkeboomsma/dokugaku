@@ -89,11 +89,11 @@ export default function WorkCard({
               authors={workCardInfo.authors}
               classNames={{ author: classes.author }}
             />
-            {isSeries(workCardInfo) && (
+            {isSeries(workCardInfo) && workCardInfo.volumeNumber > 0 && (
               <Text
                 c='dimmed'
                 size={rem(13)}
-              >{`${workCardInfo.volumeNumber} volumes`}</Text>
+              >{`${workCardInfo.volumeNumber} ${workCardInfo.volumeNumber > 1 ? 'volumes' : 'volume'}`}</Text>
             )}
           </div>
           <WorkStatusBadge status={workCardInfo.status} />

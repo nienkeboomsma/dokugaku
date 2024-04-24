@@ -1,4 +1,4 @@
-import SeriesQuery from '../queries/seriesQuery'
+import SeriesQuery from '../queries/SeriesQuery'
 
 class Series {
   async getSeries(input: { userId?: string; seriesId: string }) {

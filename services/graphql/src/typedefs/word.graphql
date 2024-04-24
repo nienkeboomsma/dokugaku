@@ -83,7 +83,7 @@ input WordListInput {
 
 extend type Query {
   word(input: WordInput!): Word
-  wordList(input: WordListInput): [Word]!
+  wordList(input: WordListInput): [Word!]!
 }
 
 extend type Mutation {
