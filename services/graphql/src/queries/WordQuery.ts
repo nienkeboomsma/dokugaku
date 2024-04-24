@@ -255,6 +255,38 @@ class WordQuery {
     return sql``
   }
 
+  minFrequencyFilter() {
+    if (
+      'minFrequency' in this.params &&
+      typeof this.params.minFrequency === 'number'
+    ) {
+      const query = sql`
+        ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
+        word_frequency.frequency >= ${this.params.minFrequency}
+      `
+      this.whereAlreadyUsed = true
+      return query
+    }
+
+    return sql``
+  }
+
+  minPageNumberFilter() {
+    if (
+      'minPageNumber' in this.params &&
+      typeof this.params.minPageNumber === 'number'
+    ) {
+      const query = sql`
+        ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
+        word_work.page_number >= ${this.params.minPageNumber}
+      `
+      this.whereAlreadyUsed = true
+      return query
+    }
+
+    return sql``
+  }
+
   pageNumberFilter() {
     if (
       'pageNumber' in this.params &&
@@ -287,6 +319,8 @@ class WordQuery {
       ${this.excludedFilter()}
       ${this.ignoredFilter()}
       ${this.knownFilter()}
+      ${this.minFrequencyFilter()}
+      ${this.minPageNumberFilter()}
       ${this.pageNumberFilter()}
 
       ORDER BY

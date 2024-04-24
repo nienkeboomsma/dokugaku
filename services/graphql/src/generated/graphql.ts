@@ -198,6 +198,8 @@ export type WordListInput = {
   excluded?: InputMaybe<Scalars['Boolean']['input']>;
   ignored?: InputMaybe<Scalars['Boolean']['input']>;
   known?: InputMaybe<Scalars['Boolean']['input']>;
+  minFrequency?: InputMaybe<Scalars['Int']['input']>;
+  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
   pageNumber?: InputMaybe<Scalars['Int']['input']>;
   /**
    * Determines what series the 'ignored' value should be based on. If no

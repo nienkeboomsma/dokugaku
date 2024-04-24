@@ -50,8 +50,8 @@ input WordListInput {
   excluded: Boolean
   known: Boolean
   ignored: Boolean
-  # minFrequency: Int   WIP
-  # minPageNumber: Int   WIP
+  minFrequency: Int
+  minPageNumber: Int
   pageNumber: Int
   """
   Determines what series the 'ignored' value should be based on. If no
