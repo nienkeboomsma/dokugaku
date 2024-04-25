@@ -2,6 +2,7 @@ import '@mantine/core/styles.layer.css'
 import 'mantine-datatable/styles.layer.css'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 
+import { ApolloWrapper } from '../graphql/ApolloWrapper'
 import AppShell from '../components/AppShell/AppShell'
 
 export const metadata = {
@@ -20,12 +21,14 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider
-          defaultColorScheme='auto'
-          theme={{ primaryColor: 'blue' }}
-        >
-          <AppShell>{children}</AppShell>
-        </MantineProvider>
+        <ApolloWrapper>
+          <MantineProvider
+            defaultColorScheme='auto'
+            theme={{ primaryColor: 'blue' }}
+          >
+            <AppShell>{children}</AppShell>
+          </MantineProvider>
+        </ApolloWrapper>
       </body>
     </html>
   )
