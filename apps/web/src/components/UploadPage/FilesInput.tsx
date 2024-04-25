@@ -1,35 +1,32 @@
 import { FileInput } from '@mantine/core'
-import { UseFormReturnType } from '@mantine/form'
 import { IconPhoto, IconFiles } from '@tabler/icons-react'
 
-import { FormType, FormValues } from '../../hooks/useUploadForm'
+import { type UploadForm } from '../../hooks/useUploadForm'
+import { GQL_WorkType } from '@repo/graphql-types'
 
-const getAcceptedExtensions = (
-  uploadForm: UseFormReturnType<FormValues>,
-  type: FormType
-) => {
-  if (type === 'manga') {
+const getAcceptedExtensions = (uploadForm: UploadForm, type: GQL_WorkType) => {
+  if (type === GQL_WorkType.Manga) {
     return `.png, .jpg, .jpeg, .webp${uploadForm.values.mokuro ? ', .json' : ''}`
   }
-  if (type === 'novel') {
+  if (type === GQL_WorkType.Novel) {
     return '.html, .md, .txt'
   }
 }
 
-const getLabel = (type: FormType) => {
-  if (type === 'manga') {
+const getLabel = (type: GQL_WorkType) => {
+  if (type === GQL_WorkType.Manga) {
     return 'Upload manga images'
   }
-  if (type === 'novel') {
+  if (type === GQL_WorkType.Novel) {
     return 'Upload text files'
   }
 }
 
-const RightSection = ({ type }: { type: FormType }) => {
-  if (type === 'manga') {
+const RightSection = ({ type }: { type: GQL_WorkType }) => {
+  if (type === GQL_WorkType.Manga) {
     return <IconPhoto size={18} stroke={1.5} />
   }
-  if (type === 'novel') {
+  if (type === GQL_WorkType.Novel) {
     return <IconFiles size={18} stroke={1.5} />
   }
 }
@@ -38,8 +35,8 @@ export default function FilesInput({
   type,
   uploadForm,
 }: {
-  type: FormType
-  uploadForm: UseFormReturnType<FormValues>
+  type: GQL_WorkType
+  uploadForm: UploadForm
 }) {
   return (
     <FileInput

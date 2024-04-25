@@ -1,12 +1,11 @@
 import { Checkbox } from '@mantine/core'
-import { UseFormReturnType } from '@mantine/form'
 
-import { FormValues } from '../../hooks/useUploadForm'
+import { UploadForm } from '../../hooks/useUploadForm'
 
 export default function MokuroInput({
   uploadForm,
 }: {
-  uploadForm: UseFormReturnType<FormValues>
+  uploadForm: UploadForm
 }) {
   return (
     <Checkbox
