@@ -93,11 +93,11 @@ export type GQL_QueryWorkListArgs = {
 };
 
 export enum GQL_ReadStatus {
-  Abandoned = 'ABANDONED',
-  None = 'NONE',
-  Read = 'READ',
-  Reading = 'READING',
-  WantToRead = 'WANT_TO_READ'
+  Abandoned = 'abandoned',
+  None = 'none',
+  Read = 'read',
+  Reading = 'reading',
+  WantToRead = 'want_to_read'
 }
 
 export type GQL_Series = {
@@ -305,8 +305,8 @@ export type GQL_WorkListInput = {
 };
 
 export enum GQL_WorkType {
-  Manga = 'MANGA',
-  Novel = 'NOVEL'
+  Manga = 'manga',
+  Novel = 'novel'
 }
 
 export type GQL_WorkVocabInput = {
@@ -341,15 +341,15 @@ export type GQL_WorkVocabInput = {
   workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type GQL_FormAuthorListQueryVariables = Exact<{ [key: string]: never; }>;
+export type GQL_UploadFormExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_FormAuthorListQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', name: string }> };
+export type GQL_UploadFormExistingAuthorsQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', name: string }> };
 
-export type GQL_FormSeriesListQueryVariables = Exact<{ [key: string]: never; }>;
+export type GQL_UploadFormExistingSeriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_FormSeriesListQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
+export type GQL_UploadFormExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;

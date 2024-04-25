@@ -12,14 +12,14 @@ type SetReadStatusResponse {
 }
 
 enum ReadStatus {
-  ABANDONED
-  NONE
-  READ
-  READING
-  WANT_TO_READ
+  abandoned
+  none
+  read
+  reading
+  want_to_read
 }
 
 enum WorkType {
-  MANGA
-  NOVEL
+  manga
+  novel
 }
