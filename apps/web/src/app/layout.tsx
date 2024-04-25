@@ -17,7 +17,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <head>
+      {/* Prevents this error: https://www.reddit.com/r/nextjs/comments/138smpm/how_to_fix_extra_attributes_from_the_server_error/ */}
+      <head suppressHydrationWarning>
         <ColorSchemeScript />
       </head>
       <body>
