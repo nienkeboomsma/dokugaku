@@ -1,4 +1,5 @@
 import sql from '../data/sql.js'
+import { AuthorModel } from '../models/AuthorModel.js'
 
 type ReturnSingle = {
   return: 'single'
@@ -35,7 +36,7 @@ class AuthorQuery {
   }
 
   getQuery() {
-    return sql`
+    return sql<AuthorModel[]>`
       SELECT 
         id,
         author_name AS name 

@@ -30,7 +30,8 @@ class Work {
         userId: input.userId,
         workIds: input.workIds,
       })
-      return workQuery.getQuery()
+      const works = await workQuery.getQuery()
+      return works ?? []
     }
 
     const workQuery = new WorkQuery({
@@ -38,7 +39,8 @@ class Work {
       return: 'all' as const,
       userId: input.userId,
     })
-    return workQuery.getQuery()
+    const works = await workQuery.getQuery()
+    return works ?? []
   }
 }
 

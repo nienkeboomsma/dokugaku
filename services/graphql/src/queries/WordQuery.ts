@@ -1,8 +1,9 @@
 import sql from '../data/sql.js'
+import { WordModel } from '../models/WordModel.js'
 
 type ReturnSingle = {
   return: 'single'
-  wordId: string
+  wordId: number
 }
 
 type ReturnMultiple = {
@@ -14,7 +15,7 @@ type ReturnMultiple = {
   minPageNumber?: number
   pageNumber?: number
   return: 'multiple'
-  wordIds: string[]
+  wordIds: number[]
 }
 
 type ReturnAll = {
@@ -304,7 +305,7 @@ class WordQuery {
   }
 
   getQuery() {
-    return sql`
+    return sql<WordModel[]>`
       ${this.selectDistinctWordsOnly()}
         word.id,
         ${this.ignoredColumn()}

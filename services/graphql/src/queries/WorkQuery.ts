@@ -1,4 +1,5 @@
 import sql from '../data/sql.js'
+import { WorkModel } from '../models/WorkModel.js'
 
 type ReturnSingle = {
   return: 'single'
@@ -82,7 +83,7 @@ class WorkQuery {
   }
 
   getQuery() {
-    return sql`
+    return sql<WorkModel[]>`
       SELECT
         work.id,
         jsonb_agg(
@@ -91,7 +92,7 @@ class WorkQuery {
             'name', author.author_name
           )
         ) AS authors,
-        work.series_id AS "series",
+        work.series_id AS "seriesId",
         work.max_progress AS "maxProgress",
         work.title,
         work.type,

@@ -6,26 +6,26 @@ const config: IGraphQLConfig = {
   extensions: {
     codegen: {
       generates: {
-        './packages/graphql-types/generated/operations.ts': {
-          plugins: ['typescript', 'typescript-operations'],
-        },
-        './packages/graphql-types/generated/resolvers.ts': {
+        './packages/graphql-types/generated/graphql.ts': {
           config: {
-            enumValues: {
-              ReadStatus: {
-                ABANDONED: 'abandoned',
-                NONE: 'none',
-                READ: 'read',
-                READING: 'reading',
-                WANT_TO_READ: 'want to read',
-              },
-              WorkType: {
-                MANGA: 'manga',
-                NOVEL: 'novel',
-              },
+            arrayInputCoercion: false,
+            contextType: '../../../services/graphql/src/context#GQL_Context',
+            inputMaybeValue: 'T | undefined',
+            mappers: {
+              Series:
+                '../../../services/graphql/src/models/SeriesModel#SeriesModel',
+              Work: '../../../services/graphql/src/models/WorkModel#WorkModel',
             },
+            maybeValue: 'T | null | undefined',
+            typesPrefix: 'GQL_',
+            useIndexSignature: true,
+            useTypeImports: true,
           },
-          plugins: ['typescript', 'typescript-resolvers'],
+          plugins: [
+            'typescript',
+            'typescript-operations',
+            'typescript-resolvers',
+          ],
         },
       },
     },

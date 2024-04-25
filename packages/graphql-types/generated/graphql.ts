@@ -1,6 +1,9 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+import type { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import type { SeriesModel } from '../../../services/graphql/src/models/SeriesModel';
+import type { WorkModel } from '../../../services/graphql/src/models/WorkModel';
+import type { GQL_Context } from '../../../services/graphql/src/context';
+export type Maybe<T> = T | null | undefined;
+export type InputMaybe<T> = T | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -17,119 +20,119 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
-export type Author = {
+export type GQL_Author = {
   __typename?: 'Author';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
 };
 
-export type AuthorInput = {
+export type GQL_AuthorInput = {
   authorId: Scalars['String']['input'];
 };
 
-export type AuthorListInput = {
+export type GQL_AuthorListInput = {
   authorIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export type Mutation = {
+export type GQL_Mutation = {
   __typename?: 'Mutation';
-  updateSeriesReadStatus: SetReadStatusResponse;
-  updateWord: WordChangeResponse;
+  updateSeriesReadStatus: GQL_SetReadStatusResponse;
+  updateWord: GQL_WordChangeResponse;
 };
 
-export type Query = {
+export type GQL_Query = {
   __typename?: 'Query';
-  author?: Maybe<Author>;
-  authorList: Array<Author>;
-  series?: Maybe<Series>;
-  seriesList: Array<Series>;
-  word?: Maybe<Word>;
-  wordList: Array<Word>;
-  work?: Maybe<Work>;
-  workList: Array<Work>;
+  author?: Maybe<GQL_Author>;
+  authorList: Array<GQL_Author>;
+  series?: Maybe<GQL_Series>;
+  seriesList: Array<GQL_Series>;
+  word?: Maybe<GQL_Word>;
+  wordList: Array<GQL_Word>;
+  work?: Maybe<GQL_Work>;
+  workList: Array<GQL_Work>;
 };
 
 
-export type QueryAuthorArgs = {
-  input: AuthorInput;
+export type GQL_QueryAuthorArgs = {
+  input: GQL_AuthorInput;
 };
 
 
-export type QueryAuthorListArgs = {
-  input?: InputMaybe<AuthorListInput>;
+export type GQL_QueryAuthorListArgs = {
+  input?: InputMaybe<GQL_AuthorListInput>;
 };
 
 
-export type QuerySeriesArgs = {
-  input: SeriesInput;
+export type GQL_QuerySeriesArgs = {
+  input: GQL_SeriesInput;
 };
 
 
-export type QuerySeriesListArgs = {
-  input?: InputMaybe<SeriesListInput>;
+export type GQL_QuerySeriesListArgs = {
+  input?: InputMaybe<GQL_SeriesListInput>;
 };
 
 
-export type QueryWordArgs = {
-  input: WordInput;
+export type GQL_QueryWordArgs = {
+  input: GQL_WordInput;
 };
 
 
-export type QueryWordListArgs = {
-  input?: InputMaybe<WordListInput>;
+export type GQL_QueryWordListArgs = {
+  input?: InputMaybe<GQL_WordListInput>;
 };
 
 
-export type QueryWorkArgs = {
-  input: WorkInput;
+export type GQL_QueryWorkArgs = {
+  input: GQL_WorkInput;
 };
 
 
-export type QueryWorkListArgs = {
-  input?: InputMaybe<WorkListInput>;
+export type GQL_QueryWorkListArgs = {
+  input?: InputMaybe<GQL_WorkListInput>;
 };
 
-export enum ReadStatus {
-  Abandoned = 'abandoned',
-  None = 'none',
-  Read = 'read',
-  Reading = 'reading',
-  WantToRead = 'want to read'
+export enum GQL_ReadStatus {
+  Abandoned = 'ABANDONED',
+  None = 'NONE',
+  Read = 'READ',
+  Reading = 'READING',
+  WantToRead = 'WANT_TO_READ'
 }
 
-export type Series = {
+export type GQL_Series = {
   __typename?: 'Series';
-  authors: Array<Author>;
+  authors: Array<GQL_Author>;
   id: Scalars['ID']['output'];
-  status?: Maybe<ReadStatus>;
+  status?: Maybe<GQL_ReadStatus>;
   title: Scalars['String']['output'];
-  vocab: Array<Word>;
-  volumes: Array<Work>;
+  vocab: Array<GQL_Word>;
+  volumes: Array<GQL_Work>;
 };
 
 
-export type SeriesVocabArgs = {
-  input?: InputMaybe<SeriesVocabInput>;
+export type GQL_SeriesVocabArgs = {
+  input?: InputMaybe<GQL_SeriesVocabInput>;
 };
 
 
-export type SeriesVolumesArgs = {
+export type GQL_SeriesVolumesArgs = {
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SeriesInput = {
+export type GQL_SeriesInput = {
   seriesId: Scalars['String']['input'];
   /** If no userId value is supplied 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SeriesListInput = {
+export type GQL_SeriesListInput = {
   seriesIds?: InputMaybe<Array<Scalars['String']['input']>>;
   /** If no userId value is supplied 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SeriesVocabInput = {
+export type GQL_SeriesVocabInput = {
   /**
    * Get only the first occurrence of each word, instead of each individual
    * occurrence.
@@ -161,15 +164,15 @@ export type SeriesVocabInput = {
   workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type SetReadStatusResponse = {
+export type GQL_SetReadStatusResponse = {
   __typename?: 'SetReadStatusResponse';
   code: Scalars['Int']['output'];
   message?: Maybe<Scalars['String']['output']>;
-  readStatus?: Maybe<ReadStatus>;
+  readStatus?: Maybe<GQL_ReadStatus>;
   success: Scalars['Boolean']['output'];
 };
 
-export type Word = {
+export type GQL_Word = {
   __typename?: 'Word';
   componentNumber?: Maybe<Scalars['Int']['output']>;
   entryNumber?: Maybe<Scalars['Int']['output']>;
@@ -184,7 +187,7 @@ export type Word = {
   volumeNumber?: Maybe<Scalars['Int']['output']>;
 };
 
-export type WordChangeResponse = {
+export type GQL_WordChangeResponse = {
   __typename?: 'WordChangeResponse';
   code: Scalars['Int']['output'];
   message?: Maybe<Scalars['String']['output']>;
@@ -192,7 +195,7 @@ export type WordChangeResponse = {
   wordId?: Maybe<Scalars['String']['output']>;
 };
 
-export type WordInput = {
+export type GQL_WordInput = {
   /**
    * Determines what series the 'ignored' value should be based on. If no
    * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
@@ -221,7 +224,7 @@ export type WordInput = {
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export type WordListInput = {
+export type GQL_WordListInput = {
   /**
    * Get only the first occurrence of each word, instead of each individual
    * occurrence.
@@ -261,31 +264,31 @@ export type WordListInput = {
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export type Work = {
+export type GQL_Work = {
   __typename?: 'Work';
-  authors: Array<Author>;
+  authors: Array<GQL_Author>;
   id: Scalars['ID']['output'];
   maxProgress: Scalars['Int']['output'];
   numberInSeries?: Maybe<Scalars['Int']['output']>;
   progress?: Maybe<Scalars['Int']['output']>;
-  series?: Maybe<Series>;
-  status?: Maybe<ReadStatus>;
+  series?: Maybe<GQL_Series>;
+  status?: Maybe<GQL_ReadStatus>;
   title: Scalars['String']['output'];
-  type: WorkType;
-  vocab: Array<Word>;
+  type: GQL_WorkType;
+  vocab: Array<GQL_Word>;
 };
 
 
-export type WorkSeriesArgs = {
+export type GQL_WorkSeriesArgs = {
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-export type WorkVocabArgs = {
-  input?: InputMaybe<WorkVocabInput>;
+export type GQL_WorkVocabArgs = {
+  input?: InputMaybe<GQL_WorkVocabInput>;
 };
 
-export type WorkInput = {
+export type GQL_WorkInput = {
   /** Get only those works that are not part of a series. */
   excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
   /** If no userId value is supplied 'progress' and 'status' will default to null. */
@@ -293,7 +296,7 @@ export type WorkInput = {
   workId: Scalars['String']['input'];
 };
 
-export type WorkListInput = {
+export type GQL_WorkListInput = {
   /** Get only those works that are not part of a series. */
   excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
   /** If no userId value is supplied 'progress' and 'status' will default to null. */
@@ -301,12 +304,12 @@ export type WorkListInput = {
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export enum WorkType {
-  Manga = 'manga',
-  Novel = 'novel'
+export enum GQL_WorkType {
+  Manga = 'MANGA',
+  Novel = 'NOVEL'
 }
 
-export type WorkVocabInput = {
+export type GQL_WorkVocabInput = {
   /**
    * Get only the first occurrence of each word, instead of each individual
    * occurrence.
@@ -338,7 +341,18 @@ export type WorkVocabInput = {
   workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type GQL_FormAuthorListQueryVariables = Exact<{ [key: string]: never; }>;
 
+
+export type GQL_FormAuthorListQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', name: string }> };
+
+export type GQL_FormSeriesListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GQL_FormSeriesListQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
+
+export type WithIndex<TObject> = TObject & Record<string, any>;
+export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -408,157 +422,151 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 
 /** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = {
-  Author: ResolverTypeWrapper<Author>;
-  AuthorInput: AuthorInput;
-  AuthorListInput: AuthorListInput;
+export type GQL_ResolversTypes = ResolversObject<{
+  Author: ResolverTypeWrapper<GQL_Author>;
+  AuthorInput: GQL_AuthorInput;
+  AuthorListInput: GQL_AuthorListInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
-  ReadStatus: ReadStatus;
-  Series: ResolverTypeWrapper<Series>;
-  SeriesInput: SeriesInput;
-  SeriesListInput: SeriesListInput;
-  SeriesVocabInput: SeriesVocabInput;
-  SetReadStatusResponse: ResolverTypeWrapper<SetReadStatusResponse>;
+  ReadStatus: GQL_ReadStatus;
+  Series: ResolverTypeWrapper<SeriesModel>;
+  SeriesInput: GQL_SeriesInput;
+  SeriesListInput: GQL_SeriesListInput;
+  SeriesVocabInput: GQL_SeriesVocabInput;
+  SetReadStatusResponse: ResolverTypeWrapper<GQL_SetReadStatusResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Word: ResolverTypeWrapper<Word>;
-  WordChangeResponse: ResolverTypeWrapper<WordChangeResponse>;
-  WordInput: WordInput;
-  WordListInput: WordListInput;
-  Work: ResolverTypeWrapper<Work>;
-  WorkInput: WorkInput;
-  WorkListInput: WorkListInput;
-  WorkType: WorkType;
-  WorkVocabInput: WorkVocabInput;
-};
+  Word: ResolverTypeWrapper<GQL_Word>;
+  WordChangeResponse: ResolverTypeWrapper<GQL_WordChangeResponse>;
+  WordInput: GQL_WordInput;
+  WordListInput: GQL_WordListInput;
+  Work: ResolverTypeWrapper<WorkModel>;
+  WorkInput: GQL_WorkInput;
+  WorkListInput: GQL_WorkListInput;
+  WorkType: GQL_WorkType;
+  WorkVocabInput: GQL_WorkVocabInput;
+}>;
 
 /** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = {
-  Author: Author;
-  AuthorInput: AuthorInput;
-  AuthorListInput: AuthorListInput;
+export type GQL_ResolversParentTypes = ResolversObject<{
+  Author: GQL_Author;
+  AuthorInput: GQL_AuthorInput;
+  AuthorListInput: GQL_AuthorListInput;
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
   Mutation: {};
   Query: {};
-  Series: Series;
-  SeriesInput: SeriesInput;
-  SeriesListInput: SeriesListInput;
-  SeriesVocabInput: SeriesVocabInput;
-  SetReadStatusResponse: SetReadStatusResponse;
+  Series: SeriesModel;
+  SeriesInput: GQL_SeriesInput;
+  SeriesListInput: GQL_SeriesListInput;
+  SeriesVocabInput: GQL_SeriesVocabInput;
+  SetReadStatusResponse: GQL_SetReadStatusResponse;
   String: Scalars['String']['output'];
-  Word: Word;
-  WordChangeResponse: WordChangeResponse;
-  WordInput: WordInput;
-  WordListInput: WordListInput;
-  Work: Work;
-  WorkInput: WorkInput;
-  WorkListInput: WorkListInput;
-  WorkVocabInput: WorkVocabInput;
-};
+  Word: GQL_Word;
+  WordChangeResponse: GQL_WordChangeResponse;
+  WordInput: GQL_WordInput;
+  WordListInput: GQL_WordListInput;
+  Work: WorkModel;
+  WorkInput: GQL_WorkInput;
+  WorkListInput: GQL_WorkListInput;
+  WorkVocabInput: GQL_WorkVocabInput;
+}>;
 
-export type AuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type GQL_AuthorResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Author'] = GQL_ResolversParentTypes['Author']> = ResolversObject<{
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+export interface GQL_JsonScalarConfig extends GraphQLScalarTypeConfig<GQL_ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  updateSeriesReadStatus?: Resolver<ResolversTypes['SetReadStatusResponse'], ParentType, ContextType>;
-  updateWord?: Resolver<ResolversTypes['WordChangeResponse'], ParentType, ContextType>;
-};
+export type GQL_MutationResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Mutation'] = GQL_ResolversParentTypes['Mutation']> = ResolversObject<{
+  updateSeriesReadStatus?: Resolver<GQL_ResolversTypes['SetReadStatusResponse'], ParentType, ContextType>;
+  updateWord?: Resolver<GQL_ResolversTypes['WordChangeResponse'], ParentType, ContextType>;
+}>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorArgs, 'input'>>;
-  authorList?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType, Partial<QueryAuthorListArgs>>;
-  series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType, RequireFields<QuerySeriesArgs, 'input'>>;
-  seriesList?: Resolver<Array<ResolversTypes['Series']>, ParentType, ContextType, Partial<QuerySeriesListArgs>>;
-  word?: Resolver<Maybe<ResolversTypes['Word']>, ParentType, ContextType, RequireFields<QueryWordArgs, 'input'>>;
-  wordList?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<QueryWordListArgs>>;
-  work?: Resolver<Maybe<ResolversTypes['Work']>, ParentType, ContextType, RequireFields<QueryWorkArgs, 'input'>>;
-  workList?: Resolver<Array<ResolversTypes['Work']>, ParentType, ContextType, Partial<QueryWorkListArgs>>;
-};
+export type GQL_QueryResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Query'] = GQL_ResolversParentTypes['Query']> = ResolversObject<{
+  author?: Resolver<Maybe<GQL_ResolversTypes['Author']>, ParentType, ContextType, RequireFields<GQL_QueryAuthorArgs, 'input'>>;
+  authorList?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType, Partial<GQL_QueryAuthorListArgs>>;
+  series?: Resolver<Maybe<GQL_ResolversTypes['Series']>, ParentType, ContextType, RequireFields<GQL_QuerySeriesArgs, 'input'>>;
+  seriesList?: Resolver<Array<GQL_ResolversTypes['Series']>, ParentType, ContextType, Partial<GQL_QuerySeriesListArgs>>;
+  word?: Resolver<Maybe<GQL_ResolversTypes['Word']>, ParentType, ContextType, RequireFields<GQL_QueryWordArgs, 'input'>>;
+  wordList?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_QueryWordListArgs>>;
+  work?: Resolver<Maybe<GQL_ResolversTypes['Work']>, ParentType, ContextType, RequireFields<GQL_QueryWorkArgs, 'input'>>;
+  workList?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType, Partial<GQL_QueryWorkListArgs>>;
+}>;
 
-export type ReadStatusResolvers = { ABANDONED: 'abandoned', NONE: 'none', READ: 'read', READING: 'reading', WANT_TO_READ: 'want to read' };
-
-export type SeriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series']> = {
-  authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<SeriesVocabArgs>>;
-  volumes?: Resolver<Array<ResolversTypes['Work']>, ParentType, ContextType, Partial<SeriesVolumesArgs>>;
+export type GQL_SeriesResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Series'] = GQL_ResolversParentTypes['Series']> = ResolversObject<{
+  authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  status?: Resolver<Maybe<GQL_ResolversTypes['ReadStatus']>, ParentType, ContextType>;
+  title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  vocab?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_SeriesVocabArgs>>;
+  volumes?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType, Partial<GQL_SeriesVolumesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type SetReadStatusResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetReadStatusResponse'] = ResolversParentTypes['SetReadStatusResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  readStatus?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+export type GQL_SetReadStatusResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['SetReadStatusResponse'] = GQL_ResolversParentTypes['SetReadStatusResponse']> = ResolversObject<{
+  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
+  readStatus?: Resolver<Maybe<GQL_ResolversTypes['ReadStatus']>, ParentType, ContextType>;
+  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type WordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Word'] = ResolversParentTypes['Word']> = {
-  componentNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  entryNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  excluded?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  frequency?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  ignored?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  info?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
-  known?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  pageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  sentenceNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  volumeNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+export type GQL_WordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Word'] = GQL_ResolversParentTypes['Word']> = ResolversObject<{
+  componentNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  entryNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  excluded?: Resolver<Maybe<GQL_ResolversTypes['Boolean']>, ParentType, ContextType>;
+  frequency?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  ignored?: Resolver<Maybe<GQL_ResolversTypes['Boolean']>, ParentType, ContextType>;
+  info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  known?: Resolver<Maybe<GQL_ResolversTypes['Boolean']>, ParentType, ContextType>;
+  pageNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  sentenceNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  volumeNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type WordChangeResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['WordChangeResponse'] = ResolversParentTypes['WordChangeResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  wordId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type GQL_WordChangeResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['WordChangeResponse'] = GQL_ResolversParentTypes['WordChangeResponse']> = ResolversObject<{
+  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
+  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
+  wordId?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type WorkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Work'] = ResolversParentTypes['Work']> = {
-  authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  maxProgress?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  numberInSeries?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  progress?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType, Partial<WorkSeriesArgs>>;
-  status?: Resolver<Maybe<ResolversTypes['ReadStatus']>, ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['WorkType'], ParentType, ContextType>;
-  vocab?: Resolver<Array<ResolversTypes['Word']>, ParentType, ContextType, Partial<WorkVocabArgs>>;
+export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Work'] = GQL_ResolversParentTypes['Work']> = ResolversObject<{
+  authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  maxProgress?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  numberInSeries?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  progress?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  series?: Resolver<Maybe<GQL_ResolversTypes['Series']>, ParentType, ContextType, Partial<GQL_WorkSeriesArgs>>;
+  status?: Resolver<Maybe<GQL_ResolversTypes['ReadStatus']>, ParentType, ContextType>;
+  title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<GQL_ResolversTypes['WorkType'], ParentType, ContextType>;
+  vocab?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_WorkVocabArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type WorkTypeResolvers = { MANGA: 'manga', NOVEL: 'novel' };
-
-export type Resolvers<ContextType = any> = {
-  Author?: AuthorResolvers<ContextType>;
+export type GQL_Resolvers<ContextType = GQL_Context> = ResolversObject<{
+  Author?: GQL_AuthorResolvers<ContextType>;
   JSON?: GraphQLScalarType;
-  Mutation?: MutationResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
-  ReadStatus?: ReadStatusResolvers;
-  Series?: SeriesResolvers<ContextType>;
-  SetReadStatusResponse?: SetReadStatusResponseResolvers<ContextType>;
-  Word?: WordResolvers<ContextType>;
-  WordChangeResponse?: WordChangeResponseResolvers<ContextType>;
-  Work?: WorkResolvers<ContextType>;
-  WorkType?: WorkTypeResolvers;
-};
+  Mutation?: GQL_MutationResolvers<ContextType>;
+  Query?: GQL_QueryResolvers<ContextType>;
+  Series?: GQL_SeriesResolvers<ContextType>;
+  SetReadStatusResponse?: GQL_SetReadStatusResponseResolvers<ContextType>;
+  Word?: GQL_WordResolvers<ContextType>;
+  WordChangeResponse?: GQL_WordChangeResponseResolvers<ContextType>;
+  Work?: GQL_WorkResolvers<ContextType>;
+}>;
 

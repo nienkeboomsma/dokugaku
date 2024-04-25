@@ -1,4 +1,5 @@
 import sql from '../data/sql.js'
+import { SeriesModel } from '../models/SeriesModel.js'
 
 type ReturnSingle = {
   return: 'single'
@@ -62,11 +63,11 @@ class SeriesQuery {
   }
 
   getQuery() {
-    return sql`
+    return sql<SeriesModel[]>`
       SELECT 
         series.id, 
         series.title AS title,
-        jsonb_agg(work.id) AS volumes,
+        jsonb_agg(work.id) AS "volumeIds",
         jsonb_agg(
           DISTINCT jsonb_build_object(
             'id', author.id,

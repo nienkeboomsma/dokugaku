@@ -23,14 +23,16 @@ class Series {
         userId: input.userId,
         seriesIds: input.seriesIds,
       })
-      return seriesQuery.getQuery()
+      const series = await seriesQuery.getQuery()
+      return series ?? []
     }
 
     const seriesQuery = new SeriesQuery({
       return: 'all' as const,
       userId: input.userId,
     })
-    return seriesQuery.getQuery()
+    const series = await seriesQuery.getQuery()
+    return series ?? []
   }
 }
 

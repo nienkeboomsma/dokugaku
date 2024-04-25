@@ -4,7 +4,7 @@ class Word {
   async getWord(input: {
     seriesIdInWhichIgnored?: string
     userId?: string
-    wordId: string
+    wordId: number
     workIdInWhichIgnored?: string
     workIds?: string[]
   }) {
@@ -27,7 +27,7 @@ class Word {
       pageNumber?: number
       seriesIdInWhichIgnored?: string
       userId?: string
-      wordIds?: string[]
+      wordIds?: number[]
       workIdInWhichIgnored?: string
       workIds?: string[]
     } = {}
@@ -38,15 +38,19 @@ class Word {
         return: 'multiple' as const,
         wordIds: input.wordIds,
       })
-      return wordQuery.getQuery()
+      const words = await wordQuery.getQuery()
+      return words ?? []
     }
 
     const wordQuery = new WordQuery({
       ...input,
       return: 'all' as const,
     })
-    return wordQuery.getQuery()
+    const words = await wordQuery.getQuery()
+    return words ?? []
   }
 }
 
 export default Word
+
+export type WordType = typeof Word
