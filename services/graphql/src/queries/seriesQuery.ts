@@ -67,7 +67,7 @@ class SeriesQuery {
       SELECT 
         series.id, 
         series.title AS title,
-        jsonb_agg(work.id) AS "volumeIds",
+        jsonb_agg(work.id) AS "workIds",
         jsonb_agg(
           DISTINCT jsonb_build_object(
             'id', author.id,
