@@ -1,4 +1,4 @@
-# Almost the same as WordListInput, except for workIds
+# Almost the same as WordListInput, except for seriesIdInWhichIgnored, workIdInWhichIgnored and workIds
 input SeriesVocabInput {
   """
   Get only the first occurrence of each word, instead of each individual
@@ -12,23 +12,11 @@ input SeriesVocabInput {
   minPageNumber: Int
   pageNumber: Int
   """
-  Determines what series the 'ignored' value should be based on. If no
-  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  seriesIdInWhichIgnored: String
-  """
   If no userId value is supplied 'excluded', 'ignored' and 'known' will default
   to null.
   """
   userId: String
   wordIds: [Int!]
-  """
-  Determines what work the 'ignored' value should be based on. If no
-  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  workIdInWhichIgnored: String
 }
 
 type Series {

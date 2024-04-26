@@ -17,6 +17,7 @@ const resolvers: GQL_Resolvers = {
     vocab: (parent, { input }, { dataSources: { word } }) => {
       return word.getWords({
         ...input,
+        workIdInWhichIgnored: parent.id,
         workIds: [parent.id],
       })
     },

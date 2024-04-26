@@ -206,7 +206,7 @@ class WordQuery {
     ) {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        user_word.excluded = ${this.params.excluded}
+        COALESCE(user_word.excluded, false) = ${this.params.excluded}
       `
       this.whereAlreadyUsed = true
       return query
@@ -229,14 +229,14 @@ class WordQuery {
     if (this.params.seriesIdInWhichIgnored && this.params.userId) {
       return sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        ignored_in_series.ignored = ${this.params.ignored}
+        COALESCE(ignored_in_series.ignored, false) = ${this.params.ignored}
       `
     }
 
     if (this.params.workIdInWhichIgnored && this.params.userId) {
       return sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        ignored_in_work.ignored = ${this.params.ignored}
+        COALESCE(ignored_in_work.ignored, false) = ${this.params.ignored}
       `
     }
 
@@ -247,7 +247,7 @@ class WordQuery {
     if ('known' in this.params && typeof this.params.known === 'boolean') {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        user_word.known = ${this.params.known}
+        COALESCE(user_word.known, false) = ${this.params.known}
       `
       this.whereAlreadyUsed = true
       return query
@@ -263,7 +263,7 @@ class WordQuery {
     ) {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        word_frequency.frequency >= ${this.params.minFrequency}
+        COALESCE(word_frequency.frequency, 0) >= ${this.params.minFrequency}
       `
       this.whereAlreadyUsed = true
       return query
