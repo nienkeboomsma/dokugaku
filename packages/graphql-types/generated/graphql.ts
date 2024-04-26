@@ -145,23 +145,11 @@ export type GQL_SeriesVocabInput = {
   minPageNumber?: InputMaybe<Scalars['Int']['input']>;
   pageNumber?: InputMaybe<Scalars['Int']['input']>;
   /**
-   * Determines what series the 'ignored' value should be based on. If no
-   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
-  /**
    * If no userId value is supplied 'excluded', 'ignored' and 'known' will default
    * to null.
    */
   userId?: InputMaybe<Scalars['String']['input']>;
   wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
-  /**
-   * Determines what work the 'ignored' value should be based on. If no
-   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type GQL_SetReadStatusResponse = {
@@ -322,23 +310,11 @@ export type GQL_WorkVocabInput = {
   minPageNumber?: InputMaybe<Scalars['Int']['input']>;
   pageNumber?: InputMaybe<Scalars['Int']['input']>;
   /**
-   * Determines what series the 'ignored' value should be based on. If no
-   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
-  /**
    * If no userId value is supplied 'excluded', 'ignored' and 'known' will default
    * to null.
    */
   userId?: InputMaybe<Scalars['String']['input']>;
   wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
-  /**
-   * Determines what work the 'ignored' value should be based on. If no
-   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type GQL_UploadFormExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -350,6 +326,14 @@ export type GQL_UploadFormExistingSeriesQueryVariables = Exact<{ [key: string]: 
 
 
 export type GQL_UploadFormExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
+
+export type GQL_WorkCardsQueryVariables = Exact<{
+  seriesInput?: InputMaybe<GQL_SeriesListInput>;
+  vocabInput?: InputMaybe<GQL_SeriesVocabInput>;
+}>;
+
+
+export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, status?: GQL_ReadStatus | null | undefined, title: string, authors: Array<{ __typename?: 'Author', name: string }>, vocab: Array<{ __typename?: 'Word', known?: boolean | null | undefined, excluded?: boolean | null | undefined, ignored?: boolean | null | undefined, volumeNumber?: number | null | undefined }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }> };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;

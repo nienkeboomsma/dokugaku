@@ -34,7 +34,7 @@ CREATE TABLE work (
   UNIQUE (series_id, volume_number)
 );
 
-CREATE TYPE readstatus AS ENUM ('none', 'want to read', 'reading', 'read', 'abandoned');
+CREATE TYPE readstatus AS ENUM ('none', 'want_to_read', 'reading', 'read', 'abandoned');
 
 CREATE TABLE user_series (
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
