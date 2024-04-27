@@ -1,19 +1,10 @@
 type Series {
   authors: [Author!]!
-  """
-  The number of unique words that occur only once within the series.
-  """
-  hapaxLegomena: Int!
   id: ID!
-  """
-  The number of words that are not marked excluded, ignored or known.
-  """
-  learnableWords(userId: String): Int
   status: ReadStatus
   title: String!
-  totalWords: Int!
-  uniqueWords: Int!
-  vocab(input: SeriesVocabInput): [Word!]!
+  wordCount(input: WordCountInput): Int
+  words(input: SubQueryWordListInput): [Word!]!
   volumes(userId: String): [Work!]!
 }
 
@@ -31,27 +22,6 @@ input SeriesListInput {
   If no userId value is supplied 'status' will default to null.
   """
   userId: String
-}
-
-# Almost the same as WordListInput, except for seriesIdInWhichIgnored, workIdInWhichIgnored and workIds
-input SeriesVocabInput {
-  """
-  Get only the first occurrence of each word, instead of each individual
-  occurrence.
-  """
-  distinctOnly: Boolean
-  excluded: Boolean
-  known: Boolean
-  ignored: Boolean
-  minFrequency: Int
-  minPageNumber: Int
-  pageNumber: Int
-  """
-  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
-  to null.
-  """
-  userId: String
-  wordIds: [Int!]
 }
 
 extend type Query {

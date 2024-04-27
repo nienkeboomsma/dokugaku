@@ -1,13 +1,42 @@
+import { WordCountModel } from '../models/WordCountModel.js'
+import { WordModel } from '../models/WordModel.js'
 import WordQuery from '../queries/WordQuery.js'
 
+type GetWordInput = {
+  seriesIdInWhichIgnored?: string
+  userId?: string
+  wordId: number
+  workIdInWhichIgnored?: string
+  workIds?: string[]
+}
+
+type GetWordCountInput = {
+  rowCountOnly: true
+} & GetWordsInputCommon
+
+type GetWordEntriesInput = {
+  rowCountOnly?: false
+} & GetWordsInputCommon
+
+type GetWordsInputCommon = {
+  distinctOnly?: boolean
+  excluded?: boolean
+  ignored?: boolean
+  known?: boolean
+  minFrequency?: number
+  minPageNumber?: number
+  pageNumber?: number
+  seriesIdInWhichIgnored?: string
+  userId?: string
+  wordIds?: number[]
+  workIdInWhichIgnored?: string
+  workIds?: string[]
+}
+
+type GetWordsInput = GetWordCountInput | GetWordEntriesInput
+
 class Word {
-  async getWord(input: {
-    seriesIdInWhichIgnored?: string
-    userId?: string
-    wordId: number
-    workIdInWhichIgnored?: string
-    workIds?: string[]
-  }) {
+  async getWord(input: GetWordInput) {
     const wordQuery = new WordQuery({
       ...input,
       return: 'single',
@@ -16,22 +45,13 @@ class Word {
     return word
   }
 
+  /* eslint-disable no-dupe-class-members */
+  // TODO: set up ESLint to deal with TS better
+  async getWords(input: GetWordCountInput): Promise<[WordCountModel]>
+  async getWords(input: GetWordEntriesInput): Promise<WordModel[]>
   async getWords(
-    input: {
-      distinctOnly?: boolean
-      excluded?: boolean
-      ignored?: boolean
-      known?: boolean
-      minFrequency?: number
-      minPageNumber?: number
-      pageNumber?: number
-      seriesIdInWhichIgnored?: string
-      userId?: string
-      wordIds?: number[]
-      workIdInWhichIgnored?: string
-      workIds?: string[]
-    } = {}
-  ) {
+    input: GetWordsInput = {}
+  ): Promise<WordModel[] | [WordCountModel]> {
     if (input.wordIds && input.wordIds.length > 0) {
       const wordQuery = new WordQuery({
         ...input,
@@ -52,5 +72,3 @@ class Word {
 }
 
 export default Word
-
-export type WordType = typeof Word

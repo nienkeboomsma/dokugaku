@@ -19,7 +19,49 @@ enum ReadStatus {
   want_to_read
 }
 
+enum WordCountType {
+  """
+  The number of unique words that occur only once within the work.
+  """
+  hapax
+  """
+  The number of words that are not marked excluded, ignored (so long as a userId value is provided) or known.
+  """
+  learnable
+  total
+  unique
+}
+
 enum WorkType {
   manga
   novel
+}
+
+# Almost the same as WordListInput, except for seriesIdInWhichIgnored, workIdInWhichIgnored and workIds
+input SubQueryWordListInput {
+  """
+  Get only the first occurrence of each word, instead of each individual
+  occurrence.
+  """
+  distinctOnly: Boolean
+  excluded: Boolean
+  known: Boolean
+  ignored: Boolean
+  minFrequency: Int
+  minPageNumber: Int
+  pageNumber: Int
+  """
+  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+  to null.
+  """
+  userId: String
+  wordIds: [Int!]
+}
+
+input WordCountInput {
+  type: WordCountType
+  """
+  If no userId value is supplied the learnable word count will not exclude ignored words.
+  """
+  userId: String
 }

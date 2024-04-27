@@ -1,4 +1,4 @@
-import { type GQL_Resolvers } from '@repo/graphql-types'
+import { GQL_WordCountType, type GQL_Resolvers } from '@repo/graphql-types'
 
 const resolvers: GQL_Resolvers = {
   Query: {
@@ -16,7 +16,28 @@ const resolvers: GQL_Resolvers = {
         workIds: parent.workIds,
       })
     },
-    vocab: (parent, { input }, { dataSources: { word } }) => {
+    wordCount: async (parent, { input }, { dataSources: { series, word } }) => {
+      const type = input?.type ?? GQL_WordCountType.Total
+
+      if (type === GQL_WordCountType.Learnable) {
+        const [data] = await word.getWords({
+          excluded: false,
+          ignored: false,
+          known: false,
+          rowCountOnly: true,
+          seriesIdInWhichIgnored: parent.id,
+          userId: input?.userId,
+          workIds: parent.workIds,
+        })
+        return data.count
+      }
+
+      return series.getSeriesWordCount({
+        seriesId: parent.id,
+        type,
+      })
+    },
+    words: (parent, { input }, { dataSources: { word } }) => {
       return word.getWords({
         ...input,
         seriesIdInWhichIgnored: parent.id,

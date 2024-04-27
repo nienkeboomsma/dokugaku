@@ -1,4 +1,7 @@
+import { GQL_WordCountType } from '@repo/graphql-types'
+
 import WorkQuery from '../queries/WorkQuery'
+import WordCountQuery from '../queries/WordCountQuery'
 
 class Work {
   async getWork(input: {
@@ -41,6 +44,16 @@ class Work {
     })
     const works = await workQuery.getQuery()
     return works ?? []
+  }
+
+  async getWorkWordCount(input: { workId: string; type: GQL_WordCountType }) {
+    const wordCountQuery = new WordCountQuery({
+      seriesOrWork: 'work',
+      seriesOrWorkId: input.workId,
+      type: input.type,
+    })
+    const [data] = await wordCountQuery.getQuery()
+    return data?.count
   }
 }
 

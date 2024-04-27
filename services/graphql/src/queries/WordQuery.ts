@@ -1,4 +1,5 @@
 import sql from '../data/sql.js'
+import { WordCountModel } from '../models/WordCountModel.js'
 import { WordModel } from '../models/WordModel.js'
 
 type ReturnSingle = {
@@ -30,6 +31,7 @@ type ReturnAll = {
 }
 
 type QueryParamsCommon = {
+  rowCountOnly?: boolean
   seriesIdInWhichIgnored?: string
   userId?: string
   workIdInWhichIgnored?: string
@@ -305,6 +307,21 @@ class WordQuery {
   }
 
   getQuery() {
+    if (this.params.rowCountOnly) {
+      return sql<[WordCountModel]>`
+      SELECT 
+        COUNT(*) AS count
+      FROM word
+        ${this.ignoredJoin()}
+        ${this.userIdJoin()}
+        ${this.workIdJoin()}
+        ${this.wordIdFilter()}
+        ${this.excludedFilter()}
+        ${this.ignoredFilter()}
+        ${this.knownFilter()};
+      `
+    }
+
     return sql<WordModel[]>`
       ${this.selectDistinctWordsOnly()}
         word.id,
@@ -323,7 +340,6 @@ class WordQuery {
       ${this.minFrequencyFilter()}
       ${this.minPageNumberFilter()}
       ${this.pageNumberFilter()}
-
       ORDER BY
         ${'distinctOnly' in this.params && this.params.distinctOnly ? sql`word.id,` : sql``}
         word_work.volume_number ASC,
