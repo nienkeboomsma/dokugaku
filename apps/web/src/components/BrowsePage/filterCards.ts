@@ -7,7 +7,7 @@ export default function filterCards(
   showFinished: boolean,
   showAbandoned: boolean
 ) {
-  const { title, authors, status } = card
+  const { title, authors, status = '' } = card
 
   if (
     debouncedSearchValue !== '' &&

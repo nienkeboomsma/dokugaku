@@ -30,4 +30,12 @@ export const NotSeries: Story = {
   args: { workCardInfo: mockWorkCardInfo[1] as WorkCardInfo },
 }
 
+export const MissingKnownVocab: Story = {
+  args: { workCardInfo: mockWorkCardInfo[2] as WorkCardInfo },
+}
+
+export const MissingStatus: Story = {
+  args: { workCardInfo: mockWorkCardInfo[3] as WorkCardInfo },
+}
+
 export default meta

@@ -1,17 +1,17 @@
-import { ReadStatus } from './Work'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 type WorkCardInfoCommon = {
   authors: string[]
   id: string
-  knownVocab: number
-  status: ReadStatus
+  knownVocab?: number
+  status?: GQL_ReadStatus
   title: string
 }
 
 type WorkCardInfoSeries = {
-  firstVolumeId: string
+  firstVolumeId?: string
   series: true
-  volumeNumber: number
+  numberOfVolumes: number
 } & WorkCardInfoCommon
 
 export const isSeries = (
