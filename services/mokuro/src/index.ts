@@ -19,7 +19,8 @@ async function main() {
       execSync(
         `mokuro ${path.join(volumePath, folderName)} --disable_confirmation &&
         mv ${path.join(volumePath, '_ocr', folderName, '*')} ${path.join(volumePath, folderName)} &&
-        rm ${path.join(volumePath, folderName, '.html')}`
+        rm -rf ${path.join(volumePath, '_ocr')} &&
+        rm ${path.join(volumePath, `${folderName}.html`)}`
       )
       return res.status(200).send(`Mokuro has successfully processed the files`)
     } catch (error) {
