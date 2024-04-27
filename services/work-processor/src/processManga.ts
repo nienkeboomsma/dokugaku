@@ -4,6 +4,7 @@ import path from 'node:path'
 import { mokuroExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
+  createCoverImage,
   getTimeEstimate,
   runIchiranOnEachPage,
   runMokuro,
@@ -43,7 +44,9 @@ export async function processManga(req: Express.Request, res: Response) {
 
   if (!filesAreMokurod) await runMokuro(folderName)
   await runIchiranOnEachPage(fullPath)
+  await createCoverImage(fullPath)
   await convertImagesToWebP(fullPath)
+
   await insertIntoDatabase(
     {
       authors: req.body.authors,

@@ -85,7 +85,15 @@ export async function convertImagesToWebP(fullPath: string) {
     const outputFile = path.format({ name: inputFileName, ext: '.webp' })
     const outputPath = path.join(fullPath, outputFile)
 
-    await sharp(inputPath).toFormat('webp').toFile(outputPath)
+    if (inputFileName === 'cover') {
+      await sharp(inputPath)
+        .resize({ width: 320 })
+        .toFormat('webp')
+        .toFile(outputPath)
+    } else {
+      await sharp(inputPath).toFormat('webp').toFile(outputPath)
+    }
+
     fs.rmSync(inputPath)
   }
 
