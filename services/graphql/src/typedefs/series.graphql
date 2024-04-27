@@ -1,3 +1,38 @@
+type Series {
+  authors: [Author!]!
+  """
+  The number of unique words that occur only once within the series.
+  """
+  hapaxLegomena: Int!
+  id: ID!
+  """
+  The number of words that are not marked excluded, ignored or known.
+  """
+  learnableWords(userId: String): Int
+  status: ReadStatus
+  title: String!
+  totalWords: Int!
+  uniqueWords: Int!
+  vocab(input: SeriesVocabInput): [Word!]!
+  volumes(userId: String): [Work!]!
+}
+
+input SeriesInput {
+  seriesId: String!
+  """
+  If no userId value is supplied 'status' will default to null.
+  """
+  userId: String
+}
+
+input SeriesListInput {
+  seriesIds: [String!]
+  """
+  If no userId value is supplied 'status' will default to null.
+  """
+  userId: String
+}
+
 # Almost the same as WordListInput, except for seriesIdInWhichIgnored, workIdInWhichIgnored and workIds
 input SeriesVocabInput {
   """
@@ -17,31 +52,6 @@ input SeriesVocabInput {
   """
   userId: String
   wordIds: [Int!]
-}
-
-type Series {
-  id: ID!
-  authors: [Author!]!
-  status: ReadStatus
-  title: String!
-  vocab(input: SeriesVocabInput): [Word!]!
-  volumes(userId: String): [Work!]!
-}
-
-input SeriesInput {
-  seriesId: String!
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
-}
-
-input SeriesListInput {
-  seriesIds: [String!]
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
 }
 
 extend type Query {

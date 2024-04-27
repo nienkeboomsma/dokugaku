@@ -18,18 +18,24 @@ CREATE TABLE user_account (
 INSERT INTO user_account(id, display_name) VALUES ('6e41e9fd-c813-40e9-91fd-c51e47efab42', 'Nienke');
 
 CREATE TABLE series (
+  hapax_legomenon_count integer NULL,
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  title text NOT NULL UNIQUE
+  title text NOT NULL UNIQUE,
+  total_word_count integer NULL,
+  unique_word_count integer NULL
 );
 
 CREATE TYPE worktype AS ENUM ('manga', 'novel');
 
 CREATE TABLE work (
+  hapax_legomenon_count integer NULL,
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   max_progress integer NOT NULL,
-  type worktype NOT NULL,
-  title text NOT NULL,
   series_id uuid NULL DEFAULT NULL REFERENCES series,
+  title text NOT NULL,
+  total_word_count integer NULL,
+  type worktype NOT NULL,
+  unique_word_count integer NULL,
   volume_number smallint NULL DEFAULT NULL,
   UNIQUE (series_id, volume_number)
 );
@@ -103,7 +109,3 @@ CREATE TABLE ignored_in_series (
   ignored boolean NOT NULL DEFAULT false,
   UNIQUE (word_id, series_id, user_id)
 );
-
-INSERT INTO user_word (user_id, word_id, known) VALUES ('6e41e9fd-c813-40e9-91fd-c51e47efab42', 2089020, true);
-INSERT INTO user_word (user_id, word_id, excluded) VALUES ('6e41e9fd-c813-40e9-91fd-c51e47efab42', 2029080, true);
-INSERT INTO ignored_in_series (series_id, user_id, word_id, ignored) VALUES ('30a885a7-09a5-4abf-9af3-d63e17c3f6d1', '6e41e9fd-c813-40e9-91fd-c51e47efab42', 1172280, true);

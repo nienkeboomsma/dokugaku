@@ -1,34 +1,23 @@
-# Almost the same as WordListInput, except for seriesIdInWhichIgnored, workIdInWhichIgnored and workIds
-input WorkVocabInput {
-  """
-  Get only the first occurrence of each word, instead of each individual
-  occurrence.
-  """
-  distinctOnly: Boolean
-  excluded: Boolean
-  known: Boolean
-  ignored: Boolean
-  minFrequency: Int
-  minPageNumber: Int
-  pageNumber: Int
-  """
-  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
-  to null.
-  """
-  userId: String
-  wordIds: [Int!]
-}
-
 type Work {
   authors: [Author!]!
+  """
+  The number of unique words that occur only once within the work.
+  """
+  hapaxLegomena: Int!
   id: ID!
+  """
+  The number of words that are not marked excluded, ignored or known.
+  """
+  learnableWords(userId: String): Int
   maxProgress: Int!
   numberInSeries: Int
   progress: Int
   series(userId: String): Series
   status: ReadStatus
   title: String!
+  totalWords: Int!
   type: WorkType!
+  uniqueWords: Int!
   vocab(input: WorkVocabInput): [Word!]!
 }
 
@@ -54,6 +43,27 @@ input WorkListInput {
   """
   userId: String
   workIds: [String!]
+}
+
+# Almost the same as WordListInput, except for seriesIdInWhichIgnored, workIdInWhichIgnored and workIds
+input WorkVocabInput {
+  """
+  Get only the first occurrence of each word, instead of each individual
+  occurrence.
+  """
+  distinctOnly: Boolean
+  excluded: Boolean
+  known: Boolean
+  ignored: Boolean
+  minFrequency: Int
+  minPageNumber: Int
+  pageNumber: Int
+  """
+  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
+  to null.
+  """
+  userId: String
+  wordIds: [Int!]
 }
 
 extend type Query {

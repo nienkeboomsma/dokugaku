@@ -7,6 +7,8 @@ import { updateUserSeriesTable } from './updateUserSeriesTable.js'
 import { updateUserWorkTable } from './updateUserWorkTable.js'
 import { updateWordWorkTable } from './updateWordWorkTable.js'
 import { updateWorkTable } from './updateWorkTable.js'
+import { updateWorkWordCounts } from './updateWorkWordCounts.js'
+import { updateSeriesWordCounts } from './updateSeriesWordCounts.js'
 
 export async function insertIntoDatabase(
   workMetadata: WorkMetadata,
@@ -30,6 +32,15 @@ export async function insertIntoDatabase(
     await updateUserWorkTable(sql, userId, workMetadata.workId)
     await updateAuthorWorkTable(sql, workMetadata.workId, authorIds)
     await updateWordWorkTable(sql, workMetadata, fullPath)
+    await updateWorkWordCounts(sql, workMetadata.workId)
+
+    if (isPartOfSeries(workMetadata)) {
+      if (!workMetadata.seriesId) {
+        throw new Error('No series ID provided.')
+      }
+
+      await updateSeriesWordCounts(sql, workMetadata.seriesId)
+    }
 
     console.log('Work was successfully added to the database')
   })
