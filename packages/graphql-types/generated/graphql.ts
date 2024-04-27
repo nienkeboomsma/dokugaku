@@ -94,7 +94,7 @@ export type GQL_QueryWorkListArgs = {
 
 export enum GQL_ReadStatus {
   Abandoned = 'abandoned',
-  None = 'none',
+  New = 'new',
   Read = 'read',
   Reading = 'reading',
   WantToRead = 'want_to_read'

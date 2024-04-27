@@ -40,13 +40,13 @@ CREATE TABLE work (
   UNIQUE (series_id, volume_number)
 );
 
-CREATE TYPE readstatus AS ENUM ('none', 'want_to_read', 'reading', 'read', 'abandoned');
+CREATE TYPE readstatus AS ENUM ('new', 'want_to_read', 'reading', 'read', 'abandoned');
 
 CREATE TABLE user_series (
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id uuid NOT NULL REFERENCES user_account,
   series_id uuid NOT NULL REFERENCES series ON DELETE CASCADE,
-  status readstatus NOT NULL DEFAULT 'none',
+  status readstatus NOT NULL DEFAULT 'new',
   UNIQUE (user_id, series_id)
  );
 
@@ -54,7 +54,7 @@ CREATE TABLE user_work (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id uuid NOT NULL REFERENCES user_account,
   work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
-  status readstatus NOT NULL DEFAULT 'none',
+  status readstatus NOT NULL DEFAULT 'new',
   current_progress integer NULL DEFAULT 0,
   UNIQUE (user_id, work_id)
 );

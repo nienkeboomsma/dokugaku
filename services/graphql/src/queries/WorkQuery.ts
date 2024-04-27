@@ -41,7 +41,7 @@ class WorkQuery {
     }
     return sql`
       COALESCE (user_work.current_progress, 0) AS progress,
-      COALESCE (user_work.status, 'none') AS status,
+      COALESCE (user_work.status, 'new') AS status,
     `
   }
 

@@ -13,7 +13,7 @@ type SetReadStatusResponse {
 
 enum ReadStatus {
   abandoned
-  none
+  new
   read
   reading
   want_to_read
