@@ -36,12 +36,12 @@ class WorkQuery {
     if (!this.params.userId) {
       return sql`
         NULL AS progress,
-        NULL AS status
+        NULL AS status,
       `
     }
     return sql`
       COALESCE (user_work.current_progress, 0) AS progress,
-      COALESCE (user_work.status, 'none') AS status
+      COALESCE (user_work.status, 'none') AS status,
     `
   }
 
@@ -98,6 +98,9 @@ class WorkQuery {
         work.type,
         work.volume_number AS "numberInSeries",
         ${this.userIdColumns()}
+        work.hapax_legomenon_count AS "hapaxLegomena",
+        work.total_word_count AS "totalWords",
+        work.unique_word_count AS "uniqueWords"
       FROM work
       JOIN author_work ON work.id = author_work.work_id
       JOIN author ON author_work.author_id = author.id

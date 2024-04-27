@@ -32,11 +32,11 @@ class SeriesQuery {
   userIdColumn() {
     if (!this.params.userId) {
       return sql`
-        NULL AS "status"
+        NULL AS "status",
       `
     }
     return sql`
-      COALESCE (user_series.status, NULL) AS "status"
+      COALESCE (user_series.status, NULL) AS "status",
     `
   }
 
@@ -75,6 +75,9 @@ class SeriesQuery {
           )
         ) AS authors,
         ${this.userIdColumn()}
+        series.hapax_legomenon_count AS "hapaxLegomena",
+        series.total_word_count AS "totalWords",
+        series.unique_word_count AS "uniqueWords"
       FROM series 
       JOIN work ON series.id = work.series_id
       JOIN author_work ON work.id = author_work.work_id
