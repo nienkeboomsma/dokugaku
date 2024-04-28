@@ -1,6 +1,8 @@
 import BrowsePage from '../../components/BrowsePage/BrowsePage'
-import { mockWorkCardInfo } from '../../fixtures/workCardInfo'
+import { getWorkCards } from '../../graphql/workCards'
 
-export default function Browse() {
-  return <BrowsePage initialWorkCards={mockWorkCardInfo} />
+export default async function Browse() {
+  const initialWorkCards = await getWorkCards()
+
+  return <BrowsePage initialWorkCards={initialWorkCards} />
 }
