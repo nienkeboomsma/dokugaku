@@ -1,8 +1,11 @@
 import { GQL_WorkType } from '@repo/graphql-types'
 
 import UploadPage from '../../components/UploadPage/UploadPage'
-import { getUploadFormExistingAuthors } from '../../graphql/uploadFormExistingAuthors'
-import { getUploadFormExistingSeries } from '../../graphql/uploadFormExistingSeries'
+import { getUploadFormExistingAuthors } from '../../graphql/getUploadFormExistingAuthors'
+import { getUploadFormExistingSeries } from '../../graphql/getUploadFormExistingSeries'
+
+// TODO: as the collection grows, it might make more sense to fetch
+//       this data once the user starts typing a series title or author name
 
 export default async function Upload() {
   const existingAuthors = await getUploadFormExistingAuthors()
