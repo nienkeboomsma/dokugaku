@@ -128,12 +128,14 @@ export type GQL_SeriesWordsArgs = {
 
 export type GQL_SeriesInput = {
   seriesId: Scalars['String']['input'];
+  status?: InputMaybe<GQL_ReadStatus>;
   /** If no userId value is supplied 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type GQL_SeriesListInput = {
   seriesIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  status?: InputMaybe<GQL_ReadStatus>;
   /** If no userId value is supplied 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -306,6 +308,7 @@ export type GQL_WorkWordsArgs = {
 export type GQL_WorkInput = {
   /** Get only those works that are not part of a series. */
   excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<GQL_ReadStatus>;
   /** If no userId value is supplied 'progress' and 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
   workId: Scalars['String']['input'];
@@ -314,6 +317,7 @@ export type GQL_WorkInput = {
 export type GQL_WorkListInput = {
   /** Get only those works that are not part of a series. */
   excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<GQL_ReadStatus>;
   /** If no userId value is supplied 'progress' and 'status' will default to null. */
   userId?: InputMaybe<Scalars['String']['input']>;
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -323,6 +327,13 @@ export enum GQL_WorkType {
   Manga = 'manga',
   Novel = 'novel'
 }
+
+export type GQL_CurrentWorksQueryVariables = Exact<{
+  input?: InputMaybe<GQL_WorkListInput>;
+}>;
+
+
+export type GQL_CurrentWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress?: number | null | undefined }> };
 
 export type GQL_UploadFormExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 

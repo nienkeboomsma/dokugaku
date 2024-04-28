@@ -17,6 +17,7 @@ input WorkInput {
   Get only those works that are not part of a series.
   """
   excludeVolumesInSeries: Boolean
+  status: ReadStatus
   """
   If no userId value is supplied 'progress' and 'status' will default to null.
   """
@@ -29,6 +30,7 @@ input WorkListInput {
   Get only those works that are not part of a series.
   """
   excludeVolumesInSeries: Boolean
+  status: ReadStatus
   """
   If no userId value is supplied 'progress' and 'status' will default to null.
   """

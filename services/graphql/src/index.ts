@@ -23,3 +23,5 @@ async function main() {
 }
 
 main()
+
+// TODO: just make userId a required variable across the board; makes everything a lot simpler

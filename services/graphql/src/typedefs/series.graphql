@@ -10,6 +10,7 @@ type Series {
 
 input SeriesInput {
   seriesId: String!
+  status: ReadStatus
   """
   If no userId value is supplied 'status' will default to null.
   """
@@ -18,6 +19,7 @@ input SeriesInput {
 
 input SeriesListInput {
   seriesIds: [String!]
+  status: ReadStatus
   """
   If no userId value is supplied 'status' will default to null.
   """

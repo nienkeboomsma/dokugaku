@@ -1,4 +1,4 @@
-import { GQL_WordCountType } from '@repo/graphql-types'
+import { GQL_ReadStatus, GQL_WordCountType } from '@repo/graphql-types'
 
 import WorkQuery from '../queries/WorkQuery'
 import WordCountQuery from '../queries/WordCountQuery'
@@ -6,14 +6,13 @@ import WordCountQuery from '../queries/WordCountQuery'
 class Work {
   async getWork(input: {
     excludeVolumesInSeries?: boolean
+    status?: GQL_ReadStatus
     userId?: string
     workId: string
   }) {
     const workQuery = new WorkQuery({
-      excludeVolumesInSeries: input.excludeVolumesInSeries,
+      ...input,
       return: 'single',
-      userId: input.userId,
-      workId: input.workId,
     })
     const [work] = await workQuery.getQuery()
     return work
@@ -22,15 +21,15 @@ class Work {
   async getWorks(
     input: {
       excludeVolumesInSeries?: boolean
+      status?: GQL_ReadStatus
       userId?: string
       workIds?: string[]
     } = {}
   ) {
     if (input.workIds && input.workIds.length > 0) {
       const workQuery = new WorkQuery({
-        excludeVolumesInSeries: input.excludeVolumesInSeries,
+        ...input,
         return: 'multiple' as const,
-        userId: input.userId,
         workIds: input.workIds,
       })
       const works = await workQuery.getQuery()
@@ -38,7 +37,7 @@ class Work {
     }
 
     const workQuery = new WorkQuery({
-      excludeVolumesInSeries: input.excludeVolumesInSeries,
+      ...input,
       return: 'all' as const,
       userId: input.userId,
     })

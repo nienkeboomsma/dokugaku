@@ -202,6 +202,8 @@ class WordQuery {
   }
 
   excludedFilter() {
+    if (!this.params.userId) return sql``
+
     if (
       'excluded' in this.params &&
       typeof this.params.excluded === 'boolean'
@@ -246,6 +248,8 @@ class WordQuery {
   }
 
   knownFilter() {
+    if (!this.params.userId) return sql``
+
     if ('known' in this.params && typeof this.params.known === 'boolean') {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 

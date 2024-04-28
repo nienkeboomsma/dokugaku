@@ -1,3 +1,4 @@
+import { GQL_ReadStatus } from '@repo/graphql-types'
 import sql from '../data/sql.js'
 import { WorkModel } from '../models/WorkModel.js'
 
@@ -17,6 +18,7 @@ type ReturnAll = {
 
 type QueryParamsCommon = {
   excludeVolumesInSeries?: boolean
+  status?: GQL_ReadStatus
   userId?: string
 }
 
@@ -82,6 +84,22 @@ class WorkQuery {
     `
   }
 
+  statusFilter() {
+    console.table({ ...this.params })
+    if (!this.params.userId) return sql``
+
+    if ('status' in this.params && typeof this.params.status !== 'undefined') {
+      const query = sql`
+        ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
+        COALESCE (user_work.status, 'new') = ${this.params.status}
+      `
+      this.whereAlreadyUsed = true
+      return query
+    }
+
+    return sql``
+  }
+
   getQuery() {
     return sql<WorkModel[]>`
       SELECT
@@ -107,6 +125,7 @@ class WorkQuery {
       ${this.userIdJoin()}
       ${this.workIdFilter()}
       ${this.excludeVolumesInSeries()}
+      ${this.statusFilter()}
       GROUP BY 
         work.id,
         work.max_progress,
