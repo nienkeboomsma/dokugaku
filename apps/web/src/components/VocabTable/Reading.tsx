@@ -11,7 +11,7 @@ export default function Reading({
   const kana = vocab.info.kana
 
   if (kanji.length === 0) {
-    return kana
+    return kana[0]
   }
 
   if (kanji.length > 0) {
