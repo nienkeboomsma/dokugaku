@@ -8,7 +8,7 @@ import {
 import { getClient } from './ApolloClient'
 import { getPercentage } from '../util/getPercentage'
 import { isNumber } from '../types/utility'
-import { WorkCardInfo } from '../types/WorkCardInfo'
+import { type WorkCardInfo } from '../types/WorkCardInfo'
 
 const WORKCARDS = gql`
   query WorkCards(
@@ -65,9 +65,10 @@ const variables: GQL_WorkCardsQueryVariables = {
   },
 }
 
-const getKnownVocab = (learnableWords: any, totalWords: any) => {
-  return isNumber(learnableWords) && isNumber(totalWords) && totalWords > 0
-    ? Math.floor(getPercentage(totalWords, learnableWords))
+const getKnownVocab = (learnableWords: number, totalWords: number) => {
+  const knownVocab = totalWords - learnableWords
+  return totalWords > 0
+    ? Math.floor(getPercentage(knownVocab, totalWords))
     : undefined
 }
 
@@ -89,7 +90,10 @@ export const getWorkCards = async () => {
     const [firstVolume] = sortedVolumes
 
     const { learnableWords, totalWords } = series
-    const knownVocab = getKnownVocab(learnableWords, totalWords)
+    const knownVocab =
+      isNumber(learnableWords) && isNumber(totalWords)
+        ? getKnownVocab(learnableWords, totalWords)
+        : undefined
 
     return {
       authors: series.authors.map((author) => author.name),
@@ -105,7 +109,10 @@ export const getWorkCards = async () => {
 
   const workCards: WorkCardInfo[] = data.workList.map((work) => {
     const { learnableWords, totalWords } = work
-    const knownVocab = getKnownVocab(learnableWords, totalWords)
+    const knownVocab =
+      isNumber(learnableWords) && isNumber(totalWords)
+        ? getKnownVocab(learnableWords, totalWords)
+        : undefined
 
     return {
       authors: work.authors.map((author) => author.name),

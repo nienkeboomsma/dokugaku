@@ -1,4 +1,4 @@
-import { WorkCardInfo } from '../../types/WorkCardInfo'
+import { type WorkCardInfo } from '../../types/WorkCardInfo'
 import { normalise } from '../../util/normaliseString'
 
 export default function filterCards(

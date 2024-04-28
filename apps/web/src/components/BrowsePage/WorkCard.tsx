@@ -17,6 +17,7 @@ import { isSeries, type WorkCardInfo } from '../../types/WorkCardInfo'
 import WorkTitle from '../WorkTitle'
 import AuthorList from '../AuthorList'
 import WorkStatusBadge from './WorkStatusBadge'
+import { isNumber } from '../../types/utility'
 
 const MAX_WIDTH = '26rem'
 const MIN_WIDTH_DESKTOP = '20rem'
@@ -116,7 +117,7 @@ export default function WorkCard({
         </div>
 
         {/* Progress */}
-        {workCardInfo.knownVocab && (
+        {isNumber(workCardInfo.knownVocab) && (
           <RingProgress
             className={classes.progress}
             roundCaps
