@@ -4,46 +4,49 @@ import { IconPhoto, IconFiles } from '@tabler/icons-react'
 import { type UploadForm } from '../../hooks/useUploadForm'
 import { GQL_WorkType } from '@repo/graphql-types'
 
-const getAcceptedExtensions = (uploadForm: UploadForm, type: GQL_WorkType) => {
-  if (type === GQL_WorkType.Manga) {
+const getAcceptedExtensions = (
+  uploadForm: UploadForm,
+  workType: GQL_WorkType
+) => {
+  if (workType === GQL_WorkType.Manga) {
     return `.png, .jpg, .jpeg, .webp${uploadForm.values.mokuro ? ', .json' : ''}`
   }
-  if (type === GQL_WorkType.Novel) {
+  if (workType === GQL_WorkType.Novel) {
     return '.html, .md, .txt'
   }
 }
 
-const getLabel = (type: GQL_WorkType) => {
-  if (type === GQL_WorkType.Manga) {
+const getLabel = (workType: GQL_WorkType) => {
+  if (workType === GQL_WorkType.Manga) {
     return 'Upload manga images'
   }
-  if (type === GQL_WorkType.Novel) {
+  if (workType === GQL_WorkType.Novel) {
     return 'Upload text files'
   }
 }
 
-const RightSection = ({ type }: { type: GQL_WorkType }) => {
-  if (type === GQL_WorkType.Manga) {
+const RightSection = ({ workType }: { workType: GQL_WorkType }) => {
+  if (workType === GQL_WorkType.Manga) {
     return <IconPhoto size={18} stroke={1.5} />
   }
-  if (type === GQL_WorkType.Novel) {
+  if (workType === GQL_WorkType.Novel) {
     return <IconFiles size={18} stroke={1.5} />
   }
 }
 
 export default function FilesInput({
-  type,
+  workType,
   uploadForm,
 }: {
-  type: GQL_WorkType
+  workType: GQL_WorkType
   uploadForm: UploadForm
 }) {
   return (
     <FileInput
-      accept={getAcceptedExtensions(uploadForm, type)}
+      accept={getAcceptedExtensions(uploadForm, workType)}
       clearable
-      label={getLabel(type)}
-      rightSection={<RightSection type={type} />}
+      label={getLabel(workType)}
+      rightSection={<RightSection workType={workType} />}
       rightSectionPointerEvents='none'
       multiple
       withAsterisk

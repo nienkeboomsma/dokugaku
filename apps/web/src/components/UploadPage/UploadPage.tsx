@@ -13,7 +13,7 @@ export default function UploadPage({
   existingMangaSeries,
   existingNovelSeries,
 }: {
-  existingAuthors: string[]
+  existingAuthors: Set<string>
   existingMangaSeries: ExistingSeries[]
   existingNovelSeries: ExistingSeries[]
 }) {
@@ -27,16 +27,16 @@ export default function UploadPage({
 
         <Tabs.Panel value='manga'>
           <UploadForm
-            existingAuthors={existingAuthors}
-            existingSeries={existingMangaSeries}
-            type={GQL_WorkType.Manga}
+            initialExistingAuthors={existingAuthors}
+            initialExistingSeries={existingMangaSeries}
+            workType={GQL_WorkType.Manga}
           />
         </Tabs.Panel>
         <Tabs.Panel value='novel'>
           <UploadForm
-            existingAuthors={existingAuthors}
-            existingSeries={existingNovelSeries}
-            type={GQL_WorkType.Novel}
+            initialExistingAuthors={existingAuthors}
+            initialExistingSeries={existingNovelSeries}
+            workType={GQL_WorkType.Novel}
           />
         </Tabs.Panel>
       </Tabs>

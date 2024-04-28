@@ -1,8 +1,9 @@
 import { Button } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
 import { GQL_WorkType } from '@repo/graphql-types'
 
 import classes from './UploadForm.module.css'
-import useUploadForm from '../../hooks/useUploadForm'
+import useUploadForm, { type FormValues } from '../../hooks/useUploadForm'
 import SeriesInput from './SeriesInput'
 import VolumeNumberInput from './VolumeNumberInput'
 import TitleInput from './TitleInput'
@@ -11,17 +12,30 @@ import MokuroInput from './MokuroInput'
 import CoverInput from './CoverInput'
 import FilesInput from './FilesInput'
 import { type ExistingSeries } from '../../types/uploadForm'
+import { useState } from 'react'
+import { getLowestMissingNumber } from '../../util/getLowestMissingNumber'
 
 export default function UploadForm({
-  existingAuthors,
-  existingSeries,
-  type,
+  initialExistingAuthors,
+  initialExistingSeries,
+  workType,
 }: {
-  existingAuthors: string[]
-  existingSeries: ExistingSeries[]
-  type: GQL_WorkType
+  initialExistingAuthors: Set<string>
+  initialExistingSeries: ExistingSeries[]
+  workType: GQL_WorkType
 }) {
-  const { uploadForm, submitHandler } = useUploadForm(type)
+  const { uploadForm, sendFormData } = useUploadForm(workType)
+  const [loading, setLoading] = useState(false)
+  const [existingAuthors, setExistingAuthors] = useState(initialExistingAuthors)
+  const [existingSeries, setExistingSeries] = useState(initialExistingSeries)
+
+  const findAuthorsBySeriesTitle = (seriesTitle: string) => {
+    const seriesInfo = existingSeries.find(
+      (series) => series.title === seriesTitle
+    )
+
+    return seriesInfo ? [...seriesInfo.authors] : []
+  }
 
   const findVolumeNumberBySeriesTitle = (seriesTitle: string) => {
     const seriesInfo = existingSeries.find(
@@ -31,12 +45,91 @@ export default function UploadForm({
     return seriesInfo ? seriesInfo.nextVolumeNumber.toString() : ''
   }
 
-  const findAuthorsBySeriesTitle = (seriesTitle: string) => {
-    const seriesInfo = existingSeries.find(
-      (series) => series.title === seriesTitle
+  const updateExistingAuthors = (values: FormValues) => {
+    const updatedAuthors = new Set(existingAuthors)
+
+    for (const author of values.authors) {
+      updatedAuthors.add(author)
+    }
+
+    setExistingAuthors(updatedAuthors)
+  }
+
+  const updateExistingSeries = (values: FormValues) => {
+    const seriesIndex = existingSeries.findIndex(
+      (series) => values.series === series.title
     )
 
-    return seriesInfo ? seriesInfo.authors : []
+    if (seriesIndex > -1) {
+      const updatedSeries = existingSeries.map((series, index) => {
+        if (index !== seriesIndex) return series
+
+        const updatedAuthors = new Set([...series.authors])
+        for (const author of values.authors) {
+          updatedAuthors.add(author)
+        }
+
+        const updatedWorkTypes = new Set([...series.workTypes])
+        updatedWorkTypes.add(workType)
+
+        const updatedVolumeNumbers = [...series.volumeNumbers]
+        updatedVolumeNumbers.push(Number(values.volumeNumber))
+
+        const nextVolumeNumber = getLowestMissingNumber(updatedVolumeNumbers)
+
+        return {
+          authors: updatedAuthors,
+          nextVolumeNumber,
+          title: series.title,
+          volumeNumbers: updatedVolumeNumbers,
+          workTypes: updatedWorkTypes,
+        }
+      })
+
+      return setExistingSeries(updatedSeries)
+    }
+
+    const newSeriesEntry = {
+      authors: new Set(values.authors),
+      nextVolumeNumber: Number(values.volumeNumber) + 1,
+      title: values.title,
+      volumeNumbers: [Number(values.volumeNumber)],
+      workTypes: new Set([workType]),
+    }
+
+    setExistingSeries((prev) => [...prev, newSeriesEntry])
+  }
+
+  const submitHandler = async (
+    values: FormValues,
+    event: React.FormEvent<HTMLFormElement> | undefined
+  ) => {
+    setLoading(true)
+    try {
+      const data = await sendFormData(values, event)
+
+      if (data.error) {
+        return notifications.show({
+          title: `Unable to process ${values.title}`,
+          message: data.error,
+        })
+      }
+
+      updateExistingAuthors(values)
+      updateExistingSeries(values)
+      uploadForm.reset()
+      notifications.show({
+        title: `${values.title} uploaded successfully`,
+        message: `Please check back in about ${Math.ceil(data.estimatedDurationInMin)} minutes`,
+      })
+    } catch {
+      notifications.show({
+        title: 'Something went wrong',
+        message: 'Please try again later',
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -54,17 +147,27 @@ export default function UploadForm({
       />
       <TitleInput uploadForm={uploadForm} />
       <AuthorsInput
-        existingAuthors={existingAuthors}
+        existingAuthors={[...existingAuthors]}
         findAuthorsBySeriesTitle={findAuthorsBySeriesTitle}
         uploadForm={uploadForm}
       />
 
-      {type === GQL_WorkType.Manga && <MokuroInput uploadForm={uploadForm} />}
-      {type === GQL_WorkType.Novel && <CoverInput uploadForm={uploadForm} />}
+      {workType === GQL_WorkType.Manga && (
+        <MokuroInput uploadForm={uploadForm} />
+      )}
+      {workType === GQL_WorkType.Novel && (
+        <CoverInput uploadForm={uploadForm} />
+      )}
 
-      <FilesInput type={type} uploadForm={uploadForm} />
+      <FilesInput workType={workType} uploadForm={uploadForm} />
 
-      <Button mt={20} type='submit' variant='filled'>
+      <Button
+        mt={20}
+        loaderProps={{ type: 'dots' }}
+        loading={loading}
+        type='submit'
+        variant='filled'
+      >
         Upload
       </Button>
     </form>

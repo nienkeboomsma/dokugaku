@@ -2,6 +2,8 @@ import { gql } from '@apollo/client'
 import { type GQL_UploadFormExistingSeriesQuery } from '@repo/graphql-types'
 
 import { getClient } from './ApolloClient'
+import { getLowestMissingNumber } from '../util/getLowestMissingNumber'
+import { isNumber } from '../types/utility'
 
 const UPLOAD_FORM_EXISTING_SERIES = gql`
   query UploadFormExistingSeries {
@@ -18,38 +20,40 @@ const UPLOAD_FORM_EXISTING_SERIES = gql`
   }
 `
 export const getUploadFormExistingSeries = async () => {
-  const { data } = await getClient().query<GQL_UploadFormExistingSeriesQuery>({
-    query: UPLOAD_FORM_EXISTING_SERIES,
-  })
-
-  const seriesInfo = data.seriesList.map((series) => {
-    const authors = series.volumes.flatMap((volume) =>
-      volume.authors.map((author) => author.name)
-    )
-    const uniqueAuthors = [...new Set(authors)]
-
-    const types = series.volumes.map((volume) => volume.type)
-    const uniqueTypes = [...new Set(types)]
-
-    const volumeNumbers = series.volumes
-      .map((volume) => volume.numberInSeries)
-      .sort()
-
-    let nextVolumeNumber = 1
-    for (let number of volumeNumbers) {
-      if (number === nextVolumeNumber) {
-        nextVolumeNumber++
+  try {
+    const { data } = await getClient().query<GQL_UploadFormExistingSeriesQuery>(
+      {
+        query: UPLOAD_FORM_EXISTING_SERIES,
       }
-    }
+    )
 
-    const seriesInfo = {
-      authors: uniqueAuthors,
-      nextVolumeNumber,
-      title: series.title,
-      types: uniqueTypes,
-    }
+    const seriesInfo = data.seriesList.map((series) => {
+      const authors = series.volumes.flatMap((volume) =>
+        volume.authors.map((author) => author.name)
+      )
+      const uniqueAuthors = new Set(authors)
+
+      const workTypes = series.volumes.map((volume) => volume.type)
+      const uniqueWorkTypes = new Set(workTypes)
+
+      const volumeNumbers = series.volumes
+        .map((volume) => volume.numberInSeries)
+        .filter(isNumber)
+
+      const nextVolumeNumber = getLowestMissingNumber(volumeNumbers)
+
+      const seriesInfo = {
+        authors: uniqueAuthors,
+        nextVolumeNumber,
+        title: series.title,
+        volumeNumbers,
+        workTypes: uniqueWorkTypes,
+      }
+      return seriesInfo
+    })
+
     return seriesInfo
-  })
-
-  return seriesInfo
+  } catch {
+    return []
+  }
 }

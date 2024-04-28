@@ -1,8 +1,9 @@
 import { GQL_WorkType } from '@repo/graphql-types'
 
 export type ExistingSeries = {
-  authors: string[]
+  authors: Set<string>
   nextVolumeNumber: number
   title: string
-  types: GQL_WorkType[]
+  volumeNumbers: number[]
+  workTypes: Set<GQL_WorkType>
 }

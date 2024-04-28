@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { UseFormReturnType, useForm } from '@mantine/form'
 import { GQL_WorkType } from '@repo/graphql-types'
 
-type FormValues = {
+export type FormValues = {
   series: string
   volumeNumber?: string
   title: string
@@ -124,8 +124,9 @@ export default function useUploadForm(type: GQL_WorkType) {
         body: formData,
       }
     )
-    console.log(await res.json())
+    const data = await res.json()
+    return data
   }
 
-  return { uploadForm, submitHandler: sendFormData }
+  return { uploadForm, sendFormData }
 }

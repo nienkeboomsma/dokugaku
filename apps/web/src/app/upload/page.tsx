@@ -9,11 +9,11 @@ export default async function Upload() {
   const existingSeries = await getUploadFormExistingSeries()
 
   const existingMangaSeries = existingSeries.filter((series) =>
-    series.types.includes(GQL_WorkType.Manga)
+    series.workTypes.has(GQL_WorkType.Manga)
   )
 
   const existingNovelSeries = existingSeries.filter((series) =>
-    series.types.includes(GQL_WorkType.Novel)
+    series.workTypes.has(GQL_WorkType.Novel)
   )
 
   return (

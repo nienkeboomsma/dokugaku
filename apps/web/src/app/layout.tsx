@@ -1,6 +1,8 @@
 import '@mantine/core/styles.layer.css'
+import '@mantine/notifications/styles.layer.css'
 import 'mantine-datatable/styles.layer.css'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
 
 import { ApolloWrapper } from '../graphql/ApolloWrapper'
 import AppShell from '../components/AppShell/AppShell'
@@ -27,6 +29,7 @@ export default function RootLayout({
             defaultColorScheme='auto'
             theme={{ primaryColor: 'blue' }}
           >
+            <Notifications />
             <AppShell>{children}</AppShell>
           </MantineProvider>
         </ApolloWrapper>
