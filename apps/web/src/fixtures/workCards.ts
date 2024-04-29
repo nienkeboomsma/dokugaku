@@ -1,7 +1,7 @@
 import { GQL_ReadStatus } from '@repo/graphql-types'
 import { type WorkCardInfo } from '../types/WorkCardInfo'
 
-export const mockWorkCardInfo: Array<WorkCardInfo> = [
+export const mockWorkCards: WorkCardInfo[] = [
   {
     authors: ['臼井 儀人'],
     firstVolumeId: '469e8ffc-4616-45c4-87dd-3673c91bd8b2',
@@ -23,15 +23,16 @@ export const mockWorkCardInfo: Array<WorkCardInfo> = [
   {
     authors: ['あらゐ けいいち'],
     id: '03b16794-4472-4ac3-b018-537398f83332',
+    knownVocab: 87,
     series: false,
     status: GQL_ReadStatus.Abandoned,
     title: '水たまりで息をする',
   },
   {
     authors: ['オオイシ ナホ', '鳥山 明'],
-    firstVolumeId: '90bfe324-e5f0-48fe-a7ca-621b14739b78',
     id: 'd548998c-849a-4418-aa8a-00a4e7b8f584',
     knownVocab: 87,
+    status: GQL_ReadStatus.Read,
     series: true,
     title: 'ドラゴンボールSD',
     numberOfVolumes: 3,

@@ -1,33 +1,33 @@
 import { GQL_ReadStatus } from '@repo/graphql-types'
 
-type WorkCardInfoCommon = {
+type WorkCardCommon = {
   authors: string[]
   id: string
-  knownVocab?: number
-  status?: GQL_ReadStatus
+  knownVocab: number
+  status: GQL_ReadStatus
   title: string
 }
 
-type WorkCardInfoSeries = {
+type WorkCardSeries = {
   firstVolumeId?: string
   series: true
   numberOfVolumes: number
-} & WorkCardInfoCommon
+} & WorkCardCommon
 
 export const isSeries = (
   workCardInfo: WorkCardInfo
-): workCardInfo is WorkCardInfoSeries => {
+): workCardInfo is WorkCardSeries => {
   return workCardInfo.series
 }
 
-type WorkCardInfoVolume = {
+type WorkCardVolume = {
   series: false
-} & WorkCardInfoCommon
+} & WorkCardCommon
 
 export const isVolume = (
   workCardInfo: WorkCardInfo
-): workCardInfo is WorkCardInfoVolume => {
+): workCardInfo is WorkCardVolume => {
   return !workCardInfo.series
 }
 
-export type WorkCardInfo = WorkCardInfoSeries | WorkCardInfoVolume
+export type WorkCardInfo = WorkCardSeries | WorkCardVolume

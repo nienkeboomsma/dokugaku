@@ -9,7 +9,6 @@ import {
   useMantineTheme,
 } from '@mantine/core'
 import { IconCheck } from '@tabler/icons-react'
-import { GQL_ReadStatus } from '@repo/graphql-types'
 import Image from 'next/image'
 
 import classes from './WorkCard.module.css'
@@ -17,7 +16,6 @@ import { isSeries, type WorkCardInfo } from '../../types/WorkCardInfo'
 import WorkTitle from '../WorkTitle'
 import AuthorList from '../AuthorList'
 import WorkStatusBadge from './WorkStatusBadge'
-import { isNumber } from '../../types/utility'
 
 const MAX_WIDTH = '26rem'
 const MIN_WIDTH_DESKTOP = '20rem'
@@ -110,30 +108,23 @@ export default function WorkCard({
               >{`${workCardInfo.numberOfVolumes} ${workCardInfo.numberOfVolumes > 1 ? 'volumes' : 'volume'}`}</Text>
             )}
           </div>
-          {workCardInfo.status &&
-            workCardInfo.status !== GQL_ReadStatus.New && (
-              <WorkStatusBadge status={workCardInfo.status} />
-            )}
+
+          <WorkStatusBadge status={workCardInfo.status} />
         </div>
 
         {/* Progress */}
-        {isNumber(workCardInfo.knownVocab) && (
-          <RingProgress
-            className={classes.progress}
-            roundCaps
-            size={60}
-            thickness={5}
-            sections={[
-              { value: workCardInfo.knownVocab, color: theme.primaryColor },
-            ]}
-            label={
-              <ProgressLabel
-                knownVocab={workCardInfo.knownVocab}
-                theme={theme}
-              />
-            }
-          />
-        )}
+        <RingProgress
+          className={classes.progress}
+          roundCaps
+          size={60}
+          thickness={5}
+          sections={[
+            { value: workCardInfo.knownVocab, color: theme.primaryColor },
+          ]}
+          label={
+            <ProgressLabel knownVocab={workCardInfo.knownVocab} theme={theme} />
+          }
+        />
       </div>
     </Paper>
   )
