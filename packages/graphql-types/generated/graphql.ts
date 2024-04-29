@@ -322,11 +322,10 @@ export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __t
 
 export type GQL_WorkInfoQueryVariables = Exact<{
   workInput: GQL_WorkInput;
-  wordsInput?: InputMaybe<GQL_SubQueryWordListInput>;
 }>;
 
 
-export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }>, words: Array<{ __typename?: 'Word', id: string, info: any, frequency: number, ignored?: boolean | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> } | null | undefined };
+export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }> } | null | undefined };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;

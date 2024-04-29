@@ -2,6 +2,7 @@
 
 import { Button } from '@mantine/core'
 import { IconBook2 } from '@tabler/icons-react'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 import classes from './WorkPage.module.css'
 import { WorkInfo } from '../../types/WorkInfo'
@@ -14,7 +15,6 @@ import AuthorList from '../AuthorList'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
 import IgnoredWords from '../VocabTable/IgnoredWords'
-import { ReadStatus } from '../../types/Work'
 import { useState } from 'react'
 import { useVocab } from '../../hooks/useVocab'
 
@@ -23,17 +23,23 @@ const coverWidth = '10rem'
 const cssVariables = {
   '--cover-width': coverWidth,
   '--second-column-max-width': VocabTableMaxWidth,
-  '--second-column-width': 'calc(100% - var(--cover-width))',
+  '--second-column-width': 'calc(100% - var(--cover-width) - var(--gap))',
 } as React.CSSProperties
 
 // TODO: Hook up to GraphQL
-const callToApi = (id: string, status: ReadStatus) => {
+const callToApi = (id: string, status: GQL_ReadStatus) => {
   console.log(id, status)
 }
 
-export default function WorkPage({ work }: { work: WorkInfo }) {
-  const [workStatus, setReadStatus] = useState(work.status)
-  const { actions, vocab } = useVocab(work.vocab, {
+export default function WorkPage({ work }: { work?: WorkInfo }) {
+  // TODO: design a proper placeholder page
+  if (!work) return 'Oops'
+
+  // TODO: get via useEffect, add loading indicator
+  const initialVocab = []
+
+  const [readStatus, setReadStatus] = useState(work.status)
+  const { actions, vocab } = useVocab(initialVocab, {
     isSeries: true,
     seriesOrWorkId: work.id,
   })
@@ -49,11 +55,11 @@ export default function WorkPage({ work }: { work: WorkInfo }) {
             width={coverWidth}
           />
           <ReadStatusSelector
-            setValue={(status: ReadStatus) => {
+            updateStatus={(status: GQL_ReadStatus) => {
               callToApi(work.id, status)
               setReadStatus(status)
             }}
-            value={workStatus}
+            status={readStatus}
           />
           <Button
             component={Link}
