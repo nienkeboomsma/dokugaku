@@ -6,7 +6,7 @@ import {
 } from '@repo/graphql-types'
 
 import { getClient } from './ApolloClient'
-import { CurrentWork } from '../types/CurrentWork'
+import { type CurrentWork } from '../types/CurrentWork'
 
 const CURRENT_WORKS = gql`
   query CurrentWorks($input: WorkListInput) {
@@ -18,13 +18,9 @@ const CURRENT_WORKS = gql`
   }
 `
 
-// TODO: this should be centrally supplied
-const userId = '6e41e9fd-c813-40e9-91fd-c51e47efab42'
-
 const variables: GQL_CurrentWorksQueryVariables = {
   input: {
     status: GQL_ReadStatus.Reading,
-    userId,
   },
 }
 
@@ -35,13 +31,7 @@ export const getCurrentWorks = async () => {
       variables,
     })
 
-    const currentWorks: CurrentWork[] = data.workList.map((work) => {
-      if (!work.progress) {
-        const workWithoutNull = { id: work.id, maxProgress: work.maxProgress }
-        return workWithoutNull
-      }
-      return work
-    })
+    const currentWorks: CurrentWork[] = data.workList
 
     return currentWorks
   } catch {

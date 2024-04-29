@@ -1,7 +1,7 @@
 'use client'
 
-import { CurrentWork } from '../../types/CurrentWork'
-import { Vocab } from '../../types/Vocab'
+import { type CurrentWork } from '../../types/CurrentWork'
+import { type Vocab } from '../../types/Vocab'
 import { useVocab } from '../../hooks/useVocab'
 import CurrentWorks from './CurrentWorks'
 import PaperContainer, {
