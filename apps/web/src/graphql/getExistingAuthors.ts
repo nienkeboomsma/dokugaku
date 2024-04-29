@@ -17,7 +17,9 @@ export const getExistingAuthors = async (): Promise<ExistingAuthors> => {
       query: EXISTING_AUTHORS,
     })
 
-    const authorNames = data.authorList.map((author) => author.name)
+    const authorNames = data.authorList
+      .map((author) => author.name)
+      .sort((authorA, authorB) => authorA.localeCompare(authorB))
 
     return new Set(authorNames)
   } catch {

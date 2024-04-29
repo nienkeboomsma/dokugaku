@@ -51,7 +51,9 @@ export const getExistingSeries = async (): Promise<ExistingSeries> => {
       return seriesInfo
     })
 
-    return seriesInfo
+    return seriesInfo.sort((seriesA, seriesB) =>
+      seriesA.title.localeCompare(seriesB.title)
+    )
   } catch {
     return []
   }
