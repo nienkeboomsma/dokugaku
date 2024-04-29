@@ -1,21 +1,22 @@
 'use client'
 
 import { Tabs } from '@mantine/core'
+import { GQL_WorkType } from '@repo/graphql-types'
 
 import classes from './UploadPage.module.css'
+import { type ExistingSeries } from '../../types/ExistingSeries'
+import { type ExistingAuthors } from '../../types/ExistingAuthors'
 import PaperContainer from '../PaperContainer/PaperContainer'
 import UploadForm from './UploadForm'
-import { GQL_WorkType } from '@repo/graphql-types'
-import { ExistingSeries } from '../../types/uploadForm'
 
 export default function UploadPage({
   existingAuthors,
   existingMangaSeries,
   existingNovelSeries,
 }: {
-  existingAuthors: Set<string>
-  existingMangaSeries: ExistingSeries[]
-  existingNovelSeries: ExistingSeries[]
+  existingAuthors: ExistingAuthors
+  existingMangaSeries: ExistingSeries
+  existingNovelSeries: ExistingSeries
 }) {
   return (
     <PaperContainer maxWidth='28rem'>

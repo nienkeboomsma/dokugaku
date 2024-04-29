@@ -1,12 +1,13 @@
 import { gql } from '@apollo/client'
-import { type GQL_UploadFormExistingSeriesQuery } from '@repo/graphql-types'
+import { type GQL_ExistingSeriesQuery } from '@repo/graphql-types'
 
 import { getClient } from './ApolloClient'
 import { getLowestMissingNumber } from '../util/getLowestMissingNumber'
 import { isNumber } from '../types/utility'
+import { ExistingSeries } from '../types/ExistingSeries'
 
-const UPLOAD_FORM_EXISTING_SERIES = gql`
-  query UploadFormExistingSeries {
+const FORM_EXISTING_SERIES = gql`
+  query ExistingSeries {
     seriesList {
       title
       volumes {
@@ -19,13 +20,11 @@ const UPLOAD_FORM_EXISTING_SERIES = gql`
     }
   }
 `
-export const getUploadFormExistingSeries = async () => {
+export const getExistingSeries = async (): Promise<ExistingSeries> => {
   try {
-    const { data } = await getClient().query<GQL_UploadFormExistingSeriesQuery>(
-      {
-        query: UPLOAD_FORM_EXISTING_SERIES,
-      }
-    )
+    const { data } = await getClient().query<GQL_ExistingSeriesQuery>({
+      query: FORM_EXISTING_SERIES,
+    })
 
     const seriesInfo = data.seriesList.map((series) => {
       const authors = series.volumes.flatMap((volume) =>

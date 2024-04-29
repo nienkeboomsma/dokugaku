@@ -6,4 +6,4 @@ export type ExistingSeries = {
   title: string
   volumeNumbers: number[]
   workTypes: Set<GQL_WorkType>
-}
+}[]

@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { Button } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { GQL_WorkType } from '@repo/graphql-types'
 
 import classes from './UploadForm.module.css'
+import { type ExistingSeries } from '../../types/ExistingSeries'
+import { type ExistingAuthors } from '../../types/ExistingAuthors'
 import useUploadForm, { type FormValues } from '../../hooks/useUploadForm'
 import SeriesInput from './SeriesInput'
 import VolumeNumberInput from './VolumeNumberInput'
@@ -11,8 +14,6 @@ import AuthorsInput from './AuthorsInput'
 import MokuroInput from './MokuroInput'
 import CoverInput from './CoverInput'
 import FilesInput from './FilesInput'
-import { type ExistingSeries } from '../../types/uploadForm'
-import { useState } from 'react'
 import { getLowestMissingNumber } from '../../util/getLowestMissingNumber'
 
 export default function UploadForm({
@@ -20,8 +21,8 @@ export default function UploadForm({
   initialExistingSeries,
   workType,
 }: {
-  initialExistingAuthors: Set<string>
-  initialExistingSeries: ExistingSeries[]
+  initialExistingAuthors: ExistingAuthors
+  initialExistingSeries: ExistingSeries
   workType: GQL_WorkType
 }) {
   const { uploadForm, sendFormData } = useUploadForm(workType)
@@ -46,7 +47,7 @@ export default function UploadForm({
   }
 
   const updateExistingAuthors = (values: FormValues) => {
-    const updatedAuthors = new Set(existingAuthors)
+    const updatedAuthors = new Set([...existingAuthors])
 
     for (const author of values.authors) {
       updatedAuthors.add(author)
@@ -137,17 +138,14 @@ export default function UploadForm({
       className={classes.form}
       onSubmit={uploadForm.onSubmit(submitHandler)}
     >
-      <SeriesInput
-        existingSeriesTitles={existingSeries.map((series) => series.title)}
-        uploadForm={uploadForm}
-      />
+      <SeriesInput existingSeries={existingSeries} uploadForm={uploadForm} />
       <VolumeNumberInput
         findVolumeNumberBySeriesTitle={findVolumeNumberBySeriesTitle}
         uploadForm={uploadForm}
       />
       <TitleInput uploadForm={uploadForm} />
       <AuthorsInput
-        existingAuthors={[...existingAuthors]}
+        existingAuthors={existingAuthors}
         findAuthorsBySeriesTitle={findAuthorsBySeriesTitle}
         uploadForm={uploadForm}
       />

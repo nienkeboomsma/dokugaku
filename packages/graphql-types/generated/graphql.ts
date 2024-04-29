@@ -301,15 +301,15 @@ export type GQL_CurrentWorksQueryVariables = Exact<{
 
 export type GQL_CurrentWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number }> };
 
-export type GQL_UploadFormExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GQL_ExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_UploadFormExistingAuthorsQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', name: string }> };
+export type GQL_ExistingAuthorsQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', name: string }> };
 
-export type GQL_UploadFormExistingSeriesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GQL_ExistingSeriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_UploadFormExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
+export type GQL_ExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
 
 export type GQL_WorkCardsQueryVariables = Exact<{
   learnableWordsInput?: InputMaybe<GQL_WordCountInput>;

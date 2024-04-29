@@ -1,5 +1,6 @@
 import { TagsInput } from '@mantine/core'
 
+import { type ExistingAuthors } from '../../types/ExistingAuthors'
 import { type UploadForm } from '../../hooks/useUploadForm'
 import AutofillButton from './AutofillButton'
 
@@ -8,7 +9,7 @@ export default function AuthorsInput({
   findAuthorsBySeriesTitle,
   uploadForm,
 }: {
-  existingAuthors: string[]
+  existingAuthors: ExistingAuthors
   findAuthorsBySeriesTitle: (seriesTitle: string) => string[] | []
   uploadForm: UploadForm
 }) {
@@ -27,7 +28,7 @@ export default function AuthorsInput({
   return (
     <TagsInput
       label='Author(s)'
-      data={existingAuthors}
+      data={[...existingAuthors]}
       rightSection={
         <AutofillButton
           ariaLabel='Autofill authors'

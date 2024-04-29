@@ -1,17 +1,18 @@
 import { Autocomplete } from '@mantine/core'
 
+import { type ExistingSeries } from '../../types/ExistingSeries'
 import { UploadForm } from '../../hooks/useUploadForm'
 
 export default function SeriesInput({
-  existingSeriesTitles,
+  existingSeries,
   uploadForm,
 }: {
-  existingSeriesTitles: string[]
+  existingSeries: ExistingSeries
   uploadForm: UploadForm
 }) {
   return (
     <Autocomplete
-      data={existingSeriesTitles}
+      data={existingSeries.map((series) => series.title)}
       label='Series'
       {...uploadForm.getInputProps('series')}
     />
