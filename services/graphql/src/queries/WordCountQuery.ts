@@ -30,7 +30,7 @@ class WordCountQuery {
   }
 
   getQuery() {
-    return sql<WordCountModel[]>`
+    return sql<[WordCountModel]>`
       SELECT 
         ${this.getColumnName()} AS count
       FROM ${sql(this.params.seriesOrWork)}

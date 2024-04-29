@@ -3,7 +3,7 @@ type Series {
   id: ID!
   status: ReadStatus!
   title: String!
-  wordCount(input: WordCountInput): Int
+  wordCount(input: WordCountInput): Int!
   words(input: SubQueryWordListInput): [Word!]!
   volumes: [Work!]!
 }

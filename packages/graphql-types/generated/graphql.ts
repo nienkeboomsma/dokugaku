@@ -107,7 +107,7 @@ export type GQL_Series = {
   status: GQL_ReadStatus;
   title: Scalars['String']['output'];
   volumes: Array<GQL_Work>;
-  wordCount?: Maybe<Scalars['Int']['output']>;
+  wordCount: Scalars['Int']['output'];
   words: Array<GQL_Word>;
 };
 
@@ -261,7 +261,7 @@ export type GQL_Work = {
   status: GQL_ReadStatus;
   title: Scalars['String']['output'];
   type: GQL_WorkType;
-  wordCount?: Maybe<Scalars['Int']['output']>;
+  wordCount: Scalars['Int']['output'];
   words: Array<GQL_Word>;
 };
 
@@ -318,7 +318,7 @@ export type GQL_WorkCardsQueryVariables = Exact<{
 }>;
 
 
-export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, totalWords?: number | null | undefined, learnableWords?: number | null | undefined, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, status: GQL_ReadStatus, title: string, totalWords?: number | null | undefined, learnableWords?: number | null | undefined, authors: Array<{ __typename?: 'Author', name: string }> }> };
+export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, totalWords: number, learnableWords: number, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, status: GQL_ReadStatus, title: string, totalWords: number, learnableWords: number, authors: Array<{ __typename?: 'Author', name: string }> }> };
 
 export type GQL_WorkInfoQueryVariables = Exact<{
   workInput: GQL_WorkInput;
@@ -487,7 +487,7 @@ export type GQL_SeriesResolvers<ContextType = GQL_Context, ParentType extends GQ
   status?: Resolver<GQL_ResolversTypes['ReadStatus'], ParentType, ContextType>;
   title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
   volumes?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType>;
-  wordCount?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType, Partial<GQL_SeriesWordCountArgs>>;
+  wordCount?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType, Partial<GQL_SeriesWordCountArgs>>;
   words?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_SeriesWordsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -533,7 +533,7 @@ export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_
   status?: Resolver<GQL_ResolversTypes['ReadStatus'], ParentType, ContextType>;
   title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<GQL_ResolversTypes['WorkType'], ParentType, ContextType>;
-  wordCount?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType, Partial<GQL_WorkWordCountArgs>>;
+  wordCount?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType, Partial<GQL_WorkWordCountArgs>>;
   words?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_WorkWordsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

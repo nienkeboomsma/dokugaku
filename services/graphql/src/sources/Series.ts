@@ -51,7 +51,7 @@ class Series {
       type: input.type,
     })
     const [data] = await wordCountQuery.getQuery()
-    return data?.count
+    return data.count
   }
 }
 
