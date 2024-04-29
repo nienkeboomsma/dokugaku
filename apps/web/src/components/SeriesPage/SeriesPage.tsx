@@ -7,7 +7,9 @@ import classes from './SeriesPage.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
 import { type Word } from '../../types/Word'
 import { useVocab } from '../../hooks/useVocab'
-import PaperContainer from '../PaperContainer/PaperContainer'
+import PaperContainer, {
+  PaperContainerPadding,
+} from '../PaperContainer/PaperContainer'
 import WorkTitle from '../WorkTitle'
 import AuthorList from '../AuthorList'
 import ReadStatusSelector from '../ReadStatusSelector'
@@ -38,7 +40,9 @@ export default function SeriesPage({
   })
 
   return (
-    <PaperContainer maxWidth={VocabTableMaxWidth}>
+    <PaperContainer
+      maxWidth={`calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding})`}
+    >
       <div className={classes.contentContainer}>
         <div className={classes.seriesInfo}>
           <div className={classes.titleAndAuthors}>

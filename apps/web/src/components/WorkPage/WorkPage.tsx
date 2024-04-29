@@ -9,7 +9,9 @@ import classes from './WorkPage.module.css'
 import { type WorkInfo } from '../../types/WorkInfo'
 import { type Word } from '../../types/Word'
 import { useVocab } from '../../hooks/useVocab'
-import PaperContainer from '../PaperContainer/PaperContainer'
+import PaperContainer, {
+  PaperContainerPadding,
+} from '../PaperContainer/PaperContainer'
 import WorkCover from '../WorkCover'
 import ReadStatusSelector from '../ReadStatusSelector'
 import Link from 'next/link'
@@ -49,7 +51,9 @@ export default function WorkPage({
   })
 
   return (
-    <PaperContainer maxWidth={`calc(${coverWidth} + ${VocabTableMaxWidth})`}>
+    <PaperContainer
+      maxWidth={`calc(${coverWidth} + ${VocabTableMaxWidth} + 3 * ${PaperContainerPadding})`}
+    >
       <div className={classes.container} style={cssVariables}>
         <div className={classes.firstColumn}>
           <WorkCover
@@ -82,7 +86,7 @@ export default function WorkPage({
             </WorkTitle>
             <AuthorList authors={work.authors} />
           </div>
-          <div className={classes.frequencyListContainer}>
+          <div>
             <SectionHeading>Frequency list</SectionHeading>
             <VocabTable
               actions={actions}

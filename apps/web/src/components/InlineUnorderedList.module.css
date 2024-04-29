@@ -1,10 +1,12 @@
 .unorderedList {
   margin: 0;
   padding: 0;
+  word-break: break-word;
 }
 
 .listItem {
-  display: inline;
+  display: inline-block;
+  vertical-align: top;
 
   &:not(:last-child)::after {
     content: '・';

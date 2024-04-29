@@ -17,7 +17,7 @@ import sortVocab from './sortVocab'
 import VocabFilter from './VocabFilter'
 import VocabSort from './VocabSort'
 
-const MAX_WIDTH = '58rem'
+const MAX_WIDTH = '52rem'
 
 export type VocabTableType =
   | 'frequencyList'
@@ -163,6 +163,7 @@ export default function VocabTable({
 
       <DataTable
         borderRadius='sm'
+        classNames={{ table: classes.table }}
         columns={tableProperties[type].columns}
         fz='md'
         minHeight={160}
