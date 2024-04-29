@@ -311,6 +311,13 @@ export type GQL_ExistingSeriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GQL_ExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
 
+export type GQL_SeriesInfoQueryVariables = Exact<{
+  seriesInput: GQL_SeriesInput;
+}>;
+
+
+export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, volumeNumber?: number | null | undefined }> } | null | undefined };
+
 export type GQL_WorkCardsQueryVariables = Exact<{
   learnableWordsInput?: InputMaybe<GQL_WordCountInput>;
   totalWordsInput?: InputMaybe<GQL_WordCountInput>;

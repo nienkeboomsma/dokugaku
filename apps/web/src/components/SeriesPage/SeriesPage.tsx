@@ -1,27 +1,34 @@
 'use client'
 
+import { useState } from 'react'
+
 import classes from './SeriesPage.module.css'
 import { SeriesInfo } from '../../types/SeriesInfo'
+import { useVocab } from '../../hooks/useVocab'
 import PaperContainer from '../PaperContainer/PaperContainer'
 import WorkTitle from '../WorkTitle'
 import AuthorList from '../AuthorList'
-import StatusSelector from '../ReadStatusSelector'
+import ReadStatusSelector from '../ReadStatusSelector'
+import Volumes from './Volumes'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
 import IgnoredWords from '../VocabTable/IgnoredWords'
-import { useState } from 'react'
-import { ReadStatus } from '../../types/Work'
-import { useVocab } from '../../hooks/useVocab'
-import Volumes from './Volumes'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 // TODO: Hook up to GraphQL
-const callToApi = (id: string, status: ReadStatus) => {
+const callToApi = (id: string, status: GQL_ReadStatus) => {
   console.log(id, status)
 }
 
-export default function SeriesPage({ series }: { series: SeriesInfo }) {
+export default function SeriesPage({ series }: { series?: SeriesInfo }) {
+  // TODO: design a proper placeholder page
+  if (!series) return 'Oops'
+
+  // TODO: get via useEffect, add loading indicator
+  const initialVocab = []
+
   const [seriesStatus, setSeriesStatus] = useState(series.status)
-  const { actions, vocab } = useVocab(series.vocab, {
+  const { actions, vocab } = useVocab(initialVocab, {
     isSeries: true,
     seriesOrWorkId: series.id,
   })
@@ -38,12 +45,12 @@ export default function SeriesPage({ series }: { series: SeriesInfo }) {
           </div>
 
           <div>
-            <StatusSelector
-              setValue={(status: ReadStatus) => {
+            <ReadStatusSelector
+              updateStatus={(status: GQL_ReadStatus) => {
                 callToApi(series.id, status)
                 setSeriesStatus(status)
               }}
-              value={seriesStatus}
+              status={seriesStatus}
             />
           </div>
         </div>

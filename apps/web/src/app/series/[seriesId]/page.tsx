@@ -1,6 +1,12 @@
 import SeriesPage from '../../../components/SeriesPage/SeriesPage'
-import { mockSeriesInfo } from '../../../fixtures/seriesInfo'
+import { getSeriesInfo } from '../../../graphql/getSeriesInfo'
 
-export default function Series({ params }: { params: { seriesId: string } }) {
-  return <SeriesPage series={mockSeriesInfo} />
+export default async function Series({
+  params,
+}: {
+  params: { seriesId: string }
+}) {
+  const seriesInfo = await getSeriesInfo(params.seriesId)
+
+  return <SeriesPage series={seriesInfo} />
 }
