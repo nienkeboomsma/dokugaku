@@ -4,9 +4,9 @@ import sql from '../data/sql.js'
 import { WordCountModel } from '../models/WordCountModel.js'
 
 type QueryParams = {
+  seriesOrWork: 'series' | 'work'
   seriesOrWorkId: string
   type: GQL_WordCountType
-  seriesOrWork: 'series' | 'work'
 }
 
 class WordCountQuery {

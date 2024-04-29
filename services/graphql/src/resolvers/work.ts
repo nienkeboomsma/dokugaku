@@ -2,19 +2,23 @@ import { GQL_WordCountType, type GQL_Resolvers } from '@repo/graphql-types'
 
 const resolvers: GQL_Resolvers = {
   Query: {
-    work: (_, { input }, { dataSources: { work } }) => {
-      return work.getWork(input)
+    work: (_, { input }, { userId, dataSources: { work } }) => {
+      return work.getWork({ ...input, userId })
     },
-    workList: async (_, { input }, { dataSources: { work } }) => {
-      return work.getWorks(input)
+    workList: async (_, { input }, { userId, dataSources: { work } }) => {
+      return work.getWorks({ ...input, userId })
     },
   },
   Work: {
-    series: (parent, { userId }, { dataSources: { series } }) => {
+    series: (parent, _, { userId, dataSources: { series } }) => {
       if (!parent.seriesId) return null
       return series.getSeries({ seriesId: parent.seriesId, userId })
     },
-    wordCount: async (parent, { input }, { dataSources: { word, work } }) => {
+    wordCount: async (
+      parent,
+      { input },
+      { userId, dataSources: { word, work } }
+    ) => {
       const type = input?.type ?? GQL_WordCountType.Total
 
       if (type === GQL_WordCountType.Learnable) {
@@ -23,7 +27,7 @@ const resolvers: GQL_Resolvers = {
           ignored: false,
           known: false,
           rowCountOnly: true,
-          userId: input?.userId,
+          userId,
           workIdInWhichIgnored: parent.id,
           workIds: [parent.id],
         })
@@ -35,9 +39,10 @@ const resolvers: GQL_Resolvers = {
         type,
       })
     },
-    words: (parent, { input }, { dataSources: { word } }) => {
+    words: (parent, { input }, { userId, dataSources: { word } }) => {
       return word.getWords({
         ...input,
+        userId,
         workIdInWhichIgnored: parent.id,
         workIds: [parent.id],
       })

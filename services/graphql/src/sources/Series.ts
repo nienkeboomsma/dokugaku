@@ -7,7 +7,7 @@ class Series {
   async getSeries(input: {
     seriesId: string
     status?: GQL_ReadStatus
-    userId?: string
+    userId: string
   }) {
     const seriesQuery = new SeriesQuery({
       ...input,
@@ -18,13 +18,11 @@ class Series {
     return series
   }
 
-  async getSeriesList(
-    input: {
-      seriesIds?: string[]
-      status?: GQL_ReadStatus
-      userId?: string
-    } = {}
-  ) {
+  async getSeriesList(input: {
+    seriesIds?: string[]
+    status?: GQL_ReadStatus
+    userId: string
+  }) {
     if (input.seriesIds && input.seriesIds.length > 0) {
       const seriesQuery = new SeriesQuery({
         ...input,

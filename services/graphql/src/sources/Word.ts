@@ -4,17 +4,17 @@ import WordQuery from '../queries/WordQuery.js'
 
 type GetWordInput = {
   seriesIdInWhichIgnored?: string
-  userId?: string
+  userId: string
   wordId: number
   workIdInWhichIgnored?: string
   workIds?: string[]
 }
 
-type GetWordCountInput = {
+type GetWordsCountInput = {
   rowCountOnly: true
 } & GetWordsInputCommon
 
-type GetWordEntriesInput = {
+type GetWordsEntriesInput = {
   rowCountOnly?: false
 } & GetWordsInputCommon
 
@@ -27,30 +27,30 @@ type GetWordsInputCommon = {
   minPageNumber?: number
   pageNumber?: number
   seriesIdInWhichIgnored?: string
-  userId?: string
+  userId: string
   wordIds?: number[]
   workIdInWhichIgnored?: string
   workIds?: string[]
 }
 
-type GetWordsInput = GetWordCountInput | GetWordEntriesInput
+type GetWordsInput = GetWordsCountInput | GetWordsEntriesInput
 
 class Word {
-  async getWord(input: GetWordInput) {
+  async getWord(input: GetWordInput): Promise<WordModel> {
     const wordQuery = new WordQuery({
       ...input,
       return: 'single',
     })
     const [word] = await wordQuery.getQuery()
-    return word
+    return word as WordModel
   }
 
   /* eslint-disable no-dupe-class-members */
   // TODO: set up ESLint to deal with TS better
-  async getWords(input: GetWordCountInput): Promise<[WordCountModel]>
-  async getWords(input: GetWordEntriesInput): Promise<WordModel[]>
+  async getWords(input: GetWordsCountInput): Promise<[WordCountModel]>
+  async getWords(input: GetWordsEntriesInput): Promise<WordModel[]>
   async getWords(
-    input: GetWordsInput = {}
+    input: GetWordsInput
   ): Promise<WordModel[] | [WordCountModel]> {
     if (input.wordIds && input.wordIds.length > 0) {
       const wordQuery = new WordQuery({

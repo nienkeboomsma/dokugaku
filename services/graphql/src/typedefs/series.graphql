@@ -1,29 +1,21 @@
 type Series {
   authors: [Author!]!
   id: ID!
-  status: ReadStatus
+  status: ReadStatus!
   title: String!
   wordCount(input: WordCountInput): Int
   words(input: SubQueryWordListInput): [Word!]!
-  volumes(userId: String): [Work!]!
+  volumes: [Work!]!
 }
 
 input SeriesInput {
   seriesId: String!
   status: ReadStatus
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
 }
 
 input SeriesListInput {
   seriesIds: [String!]
   status: ReadStatus
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
 }
 
 extend type Query {

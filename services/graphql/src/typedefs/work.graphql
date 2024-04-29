@@ -3,9 +3,9 @@ type Work {
   id: ID!
   maxProgress: Int!
   numberInSeries: Int
-  progress: Int
-  series(userId: String): Series
-  status: ReadStatus
+  progress: Int!
+  series: Series
+  status: ReadStatus!
   title: String!
   type: WorkType!
   wordCount(input: WordCountInput): Int
@@ -18,10 +18,6 @@ input WorkInput {
   """
   excludeVolumesInSeries: Boolean
   status: ReadStatus
-  """
-  If no userId value is supplied 'progress' and 'status' will default to null.
-  """
-  userId: String
   workId: String!
 }
 
@@ -31,10 +27,6 @@ input WorkListInput {
   """
   excludeVolumesInSeries: Boolean
   status: ReadStatus
-  """
-  If no userId value is supplied 'progress' and 'status' will default to null.
-  """
-  userId: String
   workIds: [String!]
 }
 

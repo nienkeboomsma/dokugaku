@@ -4,8 +4,11 @@ import { AuthorModel } from './AuthorModel'
 
 export type SeriesModel = {
   authors: AuthorModel[]
+  hapaxLegomena: number
   id: string
-  status: GQL_ReadStatus | null
+  status: GQL_ReadStatus
   title: string
+  totalWords: number
+  uniqueWords: number
   workIds: string[]
 }

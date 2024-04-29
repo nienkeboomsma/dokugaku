@@ -7,7 +7,7 @@ class Work {
   async getWork(input: {
     excludeVolumesInSeries?: boolean
     status?: GQL_ReadStatus
-    userId?: string
+    userId: string
     workId: string
   }) {
     const workQuery = new WorkQuery({
@@ -18,14 +18,12 @@ class Work {
     return work
   }
 
-  async getWorks(
-    input: {
-      excludeVolumesInSeries?: boolean
-      status?: GQL_ReadStatus
-      userId?: string
-      workIds?: string[]
-    } = {}
-  ) {
+  async getWorks(input: {
+    excludeVolumesInSeries?: boolean
+    status?: GQL_ReadStatus
+    userId: string
+    workIds?: string[]
+  }) {
     if (input.workIds && input.workIds.length > 0) {
       const workQuery = new WorkQuery({
         ...input,
@@ -39,7 +37,6 @@ class Work {
     const workQuery = new WorkQuery({
       ...input,
       return: 'all' as const,
-      userId: input.userId,
     })
     const works = await workQuery.getQuery()
     return works ?? []

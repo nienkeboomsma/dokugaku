@@ -18,7 +18,7 @@ type ReturnAll = {
 
 type QueryParamsCommon = {
   status?: GQL_ReadStatus
-  userId?: string
+  userId: string
 }
 
 type QueryParams = QueryParamsCommon &
@@ -31,28 +31,6 @@ class SeriesQuery {
   constructor(params: QueryParams) {
     this.params = params
     this.whereAlreadyUsed = false
-  }
-
-  userIdColumn() {
-    if (!this.params.userId) {
-      return sql`
-        NULL AS "status",
-      `
-    }
-    return sql`
-      COALESCE (user_series.status, NULL) AS "status",
-    `
-  }
-
-  userIdJoin() {
-    if (!this.params.userId) return sql``
-
-    return sql`
-      LEFT JOIN user_series 
-        ON series.id = user_series.series_id
-        AND ( user_series.user_id = ${this.params.userId}
-          OR user_series.user_id IS NULL )
-    `
   }
 
   seriesIdFilter() {
@@ -69,8 +47,6 @@ class SeriesQuery {
   }
 
   statusFilter() {
-    if (!this.params.userId) return sql``
-
     if ('status' in this.params && typeof this.params.status !== 'undefined') {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
@@ -95,15 +71,18 @@ class SeriesQuery {
             'name', author.author_name
           )
         ) AS authors,
-        ${this.userIdColumn()}
         series.hapax_legomenon_count AS "hapaxLegomena",
         series.total_word_count AS "totalWords",
-        series.unique_word_count AS "uniqueWords"
+        series.unique_word_count AS "uniqueWords",
+        COALESCE (user_series.status, 'new') AS "status"
       FROM series 
       JOIN work ON series.id = work.series_id
       JOIN author_work ON work.id = author_work.work_id
       JOIN author ON author_work.author_id = author.id
-      ${this.userIdJoin()}
+      LEFT JOIN user_series 
+        ON series.id = user_series.series_id
+        AND ( user_series.user_id = ${this.params.userId}
+          OR user_series.user_id IS NULL )
       ${this.seriesIdFilter()}
       ${this.statusFilter()}
       GROUP BY

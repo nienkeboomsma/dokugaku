@@ -25,7 +25,7 @@ enum WordCountType {
   """
   hapax
   """
-  The number of words that are not marked excluded, ignored (so long as a userId value is provided) or known.
+  The number of words that are not marked excluded, ignored or known.
   """
   learnable
   total
@@ -50,18 +50,9 @@ input SubQueryWordListInput {
   minFrequency: Int
   minPageNumber: Int
   pageNumber: Int
-  """
-  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
-  to null.
-  """
-  userId: String
   wordIds: [Int!]
 }
 
 input WordCountInput {
   type: WordCountType
-  """
-  If no userId value is supplied the learnable word count will not exclude ignored words.
-  """
-  userId: String
 }
