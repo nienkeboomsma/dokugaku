@@ -2,7 +2,7 @@ import { Spoiler } from '@mantine/core'
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react'
 
 import classes from './IgnoredWords.module.css'
-import { Vocab } from '../../types/Vocab'
+import { type Word } from '../../types/Word'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableProps } from './VocabTable'
 
@@ -13,7 +13,7 @@ export default function IgnoredWords({
 }: {
   actions: VocabTableProps['actions']
   furigana: boolean
-  vocab: Vocab[]
+  vocab: Word[]
 }) {
   return (
     <Spoiler

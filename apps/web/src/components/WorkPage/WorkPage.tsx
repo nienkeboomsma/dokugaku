@@ -1,11 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import { Button } from '@mantine/core'
 import { IconBook2 } from '@tabler/icons-react'
 import { GQL_ReadStatus } from '@repo/graphql-types'
 
 import classes from './WorkPage.module.css'
-import { WorkInfo } from '../../types/WorkInfo'
+import { type WorkInfo } from '../../types/WorkInfo'
+import { type Word } from '../../types/Word'
+import { useVocab } from '../../hooks/useVocab'
 import PaperContainer from '../PaperContainer/PaperContainer'
 import WorkCover from '../WorkCover'
 import ReadStatusSelector from '../ReadStatusSelector'
@@ -15,8 +18,6 @@ import AuthorList from '../AuthorList'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
 import IgnoredWords from '../VocabTable/IgnoredWords'
-import { useState } from 'react'
-import { useVocab } from '../../hooks/useVocab'
 
 const coverWidth = '10rem'
 
@@ -31,12 +32,15 @@ const callToApi = (id: string, status: GQL_ReadStatus) => {
   console.log(id, status)
 }
 
-export default function WorkPage({ work }: { work?: WorkInfo }) {
+export default function WorkPage({
+  initialVocab,
+  work,
+}: {
+  initialVocab: Word[]
+  work?: WorkInfo
+}) {
   // TODO: design a proper placeholder page
   if (!work) return 'Oops'
-
-  // TODO: get via useEffect, add loading indicator
-  const initialVocab = []
 
   const [readStatus, setReadStatus] = useState(work.status)
   const { actions, vocab } = useVocab(initialVocab, {

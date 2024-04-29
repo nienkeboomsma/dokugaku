@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 import classes from './SeriesPage.module.css'
-import { SeriesInfo } from '../../types/SeriesInfo'
+import { type SeriesInfo } from '../../types/SeriesInfo'
+import { type Word } from '../../types/Word'
 import { useVocab } from '../../hooks/useVocab'
 import PaperContainer from '../PaperContainer/PaperContainer'
 import WorkTitle from '../WorkTitle'
@@ -13,19 +15,21 @@ import Volumes from './Volumes'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
 import IgnoredWords from '../VocabTable/IgnoredWords'
-import { GQL_ReadStatus } from '@repo/graphql-types'
 
 // TODO: Hook up to GraphQL
 const callToApi = (id: string, status: GQL_ReadStatus) => {
   console.log(id, status)
 }
 
-export default function SeriesPage({ series }: { series?: SeriesInfo }) {
+export default function SeriesPage({
+  initialVocab,
+  series,
+}: {
+  initialVocab: Word[]
+  series?: SeriesInfo
+}) {
   // TODO: design a proper placeholder page
   if (!series) return 'Oops'
-
-  // TODO: get via useEffect, add loading indicator
-  const initialVocab = []
 
   const [seriesStatus, setSeriesStatus] = useState(series.status)
   const { actions, vocab } = useVocab(initialVocab, {

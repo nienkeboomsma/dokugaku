@@ -1,5 +1,5 @@
-export type Vocab = {
-  id: number
+export type Word = {
+  id: string
   info: {
     kanji: string[]
     kana: string[]

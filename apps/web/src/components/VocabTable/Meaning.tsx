@@ -1,5 +1,5 @@
 import classes from './Meaning.module.css'
-import { Vocab } from '../../types/Vocab'
+import { type Word } from '../../types/Word'
 import InlineUnorderedList from '../InlineUnorderedList'
 
 function MeaningsList({ meanings }: { meanings: string[][] }) {
@@ -14,7 +14,7 @@ function MeaningsList({ meanings }: { meanings: string[][] }) {
   )
 }
 
-export default function Meaning({ vocab }: { vocab: Vocab }) {
+export default function Meaning({ vocab }: { vocab: Word }) {
   const meanings = vocab.info.meaning
 
   if (vocab.info.meaning.length === 1) {

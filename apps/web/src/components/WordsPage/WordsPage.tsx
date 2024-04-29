@@ -4,7 +4,7 @@ import VocabTable, {
   VocabTableMaxWidth,
   VocabTableType,
 } from '../VocabTable/VocabTable'
-import { Vocab } from '../../types/Vocab'
+import { type Word } from '../../types/Word'
 import { useVocab } from '../../hooks/useVocab'
 import PaperContainer from '../PaperContainer/PaperContainer'
 
@@ -15,7 +15,7 @@ export default function WordsPage({
 }: {
   heading: string
   type: VocabTableType
-  initialVocab: Vocab[]
+  initialVocab: Word[]
 }) {
   const { actions, vocab } = useVocab(initialVocab)
 

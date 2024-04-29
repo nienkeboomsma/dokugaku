@@ -7,7 +7,7 @@ import { IconMoodSad } from '@tabler/icons-react'
 import { DataTable, DataTableColumn } from 'mantine-datatable'
 
 import classes from './VocabTable.module.css'
-import { Vocab } from '../../types/Vocab'
+import { type Word } from '../../types/Word'
 import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import Reading from './Reading'
 import Meaning from './Meaning'
@@ -27,7 +27,7 @@ export type VocabTableType =
   | 'excludedEverywhere'
 
 // eslint-disable-next-line no-unused-vars
-export type VocabAction = (id: Vocab['id']) => void
+export type VocabAction = (id: Word['id']) => void
 
 export type VocabTableProps = {
   actions: {
@@ -40,11 +40,11 @@ export type VocabTableProps = {
   }
   furigana?: boolean
   type: VocabTableType
-  vocab: Vocab[]
+  vocab: Word[]
 }
 
 type TableProperties = {
-  columns: DataTableColumn<Vocab>[]
+  columns: DataTableColumn<Word>[]
   filter: boolean
   sort: boolean
 }
@@ -58,6 +58,7 @@ export default function VocabTable({
   const [records, setRecords] = useState(vocab)
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
+  // TODO: save these preferences somewhere
   const [minFrequency, setMinFrequency] = useState<string | number>(3)
   const [sortOrder, setSortOrder] = useState<'frequency' | 'firstOccurrence'>(
     'frequency'
@@ -73,15 +74,15 @@ export default function VocabTable({
     )
   }, [vocab, debouncedSearchValue, minFrequency, sortOrder])
 
-  const allColumns: DataTableColumn<Vocab>[] = [
+  const allColumns: DataTableColumn<Word>[] = [
     {
       accessor: 'reading',
       noWrap: true,
-      render: (vocab: Vocab) => Reading({ vocab, furigana }),
+      render: (vocab: Word) => Reading({ vocab, furigana }),
     },
     {
       accessor: 'meaning',
-      render: (vocab: Vocab) => Meaning({ vocab }),
+      render: (vocab: Word) => Meaning({ vocab }),
     },
     {
       accessor: 'frequency',
@@ -92,7 +93,7 @@ export default function VocabTable({
       accessor: 'actions',
       title: '',
       textAlign: 'right',
-      render: (vocab: Vocab) =>
+      render: (vocab: Word) =>
         ActionButtons({
           onExcludeWord: () => actions.onExcludeWord(vocab.id),
           onIgnoreWord: () => actions.onIgnoreWord(vocab.id),

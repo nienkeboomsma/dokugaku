@@ -1,7 +1,7 @@
 'use client'
 
 import { type CurrentWork } from '../../types/CurrentWork'
-import { type Vocab } from '../../types/Vocab'
+import { type Word } from '../../types/Word'
 import { useVocab } from '../../hooks/useVocab'
 import CurrentWorks from './CurrentWorks'
 import PaperContainer, {
@@ -14,7 +14,7 @@ export default function DashboardPage({
   initialVocab,
 }: {
   works: CurrentWork[]
-  initialVocab: Vocab[]
+  initialVocab: Word[]
 }) {
   const { actions, vocab } = useVocab(initialVocab)
 

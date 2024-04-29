@@ -7,22 +7,22 @@ import {
 import { getClient } from './ApolloClient'
 import { WorkInfo } from '../types/WorkInfo'
 
-const WORK_INFO = gql`
-  query WorkInfo($workInput: WorkInput!) {
-    work(input: $workInput) {
-      authors {
-        name
-      }
-      id
-      maxProgress
-      progress
-      status
-      title
-    }
-  }
-`
-
 export const getWorkInfo = async (workId: string) => {
+  const WORK_INFO = gql`
+    query WorkInfo($workInput: WorkInput!) {
+      work(input: $workInput) {
+        authors {
+          name
+        }
+        id
+        maxProgress
+        progress
+        status
+        title
+      }
+    }
+  `
+
   const variables: GQL_WorkInfoQueryVariables = {
     workInput: {
       workId,

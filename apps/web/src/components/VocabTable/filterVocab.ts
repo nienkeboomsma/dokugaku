@@ -1,10 +1,10 @@
-import { Vocab } from '../../types/Vocab'
+import { Word } from '../../types/Word'
 import { normalise } from '../../util/normaliseString'
 import { isNumber } from '../../types/utility'
 import { VocabTableType } from './VocabTable'
 
 export default function filterVocab(
-  vocab: Vocab,
+  vocab: Word,
   type: VocabTableType,
   debouncedSearchValue: string,
   minFrequency: string | number
