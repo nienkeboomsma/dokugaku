@@ -1,12 +1,10 @@
 import WordsPage from '../../../components/WordsPage/WordsPage'
-import { mockVocab } from '../../../fixtures/vocab'
+import { getExcludedOrKnownWords } from '../../../graphql/getExcludedOrKnownWords'
 
-export default function KnownWords() {
+export default async function KnownWords() {
+  const vocab = await getExcludedOrKnownWords('known')
+
   return (
-    <WordsPage
-      heading='Known words'
-      type='knownWords'
-      initialVocab={mockVocab}
-    />
+    <WordsPage heading='Known words' type='knownWords' initialVocab={vocab} />
   )
 }

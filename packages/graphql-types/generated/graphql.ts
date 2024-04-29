@@ -301,6 +301,13 @@ export type GQL_CurrentWorksQueryVariables = Exact<{
 
 export type GQL_CurrentWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number }> };
 
+export type GQL_ExcludedOrKnownWordsQueryVariables = Exact<{
+  input?: InputMaybe<GQL_WordListInput>;
+}>;
+
+
+export type GQL_ExcludedOrKnownWordsQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any }> };
+
 export type GQL_ExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -318,6 +325,13 @@ export type GQL_SeriesInfoQueryVariables = Exact<{
 
 export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, volumeNumber?: number | null | undefined }> } | null | undefined };
 
+export type GQL_SeriesVocabQueryVariables = Exact<{
+  input?: InputMaybe<GQL_WordListInput>;
+}>;
+
+
+export type GQL_SeriesVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number, ignored?: boolean | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
+
 export type GQL_WorkCardsQueryVariables = Exact<{
   learnableWordsInput?: InputMaybe<GQL_WordCountInput>;
   totalWordsInput?: InputMaybe<GQL_WordCountInput>;
@@ -333,6 +347,13 @@ export type GQL_WorkInfoQueryVariables = Exact<{
 
 
 export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }> } | null | undefined };
+
+export type GQL_WorkVocabQueryVariables = Exact<{
+  input?: InputMaybe<GQL_WordListInput>;
+}>;
+
+
+export type GQL_WorkVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number, ignored?: boolean | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
