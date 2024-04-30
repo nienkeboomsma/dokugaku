@@ -12,7 +12,7 @@ import { IconCheck } from '@tabler/icons-react'
 import Image from 'next/image'
 
 import classes from './WorkCard.module.css'
-import { isSeries, WorkCardInfo } from '../../types/WorkCardInfo'
+import { isSeries, type WorkCardInfo } from '../../types/WorkCardInfo'
 import WorkTitle from '../WorkTitle'
 import AuthorList from '../AuthorList'
 import WorkStatusBadge from './WorkStatusBadge'
@@ -27,6 +27,19 @@ const cssVariables = {
   '--min-width-desktop': MIN_WIDTH_DESKTOP,
   '--min-width-mobile': MIN_WIDTH_MOBILE,
 } as React.CSSProperties
+
+const getCoverSrc = (workCardInfo: WorkCardInfo) => {
+  if (isSeries(workCardInfo) && workCardInfo.firstVolumeId) {
+    return `/works/${workCardInfo.firstVolumeId}/cover.webp`
+  }
+
+  if (isSeries(workCardInfo) && !workCardInfo.firstVolumeId) {
+    // TODO: add dummyCover file
+    return `/works/dummyCover.webp`
+  }
+
+  return `/works/${workCardInfo.id}/cover.webp`
+}
 
 function ProgressLabel({
   knownVocab,
@@ -58,7 +71,6 @@ export default function WorkCard({
   workCardInfo: WorkCardInfo
 }) {
   const theme = useMantineTheme()
-  const coverSrc = `/works/${isSeries(workCardInfo) ? workCardInfo.firstVolumeId : workCardInfo.id}/cover.webp`
 
   return (
     <Paper
@@ -75,7 +87,7 @@ export default function WorkCard({
             className={classes.cover}
             fill
             sizes={MAX_WIDTH_MOBILE}
-            src={coverSrc}
+            src={getCoverSrc(workCardInfo)}
           />
         </div>
 
@@ -89,13 +101,14 @@ export default function WorkCard({
               authors={workCardInfo.authors}
               classNames={{ author: classes.author }}
             />
-            {isSeries(workCardInfo) && (
+            {isSeries(workCardInfo) && workCardInfo.numberOfVolumes > 0 && (
               <Text
                 c='dimmed'
                 size={rem(13)}
-              >{`${workCardInfo.volumeNumber} volumes`}</Text>
+              >{`${workCardInfo.numberOfVolumes} ${workCardInfo.numberOfVolumes > 1 ? 'volumes' : 'volume'}`}</Text>
             )}
           </div>
+
           <WorkStatusBadge status={workCardInfo.status} />
         </div>
 

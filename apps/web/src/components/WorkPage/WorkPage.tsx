@@ -1,11 +1,19 @@
 'use client'
 
+import { useState } from 'react'
 import { Button } from '@mantine/core'
 import { IconBook2 } from '@tabler/icons-react'
+import { GQL_ReadStatus } from '@repo/graphql-types'
+import { useMutation } from '@apollo/client'
 
 import classes from './WorkPage.module.css'
-import { WorkInfo } from '../../types/WorkInfo'
-import PaperContainer from '../PaperContainer/PaperContainer'
+import { type WorkInfo } from '../../types/WorkInfo'
+import { type Word } from '../../types/Word'
+import { useVocab } from '../../hooks/useVocab'
+import { UPDATE_WORK_READ_STATUS } from '../../graphql/updateReadStatus'
+import PaperContainer, {
+  PaperContainerPadding,
+} from '../PaperContainer/PaperContainer'
 import WorkCover from '../WorkCover'
 import ReadStatusSelector from '../ReadStatusSelector'
 import Link from 'next/link'
@@ -14,32 +22,53 @@ import AuthorList from '../AuthorList'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
 import IgnoredWords from '../VocabTable/IgnoredWords'
-import { ReadStatus } from '../../types/Work'
-import { useState } from 'react'
-import { useVocab } from '../../hooks/useVocab'
 
 const coverWidth = '10rem'
 
 const cssVariables = {
   '--cover-width': coverWidth,
   '--second-column-max-width': VocabTableMaxWidth,
-  '--second-column-width': 'calc(100% - var(--cover-width))',
+  '--second-column-width': 'calc(100% - var(--cover-width) - var(--gap))',
 } as React.CSSProperties
 
-// TODO: Hook up to GraphQL
-const callToApi = (id: string, status: ReadStatus) => {
-  console.log(id, status)
-}
+export default function WorkPage({
+  initialVocab,
+  work,
+}: {
+  initialVocab: Word[]
+  work?: WorkInfo
+}) {
+  // TODO: design a proper placeholder page
+  if (!work) return 'Oops'
 
-export default function WorkPage({ work }: { work: WorkInfo }) {
-  const [workStatus, setReadStatus] = useState(work.status)
-  const { actions, vocab } = useVocab(work.vocab, {
+  const { actions, vocab } = useVocab(initialVocab, {
     isSeries: true,
     seriesOrWorkId: work.id,
   })
 
+  const [readStatus, setReadStatus] = useState(work.status)
+  const [readStatusLoading, setReadStatusLoading] = useState(false)
+  const [updateReadStatus] = useMutation(UPDATE_WORK_READ_STATUS)
+
+  const readStatusHandler = async (status: GQL_ReadStatus) => {
+    setReadStatusLoading(true)
+
+    const { data } = await updateReadStatus({
+      variables: { input: { status, workId: work.id } },
+    })
+    const { status: newStatus, success } = data.updateWorkReadStatus
+
+    if (success) {
+      setReadStatus(newStatus)
+    }
+
+    setReadStatusLoading(false)
+  }
+
   return (
-    <PaperContainer maxWidth={`calc(${coverWidth} + ${VocabTableMaxWidth})`}>
+    <PaperContainer
+      maxWidth={`calc(${coverWidth} + ${VocabTableMaxWidth} + 3 * ${PaperContainerPadding})`}
+    >
       <div className={classes.container} style={cssVariables}>
         <div className={classes.firstColumn}>
           <WorkCover
@@ -49,11 +78,9 @@ export default function WorkPage({ work }: { work: WorkInfo }) {
             width={coverWidth}
           />
           <ReadStatusSelector
-            setValue={(status: ReadStatus) => {
-              callToApi(work.id, status)
-              setReadStatus(status)
-            }}
-            value={workStatus}
+            loading={readStatusLoading}
+            status={readStatus}
+            updateStatus={readStatusHandler}
           />
           <Button
             component={Link}
@@ -72,7 +99,7 @@ export default function WorkPage({ work }: { work: WorkInfo }) {
             </WorkTitle>
             <AuthorList authors={work.authors} />
           </div>
-          <div className={classes.frequencyListContainer}>
+          <div>
             <SectionHeading>Frequency list</SectionHeading>
             <VocabTable
               actions={actions}

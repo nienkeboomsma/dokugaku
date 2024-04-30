@@ -1,33 +1,63 @@
 'use client'
 
+import { useState } from 'react'
+import { GQL_ReadStatus } from '@repo/graphql-types'
+import { useMutation } from '@apollo/client'
+
 import classes from './SeriesPage.module.css'
-import { SeriesInfo } from '../../types/SeriesInfo'
-import PaperContainer from '../PaperContainer/PaperContainer'
+import { type SeriesInfo } from '../../types/SeriesInfo'
+import { type Word } from '../../types/Word'
+import { useVocab } from '../../hooks/useVocab'
+import { UPDATE_SERIES_READ_STATUS } from '../../graphql/updateReadStatus'
+import PaperContainer, {
+  PaperContainerPadding,
+} from '../PaperContainer/PaperContainer'
 import WorkTitle from '../WorkTitle'
 import AuthorList from '../AuthorList'
-import StatusSelector from '../ReadStatusSelector'
+import ReadStatusSelector from '../ReadStatusSelector'
+import Volumes from './Volumes'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
 import IgnoredWords from '../VocabTable/IgnoredWords'
-import { useState } from 'react'
-import { ReadStatus } from '../../types/Work'
-import { useVocab } from '../../hooks/useVocab'
-import Volumes from './Volumes'
 
-// TODO: Hook up to GraphQL
-const callToApi = (id: string, status: ReadStatus) => {
-  console.log(id, status)
-}
+export default function SeriesPage({
+  initialVocab,
+  series,
+}: {
+  initialVocab: Word[]
+  series?: SeriesInfo
+}) {
+  // TODO: design a proper placeholder page
+  if (!series) return 'Oops'
 
-export default function SeriesPage({ series }: { series: SeriesInfo }) {
-  const [seriesStatus, setSeriesStatus] = useState(series.status)
-  const { actions, vocab } = useVocab(series.vocab, {
+  const { actions, vocab } = useVocab(initialVocab, {
     isSeries: true,
     seriesOrWorkId: series.id,
   })
 
+  const [seriesStatus, setSeriesStatus] = useState(series.status)
+  const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
+  const [updateSeriesStatus] = useMutation(UPDATE_SERIES_READ_STATUS)
+
+  const seriesStatusHandler = async (status: GQL_ReadStatus) => {
+    setSeriesStatusLoading(true)
+
+    const { data } = await updateSeriesStatus({
+      variables: { input: { seriesId: series.id, status } },
+    })
+    const { status: newStatus, success } = data.updateSeriesReadStatus
+
+    if (success) {
+      setSeriesStatus(newStatus)
+    }
+
+    setSeriesStatusLoading(false)
+  }
+
   return (
-    <PaperContainer maxWidth={VocabTableMaxWidth}>
+    <PaperContainer
+      maxWidth={`calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding})`}
+    >
       <div className={classes.contentContainer}>
         <div className={classes.seriesInfo}>
           <div className={classes.titleAndAuthors}>
@@ -38,12 +68,10 @@ export default function SeriesPage({ series }: { series: SeriesInfo }) {
           </div>
 
           <div>
-            <StatusSelector
-              setValue={(status: ReadStatus) => {
-                callToApi(series.id, status)
-                setSeriesStatus(status)
-              }}
-              value={seriesStatus}
+            <ReadStatusSelector
+              loading={seriesStatusLoading}
+              status={seriesStatus}
+              updateStatus={seriesStatusHandler}
             />
           </div>
         </div>

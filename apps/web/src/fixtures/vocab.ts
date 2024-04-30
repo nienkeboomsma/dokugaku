@@ -1,8 +1,8 @@
-import { Vocab } from '../types/Vocab'
+import { type Word } from '../types/Word'
 
-export const mockVocab: Vocab[] = [
+export const mockVocab: Word[] = [
   {
-    id: 1270010,
+    id: '1270010',
     ignored: false,
     info: {
       kanji: ['後輩'],
@@ -17,7 +17,7 @@ export const mockVocab: Vocab[] = [
     entryNumber: 1,
   },
   {
-    id: 1430000,
+    id: '1430000',
     ignored: false,
     info: {
       kanji: ['長者'],
@@ -37,7 +37,7 @@ export const mockVocab: Vocab[] = [
     componentNumber: 2,
   },
   {
-    id: 1144260,
+    id: '1144260',
     ignored: true,
     info: {
       kanji: [],
@@ -50,7 +50,7 @@ export const mockVocab: Vocab[] = [
     entryNumber: 3,
   },
   {
-    id: 1388410,
+    id: '1388410',
     ignored: false,
     info: {
       kanji: ['先輩'],
@@ -72,7 +72,7 @@ export const mockVocab: Vocab[] = [
     entryNumber: 3,
   },
   {
-    id: 1429630,
+    id: '1429630',
     ignored: false,
     info: {
       kanji: ['跳ね回る', 'はね回る', '跳ねまわる'],

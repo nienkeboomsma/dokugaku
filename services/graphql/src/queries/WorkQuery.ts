@@ -1,4 +1,6 @@
+import { GQL_ReadStatus } from '@repo/graphql-types'
 import sql from '../data/sql.js'
+import { WorkModel } from '../models/WorkModel.js'
 
 type ReturnSingle = {
   return: 'single'
@@ -16,7 +18,8 @@ type ReturnAll = {
 
 type QueryParamsCommon = {
   excludeVolumesInSeries?: boolean
-  userId?: string
+  status?: GQL_ReadStatus
+  userId: string
 }
 
 type QueryParams = QueryParamsCommon &
@@ -29,31 +32,6 @@ class WorkQuery {
   constructor(params: QueryParams) {
     this.params = params
     this.whereAlreadyUsed = false
-  }
-
-  userIdColumns() {
-    if (!this.params.userId) {
-      return sql`
-        NULL AS progress,
-        NULL AS status
-      `
-    }
-    return sql`
-      COALESCE (user_work.current_progress, 0) AS progress,
-      COALESCE (user_work.status, 'none') AS status
-    `
-  }
-
-  userIdJoin() {
-    if (!this.params.userId) return sql``
-
-    return sql`
-      LEFT JOIN user_work 
-        ON work.id = user_work.work_id
-        AND (user_work.user_id = ${this.params.userId}
-          OR user_work.user_id IS NULL
-        )
-    `
   }
 
   workIdFilter() {
@@ -74,15 +52,30 @@ class WorkQuery {
       return sql``
     }
 
-    return sql`
+    const query = sql`
       ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
       work.series_id IS NULL
       AND work.volume_number IS NULL
     `
+    this.whereAlreadyUsed = true
+    return query
+  }
+
+  statusFilter() {
+    if ('status' in this.params && typeof this.params.status !== 'undefined') {
+      const query = sql`
+        ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
+        COALESCE (user_work.status, 'new') = ${this.params.status}
+      `
+      this.whereAlreadyUsed = true
+      return query
+    }
+
+    return sql``
   }
 
   getQuery() {
-    return sql`
+    return sql<WorkModel[]>`
       SELECT
         work.id,
         jsonb_agg(
@@ -91,18 +84,26 @@ class WorkQuery {
             'name', author.author_name
           )
         ) AS authors,
-        work.series_id AS "series",
+        work.series_id AS "seriesId",
         work.max_progress AS "maxProgress",
         work.title,
         work.type,
         work.volume_number AS "numberInSeries",
-        ${this.userIdColumns()}
+        work.hapax_legomenon_count AS "hapaxLegomena",
+        work.total_word_count AS "totalWords",
+        work.unique_word_count AS "uniqueWords",
+        COALESCE (user_work.current_progress, 0) AS progress,
+        COALESCE (user_work.status, 'new') AS status
       FROM work
       JOIN author_work ON work.id = author_work.work_id
       JOIN author ON author_work.author_id = author.id
-      ${this.userIdJoin()}
+      LEFT JOIN user_work 
+        ON work.id = user_work.work_id
+        AND (user_work.user_id = ${this.params.userId}
+          OR user_work.user_id IS NULL )
       ${this.workIdFilter()}
       ${this.excludeVolumesInSeries()}
+      ${this.statusFilter()}
       GROUP BY 
         work.id,
         work.max_progress,

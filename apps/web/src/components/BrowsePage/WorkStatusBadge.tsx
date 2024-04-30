@@ -1,21 +1,30 @@
 import { Badge } from '@mantine/core'
+import { GQL_ReadStatus } from '@repo/graphql-types/'
 
-import { ReadStatus } from '../../types/Work'
+export default function WorkStatusBadge({
+  status,
+}: {
+  status: GQL_ReadStatus
+}) {
+  const displayStatus = status.replaceAll('_', ' ')
 
-export default function WorkStatusBadge({ status }: { status: ReadStatus }) {
   return (
     <Badge
-      color={status === 'abandoned' ? 'gray' : undefined}
+      color={
+        status === GQL_ReadStatus.Abandoned || status === GQL_ReadStatus.New
+          ? 'gray'
+          : undefined
+      }
       variant={
-        status === 'want to read'
+        status === GQL_ReadStatus.WantToRead || status === GQL_ReadStatus.New
           ? 'outline'
-          : status === 'reading'
+          : status === GQL_ReadStatus.Reading
             ? 'light'
             : 'filled'
       }
       radius='sm'
     >
-      {status}
+      {displayStatus}
     </Badge>
   )
 }

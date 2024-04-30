@@ -1,35 +1,31 @@
-import { ActionIcon, TextInput } from '@mantine/core'
-import { UseFormReturnType } from '@mantine/form'
-import { IconWand } from '@tabler/icons-react'
+import { TextInput } from '@mantine/core'
 
-import { FormValues } from '../../hooks/useUploadForm'
+import { type UploadForm } from '../../hooks/useUploadForm'
+import AutofillButton from './AutofillButton'
 
-export default function TitleInput({
-  uploadForm,
-}: {
-  uploadForm: UseFormReturnType<FormValues>
-}) {
+export default function TitleInput({ uploadForm }: { uploadForm: UploadForm }) {
+  const showAutofillButton = !!(
+    uploadForm.values.series &&
+    uploadForm.values.volumeNumber &&
+    uploadForm.values.title !==
+      `${uploadForm.values.series} ${uploadForm.values.volumeNumber}`
+  )
+
+  const autofillAction = () =>
+    uploadForm.setFieldValue(
+      'title',
+      `${uploadForm.values.series} ${uploadForm.values.volumeNumber}`
+    )
+
   return (
     <TextInput
       label='Title'
       rightSection={
-        uploadForm.values.series &&
-        uploadForm.values.volumeNumber &&
-        uploadForm.values.title !==
-          `${uploadForm.values.series} ${uploadForm.values.volumeNumber}` && (
-          <ActionIcon
-            aria-label={'Autofill title'}
-            onClick={() =>
-              uploadForm.setFieldValue(
-                'title',
-                `${uploadForm.values.series} ${uploadForm.values.volumeNumber}`
-              )
-            }
-            variant='light'
-          >
-            <IconWand size={18} stroke={1.5} />
-          </ActionIcon>
-        )
+        <AutofillButton
+          ariaLabel='Autofill title'
+          onClick={autofillAction}
+          showButton={showAutofillButton}
+        />
       }
       withAsterisk
       {...uploadForm.getInputProps('title')}

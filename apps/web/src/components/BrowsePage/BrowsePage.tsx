@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDebouncedValue } from '@mantine/hooks'
 
 import classes from './BrowsePage.module.css'
-import { WorkCardInfo } from '../../types/WorkCardInfo'
+import { type WorkCardInfo } from '../../types/WorkCardInfo'
 import filterCards from './filterCards'
 import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import WorkCardFilter from './WorkCardFilter'
@@ -23,6 +23,7 @@ export default function BrowsePage({
   const [workCards, setWorkCards] = useState(initialWorkCards)
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
+  // TODO: save these preferences somewhere
   const [showFinished, setShowFinished] = useState(true)
   const [showAbandoned, setShowAbandoned] = useState(true)
 

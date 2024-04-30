@@ -1,6 +1,6 @@
-import { type Resolvers } from '../generated/graphql'
+import { type GQL_Resolvers } from '@repo/graphql-types'
 
-const resolvers: Resolvers = {
+const resolvers: GQL_Resolvers = {
   Query: {
     author: (_, { input }, { dataSources: { author } }) => {
       return author.getAuthor(input)

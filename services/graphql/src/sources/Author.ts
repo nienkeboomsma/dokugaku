@@ -7,26 +7,28 @@ class Author {
       return: 'single',
     })
     const [author] = await authorQuery.getQuery()
-    return author
+    return author ?? null
   }
 
   async getAuthors(
     input: {
       authorIds?: string[]
-    } = {}
+    } | null = {}
   ) {
-    if (input.authorIds && input.authorIds.length > 0) {
+    if (input && input.authorIds && input.authorIds.length > 0) {
       const authorQuery = new AuthorQuery({
         authorIds: input.authorIds,
         return: 'multiple' as const,
       })
-      return authorQuery.getQuery()
+      const authors = await authorQuery.getQuery()
+      return authors ?? []
     }
 
     const authorQuery = new AuthorQuery({
       return: 'all' as const,
     })
-    return authorQuery.getQuery()
+    const authors = await authorQuery.getQuery()
+    return authors ?? []
   }
 }
 

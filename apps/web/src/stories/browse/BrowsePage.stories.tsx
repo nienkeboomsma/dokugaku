@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import BrowsePage from '../../components/BrowsePage/BrowsePage'
-import { mockWorkCardInfo } from '../../fixtures/workCardInfo'
+import { mockWorkCards } from '../../fixtures/workCards'
 
 const meta = {
   title: 'Browse/Page',
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    initialWorkCards: mockWorkCardInfo,
+    initialWorkCards: mockWorkCards,
   },
   decorators: [
     (Story, context) => (

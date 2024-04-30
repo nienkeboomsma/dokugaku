@@ -18,29 +18,35 @@ CREATE TABLE user_account (
 INSERT INTO user_account(id, display_name) VALUES ('6e41e9fd-c813-40e9-91fd-c51e47efab42', 'Nienke');
 
 CREATE TABLE series (
+  hapax_legomenon_count integer NULL,
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  title text NOT NULL UNIQUE
+  title text NOT NULL UNIQUE,
+  total_word_count integer NULL,
+  unique_word_count integer NULL
 );
 
 CREATE TYPE worktype AS ENUM ('manga', 'novel');
 
 CREATE TABLE work (
+  hapax_legomenon_count integer NULL,
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   max_progress integer NOT NULL,
-  type worktype NOT NULL,
-  title text NOT NULL,
   series_id uuid NULL DEFAULT NULL REFERENCES series,
+  title text NOT NULL,
+  total_word_count integer NULL,
+  type worktype NOT NULL,
+  unique_word_count integer NULL,
   volume_number smallint NULL DEFAULT NULL,
   UNIQUE (series_id, volume_number)
 );
 
-CREATE TYPE readstatus AS ENUM ('none', 'want to read', 'reading', 'read', 'abandoned');
+CREATE TYPE readstatus AS ENUM ('new', 'want_to_read', 'reading', 'read', 'abandoned');
 
 CREATE TABLE user_series (
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id uuid NOT NULL REFERENCES user_account,
   series_id uuid NOT NULL REFERENCES series ON DELETE CASCADE,
-  status readstatus NOT NULL DEFAULT 'none',
+  status readstatus NOT NULL DEFAULT 'new',
   UNIQUE (user_id, series_id)
  );
 
@@ -48,7 +54,7 @@ CREATE TABLE user_work (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id uuid NOT NULL REFERENCES user_account,
   work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
-  status readstatus NOT NULL DEFAULT 'none',
+  status readstatus NOT NULL DEFAULT 'new',
   current_progress integer NULL DEFAULT 0,
   UNIQUE (user_id, work_id)
 );
@@ -97,9 +103,9 @@ CREATE TABLE ignored_in_work (
 
 CREATE TABLE ignored_in_series (
   id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  word_id integer NOT NULL REFERENCES word,
   series_id uuid NOT NULL REFERENCES series,
   user_id uuid NOT NULL REFERENCES user_account,
+  word_id integer NOT NULL REFERENCES word,
   ignored boolean NOT NULL DEFAULT false,
   UNIQUE (word_id, series_id, user_id)
 );

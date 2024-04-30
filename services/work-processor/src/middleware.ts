@@ -14,7 +14,7 @@ export function validateMetadata(
 
   if (!authors) {
     return res.status(500).send({
-      error: 'Make sure to provide one or more authors.',
+      error: 'Make sure to provide one or more authors',
     })
   }
 
@@ -33,13 +33,13 @@ export function validateMetadata(
   if (series && !volumeNumber) {
     return res
       .status(500)
-      .send({ error: 'Make sure to provide a volume number.' })
+      .send({ error: 'Make sure to provide a volume number' })
   }
 
   if (!series && volumeNumber) {
     return res
       .status(500)
-      .send({ error: 'Make sure to provide a series title.' })
+      .send({ error: 'Make sure to provide a series title' })
   }
 
   if (volumeNumber && !isNumber(volumeNumber)) {
@@ -47,12 +47,14 @@ export function validateMetadata(
   }
 
   if (!title) {
-    return res.status(500).send({ error: 'Make sure to provide a title.' })
+    return res.status(500).send({ error: 'Make sure to provide a title' })
   }
 
   if (!userId) {
-    return res.status(500).send({ error: 'Make sure to provide a user ID.' })
+    return res.status(500).send({ error: 'Make sure to provide a user ID' })
   }
+
+  // TODO: Check if a work with the same title or series/number already exists
 
   next()
 }
@@ -90,18 +92,18 @@ export function validateMangaFiles(
   const filesAreMokurod = req.body.mokuro === 'true'
 
   if (!req.files) {
-    return res.status(500).send({ error: 'Make sure to include the images.' })
+    return res.status(500).send({ error: 'Make sure to include the images' })
   }
 
   if (!Array.isArray(req.files)) {
     return res
       .status(500)
-      .send({ error: 'Make sure there is only one "files" input in the form.' })
+      .send({ error: 'Make sure there is only one "files" input in the form' })
   }
 
   if (filesAreMokurod && !mokurodFilesAreValid(req.files)) {
     return res.status(500).send({
-      error: 'Make sure there is a corresponding JSON file for each image.',
+      error: 'Make sure there is a corresponding JSON file for each image',
     })
   }
 
@@ -116,21 +118,21 @@ export function validateNovelFiles(
   if (!req.files) {
     return res
       .status(500)
-      .send({ error: 'Make sure to attach a cover and text file(s).' })
+      .send({ error: 'Make sure to attach a cover and text file(s)' })
   }
 
   if (Array.isArray(req.files)) {
     return res
       .status(500)
       .send(
-        'Make sure there is a "cover" input and a "files" input in the form.'
+        'Make sure there is a "cover" input and a "files" input in the form'
       )
   }
 
   if (!req.files.cover || !req.files.files) {
     return res
       .status(500)
-      .send({ error: 'Make sure to attach both a cover and text file(s).' })
+      .send({ error: 'Make sure to attach both a cover and text file(s)' })
   }
 
   next()

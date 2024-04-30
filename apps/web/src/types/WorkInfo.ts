@@ -1,12 +1,10 @@
-import { ReadStatus } from './Work'
-import { Vocab } from './Vocab'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 export type WorkInfo = {
   id: string
   title: string
   authors: string[]
-  status: ReadStatus
+  status: GQL_ReadStatus
   progress: number
   maxProgress: number
-  vocab: Vocab[]
 }

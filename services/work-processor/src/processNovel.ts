@@ -1,4 +1,5 @@
 import { type Express, type Response } from 'express'
+import fs from 'node:fs'
 import path from 'node:path'
 
 import { novelTextExtensions, volumePath } from './utils/constants.js'
@@ -39,21 +40,27 @@ export async function processNovel(req: Express.Request, res: Response) {
     estimatedFinishTime: timeWhenFinished,
   })
 
-  await runIchiranOnEachChunk(chunks, fullPath)
-  await convertImagesToWebP(fullPath)
-  await insertIntoDatabase(
-    {
-      authors: authors,
-      seriesTitle: series,
-      workId: folderName,
-      workMaxProgress: numberOfParagraphs.toString(),
-      workTitle: title,
-      workType: 'novel',
-      workVolumeNumber: volumeNumber,
-    },
-    userId,
-    fullPath
-  )
+  try {
+    await runIchiranOnEachChunk(chunks, fullPath)
+    await convertImagesToWebP(fullPath)
+    await insertIntoDatabase(
+      {
+        authors: authors,
+        seriesTitle: series,
+        workId: folderName,
+        workMaxProgress: numberOfParagraphs.toString(),
+        workTitle: title,
+        workType: 'novel',
+        workVolumeNumber: volumeNumber,
+      },
+      userId,
+      fullPath
+    )
 
-  console.timeEnd(timeTaken)
+    console.timeEnd(timeTaken)
+  } catch (err) {
+    fs.rmSync(fullPath, { recursive: true, force: true })
+    console.log('An error occurred: ', err)
+    process.exit(1)
+  }
 }

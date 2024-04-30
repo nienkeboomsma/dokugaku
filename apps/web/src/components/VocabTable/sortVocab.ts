@@ -1,9 +1,9 @@
-import { Vocab } from '../../types/Vocab'
+import { type Word } from '../../types/Word'
 import { isNumber } from '../../types/utility'
 
 const sortBy = (
-  vocabA: Vocab,
-  vocabB: Vocab,
+  vocabA: Word,
+  vocabB: Word,
   property:
     | 'volumeNumber'
     | 'pageNumber'
@@ -20,8 +20,8 @@ const sortBy = (
 }
 
 export default function sortVocab(
-  vocabA: Vocab,
-  vocabB: Vocab,
+  vocabA: Word,
+  vocabB: Word,
   sortOrder: 'frequency' | 'firstOccurrence'
 ) {
   if (

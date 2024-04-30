@@ -1,6 +1,13 @@
 import BrowsePage from '../../components/BrowsePage/BrowsePage'
-import { mockWorkCardInfo } from '../../fixtures/workCardInfo'
+import { getWorkCards } from '../../graphql/getWorkCards'
 
-export default function Browse() {
-  return <BrowsePage initialWorkCards={mockWorkCardInfo} />
+// TODO: speed up the known vocab generation; use indexes in PG
+//       and consider caching the value somehow
+
+// TODO: add pagination
+
+export default async function Browse() {
+  const initialWorkCards = await getWorkCards()
+
+  return <BrowsePage initialWorkCards={initialWorkCards} />
 }

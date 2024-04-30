@@ -1,7 +1,10 @@
 import DashboardPage from '../../components/DashboardPage/DashboardPage'
-import { mockCurrentWorks } from '../../fixtures/currentWorks'
-import { mockVocab } from '../../fixtures/vocab'
+import { getCurrentWorks } from '../../graphql/getCurrentWorks'
+import { getRecommendedVocab } from '../../graphql/getRecommendedVocab'
 
-export default function Dashboard() {
-  return <DashboardPage works={mockCurrentWorks} initialVocab={mockVocab} />
+export default async function Dashboard() {
+  const currentWorks = await getCurrentWorks()
+  const vocab = await getRecommendedVocab()
+
+  return <DashboardPage works={currentWorks} initialVocab={vocab} />
 }

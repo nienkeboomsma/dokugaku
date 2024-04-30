@@ -11,11 +11,14 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@apollo/client": "^3.9.11",
+    "@apollo/client": "^3.10.1",
+    "@apollo/experimental-nextjs-app-support": "^0.10.0",
     "@mantine/core": "^7.7.0",
     "@mantine/form": "^7.7.1",
     "@mantine/hooks": "^7.7.0",
+    "@mantine/notifications": "^7.8.1",
     "@tabler/icons-react": "^3.1.0",
+    "apollo-link-context": "^1.0.20",
     "clsx": "^2.1.0",
     "graphql": "^16.8.1",
     "mantine-datatable": "^7.1.7",
@@ -27,6 +30,7 @@
     "@chromatic-com/storybook": "^1.2.25",
     "@next/eslint-plugin-next": "^14.1.1",
     "@repo/eslint-config": "workspace:*",
+    "@repo/graphql-types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@storybook/addon-essentials": "^8.0.5",
     "@storybook/addon-interactions": "^8.0.5",

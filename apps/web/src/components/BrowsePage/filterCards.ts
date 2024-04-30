@@ -1,4 +1,4 @@
-import { WorkCardInfo } from '../../types/WorkCardInfo'
+import { type WorkCardInfo } from '../../types/WorkCardInfo'
 import { normalise } from '../../util/normaliseString'
 
 export default function filterCards(
@@ -7,7 +7,7 @@ export default function filterCards(
   showFinished: boolean,
   showAbandoned: boolean
 ) {
-  const { title, authors, status } = card
+  const { title, authors, status = '' } = card
 
   if (
     debouncedSearchValue !== '' &&

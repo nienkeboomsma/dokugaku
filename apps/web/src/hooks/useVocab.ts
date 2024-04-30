@@ -1,40 +1,41 @@
 import { useReducer } from 'react'
-import { Vocab } from '../types/Vocab'
-import { WorkInfo } from '../types/WorkInfo'
-import { SeriesInfo } from '../types/SeriesInfo'
+
+import { type Word } from '../types/Word'
+import { type WorkInfo } from '../types/WorkInfo'
+import { type SeriesInfo } from '../types/SeriesInfo'
 import { isUndefined } from '../types/utility'
 
 export type VocabAction =
   | {
       type: 'EXCLUDE_WORD'
-      vocabId: Vocab['id']
+      vocabId: Word['id']
     }
   | {
       type: 'IGNORE_WORD'
       isSeries: boolean
       seriesOrWorkId: WorkInfo['id'] | SeriesInfo['id']
-      vocabId: Vocab['id']
+      vocabId: Word['id']
     }
   | {
       type: 'MARK_WORD_AS_KNOWN'
-      vocabId: Vocab['id']
+      vocabId: Word['id']
     }
   | {
       type: 'MARK_WORD_AS_UNKNOWN'
-      vocabId: Vocab['id']
+      vocabId: Word['id']
     }
   | {
       type: 'UNEXCLUDE_WORD'
-      vocabId: Vocab['id']
+      vocabId: Word['id']
     }
   | {
       type: 'UNIGNORE_WORD'
       isSeries: boolean
       seriesOrWorkId: WorkInfo['id'] | SeriesInfo['id']
-      vocabId: Vocab['id']
+      vocabId: Word['id']
     }
 
-const reducer = (prevState: Vocab[], action: VocabAction): Vocab[] => {
+const reducer = (prevState: Word[], action: VocabAction): Word[] => {
   switch (action.type) {
     case 'EXCLUDE_WORD':
       // try/catch call to API
@@ -64,7 +65,7 @@ const reducer = (prevState: Vocab[], action: VocabAction): Vocab[] => {
 }
 
 export function useVocab(
-  initialState: Vocab[],
+  initialState: Word[],
   options: {
     isSeries?: boolean
     seriesOrWorkId?: WorkInfo['id'] | SeriesInfo['id']
@@ -74,7 +75,7 @@ export function useVocab(
 
   const { isSeries, seriesOrWorkId } = options
 
-  const excludeWordById = (vocabId: Vocab['id']) => {
+  const excludeWordById = (vocabId: Word['id']) => {
     const action: VocabAction = {
       type: 'EXCLUDE_WORD',
       vocabId,
@@ -82,7 +83,7 @@ export function useVocab(
     dispatch(action)
   }
 
-  const ignoreWordById = (vocabId: Vocab['id']) => {
+  const ignoreWordById = (vocabId: Word['id']) => {
     if (isUndefined(isSeries) || isUndefined(seriesOrWorkId)) return
 
     const action: VocabAction = {
@@ -94,7 +95,7 @@ export function useVocab(
     dispatch(action)
   }
 
-  const markWordAsKnownById = (vocabId: Vocab['id']) => {
+  const markWordAsKnownById = (vocabId: Word['id']) => {
     const action: VocabAction = {
       type: 'MARK_WORD_AS_KNOWN',
       vocabId,
@@ -102,7 +103,7 @@ export function useVocab(
     dispatch(action)
   }
 
-  const markWordAsUnknownById = (vocabId: Vocab['id']) => {
+  const markWordAsUnknownById = (vocabId: Word['id']) => {
     const action: VocabAction = {
       type: 'MARK_WORD_AS_UNKNOWN',
       vocabId,
@@ -110,7 +111,7 @@ export function useVocab(
     dispatch(action)
   }
 
-  const unExcludeWordById = (vocabId: Vocab['id']) => {
+  const unExcludeWordById = (vocabId: Word['id']) => {
     const action: VocabAction = {
       type: 'UNEXCLUDE_WORD',
       vocabId,
@@ -118,7 +119,7 @@ export function useVocab(
     dispatch(action)
   }
 
-  const unignoreWordById = (vocabId: Vocab['id']) => {
+  const unignoreWordById = (vocabId: Word['id']) => {
     if (isUndefined(isSeries) || isUndefined(seriesOrWorkId)) return
     const action: VocabAction = {
       type: 'UNIGNORE_WORD',

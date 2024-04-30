@@ -1,17 +1,17 @@
-import { Vocab } from '../../types/Vocab'
+import { type Word } from '../../types/Word'
 
 export default function Reading({
   vocab,
   furigana,
 }: {
-  vocab: Vocab
+  vocab: Word
   furigana?: boolean
 }) {
   const kanji = vocab.info.kanji
   const kana = vocab.info.kana
 
   if (kanji.length === 0) {
-    return kana
+    return kana[0]
   }
 
   if (kanji.length > 0) {

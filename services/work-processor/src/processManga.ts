@@ -1,9 +1,11 @@
 import { type Express, type Response } from 'express'
+import fs from 'node:fs'
 import path from 'node:path'
 
 import { mokuroExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
+  createCoverImage,
   getTimeEstimate,
   runIchiranOnEachPage,
   runMokuro,
@@ -40,23 +42,30 @@ export async function processManga(req: Express.Request, res: Response) {
     estimatedDurationInMin: estimatedDuration / 1000 / 60,
     estimatedFinishTime: timeWhenFinished,
   })
+  try {
+    if (!filesAreMokurod) await runMokuro(folderName)
+    await runIchiranOnEachPage(fullPath)
+    createCoverImage(fullPath)
+    await convertImagesToWebP(fullPath)
 
-  if (!filesAreMokurod) await runMokuro(folderName)
-  await runIchiranOnEachPage(fullPath)
-  await convertImagesToWebP(fullPath)
-  await insertIntoDatabase(
-    {
-      authors: req.body.authors,
-      seriesTitle: req.body.series,
-      workId: folderName,
-      workMaxProgress: numberOfImages.toString(),
-      workTitle: req.body.title,
-      workType: 'manga',
-      workVolumeNumber: req.body.volumeNumber,
-    },
-    req.body.userId,
-    fullPath
-  )
+    await insertIntoDatabase(
+      {
+        authors: req.body.authors,
+        seriesTitle: req.body.series,
+        workId: folderName,
+        workMaxProgress: numberOfImages.toString(),
+        workTitle: req.body.title,
+        workType: 'manga',
+        workVolumeNumber: req.body.volumeNumber,
+      },
+      req.body.userId,
+      fullPath
+    )
 
-  console.timeEnd(timeTaken)
+    console.timeEnd(timeTaken)
+  } catch (err) {
+    fs.rmSync(fullPath, { recursive: true, force: true })
+    console.log('An error occurred: ', err)
+    process.exit(1)
+  }
 }

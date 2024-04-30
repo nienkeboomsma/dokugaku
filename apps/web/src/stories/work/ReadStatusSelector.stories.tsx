@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { useArgs } from '@storybook/preview-api'
 
 import ReadStatusSelector from '../../components/ReadStatusSelector'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 const meta: Meta<typeof ReadStatusSelector> = {
   title: 'Work/Read status selector',
@@ -9,36 +10,54 @@ const meta: Meta<typeof ReadStatusSelector> = {
   decorators: [
     (Story, context) => {
       const [, updateArgs] = useArgs()
-      const setValue = (value: string) => updateArgs({ value })
+      const updateStatus = (status: string) => updateArgs({ status })
 
-      return <Story args={{ ...context.args, setValue }} />
+      return <Story args={{ ...context.args, updateStatus }} />
     },
   ],
 }
 
 type Story = StoryObj<typeof meta>
 
-export const WantToRead: Story = {
+export const Abandoned: Story = {
   args: {
-    value: 'want to read',
+    loading: false,
+    status: GQL_ReadStatus.Abandoned,
   },
 }
 
-export const Reading: Story = {
+export const Loading: Story = {
   args: {
-    value: 'reading',
+    loading: true,
+    status: GQL_ReadStatus.Abandoned,
+  },
+}
+
+export const New: Story = {
+  args: {
+    loading: false,
+    status: GQL_ReadStatus.New,
   },
 }
 
 export const Read: Story = {
   args: {
-    value: 'read',
+    loading: false,
+    status: GQL_ReadStatus.Read,
   },
 }
 
-export const Abandoned: Story = {
+export const Reading: Story = {
   args: {
-    value: 'abandoned',
+    loading: false,
+    status: GQL_ReadStatus.Reading,
+  },
+}
+
+export const WantToRead: Story = {
+  args: {
+    loading: false,
+    status: GQL_ReadStatus.WantToRead,
   },
 }
 

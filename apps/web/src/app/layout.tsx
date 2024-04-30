@@ -1,7 +1,10 @@
 import '@mantine/core/styles.layer.css'
+import '@mantine/notifications/styles.layer.css'
 import 'mantine-datatable/styles.layer.css'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
 
+import { ApolloWrapper } from '../graphql/ApolloWrapper'
 import AppShell from '../components/AppShell/AppShell'
 
 export const metadata = {
@@ -16,16 +19,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <head>
+      {/* Prevents this error: https://www.reddit.com/r/nextjs/comments/138smpm/how_to_fix_extra_attributes_from_the_server_error/ */}
+      <head suppressHydrationWarning>
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider
-          defaultColorScheme='auto'
-          theme={{ primaryColor: 'blue' }}
-        >
-          <AppShell>{children}</AppShell>
-        </MantineProvider>
+        <ApolloWrapper>
+          <MantineProvider
+            defaultColorScheme='auto'
+            theme={{ primaryColor: 'blue' }}
+          >
+            <Notifications />
+            <AppShell>{children}</AppShell>
+          </MantineProvider>
+        </ApolloWrapper>
       </body>
     </html>
   )

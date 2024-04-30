@@ -1,5 +1,5 @@
 import classes from './CurrentWorks.module.css'
-import { CurrentWork } from '../../types/CurrentWork'
+import { type CurrentWork } from '../../types/CurrentWork'
 import PaperContainer from '../PaperContainer/PaperContainer'
 import ScaleLink from '../ScaleLink'
 import WorkCover from '../WorkCover'

@@ -1,5 +1,6 @@
-import express, { type Express } from 'express'
 import cors from 'cors'
+import express, { type Express } from 'express'
+
 import { processMangaFiles, processNovelFiles } from './multer.js'
 import {
   validateMangaFiles,
@@ -14,9 +15,6 @@ async function main() {
 
   app.use(cors())
   app.use(express.json())
-
-  // TODO: look into image optimisation for cover images (both novel and manga);
-  //       for a start, save a smaller copy of img0001.webp as cover.webp
 
   app.post(
     '/processManga',

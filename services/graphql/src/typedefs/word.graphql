@@ -1,14 +1,14 @@
 type Word {
   id: ID!
   info: JSON!
-  known: Boolean
+  known: Boolean!
   ignored: Boolean
-  excluded: Boolean
-  frequency: Int
+  excluded: Boolean!
+  frequency: Int!
   volumeNumber: Int
-  pageNumber: Int
-  sentenceNumber: Int
-  entryNumber: Int
+  pageNumber: Int!
+  sentenceNumber: Int!
+  entryNumber: Int!
   componentNumber: Int
 }
 
@@ -19,11 +19,6 @@ input WordInput {
   will default to null.
   """
   seriesIdInWhichIgnored: String
-  """
-  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
-  to null.
-  """
-  userId: String
   wordId: Int!
   """
   Determines what work the 'ignored' value should be based on. If no
@@ -49,6 +44,9 @@ input WordListInput {
   distinctOnly: Boolean
   excluded: Boolean
   known: Boolean
+  """
+  Will return null if no seriesIdInWhichIgnored or workIdInWhichIgnored is supplied
+  """
   ignored: Boolean
   minFrequency: Int
   minPageNumber: Int
@@ -59,11 +57,6 @@ input WordListInput {
   will default to null.
   """
   seriesIdInWhichIgnored: String
-  """
-  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
-  to null.
-  """
-  userId: String
   wordIds: [Int!]
   """
   Determines what work the 'ignored' value should be based on. If no
@@ -81,18 +74,31 @@ input WordListInput {
   workIds: [String!]
 }
 
+input UpdateIgnoredWordInput {
+  ignored: Boolean!
+  """
+  A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
+  """
+  workIdInWhichIgnored: String
+  wordId: String!
+}
+
 extend type Query {
   word(input: WordInput!): Word
-  wordList(input: WordListInput): [Word]!
+  wordList(input: WordListInput): [Word!]!
 }
 
 extend type Mutation {
-  updateWord: WordChangeResponse!
+  updateIgnoredWord(input: UpdateIgnoredWordInput!): UpdateIgnoredWordResponse!
 }
 
-type WordChangeResponse {
+type UpdateIgnoredWordResponse {
   code: Int!
   success: Boolean!
-  message: String
-  wordId: String
+  message: String!
+  ignored: Boolean
 }

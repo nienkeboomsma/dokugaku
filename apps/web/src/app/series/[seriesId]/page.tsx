@@ -1,6 +1,15 @@
 import SeriesPage from '../../../components/SeriesPage/SeriesPage'
-import { mockSeriesInfo } from '../../../fixtures/seriesInfo'
+import { getSeriesInfo } from '../../../graphql/getSeriesInfo'
+import { getSeriesVocab } from '../../../graphql/getSeriesVocab'
 
-export default function Series({ params }: { params: { seriesId: string } }) {
-  return <SeriesPage series={mockSeriesInfo} />
+export default async function Series({
+  params,
+}: {
+  params: { seriesId: string }
+}) {
+  const seriesInfo = await getSeriesInfo(params.seriesId)
+  const workIds = seriesInfo?.volumes.map((volume) => volume.id)
+  const vocab = workIds ? await getSeriesVocab(params.seriesId, workIds) : []
+
+  return <SeriesPage initialVocab={vocab} series={seriesInfo} />
 }

@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
-import { useForm } from '@mantine/form'
-
-export type FormType = 'manga' | 'novel'
+import { UseFormReturnType, useForm } from '@mantine/form'
+import { GQL_WorkType } from '@repo/graphql-types'
 
 export type FormValues = {
   series: string
@@ -12,7 +11,9 @@ export type FormValues = {
   cover?: File
   files: File[]
 }
-const getInitialValues = (type: FormType) => {
+
+export type UploadForm = UseFormReturnType<FormValues>
+const getInitialValues = (type: GQL_WorkType) => {
   const commonValues = {
     series: '',
     volumeNumber: '',
@@ -21,9 +22,10 @@ const getInitialValues = (type: FormType) => {
     files: [],
   }
 
-  if (type === 'manga') return { ...commonValues, mokuro: false }
-  if (type === 'novel') return { ...commonValues, cover: undefined }
+  if (type === GQL_WorkType.Manga) return { ...commonValues, mokuro: false }
+  if (type === GQL_WorkType.Novel) return { ...commonValues, cover: undefined }
 }
+
 const volumeNumberValidator = (
   value: FormValues['volumeNumber'],
   values: FormValues
@@ -55,19 +57,19 @@ const coverValidator = (value: FormValues['cover']) => {
   return !value ? 'Please supply a cover image' : null
 }
 
-const getValidators = (type: FormType) => {
+const getValidators = (type: GQL_WorkType) => {
   const commonValidators = {
     volumeNumber: volumeNumberValidator,
     title: titleValidator,
     authors: authorsValidator,
   }
 
-  if (type === 'manga')
+  if (type === GQL_WorkType.Manga)
     return {
       ...commonValidators,
       files: mangaFilesValidator,
     }
-  if (type === 'novel')
+  if (type === GQL_WorkType.Novel)
     return {
       ...commonValidators,
       files: novelFilesValidator,
@@ -75,7 +77,7 @@ const getValidators = (type: FormType) => {
     }
 }
 
-export function useUploadForm(type: FormType) {
+export default function useUploadForm(type: GQL_WorkType) {
   const uploadForm = useForm<FormValues>({
     initialValues: getInitialValues(type),
     validate: getValidators(type),
@@ -104,10 +106,10 @@ export function useUploadForm(type: FormType) {
     })
     values.files.forEach((file) => formData.append('files', file))
 
-    if (type === 'manga') {
+    if (type === GQL_WorkType.Manga) {
       formData.append('mokuro', values.mokuro?.toString() ?? 'false')
     }
-    if (type === 'novel') {
+    if (type === GQL_WorkType.Novel) {
       formData.append('cover', values.cover ?? '')
     }
 
@@ -115,14 +117,16 @@ export function useUploadForm(type: FormType) {
     formData.append('userId', '6e41e9fd-c813-40e9-91fd-c51e47efab42')
 
     const res = await fetch(
-      `http://localhost:3004/process${type === 'manga' ? 'Manga' : 'Novel'}`,
+      // TODO: do this via env variable
+      `http://localhost:3004/process${type}`,
       {
         method: 'POST',
         body: formData,
       }
     )
-    console.log(await res.json())
+    const data = await res.json()
+    return data
   }
 
-  return { uploadForm, submitHandler: sendFormData }
+  return { uploadForm, sendFormData }
 }

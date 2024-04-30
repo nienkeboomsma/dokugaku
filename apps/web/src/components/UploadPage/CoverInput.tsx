@@ -1,14 +1,9 @@
 import { FileInput } from '@mantine/core'
-import { UseFormReturnType } from '@mantine/form'
 import { IconPhoto } from '@tabler/icons-react'
 
-import { FormValues } from '../../hooks/useUploadForm'
+import { type UploadForm } from '../../hooks/useUploadForm'
 
-export default function CoverInput({
-  uploadForm,
-}: {
-  uploadForm: UseFormReturnType<FormValues>
-}) {
+export default function CoverInput({ uploadForm }: { uploadForm: UploadForm }) {
   return (
     <FileInput
       accept='.png, .jpg, .jpeg, .webp'

@@ -1,52 +1,52 @@
 import { FileInput } from '@mantine/core'
-import { UseFormReturnType } from '@mantine/form'
 import { IconPhoto, IconFiles } from '@tabler/icons-react'
 
-import { FormType, FormValues } from '../../hooks/useUploadForm'
+import { type UploadForm } from '../../hooks/useUploadForm'
+import { GQL_WorkType } from '@repo/graphql-types'
 
 const getAcceptedExtensions = (
-  uploadForm: UseFormReturnType<FormValues>,
-  type: FormType
+  uploadForm: UploadForm,
+  workType: GQL_WorkType
 ) => {
-  if (type === 'manga') {
+  if (workType === GQL_WorkType.Manga) {
     return `.png, .jpg, .jpeg, .webp${uploadForm.values.mokuro ? ', .json' : ''}`
   }
-  if (type === 'novel') {
+  if (workType === GQL_WorkType.Novel) {
     return '.html, .md, .txt'
   }
 }
 
-const getLabel = (type: FormType) => {
-  if (type === 'manga') {
+const getLabel = (workType: GQL_WorkType) => {
+  if (workType === GQL_WorkType.Manga) {
     return 'Upload manga images'
   }
-  if (type === 'novel') {
+  if (workType === GQL_WorkType.Novel) {
     return 'Upload text files'
   }
 }
 
-const RightSection = ({ type }: { type: FormType }) => {
-  if (type === 'manga') {
+const RightSection = ({ workType }: { workType: GQL_WorkType }) => {
+  if (workType === GQL_WorkType.Manga) {
     return <IconPhoto size={18} stroke={1.5} />
   }
-  if (type === 'novel') {
+  if (workType === GQL_WorkType.Novel) {
     return <IconFiles size={18} stroke={1.5} />
   }
 }
 
 export default function FilesInput({
-  type,
+  workType,
   uploadForm,
 }: {
-  type: FormType
-  uploadForm: UseFormReturnType<FormValues>
+  workType: GQL_WorkType
+  uploadForm: UploadForm
 }) {
   return (
     <FileInput
-      accept={getAcceptedExtensions(uploadForm, type)}
+      accept={getAcceptedExtensions(uploadForm, workType)}
       clearable
-      label={getLabel(type)}
-      rightSection={<RightSection type={type} />}
+      label={getLabel(workType)}
+      rightSection={<RightSection workType={workType} />}
       rightSectionPointerEvents='none'
       multiple
       withAsterisk

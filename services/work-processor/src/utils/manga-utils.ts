@@ -6,6 +6,7 @@ import { type MokuroData } from './types.js'
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 import {
   ichiranTimePerPage,
+  mokuroExtensions,
   mokuroInitTime,
   mokuroTimePerPage,
   webpConversionPerImage,
@@ -36,7 +37,7 @@ export async function runMokuro(folderName: string) {
     `http://mokuro:${process.env.MOKURO_PORT}/mokuro`,
     { folderName },
     // TODO: use Redis to track Mokuro progress instead
-    { timeout: 1000 * 60 * 60 }
+    { timeout: 1000 * 60 * 120 }
   )
 
   console.timeEnd(timeTaken)
@@ -79,4 +80,20 @@ export async function runIchiranOnEachPage(fullPath: string) {
   }
 
   console.timeEnd(timeTaken)
+}
+
+export function createCoverImage(fullPath: string) {
+  const images = getAllFilesByExtension(fullPath, mokuroExtensions)
+  const [firstPage] = images.sort()
+
+  if (!firstPage) {
+    return console.log('Unable to generate a cover image')
+  }
+
+  const firstPagePath = path.join(fullPath, firstPage)
+  const coverPath = path.join(fullPath, `cover${path.extname(firstPage)}`)
+
+  console.table({ firstPagePath, coverPath })
+
+  fs.copyFileSync(firstPagePath, coverPath)
 }

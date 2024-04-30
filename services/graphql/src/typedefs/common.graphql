@@ -4,22 +4,55 @@ type Query
 
 type Mutation
 
-type SetReadStatusResponse {
-  code: Int!
-  success: Boolean!
-  message: String
-  readStatus: ReadStatus
+enum ReadStatus {
+  abandoned
+  new
+  read
+  reading
+  want_to_read
 }
 
-enum ReadStatus {
-  NONE
-  WANT_TO_READ
-  READING
-  READ
-  ABANDONED
+enum WordCountType {
+  """
+  The number of unique words that occur only once within the work.
+  """
+  hapax
+  """
+  The number of words that are not marked excluded, ignored or known.
+  """
+  learnable
+  total
+  unique
 }
 
 enum WorkType {
-  MANGA
-  NOVEL
+  manga
+  novel
+}
+
+# Almost the same as WordListInput, except for seriesIdInWhichIgnored, workIdInWhichIgnored and workIds
+input SubQueryWordListInput {
+  """
+  Get only the first occurrence of each word, instead of each individual
+  occurrence.
+  """
+  distinctOnly: Boolean
+  excluded: Boolean
+  known: Boolean
+  ignored: Boolean
+  minFrequency: Int
+  minPageNumber: Int
+  pageNumber: Int
+  wordIds: [Int!]
+}
+
+input WordCountInput {
+  type: WordCountType
+}
+
+type UpdateReadStatusResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  status: ReadStatus
 }

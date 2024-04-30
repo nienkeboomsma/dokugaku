@@ -4,8 +4,7 @@ import WorkCard, {
   WorkCardMaxWidth,
   WorkCardMinWidthMobile,
 } from '../../components/BrowsePage/WorkCard'
-import { mockWorkCardInfo } from '../../fixtures/workCardInfo'
-import { WorkCardInfo } from '../../types/WorkCardInfo'
+import { mockWorkCards } from '../../fixtures/workCards'
 import { resizer } from '../../../.storybook/decorators/resizer'
 
 const meta = {
@@ -23,11 +22,15 @@ const meta = {
 type Story = StoryObj<typeof meta>
 
 export const Series: Story = {
-  args: { workCardInfo: mockWorkCardInfo[0] as WorkCardInfo },
+  args: { workCardInfo: mockWorkCards[0] },
 }
 
 export const NotSeries: Story = {
-  args: { workCardInfo: mockWorkCardInfo[1] as WorkCardInfo },
+  args: { workCardInfo: mockWorkCards[1] },
+}
+
+export const MissingCover: Story = {
+  args: { workCardInfo: mockWorkCards[3] },
 }
 
 export default meta

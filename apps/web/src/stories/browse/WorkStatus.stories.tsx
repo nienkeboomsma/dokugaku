@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { GQL_ReadStatus } from '@repo/graphql-types'
+
 import WorkStatusBadge from '../../components/BrowsePage/WorkStatusBadge'
 
 const meta = {
@@ -8,27 +10,33 @@ const meta = {
 
 type Story = StoryObj<typeof meta>
 
-export const WantToRead: Story = {
+export const Abandoned: Story = {
   args: {
-    status: 'want to read',
+    status: GQL_ReadStatus.Abandoned,
   },
 }
 
-export const Reading: Story = {
+export const New: Story = {
   args: {
-    status: 'reading',
+    status: GQL_ReadStatus.New,
   },
 }
 
 export const Read: Story = {
   args: {
-    status: 'read',
+    status: GQL_ReadStatus.Read,
   },
 }
 
-export const Abandoned: Story = {
+export const Reading: Story = {
   args: {
-    status: 'abandoned',
+    status: GQL_ReadStatus.Reading,
+  },
+}
+
+export const WantToRead: Story = {
+  args: {
+    status: GQL_ReadStatus.WantToRead,
   },
 }
 

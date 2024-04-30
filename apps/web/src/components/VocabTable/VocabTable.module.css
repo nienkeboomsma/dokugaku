@@ -25,3 +25,10 @@
   max-width: calc(var(--max-width) - 2 * var(--padding));
   padding: var(--padding);
 }
+
+.table {
+  td {
+    padding: 0.625rem;
+    vertical-align: top;
+  }
+}

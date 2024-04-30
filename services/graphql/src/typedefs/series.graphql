@@ -1,66 +1,35 @@
-# Almost the same as WordListInput, except for workIds
-input SeriesVocabInput {
-  """
-  Get only the first occurrence of each word, instead of each individual
-  occurrence.
-  """
-  distinctOnly: Boolean
-  excluded: Boolean
-  known: Boolean
-  ignored: Boolean
-  minFrequency: Int
-  minPageNumber: Int
-  pageNumber: Int
-  """
-  Determines what series the 'ignored' value should be based on. If no
-  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  seriesIdInWhichIgnored: String
-  """
-  If no userId value is supplied 'excluded', 'ignored' and 'known' will default
-  to null.
-  """
-  userId: String
-  wordIds: [Int!]
-  """
-  Determines what work the 'ignored' value should be based on. If no
-  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  workIdInWhichIgnored: String
-}
-
 type Series {
-  id: ID!
   authors: [Author!]!
-  status: ReadStatus
+  id: ID!
+  status: ReadStatus!
   title: String!
-  vocab(input: SeriesVocabInput): [Word!]!
-  volumes(userId: String): [Work!]!
+  wordCount(input: WordCountInput): Int!
+  words(input: SubQueryWordListInput): [Word!]!
+  volumes: [Work!]!
 }
 
 input SeriesInput {
   seriesId: String!
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
+  status: ReadStatus
 }
 
 input SeriesListInput {
   seriesIds: [String!]
-  """
-  If no userId value is supplied 'status' will default to null.
-  """
-  userId: String
+  status: ReadStatus
+}
+
+input UpdateSeriesReadStatusInput {
+  seriesId: String!
+  status: ReadStatus!
 }
 
 extend type Query {
   series(input: SeriesInput!): Series
-  seriesList(input: SeriesListInput): [Series]!
+  seriesList(input: SeriesListInput): [Series!]!
 }
 
 extend type Mutation {
-  updateSeriesReadStatus: SetReadStatusResponse!
+  updateSeriesReadStatus(
+    input: UpdateSeriesReadStatusInput!
+  ): UpdateReadStatusResponse!
 }

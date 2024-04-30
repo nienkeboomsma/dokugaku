@@ -1,40 +1,51 @@
 import { Button, Combobox, useCombobox } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
-import { ReadStatus } from '../types/Work'
+const readStatusValues = Object.values(GQL_ReadStatus)
 
-const displayStatuses = ['Want to read', 'Reading', 'Read', 'Abandoned']
+const getDisplayValue = (value: string) => {
+  const firstCharUppercase = value[0]?.toUpperCase() + value.slice(1)
+  return firstCharUppercase.replaceAll('_', ' ')
+}
 
 export default function ReadStatusSelector({
-  value,
-  setValue,
+  loading,
+  status,
+  updateStatus,
 }: {
-  value: ReadStatus
+  loading: boolean
+  status: GQL_ReadStatus
   // eslint-disable-next-line no-unused-vars
-  setValue: (status: ReadStatus) => void
+  updateStatus: (status: GQL_ReadStatus) => void
 }) {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   })
 
-  const options = displayStatuses.map((status) => (
+  const options = readStatusValues.map((status) => (
     <Combobox.Option value={status} key={status}>
-      {status}
+      {getDisplayValue(status)}
     </Combobox.Option>
   ))
 
   return (
     <Combobox
-      onOptionSubmit={(value) => {
-        const status = value.toLowerCase() as ReadStatus
-        setValue(status)
+      onOptionSubmit={(status) => {
+        updateStatus(status as GQL_ReadStatus)
         combobox.closeDropdown()
       }}
       store={combobox}
     >
       <Combobox.Target>
         <Button
-          color={value === 'abandoned' ? 'gray' : undefined}
+          color={
+            status === GQL_ReadStatus.Abandoned || status === GQL_ReadStatus.New
+              ? 'gray'
+              : undefined
+          }
+          loaderProps={{ type: 'dots' }}
+          loading={loading}
           onClick={() => combobox.toggleDropdown()}
           rightSection={<IconChevronDown size={14} />}
           styles={{
@@ -50,14 +61,15 @@ export default function ReadStatusSelector({
           }}
           type='button'
           variant={
-            value === 'want to read'
+            status === GQL_ReadStatus.WantToRead ||
+            status === GQL_ReadStatus.New
               ? 'outline'
-              : value === 'reading'
+              : status === GQL_ReadStatus.Reading
                 ? 'light'
                 : 'filled'
           }
         >
-          {value[0]?.toUpperCase() + value.slice(1)}
+          {getDisplayValue(status)}
         </Button>
       </Combobox.Target>
 

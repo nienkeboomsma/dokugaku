@@ -6,7 +6,7 @@ export async function updateUserWorkTable(
   workId: string
 ) {
   const userWork = {
-    status: 'want to read',
+    status: 'want_to_read',
     user_id: userId,
     work_id: workId,
   }

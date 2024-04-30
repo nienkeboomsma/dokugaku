@@ -1,8 +1,10 @@
 import sql from '../data/sql.js'
+import { WordCountModel } from '../models/WordCountModel.js'
+import { WordModel } from '../models/WordModel.js'
 
 type ReturnSingle = {
   return: 'single'
-  wordId: string
+  wordId: number
 }
 
 type ReturnMultiple = {
@@ -14,7 +16,7 @@ type ReturnMultiple = {
   minPageNumber?: number
   pageNumber?: number
   return: 'multiple'
-  wordIds: string[]
+  wordIds: number[]
 }
 
 type ReturnAll = {
@@ -29,8 +31,9 @@ type ReturnAll = {
 }
 
 type QueryParamsCommon = {
+  rowCountOnly?: boolean
   seriesIdInWhichIgnored?: string
-  userId?: string
+  userId: string
   workIdInWhichIgnored?: string
   workIds?: string[]
 }
@@ -57,41 +60,27 @@ class WordQuery {
 
   ignoredColumn() {
     if (
-      (!this.params.seriesIdInWhichIgnored &&
-        !this.params.workIdInWhichIgnored) ||
-      !this.params.userId
+      !this.params.seriesIdInWhichIgnored &&
+      !this.params.workIdInWhichIgnored
     ) {
       return sql`
         NULL AS "ignored",
       `
     }
 
-    if (this.params.seriesIdInWhichIgnored && this.params.userId) {
+    if (this.params.seriesIdInWhichIgnored) {
       return sql`
         COALESCE (ignored_in_series.ignored, false) AS "ignored",
       `
     }
 
-    if (this.params.workIdInWhichIgnored && this.params.userId) {
+    if (this.params.workIdInWhichIgnored) {
       return sql`
         COALESCE (ignored_in_work.ignored, false) AS "ignored",
       `
     }
 
     return sql``
-  }
-
-  userIdColumns() {
-    if (!this.params.userId) {
-      return sql`
-        NULL AS excluded,
-        NULL AS known,
-      `
-    }
-    return sql`
-      COALESCE (user_word.excluded, false) AS excluded, 
-      COALESCE (user_word.known, false) AS known,
-    `
   }
 
   workIdColumns() {
@@ -107,52 +96,35 @@ class WordQuery {
 
   ignoredJoin() {
     if (
-      (!this.params.seriesIdInWhichIgnored &&
-        !this.params.workIdInWhichIgnored) ||
-      !this.params.userId
+      !this.params.seriesIdInWhichIgnored &&
+      !this.params.workIdInWhichIgnored
     ) {
       return sql``
     }
 
-    if (this.params.seriesIdInWhichIgnored && this.params.userId) {
+    if (this.params.seriesIdInWhichIgnored) {
       return sql`
         LEFT JOIN ignored_in_series 
           ON word.id = ignored_in_series.word_id
           AND ( ignored_in_series.user_id = ${this.params.userId}
-            OR ignored_in_series.user_id IS NULL
-          )
+            OR ignored_in_series.user_id IS NULL )
           AND ( ignored_in_series.series_id = ${this.params.seriesIdInWhichIgnored}
-            OR ignored_in_series.series_id IS NULL
-          )
+            OR ignored_in_series.series_id IS NULL )
       `
     }
 
-    if (this.params.workIdInWhichIgnored && this.params.userId) {
+    if (this.params.workIdInWhichIgnored) {
       return sql`
         LEFT JOIN ignored_in_work 
           ON word.id = ignored_in_work.word_id
           AND ( ignored_in_work.user_id = ${this.params.userId}
-            OR ignored_in_work.user_id IS NULL
-          )
+            OR ignored_in_work.user_id IS NULL )
           AND ( ignored_in_work.work_id = ${this.params.workIdInWhichIgnored}
-            OR ignored_in_work.work_id IS NULL
-          )
+            OR ignored_in_work.work_id IS NULL )
       `
     }
 
     return sql``
-  }
-
-  userIdJoin() {
-    if (!this.params.userId) return sql``
-
-    return sql`
-      LEFT JOIN user_word 
-        ON word.id = user_word.word_id
-        AND ( user_word.user_id = ${this.params.userId}
-          OR user_word.user_id IS NULL
-        )
-    `
   }
 
   workIdJoin() {
@@ -205,7 +177,7 @@ class WordQuery {
     ) {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        user_word.excluded = ${this.params.excluded}
+        COALESCE(user_word.excluded, false) = ${this.params.excluded}
       `
       this.whereAlreadyUsed = true
       return query
@@ -218,25 +190,28 @@ class WordQuery {
     if (
       (!this.params.seriesIdInWhichIgnored &&
         !this.params.workIdInWhichIgnored) ||
-      !this.params.userId ||
       !('ignored' in this.params) ||
       typeof this.params.ignored !== 'boolean'
     ) {
       return sql``
     }
 
-    if (this.params.seriesIdInWhichIgnored && this.params.userId) {
-      return sql`
+    if (this.params.seriesIdInWhichIgnored) {
+      const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        ignored_in_series.ignored = ${this.params.ignored}
+        COALESCE(ignored_in_series.ignored, false) = ${this.params.ignored}
       `
+      this.whereAlreadyUsed = true
+      return query
     }
 
-    if (this.params.workIdInWhichIgnored && this.params.userId) {
-      return sql`
+    if (this.params.workIdInWhichIgnored) {
+      const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        ignored_in_work.ignored = ${this.params.ignored}
+        COALESCE(ignored_in_work.ignored, false) = ${this.params.ignored}
       `
+      this.whereAlreadyUsed = true
+      return query
     }
 
     return sql``
@@ -246,7 +221,7 @@ class WordQuery {
     if ('known' in this.params && typeof this.params.known === 'boolean') {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        user_word.known = ${this.params.known}
+        COALESCE(user_word.known, false) = ${this.params.known}
       `
       this.whereAlreadyUsed = true
       return query
@@ -262,7 +237,7 @@ class WordQuery {
     ) {
       const query = sql`
         ${this.whereAlreadyUsed ? sql`AND` : sql`WHERE`} 
-        word_frequency.frequency >= ${this.params.minFrequency}
+        COALESCE(word_frequency.frequency, 0) >= ${this.params.minFrequency}
       `
       this.whereAlreadyUsed = true
       return query
@@ -304,16 +279,38 @@ class WordQuery {
   }
 
   getQuery() {
-    return sql`
+    if (this.params.rowCountOnly) {
+      return sql<[WordCountModel]>`
+      SELECT 
+        COUNT(*) AS count
+      FROM word
+        ${this.ignoredJoin()}
+        LEFT JOIN user_word 
+          ON word.id = user_word.word_id
+          AND ( user_word.user_id = ${this.params.userId}
+            OR user_word.user_id IS NULL )
+        ${this.workIdJoin()}
+        ${this.wordIdFilter()}
+        ${this.excludedFilter()}
+        ${this.ignoredFilter()}
+        ${this.knownFilter()};
+      `
+    }
+
+    return sql<WordModel[]>`
       ${this.selectDistinctWordsOnly()}
         word.id,
+        word.info,
         ${this.ignoredColumn()}
-        ${this.userIdColumns()}
         ${this.workIdColumns()}
-        word.info
+        user_word.excluded AS excluded, 
+        user_word.known AS known
       FROM word 
       ${this.ignoredJoin()}
-      ${this.userIdJoin()}
+      LEFT JOIN user_word 
+        ON word.id = user_word.word_id
+        AND ( user_word.user_id = ${this.params.userId}
+          OR user_word.user_id IS NULL )
       ${this.workIdJoin()}
       ${this.wordIdFilter()}
       ${this.excludedFilter()}
@@ -322,7 +319,6 @@ class WordQuery {
       ${this.minFrequencyFilter()}
       ${this.minPageNumberFilter()}
       ${this.pageNumberFilter()}
-
       ORDER BY
         ${'distinctOnly' in this.params && this.params.distinctOnly ? sql`word.id,` : sql``}
         word_work.volume_number ASC,
