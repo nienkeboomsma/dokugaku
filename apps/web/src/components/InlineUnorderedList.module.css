@@ -5,7 +5,7 @@
 }
 
 .listItem {
-  display: inline-block;
+  display: var(--display);
   vertical-align: top;
 
   &:not(:last-child)::after {

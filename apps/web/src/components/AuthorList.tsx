@@ -38,6 +38,7 @@ export default function AuthorList({
     <TruncateToSingleLine dotColor='var(--mantine-color-dimmed)'>
       <InlineUnorderedList
         classNames={{ listItem: classNames?.author }}
+        display='inline'
         listItems={authors}
         listItemWrapper={Author}
       />
