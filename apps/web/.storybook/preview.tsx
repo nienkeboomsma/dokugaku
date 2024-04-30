@@ -28,7 +28,8 @@ export function ColorSchemeWrapper({
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <MantineProvider>
+      // TODO: define a theme file centrally
+      <MantineProvider theme={{ primaryColor: 'blue' }}>
         <ColorSchemeWrapper>
           <Story />
         </ColorSchemeWrapper>
