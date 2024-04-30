@@ -318,6 +318,20 @@ export type GQL_ExistingSeriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GQL_ExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
 
+export type GQL_WantToReadWorksQueryVariables = Exact<{
+  input?: InputMaybe<GQL_WorkListInput>;
+}>;
+
+
+export type GQL_WantToReadWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string }> };
+
+export type GQL_RecommendedVocabQueryVariables = Exact<{
+  input?: InputMaybe<GQL_WordListInput>;
+}>;
+
+
+export type GQL_RecommendedVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number }> };
+
 export type GQL_SeriesInfoQueryVariables = Exact<{
   seriesInput: GQL_SeriesInput;
 }>;
