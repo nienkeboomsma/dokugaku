@@ -30,7 +30,18 @@ input WorkListInput {
   workIds: [String!]
 }
 
+input UpdateWorkReadStatusInput {
+  status: ReadStatus!
+  workId: String!
+}
+
 extend type Query {
   work(input: WorkInput!): Work
   workList(input: WorkListInput): [Work!]!
+}
+
+extend type Mutation {
+  updateWorkReadStatus(
+    input: UpdateWorkReadStatusInput!
+  ): UpdateReadStatusResponse!
 }

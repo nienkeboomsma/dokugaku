@@ -4,13 +4,6 @@ type Query
 
 type Mutation
 
-type SetReadStatusResponse {
-  code: Int!
-  success: Boolean!
-  message: String
-  readStatus: ReadStatus
-}
-
 enum ReadStatus {
   abandoned
   new
@@ -55,4 +48,11 @@ input SubQueryWordListInput {
 
 input WordCountInput {
   type: WordCountType
+}
+
+type UpdateReadStatusResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  status: ReadStatus
 }

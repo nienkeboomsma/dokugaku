@@ -10,9 +10,11 @@ const getDisplayValue = (value: string) => {
 }
 
 export default function ReadStatusSelector({
+  loading,
   status,
   updateStatus,
 }: {
+  loading: boolean
   status: GQL_ReadStatus
   // eslint-disable-next-line no-unused-vars
   updateStatus: (status: GQL_ReadStatus) => void
@@ -42,6 +44,8 @@ export default function ReadStatusSelector({
               ? 'gray'
               : undefined
           }
+          loaderProps={{ type: 'dots' }}
+          loading={loading}
           onClick={() => combobox.toggleDropdown()}
           rightSection={<IconChevronDown size={14} />}
           styles={{

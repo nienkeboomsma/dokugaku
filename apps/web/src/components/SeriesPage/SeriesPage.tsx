@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { GQL_ReadStatus } from '@repo/graphql-types'
+import { useMutation } from '@apollo/client'
 
 import classes from './SeriesPage.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
 import { type Word } from '../../types/Word'
 import { useVocab } from '../../hooks/useVocab'
+import { UPDATE_SERIES_READ_STATUS } from '../../graphql/updateReadStatus'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
@@ -18,11 +20,6 @@ import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
 import IgnoredWords from '../VocabTable/IgnoredWords'
 
-// TODO: Hook up to GraphQL
-const callToApi = (id: string, status: GQL_ReadStatus) => {
-  console.log(id, status)
-}
-
 export default function SeriesPage({
   initialVocab,
   series,
@@ -33,11 +30,29 @@ export default function SeriesPage({
   // TODO: design a proper placeholder page
   if (!series) return 'Oops'
 
-  const [seriesStatus, setSeriesStatus] = useState(series.status)
   const { actions, vocab } = useVocab(initialVocab, {
     isSeries: true,
     seriesOrWorkId: series.id,
   })
+
+  const [seriesStatus, setSeriesStatus] = useState(series.status)
+  const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
+  const [updateSeriesStatus] = useMutation(UPDATE_SERIES_READ_STATUS)
+
+  const seriesStatusHandler = async (status: GQL_ReadStatus) => {
+    setSeriesStatusLoading(true)
+
+    const { data } = await updateSeriesStatus({
+      variables: { input: { seriesId: series.id, status } },
+    })
+    const { status: newStatus, success } = data.updateSeriesReadStatus
+
+    if (success) {
+      setSeriesStatus(newStatus)
+    }
+
+    setSeriesStatusLoading(false)
+  }
 
   return (
     <PaperContainer
@@ -54,11 +69,9 @@ export default function SeriesPage({
 
           <div>
             <ReadStatusSelector
-              updateStatus={(status: GQL_ReadStatus) => {
-                callToApi(series.id, status)
-                setSeriesStatus(status)
-              }}
+              loading={seriesStatusLoading}
               status={seriesStatus}
+              updateStatus={seriesStatusHandler}
             />
           </div>
         </div>

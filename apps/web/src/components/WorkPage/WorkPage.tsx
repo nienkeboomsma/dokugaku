@@ -4,11 +4,13 @@ import { useState } from 'react'
 import { Button } from '@mantine/core'
 import { IconBook2 } from '@tabler/icons-react'
 import { GQL_ReadStatus } from '@repo/graphql-types'
+import { useMutation } from '@apollo/client'
 
 import classes from './WorkPage.module.css'
 import { type WorkInfo } from '../../types/WorkInfo'
 import { type Word } from '../../types/Word'
 import { useVocab } from '../../hooks/useVocab'
+import { UPDATE_WORK_READ_STATUS } from '../../graphql/updateReadStatus'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
@@ -29,11 +31,6 @@ const cssVariables = {
   '--second-column-width': 'calc(100% - var(--cover-width) - var(--gap))',
 } as React.CSSProperties
 
-// TODO: Hook up to GraphQL
-const callToApi = (id: string, status: GQL_ReadStatus) => {
-  console.log(id, status)
-}
-
 export default function WorkPage({
   initialVocab,
   work,
@@ -44,11 +41,29 @@ export default function WorkPage({
   // TODO: design a proper placeholder page
   if (!work) return 'Oops'
 
-  const [readStatus, setReadStatus] = useState(work.status)
   const { actions, vocab } = useVocab(initialVocab, {
     isSeries: true,
     seriesOrWorkId: work.id,
   })
+
+  const [readStatus, setReadStatus] = useState(work.status)
+  const [readStatusLoading, setReadStatusLoading] = useState(false)
+  const [updateReadStatus] = useMutation(UPDATE_WORK_READ_STATUS)
+
+  const readStatusHandler = async (status: GQL_ReadStatus) => {
+    setReadStatusLoading(true)
+
+    const { data } = await updateReadStatus({
+      variables: { input: { status, workId: work.id } },
+    })
+    const { status: newStatus, success } = data.updateWorkReadStatus
+
+    if (success) {
+      setReadStatus(newStatus)
+    }
+
+    setReadStatusLoading(false)
+  }
 
   return (
     <PaperContainer
@@ -63,11 +78,9 @@ export default function WorkPage({
             width={coverWidth}
           />
           <ReadStatusSelector
-            updateStatus={(status: GQL_ReadStatus) => {
-              callToApi(work.id, status)
-              setReadStatus(status)
-            }}
+            loading={readStatusLoading}
             status={readStatus}
+            updateStatus={readStatusHandler}
           />
           <Button
             component={Link}

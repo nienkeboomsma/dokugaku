@@ -1,5 +1,6 @@
 import { GQL_ReadStatus, GQL_WordCountType } from '@repo/graphql-types'
 
+import sql from '../data/sql'
 import WorkQuery from '../queries/WorkQuery'
 import WordCountQuery from '../queries/WordCountQuery'
 
@@ -50,6 +51,20 @@ class Work {
     })
     const [data] = await wordCountQuery.getQuery()
     return data?.count
+  }
+
+  async updateWorkReadStatus(input: {
+    status: GQL_ReadStatus
+    userId: string
+    workId: string
+  }) {
+    return sql<{ status: GQL_ReadStatus }[]>`
+      UPDATE user_work
+      SET status = ${input.status}
+      WHERE user_id = ${input.userId} 
+        AND work_id = ${input.workId}
+      RETURNING status;
+    `
   }
 }
 

@@ -21,30 +21,42 @@ type Story = StoryObj<typeof meta>
 
 export const Abandoned: Story = {
   args: {
+    loading: false,
+    status: GQL_ReadStatus.Abandoned,
+  },
+}
+
+export const Loading: Story = {
+  args: {
+    loading: true,
     status: GQL_ReadStatus.Abandoned,
   },
 }
 
 export const New: Story = {
   args: {
+    loading: false,
     status: GQL_ReadStatus.New,
   },
 }
 
 export const Read: Story = {
   args: {
+    loading: false,
     status: GQL_ReadStatus.Read,
   },
 }
 
 export const Reading: Story = {
   args: {
+    loading: false,
     status: GQL_ReadStatus.Reading,
   },
 }
 
 export const WantToRead: Story = {
   args: {
+    loading: false,
     status: GQL_ReadStatus.WantToRead,
   },
 }

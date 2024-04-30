@@ -1,5 +1,6 @@
 import { GQL_ReadStatus, GQL_WordCountType } from '@repo/graphql-types'
 
+import sql from '../data/sql'
 import SeriesQuery from '../queries/SeriesQuery'
 import WordCountQuery from '../queries/WordCountQuery'
 
@@ -52,6 +53,20 @@ class Series {
     })
     const [data] = await wordCountQuery.getQuery()
     return data.count
+  }
+
+  async updateSeriesReadStatus(input: {
+    seriesId: string
+    status: GQL_ReadStatus
+    userId: string
+  }) {
+    return sql<{ status: GQL_ReadStatus }[]>`
+      UPDATE user_series
+      SET status = ${input.status}
+      WHERE user_id = ${input.userId} 
+        AND series_id = ${input.seriesId}
+      RETURNING status;
+    `
   }
 }
 

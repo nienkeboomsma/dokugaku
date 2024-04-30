@@ -9,6 +9,35 @@ const resolvers: GQL_Resolvers = {
       return series.getSeriesList({ ...input, userId }) ?? []
     },
   },
+  Mutation: {
+    updateSeriesReadStatus: async (
+      _,
+      { input },
+      { userId, dataSources: { series } }
+    ) => {
+      try {
+        const [res] = await series.updateSeriesReadStatus({
+          seriesId: input.seriesId,
+          status: input.status,
+          userId,
+        })
+        return {
+          code: 200,
+          success: true,
+          message: 'Series status has successfully been updated',
+          status: res?.status,
+        }
+      } catch (err) {
+        console.log(err, typeof err)
+        return {
+          code: 500,
+          success: false,
+          message: 'Unable to update series status',
+          status: null,
+        }
+      }
+    },
+  },
   Series: {
     volumes: async (parent, _, { userId, dataSources: { work } }) => {
       return work.getWorks({
