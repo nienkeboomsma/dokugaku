@@ -22,6 +22,7 @@ services:
     networks:
       - backend
     restart: always
+    shm_size: 1gb
     volumes:
       - db:/var/lib/postgresql/data
   graphql:
