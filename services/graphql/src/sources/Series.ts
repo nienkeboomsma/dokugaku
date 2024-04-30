@@ -60,7 +60,7 @@ class Series {
     status: GQL_ReadStatus
     userId: string
   }) {
-    return sql<{ status: GQL_ReadStatus }[]>`
+    return sql<[{ status: GQL_ReadStatus }]>`
       UPDATE user_series
       SET status = ${input.status}
       WHERE user_id = ${input.userId} 

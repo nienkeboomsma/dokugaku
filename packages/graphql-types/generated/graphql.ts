@@ -36,9 +36,14 @@ export type GQL_AuthorListInput = {
 
 export type GQL_Mutation = {
   __typename?: 'Mutation';
+  updateIgnoredWord: GQL_UpdateIgnoredWordResponse;
   updateSeriesReadStatus: GQL_UpdateReadStatusResponse;
-  updateWord: GQL_WordChangeResponse;
   updateWorkReadStatus: GQL_UpdateReadStatusResponse;
+};
+
+
+export type GQL_MutationUpdateIgnoredWordArgs = {
+  input: GQL_UpdateIgnoredWordInput;
 };
 
 
@@ -157,6 +162,23 @@ export type GQL_SubQueryWordListInput = {
   wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type GQL_UpdateIgnoredWordInput = {
+  ignored: Scalars['Boolean']['input'];
+  /** A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored. */
+  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+  wordId: Scalars['String']['input'];
+  /** A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored. */
+  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GQL_UpdateIgnoredWordResponse = {
+  __typename?: 'UpdateIgnoredWordResponse';
+  code: Scalars['Int']['output'];
+  ignored?: Maybe<Scalars['Boolean']['output']>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type GQL_UpdateReadStatusResponse = {
   __typename?: 'UpdateReadStatusResponse';
   code: Scalars['Int']['output'];
@@ -188,14 +210,6 @@ export type GQL_Word = {
   pageNumber: Scalars['Int']['output'];
   sentenceNumber: Scalars['Int']['output'];
   volumeNumber?: Maybe<Scalars['Int']['output']>;
-};
-
-export type GQL_WordChangeResponse = {
-  __typename?: 'WordChangeResponse';
-  code: Scalars['Int']['output'];
-  message?: Maybe<Scalars['String']['output']>;
-  success: Scalars['Boolean']['output'];
-  wordId?: Maybe<Scalars['String']['output']>;
 };
 
 export type GQL_WordCountInput = {
@@ -390,6 +404,13 @@ export type GQL_WorkVocabQueryVariables = Exact<{
 
 export type GQL_WorkVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number, ignored?: boolean | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
 
+export type GQL_UpdateIgnoredWordMutationVariables = Exact<{
+  input: GQL_UpdateIgnoredWordInput;
+}>;
+
+
+export type GQL_UpdateIgnoredWordMutation = { __typename?: 'Mutation', updateIgnoredWord: { __typename?: 'UpdateIgnoredWordResponse', success: boolean } };
+
 export type GQL_UpdateSeriesReadStatusMutationVariables = Exact<{
   input: GQL_UpdateSeriesReadStatusInput;
 }>;
@@ -491,11 +512,12 @@ export type GQL_ResolversTypes = ResolversObject<{
   SeriesListInput: GQL_SeriesListInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   SubQueryWordListInput: GQL_SubQueryWordListInput;
+  UpdateIgnoredWordInput: GQL_UpdateIgnoredWordInput;
+  UpdateIgnoredWordResponse: ResolverTypeWrapper<GQL_UpdateIgnoredWordResponse>;
   UpdateReadStatusResponse: ResolverTypeWrapper<GQL_UpdateReadStatusResponse>;
   UpdateSeriesReadStatusInput: GQL_UpdateSeriesReadStatusInput;
   UpdateWorkReadStatusInput: GQL_UpdateWorkReadStatusInput;
   Word: ResolverTypeWrapper<GQL_Word>;
-  WordChangeResponse: ResolverTypeWrapper<GQL_WordChangeResponse>;
   WordCountInput: GQL_WordCountInput;
   WordCountType: GQL_WordCountType;
   WordInput: GQL_WordInput;
@@ -522,11 +544,12 @@ export type GQL_ResolversParentTypes = ResolversObject<{
   SeriesListInput: GQL_SeriesListInput;
   String: Scalars['String']['output'];
   SubQueryWordListInput: GQL_SubQueryWordListInput;
+  UpdateIgnoredWordInput: GQL_UpdateIgnoredWordInput;
+  UpdateIgnoredWordResponse: GQL_UpdateIgnoredWordResponse;
   UpdateReadStatusResponse: GQL_UpdateReadStatusResponse;
   UpdateSeriesReadStatusInput: GQL_UpdateSeriesReadStatusInput;
   UpdateWorkReadStatusInput: GQL_UpdateWorkReadStatusInput;
   Word: GQL_Word;
-  WordChangeResponse: GQL_WordChangeResponse;
   WordCountInput: GQL_WordCountInput;
   WordInput: GQL_WordInput;
   WordListInput: GQL_WordListInput;
@@ -546,8 +569,8 @@ export interface GQL_JsonScalarConfig extends GraphQLScalarTypeConfig<GQL_Resolv
 }
 
 export type GQL_MutationResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Mutation'] = GQL_ResolversParentTypes['Mutation']> = ResolversObject<{
+  updateIgnoredWord?: Resolver<GQL_ResolversTypes['UpdateIgnoredWordResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateIgnoredWordArgs, 'input'>>;
   updateSeriesReadStatus?: Resolver<GQL_ResolversTypes['UpdateReadStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateSeriesReadStatusArgs, 'input'>>;
-  updateWord?: Resolver<GQL_ResolversTypes['WordChangeResponse'], ParentType, ContextType>;
   updateWorkReadStatus?: Resolver<GQL_ResolversTypes['UpdateReadStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateWorkReadStatusArgs, 'input'>>;
 }>;
 
@@ -570,6 +593,14 @@ export type GQL_SeriesResolvers<ContextType = GQL_Context, ParentType extends GQ
   volumes?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType>;
   wordCount?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType, Partial<GQL_SeriesWordCountArgs>>;
   words?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_SeriesWordsArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GQL_UpdateIgnoredWordResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['UpdateIgnoredWordResponse'] = GQL_ResolversParentTypes['UpdateIgnoredWordResponse']> = ResolversObject<{
+  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  ignored?: Resolver<Maybe<GQL_ResolversTypes['Boolean']>, ParentType, ContextType>;
+  message?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -596,14 +627,6 @@ export type GQL_WordResolvers<ContextType = GQL_Context, ParentType extends GQL_
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type GQL_WordChangeResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['WordChangeResponse'] = GQL_ResolversParentTypes['WordChangeResponse']> = ResolversObject<{
-  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
-  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
-  wordId?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Work'] = GQL_ResolversParentTypes['Work']> = ResolversObject<{
   authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
@@ -625,9 +648,9 @@ export type GQL_Resolvers<ContextType = GQL_Context> = ResolversObject<{
   Mutation?: GQL_MutationResolvers<ContextType>;
   Query?: GQL_QueryResolvers<ContextType>;
   Series?: GQL_SeriesResolvers<ContextType>;
+  UpdateIgnoredWordResponse?: GQL_UpdateIgnoredWordResponseResolvers<ContextType>;
   UpdateReadStatusResponse?: GQL_UpdateReadStatusResponseResolvers<ContextType>;
   Word?: GQL_WordResolvers<ContextType>;
-  WordChangeResponse?: GQL_WordChangeResponseResolvers<ContextType>;
   Work?: GQL_WorkResolvers<ContextType>;
 }>;
 

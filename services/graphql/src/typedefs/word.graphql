@@ -74,18 +74,31 @@ input WordListInput {
   workIds: [String!]
 }
 
+input UpdateIgnoredWordInput {
+  ignored: Boolean!
+  """
+  A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
+  """
+  workIdInWhichIgnored: String
+  wordId: String!
+}
+
 extend type Query {
   word(input: WordInput!): Word
   wordList(input: WordListInput): [Word!]!
 }
 
 extend type Mutation {
-  updateWord: WordChangeResponse!
+  updateIgnoredWord(input: UpdateIgnoredWordInput!): UpdateIgnoredWordResponse!
 }
 
-type WordChangeResponse {
+type UpdateIgnoredWordResponse {
   code: Int!
   success: Boolean!
-  message: String
-  wordId: String
+  message: String!
+  ignored: Boolean
 }

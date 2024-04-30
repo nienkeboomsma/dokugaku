@@ -58,7 +58,7 @@ class Work {
     userId: string
     workId: string
   }) {
-    return sql<{ status: GQL_ReadStatus }[]>`
+    return sql<[{ status: GQL_ReadStatus }]>`
       UPDATE user_work
       SET status = ${input.status}
       WHERE user_id = ${input.userId} 

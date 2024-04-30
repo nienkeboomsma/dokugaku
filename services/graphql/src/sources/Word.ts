@@ -1,3 +1,4 @@
+import sql from '../data/sql.js'
 import { WordCountModel } from '../models/WordCountModel.js'
 import { WordModel } from '../models/WordModel.js'
 import WordQuery from '../queries/WordQuery.js'
@@ -35,6 +36,14 @@ type GetWordsInputCommon = {
 
 type GetWordsInput = GetWordsCountInput | GetWordsEntriesInput
 
+type UpdateIgnoredWordInput = {
+  ignored: boolean
+  seriesIdInWhichIgnored?: string
+  userId: string
+  wordId: string
+  workIdInWhichIgnored?: string
+}
+
 class Word {
   async getWord(input: GetWordInput): Promise<WordModel> {
     const wordQuery = new WordQuery({
@@ -68,6 +77,34 @@ class Word {
     })
     const words = await wordQuery.getQuery()
     return words ?? []
+  }
+
+  async updateIgnoredWord(input: UpdateIgnoredWordInput) {
+    if (!input.seriesIdInWhichIgnored && !input.workIdInWhichIgnored) {
+      throw new Error(
+        'Must supply a value for either seriesIdInWhichIgnored or workIdInWhichIgnored'
+      )
+    }
+
+    if (input.seriesIdInWhichIgnored) {
+      return sql<[{ ignored: boolean }]>`
+        INSERT INTO ignored_in_series (word_id, series_id, user_id, ignored)
+        VALUES (${input.wordId}, ${input.seriesIdInWhichIgnored}, ${input.userId}, ${input.ignored})
+        ON CONFLICT (word_id, series_id, user_id)
+        DO UPDATE SET ignored = ${input.ignored}
+        RETURNING ignored;
+      `
+    }
+
+    if (input.workIdInWhichIgnored) {
+      return sql<[{ ignored: boolean }]>`
+        INSERT INTO ignored_in_work (word_id, work_id, user_id, ignored)
+        VALUES (${input.wordId}, ${input.workIdInWhichIgnored}, ${input.userId}, ${input.ignored})
+        ON CONFLICT (word_id, work_id, user_id)
+        DO UPDATE SET ignored = ${input.ignored}
+        RETURNING ignored;
+      `
+    }
   }
 }
 
