@@ -39,13 +39,15 @@ export const getWorkVocab = async (workId: string) => {
 
     if (!data) return []
 
-    const wordList: Word[] = data.wordList.map((word) => {
-      return {
-        ...word,
-        ignored: word.ignored ?? undefined,
-        componentNumber: word.componentNumber ?? undefined,
-      }
-    })
+    const wordList: Word[] = data.wordList
+      .map((word) => {
+        return {
+          ...word,
+          ignored: word.ignored ?? undefined,
+          componentNumber: word.componentNumber ?? undefined,
+        }
+      })
+      .sort((wordA, wordB) => wordB.frequency - wordA.frequency)
 
     return wordList
   } catch {
