@@ -1,27 +1,28 @@
 import { Radio, Stack } from '@mantine/core'
 import { Dispatch, SetStateAction } from 'react'
 
-type SortOptions = 'frequency' | 'firstOccurrence'
+export enum ListType {
+  Frequency = 'frequency',
+  Glossary = 'glossary',
+}
 
 export default function VocabSort({
-  sortOrder,
-  setSortOrder,
+  listType,
+  setListType,
 }: {
-  sortOrder: SortOptions
-  setSortOrder: Dispatch<SetStateAction<SortOptions>>
+  listType: ListType
+  setListType: Dispatch<SetStateAction<ListType>>
 }) {
   return (
     <Radio.Group
-      label='Sort vocab by'
-      mt='-0.1875rem'
-      name='sortOrder'
-      onChange={setSortOrder as Dispatch<SetStateAction<string>>}
-      pb={3}
-      value={sortOrder}
+      aria-label='List style'
+      name='listType'
+      onChange={setListType as Dispatch<SetStateAction<string>>}
+      value={listType}
     >
-      <Stack mt='xs'>
-        <Radio value='frequency' label='Frequency' />
-        <Radio value='firstOccurrence' label='First occurrence' />
+      <Stack>
+        <Radio value={ListType.Frequency} label='Frequency list' />
+        <Radio value={ListType.Glossary} label='Glossary' />
       </Stack>
     </Radio.Group>
   )

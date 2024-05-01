@@ -7,41 +7,43 @@ import { IconMoodSad } from '@tabler/icons-react'
 import { DataTable, DataTableColumn } from 'mantine-datatable'
 
 import classes from './VocabTable.module.css'
+import { type SeriesInfo } from '../../types/SeriesInfo'
 import { type Word } from '../../types/Word'
-import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
+import { type WorkInfo } from '../../types/WorkInfo'
 import Reading from './Reading'
 import Meaning from './Meaning'
 import ActionButtons from './ActionButtons'
-import filterVocab from './filterVocab'
-import sortVocab from './sortVocab'
+import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import VocabFilter from './VocabFilter'
-import VocabSort from './VocabSort'
+import filterVocab from './filterVocab'
+import VocabSort, { ListType } from './VocabSort'
 
 const MAX_WIDTH = '52rem'
 
-export type VocabTableType =
-  | 'frequencyList'
-  | 'recommendedVocab'
-  | 'knownWords'
-  | 'excludedFromWork'
-  | 'excludedEverywhere'
-
-// eslint-disable-next-line no-unused-vars
-export type VocabAction = (id: Word['id']) => void
-
-export type VocabTableProps = {
-  actions: {
-    onExcludeWord: VocabAction
-    onIgnoreWord: VocabAction
-    onMarkWordAsKnown: VocabAction
-    onMarkWordAsUnknown: VocabAction
-    onUnexcludeWord: VocabAction
-    onUnignoreWord: VocabAction
-  }
-  furigana?: boolean
-  type: VocabTableType
-  vocab: Word[]
+export enum VocabTableType {
+  Excluded = 'excluded',
+  Known = 'known',
+  Recommended = 'recommended',
+  SeriesOrWork = 'seriesOrWork',
 }
+
+type VocabTablePropsCorpus = {
+  furigana?: boolean
+  type:
+    | VocabTableType.Excluded
+    | VocabTableType.Known
+    | VocabTableType.Recommended
+}
+
+type VocabTablePropsSeriesOrWork = {
+  furigana?: boolean
+  seriesOrWork: SeriesInfo | WorkInfo
+  type: VocabTableType.SeriesOrWork
+}
+
+export type VocabTableProps =
+  | VocabTablePropsCorpus
+  | VocabTablePropsSeriesOrWork
 
 type TableProperties = {
   columns: DataTableColumn<Word>[]
@@ -49,30 +51,47 @@ type TableProperties = {
   sort: boolean
 }
 
-export default function VocabTable({
-  actions,
-  furigana,
-  type,
-  vocab,
-}: VocabTableProps) {
+// eslint-disable-next-line no-unused-vars
+export type VocabAction = (id: Word['id']) => void
+
+export default function VocabTable(props: VocabTableProps) {
+  const { furigana, type } = props
+  const seriesOrWork =
+    type === VocabTableType.SeriesOrWork ? props.seriesOrWork : undefined
+  const isSeries = seriesOrWork?.series
+  const isPartOfSeries = !isSeries ? seriesOrWork?.seriesId : false
+
+  const [vocab, setVocab] = useState<Word[]>([])
   const [records, setRecords] = useState(vocab)
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
   // TODO: save these preferences somewhere
+  const [showIgnored, setShowIgnored] = useState(false)
+  const [showUnignored, setShowUnignored] = useState(true)
   const [minFrequency, setMinFrequency] = useState<string | number>(3)
-  const [sortOrder, setSortOrder] = useState<'frequency' | 'firstOccurrence'>(
-    'frequency'
-  )
+  const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
+  const [listType, setListType] = useState<ListType>(ListType.Frequency)
 
   useEffect(() => {
     setRecords(
-      vocab
-        .filter((vocab) =>
-          filterVocab(vocab, type, debouncedSearchValue, minFrequency)
-        )
-        .sort((vocabA, vocabB) => sortVocab(vocabA, vocabB, sortOrder))
+      vocab.filter((word) =>
+        filterVocab({
+          minFrequency: debouncedMinFrequency,
+          searchValue: debouncedSearchValue,
+          showIgnored,
+          showUnignored,
+          type,
+          word,
+        })
+      )
     )
-  }, [vocab, debouncedSearchValue, minFrequency, sortOrder])
+  }, [
+    vocab,
+    debouncedMinFrequency,
+    debouncedSearchValue,
+    listType,
+    showIgnored,
+  ])
 
   const allColumns: DataTableColumn<Word>[] = [
     {
@@ -93,15 +112,55 @@ export default function VocabTable({
       accessor: 'actions',
       title: '',
       textAlign: 'right',
-      render: (vocab: Word) =>
+      render: (wordInRow: Word) =>
         ActionButtons({
-          onExcludeWord: () => actions.onExcludeWord(vocab.id),
-          onIgnoreWord: () => actions.onIgnoreWord(vocab.id),
-          onMarkWordAsKnown: () => actions.onMarkWordAsKnown(vocab.id),
-          onMarkWordAsUnknown: () => actions.onMarkWordAsUnknown(vocab.id),
-          onUnexcludeWord: () => actions.onUnexcludeWord(vocab.id),
-          onUnignoreWord: () => actions.onUnignoreWord(vocab.id),
-          type: type,
+          onExcludeWord: () => {
+            // call to API
+            setVocab((prev) =>
+              prev.filter((wordInState) => wordInState.id === wordInRow.id)
+            )
+          },
+          onIgnoreWord: () => {
+            // call to API
+            setVocab((prev) =>
+              prev.map((wordInState) =>
+                wordInState.id === wordInRow.id
+                  ? { ...wordInState, ignored: true }
+                  : wordInState
+              )
+            )
+          },
+          onMarkWordAsKnown: () => {
+            // call to API
+            setVocab((prev) =>
+              prev.filter((wordInState) => wordInState.id === wordInRow.id)
+            )
+          },
+          onMarkWordAsUnknown: () => {
+            // call to API
+            setVocab((prev) =>
+              prev.filter((wordInState) => wordInState.id === wordInRow.id)
+            )
+          },
+          onUnexcludeWord: () => {
+            // call to API
+            setVocab((prev) =>
+              prev.filter((wordInState) => wordInState.id === wordInRow.id)
+            )
+          },
+          onUnignoreWord: () => {
+            // call to API
+            setVocab((prev) =>
+              prev.map((wordInState) =>
+                wordInState.id === wordInRow.id
+                  ? { ...wordInState, ignored: false }
+                  : wordInState
+              )
+            )
+          },
+          isSeries,
+          vocabTableType: type,
+          wordInRow,
         }),
     },
   ]
@@ -111,27 +170,23 @@ export default function VocabTable({
   )
 
   const tableProperties: Record<VocabTableType, TableProperties> = {
-    frequencyList: {
+    [VocabTableType.SeriesOrWork]: {
       columns: allColumns,
       filter: true,
       sort: true,
     },
-    recommendedVocab: {
+    [VocabTableType.Recommended]: {
       columns: allColumns,
+      // TODO: don't pass a bool, but pass the component of choice?
       filter: true,
       sort: false,
     },
-    knownWords: {
+    [VocabTableType.Known]: {
       columns: nonFrequencyColumns,
       filter: false,
       sort: false,
     },
-    excludedFromWork: {
-      columns: nonFrequencyColumns,
-      filter: false,
-      sort: true,
-    },
-    excludedEverywhere: {
+    [VocabTableType.Excluded]: {
       columns: nonFrequencyColumns,
       filter: false,
       sort: false,
@@ -149,6 +204,11 @@ export default function VocabTable({
             <VocabFilter
               minFrequency={minFrequency}
               setMinFrequency={setMinFrequency}
+              setShowIgnored={setShowIgnored}
+              setShowUnignored={setShowUnignored}
+              showIgnored={showIgnored}
+              showUnignored={showUnignored}
+              vocabTableType={type}
             />
           )
         }
@@ -156,7 +216,7 @@ export default function VocabTable({
         setSearchValue={setSearchValue}
         sortContent={
           tableProperties[type].sort && (
-            <VocabSort sortOrder={sortOrder} setSortOrder={setSortOrder} />
+            <VocabSort listType={listType} setListType={setListType} />
           )
         }
       />

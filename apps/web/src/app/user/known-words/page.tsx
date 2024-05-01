@@ -1,10 +1,8 @@
+'use client'
+
+import { VocabTableType } from '../../../components/VocabTable/VocabTable'
 import WordsPage from '../../../components/WordsPage/WordsPage'
-import { getExcludedOrKnownWords } from '../../../graphql/getExcludedOrKnownWords'
 
-export default async function KnownWords() {
-  const vocab = await getExcludedOrKnownWords('known')
-
-  return (
-    <WordsPage heading='Known words' type='knownWords' initialVocab={vocab} />
-  )
+export default function KnownWords() {
+  return <WordsPage heading='Known words' type={VocabTableType.Known} />
 }

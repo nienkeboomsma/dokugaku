@@ -17,6 +17,9 @@ export const getWorkInfo = async (workId: string) => {
         id
         maxProgress
         progress
+        series {
+          id
+        }
         status
         title
       }
@@ -40,6 +43,8 @@ export const getWorkInfo = async (workId: string) => {
     const workInfo: WorkInfo = {
       ...data.work,
       authors: data.work.authors.map((author) => author.name),
+      series: false,
+      seriesId: data.work.series?.id ?? undefined,
     }
 
     return workInfo

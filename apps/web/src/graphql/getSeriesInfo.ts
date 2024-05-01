@@ -59,6 +59,7 @@ export const getSeriesInfo = async (seriesId: string) => {
     const seriesInfo: SeriesInfo = {
       ...data.series,
       authors,
+      series: true,
       volumes,
     }
 

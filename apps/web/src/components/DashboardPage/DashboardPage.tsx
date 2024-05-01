@@ -1,23 +1,16 @@
 'use client'
 
 import { type CurrentWork } from '../../types/CurrentWork'
-import { type Word } from '../../types/Word'
-import { useVocab } from '../../hooks/useVocab'
 import CurrentWorks from './CurrentWorks'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
-import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
+import VocabTable, {
+  VocabTableMaxWidth,
+  VocabTableType,
+} from '../VocabTable/VocabTable'
 
-export default function DashboardPage({
-  works,
-  initialVocab,
-}: {
-  works: CurrentWork[]
-  initialVocab: Word[]
-}) {
-  const { actions, vocab } = useVocab(initialVocab)
-
+export default function DashboardPage({ works }: { works: CurrentWork[] }) {
   return (
     <div
       style={{
@@ -30,12 +23,7 @@ export default function DashboardPage({
         heading='Recommended vocab'
         maxContentWidth={VocabTableMaxWidth}
       >
-        <VocabTable
-          actions={actions}
-          furigana
-          type='recommendedVocab'
-          vocab={vocab}
-        />
+        <VocabTable furigana type={VocabTableType.Recommended} />
       </PaperContainer>
     </div>
   )

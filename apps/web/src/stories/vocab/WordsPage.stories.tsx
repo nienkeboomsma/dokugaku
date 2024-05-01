@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import WordsPage from '../../components/WordsPage/WordsPage'
-import { mockVocab } from '../../fixtures/vocab'
+import { VocabTableType } from '../../components/VocabTable/VocabTable'
 
 const meta = {
   title: 'Vocab/Words page',
@@ -13,16 +13,14 @@ type Story = StoryObj<typeof meta>
 export const KnownWords: Story = {
   args: {
     heading: 'Known words',
-    initialVocab: mockVocab,
-    type: 'knownWords',
+    type: VocabTableType.Known,
   },
 }
 
 export const ExcludedEverywhere: Story = {
   args: {
     heading: 'Excluded words',
-    initialVocab: mockVocab,
-    type: 'excludedEverywhere',
+    type: VocabTableType.Excluded,
   },
 }
 

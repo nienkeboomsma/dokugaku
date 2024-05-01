@@ -395,7 +395,7 @@ export type GQL_WorkInfoQueryVariables = Exact<{
 }>;
 
 
-export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }> } | null | undefined };
+export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }>, series?: { __typename?: 'Series', id: string } | null | undefined } | null | undefined };
 
 export type GQL_WorkVocabQueryVariables = Exact<{
   input?: InputMaybe<GQL_WordListInput>;
