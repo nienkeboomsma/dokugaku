@@ -315,6 +315,41 @@ export type GQL_UpdateWorkReadStatusMutationVariables = Exact<{
 
 export type GQL_UpdateWorkReadStatusMutation = { __typename?: 'Mutation', updateWorkReadStatus: { __typename?: 'UpdateReadStatusResponse', status?: GQL_ReadStatus | null | undefined, success: boolean } };
 
+export type GQL_ExcludedWordsQueryVariables = Exact<{
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+}>;
+
+
+export type GQL_ExcludedWordsQuery = { __typename?: 'Query', excludedWords: Array<{ __typename?: 'KnownOrExcludedWord', id: string, info: any }> };
+
+export type GQL_FrequencyListQueryVariables = Exact<{
+  input: GQL_FrequencyListInput;
+}>;
+
+
+export type GQL_FrequencyListQuery = { __typename?: 'Query', frequencyList: Array<{ __typename?: 'FrequencyListWord', id: string, info: any, frequency: number, ignored: boolean }> };
+
+export type GQL_GlossaryQueryVariables = Exact<{
+  input: GQL_GlossaryInput;
+}>;
+
+
+export type GQL_GlossaryQuery = { __typename?: 'Query', glossary: Array<{ __typename?: 'GlossaryWord', id: string, info: any, frequency: number, ignored: boolean, volumeNumber?: number | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
+
+export type GQL_KnownWordsQueryVariables = Exact<{
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+}>;
+
+
+export type GQL_KnownWordsQuery = { __typename?: 'Query', knownWords: Array<{ __typename?: 'KnownOrExcludedWord', id: string, info: any }> };
+
+export type GQL_RecommendedWordsQueryVariables = Exact<{
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+}>;
+
+
+export type GQL_RecommendedWordsQuery = { __typename?: 'Query', recommendedWords: Array<{ __typename?: 'RecommendedWord', id: string, info: any, frequency: number }> };
+
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
 

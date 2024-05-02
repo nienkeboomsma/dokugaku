@@ -1,11 +1,12 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { offsetLimitPagination } from '@apollo/client/utilities'
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc'
 
 export const { getClient } = registerApolloClient(() => {
   const httpLink = createHttpLink({
-    uri: 'http://graphql:3001',
-    // uri: 'http://localhost:3001',
+    // uri: 'http://graphql:3001',
+    uri: 'http://localhost:3001',
   })
 
   const authLink = setContext((_, { headers }) => {
@@ -20,7 +21,30 @@ export const { getClient } = registerApolloClient(() => {
   })
 
   return new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            excludedWords: offsetLimitPagination(),
+            frequencyList: offsetLimitPagination(),
+            glossary: offsetLimitPagination(),
+            knownWords: offsetLimitPagination(),
+            recommendedWords: offsetLimitPagination(),
+          },
+        },
+        // The 'id' property is not a unique identifier, as each distinct word
+        // can occur more than once within a glossary.
+        GlossaryWord: {
+          keyFields: [
+            'volumeNumber',
+            'pageNumber',
+            'sentenceNumber',
+            'entryNumber',
+            'componentNumber',
+          ],
+        },
+      },
+    }),
     link: authLink.concat(httpLink),
   })
 })

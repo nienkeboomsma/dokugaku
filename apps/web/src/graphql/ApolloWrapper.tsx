@@ -2,6 +2,7 @@
 
 import { ApolloLink, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { offsetLimitPagination } from '@apollo/client/utilities'
 import {
   ApolloNextAppProvider,
   NextSSRInMemoryCache,
@@ -14,8 +15,10 @@ const isServer = () => typeof window === `undefined`
 export function makeClient() {
   const adjustedUri = isServer()
     ? // TODO: do this via env variable
-      'http://graphql:3001'
-    : 'http://localhost:3001'
+      // 'http://graphql:3001'
+      'http://localhost:3001'
+    : // 'http://graphql:3001'
+      'http://localhost:3001'
   // 'http://host.docker.internal:3001'
 
   const httpLink = createHttpLink({
@@ -34,7 +37,30 @@ export function makeClient() {
   })
 
   return new NextSSRApolloClient({
-    cache: new NextSSRInMemoryCache(),
+    cache: new NextSSRInMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            excludedWords: offsetLimitPagination(),
+            frequencyList: offsetLimitPagination(),
+            glossary: offsetLimitPagination(),
+            knownWords: offsetLimitPagination(),
+            recommendedWords: offsetLimitPagination(),
+          },
+        },
+        // The 'id' property is not a unique identifier, as each distinct word
+        // can occur more than once within a glossary.
+        GlossaryWord: {
+          keyFields: [
+            'volumeNumber',
+            'pageNumber',
+            'sentenceNumber',
+            'entryNumber',
+            'componentNumber',
+          ],
+        },
+      },
+    }),
     link: isServer()
       ? ApolloLink.from([
           new SSRMultipartLink({
