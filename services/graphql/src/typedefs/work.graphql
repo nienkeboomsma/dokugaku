@@ -12,8 +12,6 @@ type Work {
   totalWords: Int!
   type: WorkType!
   uniqueWords: Int!
-  wordCount(input: WordCountInput): Int!
-  words(input: SubQueryWordListInput): [Word!]!
 }
 
 input WorkInput {

@@ -7,8 +7,6 @@ type Series {
   title: String!
   totalWords: Int!
   uniqueWords: Int!
-  wordCount(input: WordCountInput): Int!
-  words(input: SubQueryWordListInput): [Word!]!
   volumes: [Work!]!
 }
 

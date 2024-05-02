@@ -1,13 +1,11 @@
-export type WordModel = {
+export type GlossaryModel = {
   id: string
   info: string
-  ignored: boolean | null
-  excluded: boolean
-  known: boolean
   frequency: number
   volumeNumber: number | null
   pageNumber: number
   sentenceNumber: number
   entryNumber: number
   componentNumber: number | null
+  ignored: boolean
 }
