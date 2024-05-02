@@ -15,7 +15,7 @@ class Series {
       return: 'single',
       seriesId: input.seriesId,
     })
-    const [series] = await seriesQuery.getQuery()
+    const [series] = await seriesQuery.runQuery()
     return series
   }
 
@@ -30,7 +30,7 @@ class Series {
         return: 'multiple' as const,
         seriesIds: input.seriesIds,
       })
-      const series = await seriesQuery.getQuery()
+      const series = await seriesQuery.runQuery()
       return series ?? []
     }
 
@@ -38,7 +38,7 @@ class Series {
       ...input,
       return: 'all' as const,
     })
-    const series = await seriesQuery.getQuery()
+    const series = await seriesQuery.runQuery()
     return series ?? []
   }
 
@@ -51,7 +51,7 @@ class Series {
       seriesOrWorkId: input.seriesId,
       type: input.type,
     })
-    const [data] = await wordCountQuery.getQuery()
+    const [data] = await wordCountQuery.runQuery()
     return data.count
   }
 

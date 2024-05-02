@@ -15,7 +15,7 @@ class Work {
       ...input,
       return: 'single',
     })
-    const [work] = await workQuery.getQuery()
+    const [work] = await workQuery.runQuery()
     return work
   }
 
@@ -31,7 +31,7 @@ class Work {
         return: 'multiple' as const,
         workIds: input.workIds,
       })
-      const works = await workQuery.getQuery()
+      const works = await workQuery.runQuery()
       return works ?? []
     }
 
@@ -39,7 +39,7 @@ class Work {
       ...input,
       return: 'all' as const,
     })
-    const works = await workQuery.getQuery()
+    const works = await workQuery.runQuery()
     return works ?? []
   }
 
@@ -49,7 +49,7 @@ class Work {
       seriesOrWorkId: input.workId,
       type: input.type,
     })
-    const [data] = await wordCountQuery.getQuery()
+    const [data] = await wordCountQuery.runQuery()
     return data?.count
   }
 
