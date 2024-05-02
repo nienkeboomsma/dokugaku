@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client'
 import {
-  GQL_WordCountType,
   type GQL_WorkCardsQueryVariables,
   type GQL_WorkCardsQuery,
 } from '@repo/graphql-types'
@@ -10,20 +9,16 @@ import { type WorkCardInfo } from '../types/WorkCardInfo'
 import { getPercentage } from '../util/getPercentage'
 
 const WORKCARDS = gql`
-  query WorkCards(
-    $learnableWordsInput: WordCountInput
-    $totalWordsInput: WordCountInput
-    $worksInput: WorkListInput
-  ) {
+  query WorkCards($worksInput: WorkListInput) {
     seriesList {
       authors {
         name
       }
       id
+      learnableWords
       status
       title
-      totalWords: wordCount(input: $totalWordsInput)
-      learnableWords: wordCount(input: $learnableWordsInput)
+      totalWords
       volumes {
         id
         numberInSeries
@@ -34,21 +29,15 @@ const WORKCARDS = gql`
         name
       }
       id
+      learnableWords
       status
       title
-      totalWords: wordCount(input: $totalWordsInput)
-      learnableWords: wordCount(input: $learnableWordsInput)
+      totalWords
     }
   }
 `
 
 const variables: GQL_WorkCardsQueryVariables = {
-  learnableWordsInput: {
-    type: GQL_WordCountType.Learnable,
-  },
-  totalWordsInput: {
-    type: GQL_WordCountType.Total,
-  },
   worksInput: {
     excludeVolumesInSeries: true,
   },

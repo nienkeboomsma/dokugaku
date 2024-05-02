@@ -1,8 +1,7 @@
-import { GQL_ReadStatus, GQL_WordCountType } from '@repo/graphql-types'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 import sql from '../data/sql'
 import SeriesQuery from '../queries/SeriesQuery'
-import WordCountQuery from '../queries/WordCountQuery'
 
 class Series {
   async getSeries(input: {
@@ -40,19 +39,6 @@ class Series {
     })
     const series = await seriesQuery.runQuery()
     return series ?? []
-  }
-
-  async getSeriesWordCount(input: {
-    seriesId: string
-    type: GQL_WordCountType
-  }) {
-    const wordCountQuery = new WordCountQuery({
-      seriesOrWork: 'series',
-      seriesOrWorkId: input.seriesId,
-      type: input.type,
-    })
-    const [data] = await wordCountQuery.runQuery()
-    return data.count
   }
 
   async updateSeriesReadStatus(input: {

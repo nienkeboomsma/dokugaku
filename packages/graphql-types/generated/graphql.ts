@@ -119,9 +119,13 @@ export enum GQL_ReadStatus {
 export type GQL_Series = {
   __typename?: 'Series';
   authors: Array<GQL_Author>;
+  hapaxLegomena: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
+  learnableWords: Scalars['Int']['output'];
   status: GQL_ReadStatus;
   title: Scalars['String']['output'];
+  totalWords: Scalars['Int']['output'];
+  uniqueWords: Scalars['Int']['output'];
   volumes: Array<GQL_Work>;
   wordCount: Scalars['Int']['output'];
   words: Array<GQL_Word>;
@@ -288,14 +292,18 @@ export type GQL_WordListInput = {
 export type GQL_Work = {
   __typename?: 'Work';
   authors: Array<GQL_Author>;
+  hapaxLegomena: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
+  learnableWords: Scalars['Int']['output'];
   maxProgress: Scalars['Int']['output'];
   numberInSeries?: Maybe<Scalars['Int']['output']>;
   progress: Scalars['Int']['output'];
   series?: Maybe<GQL_Series>;
   status: GQL_ReadStatus;
   title: Scalars['String']['output'];
+  totalWords: Scalars['Int']['output'];
   type: GQL_WorkType;
+  uniqueWords: Scalars['Int']['output'];
   wordCount: Scalars['Int']['output'];
   words: Array<GQL_Word>;
 };
@@ -382,13 +390,11 @@ export type GQL_SeriesVocabQueryVariables = Exact<{
 export type GQL_SeriesVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number, ignored?: boolean | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
 
 export type GQL_WorkCardsQueryVariables = Exact<{
-  learnableWordsInput?: InputMaybe<GQL_WordCountInput>;
-  totalWordsInput?: InputMaybe<GQL_WordCountInput>;
   worksInput?: InputMaybe<GQL_WorkListInput>;
 }>;
 
 
-export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, totalWords: number, learnableWords: number, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, status: GQL_ReadStatus, title: string, totalWords: number, learnableWords: number, authors: Array<{ __typename?: 'Author', name: string }> }> };
+export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', name: string }> }> };
 
 export type GQL_WorkInfoQueryVariables = Exact<{
   workInput: GQL_WorkInput;
@@ -587,9 +593,13 @@ export type GQL_QueryResolvers<ContextType = GQL_Context, ParentType extends GQL
 
 export type GQL_SeriesResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Series'] = GQL_ResolversParentTypes['Series']> = ResolversObject<{
   authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
+  hapaxLegomena?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  learnableWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<GQL_ResolversTypes['ReadStatus'], ParentType, ContextType>;
   title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  totalWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  uniqueWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   volumes?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType>;
   wordCount?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType, Partial<GQL_SeriesWordCountArgs>>;
   words?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_SeriesWordsArgs>>;
@@ -629,14 +639,18 @@ export type GQL_WordResolvers<ContextType = GQL_Context, ParentType extends GQL_
 
 export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Work'] = GQL_ResolversParentTypes['Work']> = ResolversObject<{
   authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
+  hapaxLegomena?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  learnableWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   maxProgress?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   numberInSeries?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
   progress?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   series?: Resolver<Maybe<GQL_ResolversTypes['Series']>, ParentType, ContextType>;
   status?: Resolver<GQL_ResolversTypes['ReadStatus'], ParentType, ContextType>;
   title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  totalWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   type?: Resolver<GQL_ResolversTypes['WorkType'], ParentType, ContextType>;
+  uniqueWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   wordCount?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType, Partial<GQL_WorkWordCountArgs>>;
   words?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_WorkWordsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
