@@ -9,11 +9,14 @@ import { ExistingSeries } from '../types/ExistingSeries'
 const FORM_EXISTING_SERIES = gql`
   query ExistingSeries {
     seriesList {
+      id
       title
       volumes {
         authors {
+          id
           name
         }
+        id
         numberInSeries
         type
       }

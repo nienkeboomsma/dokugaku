@@ -7,6 +7,7 @@ import { ExistingAuthors } from '../types/ExistingAuthors'
 const EXISTING_AUTHORS = gql`
   query ExistingAuthors {
     authorList {
+      id
       name
     }
   }

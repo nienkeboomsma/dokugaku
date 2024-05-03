@@ -12,6 +12,7 @@ const WORKCARDS = gql`
   query WorkCards($worksInput: WorkListInput) {
     seriesList {
       authors {
+        id
         name
       }
       id
@@ -26,6 +27,7 @@ const WORKCARDS = gql`
     }
     workList(input: $worksInput) {
       authors {
+        id
         name
       }
       id

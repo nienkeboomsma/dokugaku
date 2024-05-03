@@ -12,6 +12,7 @@ const SERIES_INFO = gql`
   query SeriesInfo($seriesInput: SeriesInput!) {
     series(input: $seriesInput) {
       authors {
+        id
         name
       }
       id
@@ -20,8 +21,8 @@ const SERIES_INFO = gql`
       volumes {
         id
         maxProgress
-        volumeNumber: numberInSeries
         progress
+        volumeNumber: numberInSeries
       }
     }
   }

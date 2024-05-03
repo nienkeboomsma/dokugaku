@@ -273,33 +273,33 @@ export type GQL_CurrentWorksQuery = { __typename?: 'Query', workList: Array<{ __
 export type GQL_ExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_ExistingAuthorsQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', name: string }> };
+export type GQL_ExistingAuthorsQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', id: string, name: string }> };
 
 export type GQL_ExistingSeriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_ExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
+export type GQL_ExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, title: string, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', id: string, name: string }> }> }> };
 
 export type GQL_SeriesInfoQueryVariables = Exact<{
   seriesInput: GQL_SeriesInput;
 }>;
 
 
-export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, volumeNumber?: number | null | undefined }> } | null | undefined };
+export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', id: string, name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, volumeNumber?: number | null | undefined }> } | null | undefined };
 
 export type GQL_WorkCardsQueryVariables = Exact<{
   worksInput?: InputMaybe<GQL_WorkListInput>;
 }>;
 
 
-export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', name: string }> }> };
+export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', id: string, name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', id: string, name: string }> }> };
 
 export type GQL_WorkInfoQueryVariables = Exact<{
   workInput: GQL_WorkInput;
 }>;
 
 
-export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }>, series?: { __typename?: 'Series', id: string } | null | undefined } | null | undefined };
+export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', id: string, name: string }>, series?: { __typename?: 'Series', id: string } | null | undefined } | null | undefined };
 
 export type GQL_UpdateSeriesReadStatusMutationVariables = Exact<{
   input: GQL_UpdateSeriesReadStatusInput;

@@ -12,6 +12,7 @@ export const getWorkInfo = async (workId: string) => {
     query WorkInfo($workInput: WorkInput!) {
       work(input: $workInput) {
         authors {
+          id
           name
         }
         id
