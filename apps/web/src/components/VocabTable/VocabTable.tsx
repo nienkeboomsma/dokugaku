@@ -10,6 +10,7 @@ import classes from './VocabTable.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
 import { type Word } from '../../types/Word'
 import { type WorkInfo } from '../../types/WorkInfo'
+import { useGetWordsQuery } from '../../graphql/vocabTableQueries'
 import Reading from './Reading'
 import Meaning from './Meaning'
 import ActionButtons from './ActionButtons'
@@ -17,9 +18,8 @@ import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import VocabFilter from './VocabFilter'
 import filterVocab from './filterVocab'
 import VocabSort, { ListType } from './VocabSort'
-import { getFirstBatchOfWords } from '../../graphql/vocabTableQueries'
 
-const BATCH_SIZE = 12
+const BATCH_SIZE = 500
 const MAX_WIDTH = '52rem'
 
 export enum VocabTableType {
@@ -59,52 +59,46 @@ export default function VocabTable(props: VocabTableProps) {
   const [showUnignored, setShowUnignored] = useState(true)
   const [minFrequency, setMinFrequency] = useState<string | number>(1)
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
-  const [listType, setListType] = useState<ListType>(ListType.Glossary)
+  const [listType, setListType] = useState<ListType>(ListType.Frequency)
   // TODO: implement search
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
   const [searchResults, setSearchResults] = useState<Word[]>([])
 
-  const [nextOffset, setNextOffset] = useState(0)
   const scrollViewportRef = useRef<HTMLDivElement>(null)
+  const [vocab, setVocab] = useState<Word[]>([])
+  const [records, setRecords] = useState(vocab)
 
   const queryVariables = {
     isPartOfSeries,
     isSeries,
     limit: BATCH_SIZE,
-    offset: nextOffset,
+    offset: 0,
     seriesId: isSeries ? seriesOrWork.id : seriesOrWork?.seriesId,
     workId: isSeries ? undefined : seriesOrWork?.id,
   }
 
-  const { data, error, getNextBatchOfWords, loading } = getFirstBatchOfWords(
+  const { data, getNextBatchOfWords, loading } = useGetWordsQuery(
     listType,
     type,
     queryVariables
   )
 
-  const [vocab, setVocab] = useState<Word[]>([])
-
   useEffect(() => {
-    if (loading || !data) return
-    setVocab(data)
-    setNextOffset(nextOffset + BATCH_SIZE)
-  }, [loading])
-
-  // TODO: account for changing to glossary mode
-  useEffect(() => {
-    setNextOffset(0)
+    setRecords([])
   }, [listType])
 
-  const [records, setRecords] = useState(vocab)
+  useEffect(() => {
+    setVocab(data ?? [])
+  }, [data])
 
-  const loadMoreRecords = async () => {
+  const loadMoreRecords = () => {
     // TODO: loadMoreRecords continues to be triggered (and to show a spinner)
     //       even if there are no more records to fetch
     // TODO: if minFrequency = 3 (for example) and the last row where
     //       minFrequency = 3 has been downloaded, loadMoreRecords should not
     //       trigger anymore, even though there are more records it could fetch
-    getNextBatchOfWords(nextOffset)
+    getNextBatchOfWords(vocab.length)
   }
 
   useEffect(() => {
@@ -147,7 +141,10 @@ export default function VocabTable(props: VocabTableProps) {
             setVocab((prev) =>
               prev.filter((wordInState) => wordInState.id !== wordInRow.id)
             )
-            setNextOffset((prev) => prev - 1)
+            // TODO: update GQL cache as well, to prevent dropped or duplicated
+            //       rows due to offset pagination (in fact, one could probably
+            //       leave out the 'vocab' middle man entirely)
+            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly//       https://www.apollographql.com/docs/kotlin/caching/query-watchers/#updating-the-cache-after-a-mutation
           },
           onIgnoreWord: () => {
             // call to API
@@ -164,21 +161,30 @@ export default function VocabTable(props: VocabTableProps) {
             setVocab((prev) =>
               prev.filter((wordInState) => wordInState.id !== wordInRow.id)
             )
-            setNextOffset((prev) => prev - 1)
+            // TODO: update GQL cache as well, to prevent dropped or duplicated
+            //       rows due to offset pagination (in fact, one could probably
+            //       leave out the 'vocab' middle man entirely)
+            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
           },
           onMarkWordAsUnknown: () => {
             // call to API
             setVocab((prev) =>
               prev.filter((wordInState) => wordInState.id !== wordInRow.id)
             )
-            setNextOffset((prev) => prev - 1)
+            // TODO: update GQL cache as well, to prevent dropped or duplicated
+            //       rows due to offset pagination (in fact, one could probably
+            //       leave out the 'vocab' middle man entirely)
+            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
           },
           onUnexcludeWord: () => {
             // call to API
             setVocab((prev) =>
               prev.filter((wordInState) => wordInState.id !== wordInRow.id)
             )
-            setNextOffset((prev) => prev - 1)
+            // TODO: update GQL cache as well, to prevent dropped or duplicated
+            //       rows due to offset pagination (in fact, one could probably
+            //       leave out the 'vocab' middle man entirely)
+            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
           },
           onUnignoreWord: () => {
             // call to API

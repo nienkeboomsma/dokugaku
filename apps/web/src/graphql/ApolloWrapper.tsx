@@ -42,8 +42,11 @@ export function makeClient() {
         Query: {
           fields: {
             excludedWords: offsetLimitPagination(),
-            frequencyList: offsetLimitPagination(['seriedId', 'workId']),
-            glossary: offsetLimitPagination(['seriedId', 'workId']),
+            frequencyList: offsetLimitPagination([
+              'input',
+              ['seriesId', 'workId'],
+            ]),
+            glossary: offsetLimitPagination(['input', ['workId']]),
             knownWords: offsetLimitPagination(),
             recommendedWords: offsetLimitPagination(),
           },
