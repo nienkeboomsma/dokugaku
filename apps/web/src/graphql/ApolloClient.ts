@@ -26,8 +26,8 @@ export const { getClient } = registerApolloClient(() => {
         Query: {
           fields: {
             excludedWords: offsetLimitPagination(),
-            frequencyList: offsetLimitPagination(),
-            glossary: offsetLimitPagination(),
+            frequencyList: offsetLimitPagination(['seriedId', 'workId']),
+            glossary: offsetLimitPagination(['seriedId', 'workId']),
             knownWords: offsetLimitPagination(),
             recommendedWords: offsetLimitPagination(),
           },
@@ -46,5 +46,6 @@ export const { getClient } = registerApolloClient(() => {
       },
     }),
     link: authLink.concat(httpLink),
+    connectToDevTools: true,
   })
 })

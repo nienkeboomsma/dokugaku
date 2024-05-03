@@ -42,8 +42,8 @@ export function makeClient() {
         Query: {
           fields: {
             excludedWords: offsetLimitPagination(),
-            frequencyList: offsetLimitPagination(),
-            glossary: offsetLimitPagination(),
+            frequencyList: offsetLimitPagination(['seriedId', 'workId']),
+            glossary: offsetLimitPagination(['seriedId', 'workId']),
             knownWords: offsetLimitPagination(),
             recommendedWords: offsetLimitPagination(),
           },
@@ -70,6 +70,7 @@ export function makeClient() {
         ])
       : authLink.concat(httpLink),
     ssrMode: isServer(),
+    connectToDevTools: true,
   })
 }
 

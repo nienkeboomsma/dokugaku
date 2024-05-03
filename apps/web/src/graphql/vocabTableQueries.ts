@@ -67,7 +67,7 @@ export const RECOMMENDED_WORDS = gql`
   }
 `
 
-export const getFirstBatchOfWords = (
+export const useGetWordsQuery = (
   listType: ListType,
   type: VocabTableType,
   variables: GQL_CorpusScopedInput & GQL_FrequencyListInput & GQL_GlossaryInput
@@ -85,15 +85,18 @@ export const getFirstBatchOfWords = (
       })
 
     const getNextBatchOfWords = (nextOffset: number) => {
+      console.log('Getting next batch of words with offset', nextOffset)
       fetchMore({
         variables: {
-          offSet: nextOffset,
+          input: { limit: variables.limit, offset: nextOffset },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          console.log('previous data:', prev)
+          console.log('newly fetched data:', fetchMoreResult)
           const newExcludedWords = prev.excludedWords.concat(
             fetchMoreResult.excludedWords
           )
-
+          console.log('new excluded words:', newExcludedWords)
           return {
             ...prev,
             excludedWords: newExcludedWords,
@@ -124,15 +127,18 @@ export const getFirstBatchOfWords = (
     )
 
     const getNextBatchOfWords = (nextOffset: number) => {
+      console.log('Getting next batch of words with offset', nextOffset)
       fetchMore({
         variables: {
-          offSet: nextOffset,
+          input: { limit: variables.limit, offset: nextOffset },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          console.log('previous data:', prev)
+          console.log('newly fetched data:', fetchMoreResult)
           const newKnownWords = prev.knownWords.concat(
             fetchMoreResult.knownWords
           )
-
+          console.log('new known words:', newKnownWords)
           return {
             ...prev,
             knownWords: newKnownWords,
@@ -163,15 +169,18 @@ export const getFirstBatchOfWords = (
       })
 
     const getNextBatchOfWords = (nextOffset: number) => {
+      console.log('Getting next batch of words with offset', nextOffset)
       fetchMore({
         variables: {
-          offSet: nextOffset,
+          input: { limit: variables.limit, offset: nextOffset },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          console.log('previous data:', prev)
+          console.log('newly fetched data:', fetchMoreResult)
           const newRecommendedWords = prev.recommendedWords.concat(
             fetchMoreResult.recommendedWords
           )
-
+          console.log('new recommended words:', newRecommendedWords)
           return {
             ...prev,
             recommendedWords: newRecommendedWords,
@@ -206,15 +215,25 @@ export const getFirstBatchOfWords = (
         })
 
       const getNextBatchOfWords = (nextOffset: number) => {
+        console.log('Getting next batch of words with offset', nextOffset)
         fetchMore({
           variables: {
-            offSet: nextOffset,
+            input: {
+              isPartOfSeries: variables.isPartOfSeries,
+              isSeries: variables.isSeries,
+              limit: variables.limit,
+              offset: nextOffset,
+              seriesId: variables.seriesId,
+              workId: variables.workId,
+            },
           },
           updateQuery: (prev, { fetchMoreResult }) => {
+            console.log('previous data:', prev)
+            console.log('newly fetched data:', fetchMoreResult)
             const newFrequencyList = prev.frequencyList.concat(
               fetchMoreResult.frequencyList
             )
-
+            console.log('new frequency list:', newFrequencyList)
             return {
               ...prev,
               frequencyList: newFrequencyList,
@@ -249,13 +268,22 @@ export const getFirstBatchOfWords = (
       )
 
       const getNextBatchOfWords = (nextOffset: number) => {
+        console.log('Getting next batch of words with offset', nextOffset)
         fetchMore({
           variables: {
-            offSet: nextOffset,
+            input: {
+              isPartOfSeries: variables.isPartOfSeries,
+              limit: variables.limit,
+              offset: nextOffset,
+              seriesId: variables.seriesId,
+              workId: variables.workId,
+            },
           },
           updateQuery: (prev, { fetchMoreResult }) => {
+            console.log('previous data:', prev)
+            console.log('newly fetched data:', fetchMoreResult)
             const newGlossary = prev.glossary.concat(fetchMoreResult.glossary)
-
+            console.log('new glossary:', newGlossary)
             return {
               ...prev,
               glossary: newGlossary,

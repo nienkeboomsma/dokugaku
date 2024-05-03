@@ -92,6 +92,7 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
             <SectionHeading>Frequency list</SectionHeading>
             <VocabTable
               furigana
+              // key={work.id}
               seriesOrWork={work}
               type={VocabTableType.SeriesOrWork}
             />
