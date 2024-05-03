@@ -10,7 +10,7 @@ import classes from './VocabTable.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
 import { type Word } from '../../types/Word'
 import { type WorkInfo } from '../../types/WorkInfo'
-import { useGetWordsQuery } from '../../graphql/vocabTableQueries'
+import { useGetWordsQuery } from '../../hooks/useGetWordsQuery'
 import Reading from './Reading'
 import Meaning from './Meaning'
 import ActionButtons from './ActionButtons'
@@ -54,6 +54,15 @@ export default function VocabTable(props: VocabTableProps) {
   const isSeries = seriesOrWork?.series
   const isPartOfSeries = !isSeries && !!seriesOrWork?.seriesId
 
+  const queryVariables = {
+    isPartOfSeries,
+    isSeries,
+    limit: BATCH_SIZE,
+    offset: 0,
+    seriesId: isSeries ? seriesOrWork.id : seriesOrWork?.seriesId,
+    workId: isSeries ? undefined : seriesOrWork?.id,
+  }
+
   // TODO: save these preferences somewhere
   const [showIgnored, setShowIgnored] = useState(false)
   const [showUnignored, setShowUnignored] = useState(true)
@@ -69,28 +78,11 @@ export default function VocabTable(props: VocabTableProps) {
   const [vocab, setVocab] = useState<Word[]>([])
   const [records, setRecords] = useState(vocab)
 
-  const queryVariables = {
-    isPartOfSeries,
-    isSeries,
-    limit: BATCH_SIZE,
-    offset: 0,
-    seriesId: isSeries ? seriesOrWork.id : seriesOrWork?.seriesId,
-    workId: isSeries ? undefined : seriesOrWork?.id,
-  }
-
   const { data, getNextBatchOfWords, loading } = useGetWordsQuery(
     listType,
     type,
     queryVariables
   )
-
-  useEffect(() => {
-    setRecords([])
-  }, [listType])
-
-  useEffect(() => {
-    setVocab(data ?? [])
-  }, [data])
 
   const loadMoreRecords = () => {
     // TODO: loadMoreRecords continues to be triggered (and to show a spinner)
@@ -100,6 +92,14 @@ export default function VocabTable(props: VocabTableProps) {
     //       trigger anymore, even though there are more records it could fetch
     getNextBatchOfWords(vocab.length)
   }
+
+  useEffect(() => {
+    setRecords([])
+  }, [listType])
+
+  useEffect(() => {
+    setVocab(data ?? [])
+  }, [data])
 
   useEffect(() => {
     setRecords(
