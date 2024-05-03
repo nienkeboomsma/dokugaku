@@ -29,7 +29,8 @@ type Variables = {
 export const useGetWordsQuery = (
   listType: ListType,
   kind: VocabTableType,
-  variables: Variables
+  variables: Variables,
+  searchString: string
 ) => {
   if (kind === VocabTableType.Excluded) {
     const { data, error, fetchMore, loading } =
@@ -39,6 +40,7 @@ export const useGetWordsQuery = (
           input: {
             limit: variables.limit,
             offset: variables.offset,
+            searchString: searchString,
           },
         },
       })
@@ -78,6 +80,7 @@ export const useGetWordsQuery = (
           input: {
             limit: variables.limit,
             offset: variables.offset,
+            searchString: searchString,
           },
         },
       }
@@ -117,6 +120,7 @@ export const useGetWordsQuery = (
           input: {
             limit: variables.limit,
             offset: variables.offset,
+            searchString: searchString,
           },
         },
         onCompleted: () => {},
@@ -159,6 +163,7 @@ export const useGetWordsQuery = (
               isSeries: variables.isSeries,
               limit: variables.limit,
               offset: variables.offset,
+              searchString: searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },
@@ -208,6 +213,7 @@ export const useGetWordsQuery = (
               isPartOfSeries: variables.isPartOfSeries,
               limit: variables.limit,
               offset: variables.offset,
+              searchString: searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },

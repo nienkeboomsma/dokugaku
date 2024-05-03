@@ -4,10 +4,12 @@ import { type RecommendedWordModel } from '../models/RecommendedWordModel'
 export function getRecommendedWords({
   limit,
   offset,
+  searchString,
   userId,
 }: {
   limit?: number
   offset?: number
+  searchString?: string
   userId: string
 }) {
   return sql<RecommendedWordModel[]>`
@@ -29,6 +31,13 @@ export function getRecommendedWords({
       )
     JOIN word
       ON word_work.word_id = word.id
+    ${
+      searchString
+        ? sql`
+          WHERE word.info::text ILIKE '%' || ${searchString} || '%'
+        `
+        : sql``
+    }
     GROUP BY 
       word.id
     ORDER BY

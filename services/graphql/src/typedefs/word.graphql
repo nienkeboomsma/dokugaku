@@ -31,6 +31,7 @@ type RecommendedWord {
 input CorpusScopedInput {
   limit: Int
   offset: Int
+  searchString: String
 }
 
 input FrequencyListInput {
@@ -42,6 +43,7 @@ input FrequencyListInput {
   limit: Int
   offset: Int
   seriesId: String
+  searchString: String
   workId: String
 }
 
@@ -52,6 +54,7 @@ input GlossaryInput {
   isPartOfSeries: Boolean!
   limit: Int
   offset: Int
+  searchString: String
   seriesId: String
   workId: String!
 }

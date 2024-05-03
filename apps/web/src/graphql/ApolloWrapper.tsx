@@ -41,14 +41,20 @@ export function makeClient() {
       typePolicies: {
         Query: {
           fields: {
-            excludedWords: offsetLimitPagination(),
+            excludedWords: offsetLimitPagination(['input', ['searchString']]),
             frequencyList: offsetLimitPagination([
               'input',
-              ['seriesId', 'workId'],
+              ['searchString', 'seriesId', 'workId'],
             ]),
-            glossary: offsetLimitPagination(['input', ['workId']]),
-            knownWords: offsetLimitPagination(),
-            recommendedWords: offsetLimitPagination(),
+            glossary: offsetLimitPagination([
+              'input',
+              ['searchString', 'workId'],
+            ]),
+            knownWords: offsetLimitPagination(['input', ['searchString']]),
+            recommendedWords: offsetLimitPagination([
+              'input',
+              ['searchString'],
+            ]),
           },
         },
         // The 'id' property is not a unique identifier, as each distinct word

@@ -37,6 +37,7 @@ export type GQL_AuthorListInput = {
 export type GQL_CorpusScopedInput = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  searchString?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type GQL_FrequencyListInput = {
@@ -45,6 +46,7 @@ export type GQL_FrequencyListInput = {
   isSeries: Scalars['Boolean']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  searchString?: InputMaybe<Scalars['String']['input']>;
   seriesId?: InputMaybe<Scalars['String']['input']>;
   workId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -62,6 +64,7 @@ export type GQL_GlossaryInput = {
   isPartOfSeries: Scalars['Boolean']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  searchString?: InputMaybe<Scalars['String']['input']>;
   seriesId?: InputMaybe<Scalars['String']['input']>;
   workId: Scalars['String']['input'];
 };

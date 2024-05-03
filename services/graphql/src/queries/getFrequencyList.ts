@@ -4,6 +4,7 @@ import { type FrequencyListModel } from '../models/FrequencyListModel'
 type GetFrequencyListParamsCommon = {
   limit?: number
   offset?: number
+  searchString?: string
   userId: string
 }
 
@@ -94,6 +95,13 @@ export function getFrequencyList(params: GetFrequencyListParams) {
         !params.isSeries
           ? sql`
             AND work.id = ${params.workId}
+          `
+          : sql``
+      }
+      ${
+        params.searchString
+          ? sql`
+            AND word.info::text ILIKE '%' || ${params.searchString} || '%'
           `
           : sql``
       }

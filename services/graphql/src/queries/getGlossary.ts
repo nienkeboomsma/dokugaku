@@ -4,6 +4,7 @@ import { type GlossaryModel } from '../models/GlossaryModel'
 type GetGlossaryParamsCommon = {
   limit?: number
   offset?: number
+  searchString?: string
   userId: string
 }
 
@@ -83,6 +84,13 @@ export function getGlossary(params: GetGlossaryParams) {
       WHERE COALESCE(user_word.excluded, false) = false
         AND COALESCE(user_word.known, false) = false
         AND word_work.work_id = ${params.workId}
+        ${
+          params.searchString
+            ? sql`
+              AND word.info::text ILIKE '%' || ${params.searchString} || '%'
+            `
+            : sql``
+        }
 
       ORDER BY
         word_work.volume_number ASC,

@@ -54,15 +54,6 @@ export default function VocabTable(props: VocabTableProps) {
   const isSeries = seriesOrWork?.series
   const isPartOfSeries = !isSeries && !!seriesOrWork?.seriesId
 
-  const queryVariables = {
-    isPartOfSeries,
-    isSeries,
-    limit: BATCH_SIZE,
-    offset: 0,
-    seriesId: isSeries ? seriesOrWork.id : seriesOrWork?.seriesId,
-    workId: isSeries ? undefined : seriesOrWork?.id,
-  }
-
   // TODO: save these preferences somewhere
   const [showIgnored, setShowIgnored] = useState(false)
   const [showUnignored, setShowUnignored] = useState(true)
@@ -72,16 +63,25 @@ export default function VocabTable(props: VocabTableProps) {
   // TODO: implement search
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
-  const [searchResults, setSearchResults] = useState<Word[]>([])
 
   const scrollViewportRef = useRef<HTMLDivElement>(null)
   const [vocab, setVocab] = useState<Word[]>([])
   const [records, setRecords] = useState(vocab)
 
+  const queryVariables = {
+    isPartOfSeries,
+    isSeries,
+    limit: BATCH_SIZE,
+    offset: 0,
+    seriesId: isSeries ? seriesOrWork.id : seriesOrWork?.seriesId,
+    workId: isSeries ? undefined : seriesOrWork?.id,
+  }
+
   const { data, getNextBatchOfWords, loading } = useGetWordsQuery(
     listType,
     type,
-    queryVariables
+    queryVariables,
+    debouncedSearchValue
   )
 
   const loadMoreRecords = () => {
@@ -95,7 +95,7 @@ export default function VocabTable(props: VocabTableProps) {
 
   useEffect(() => {
     setRecords([])
-  }, [listType])
+  }, [debouncedSearchValue, listType])
 
   useEffect(() => {
     setVocab(data ?? [])
@@ -115,6 +115,12 @@ export default function VocabTable(props: VocabTableProps) {
     )
   }, [vocab, debouncedMinFrequency, showIgnored, showUnignored])
 
+  // TODO: add 'page' column for manga glossaries (and maybe a minPageNumber
+  //       filter to go with it?)
+  // TODO: in that case, allow glossaries for series after all, and allow to
+  //       filter by minVolumeNumber and minPagenumber
+  // TODO: give novels a pageNumber that corresponds to a specific block of
+  //       text that could eventually be linked to
   const allColumns: DataTableColumn<Word>[] = [
     {
       accessor: 'reading',
@@ -144,7 +150,7 @@ export default function VocabTable(props: VocabTableProps) {
             // TODO: update GQL cache as well, to prevent dropped or duplicated
             //       rows due to offset pagination (in fact, one could probably
             //       leave out the 'vocab' middle man entirely)
-            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly//       https://www.apollographql.com/docs/kotlin/caching/query-watchers/#updating-the-cache-after-a-mutation
+            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
           },
           onIgnoreWord: () => {
             // call to API
