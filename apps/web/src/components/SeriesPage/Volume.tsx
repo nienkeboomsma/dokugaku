@@ -19,8 +19,8 @@ export default function Volume({
         <WorkCover
           coverPath={`/works/${volume.id}/cover.webp`}
           grow
-          maxProgress={volume.maxProgress}
-          progress={volume.progress}
+          // maxProgress={volume.maxProgress}
+          // progress={volume.progress}
         />
       </Indicator>
     </ScaleLink>
