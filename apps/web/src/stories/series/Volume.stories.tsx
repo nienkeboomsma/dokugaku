@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Volume, { VolumeMinWidth } from '../../components/SeriesPage/Volume'
 import { resizer } from '../../../.storybook/decorators/resizer'
 import { mockSeriesInfo } from '../../fixtures/seriesInfo'
-import { VolumeInfo } from '../../types/SeriesInfo'
+import { type VolumeInfo } from '../../types/SeriesInfo'
 
 const indicatorSize = '1.5rem'
 

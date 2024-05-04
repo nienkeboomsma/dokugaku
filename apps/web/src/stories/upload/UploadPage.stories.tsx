@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+
 import UploadPage from '../../components/UploadPage/UploadPage'
 
 const meta = {

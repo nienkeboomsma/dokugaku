@@ -1,6 +1,6 @@
+import { Dispatch, SetStateAction } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useArgs } from '@storybook/preview-api'
-import { Dispatch, SetStateAction } from 'react'
 
 import VocabSort, { ListType } from '../../components/VocabTable/VocabSort'
 
