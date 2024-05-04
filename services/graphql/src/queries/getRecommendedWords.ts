@@ -1,6 +1,8 @@
 import sql from '../data/sql'
 import { type RecommendedWordModel } from '../models/RecommendedWordModel'
 
+// TODO: if a word is ignored in a particular series or work, those instances should not be counted
+
 export function getRecommendedWords({
   limit,
   offset,
