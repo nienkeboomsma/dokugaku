@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 import classes from './WorkPage.module.css'
 import { type WorkInfo } from '../../types/WorkInfo'
-import { UPDATE_WORK_READ_STATUS } from '../../graphql/updateReadStatus'
+import { UPDATE_WORK_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
@@ -62,8 +62,8 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
         <div className={classes.firstColumn}>
           <WorkCover
             coverPath={`/works/${work.id}/cover.webp`}
-            maxProgress={work.maxProgress}
-            progress={work.progress}
+            // maxProgress={work.maxProgress}
+            // progress={work.progress}
             width={COVER_WIDTH}
           />
           <ReadStatusSelector

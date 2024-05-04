@@ -4,9 +4,9 @@ import {
   type GQL_SeriesInfoQueryVariables,
 } from '@repo/graphql-types'
 
-import { getClient } from './ApolloClient'
-import { type SeriesInfo, VolumeInfo } from '../types/SeriesInfo'
-import { isNumber } from '../types/utility'
+import { getClient } from '../client/ApolloClient'
+import { type SeriesInfo, VolumeInfo } from '../../types/SeriesInfo'
+import { isNumber } from '../../types/utility'
 
 const SERIES_INFO = gql`
   query SeriesInfo($seriesInput: SeriesInput!) {

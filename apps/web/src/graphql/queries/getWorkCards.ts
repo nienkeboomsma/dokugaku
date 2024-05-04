@@ -4,9 +4,9 @@ import {
   type GQL_WorkCardsQuery,
 } from '@repo/graphql-types'
 
-import { getClient } from './ApolloClient'
-import { type WorkCardInfo } from '../types/WorkCardInfo'
-import { getPercentage } from '../util/getPercentage'
+import { getClient } from '../client/ApolloClient'
+import { type WorkCardInfo } from '../../types/WorkCardInfo'
+import { getPercentage } from '../../util/getPercentage'
 
 const WORKCARDS = gql`
   query WorkCards($worksInput: WorkListInput) {

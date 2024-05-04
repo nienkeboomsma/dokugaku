@@ -4,8 +4,8 @@ import {
   type GQL_WorkInfoQueryVariables,
 } from '@repo/graphql-types'
 
-import { getClient } from './ApolloClient'
-import { WorkInfo } from '../types/WorkInfo'
+import { getClient } from '../client/ApolloClient'
+import { WorkInfo } from '../../types/WorkInfo'
 
 export const getWorkInfo = async (workId: string) => {
   const WORK_INFO = gql`

@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/client'
 
 import classes from './SeriesPage.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
-import { UPDATE_SERIES_READ_STATUS } from '../../graphql/updateReadStatus'
+import { UPDATE_SERIES_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
