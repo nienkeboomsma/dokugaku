@@ -5,6 +5,7 @@ import { type SeriesInfo } from '../types/SeriesInfo'
 export const mockSeriesInfo: SeriesInfo = {
   authors: ['臼井 儀人'],
   id: '321192a0-d330-4ead-b2db-2f40100e9046',
+  series: true,
   status: GQL_ReadStatus.Reading,
   title: 'クレヨンしんちゃん',
   volumes: [

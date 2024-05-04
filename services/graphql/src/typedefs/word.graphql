@@ -17,7 +17,12 @@ type GlossaryWord {
   componentNumber: Int
 }
 
-type KnownOrExcludedWord {
+type KnownWord {
+  id: ID!
+  info: JSON!
+}
+
+type ExcludedWord {
   id: ID!
   info: JSON!
 }
@@ -60,20 +65,48 @@ input GlossaryInput {
 }
 
 extend type Query {
-  excludedWords(input: CorpusScopedInput): [KnownOrExcludedWord!]!
+  excludedWords(input: CorpusScopedInput): [ExcludedWord!]!
   frequencyList(input: FrequencyListInput!): [FrequencyListWord!]!
   glossary(input: GlossaryInput!): [GlossaryWord!]!
-  knownWords(input: CorpusScopedInput): [KnownOrExcludedWord!]!
+  knownWords(input: CorpusScopedInput): [KnownWord!]!
   recommendedWords(input: CorpusScopedInput): [RecommendedWord!]!
 }
 
-# extend type Mutation {
-# updateIgnoredWord(input: UpdateIgnoredWordInput!): UpdateIgnoredWordResponse!
-# }
+type UpdateWordStatusResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+}
 
-# type UpdateIgnoredWordResponse {
-#   code: Int!
-#   success: Boolean!
-#   message: String!
-#   ignored: Boolean
-# }
+input UpdateExcludedStatusInput {
+  id: ID!
+  excluded: Boolean!
+}
+
+input UpdateIgnoredStatusInput {
+  id: ID!
+  ignored: Boolean!
+  """
+  A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
+  """
+  seriesIdInWhichIgnored: String
+  """
+  A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
+  """
+  workIdInWhichIgnored: String
+}
+
+input UpdateKnownStatusInput {
+  id: ID!
+  known: Boolean!
+}
+
+extend type Mutation {
+  updateExcludedStatus(
+    input: UpdateExcludedStatusInput!
+  ): UpdateWordStatusResponse!
+  updateIgnoredStatus(
+    input: UpdateIgnoredStatusInput!
+  ): UpdateWordStatusResponse!
+  updateKnownStatus(input: UpdateKnownStatusInput!): UpdateWordStatusResponse!
+}

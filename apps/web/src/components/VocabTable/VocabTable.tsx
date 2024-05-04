@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -11,6 +12,7 @@ import { type SeriesInfo } from '../../types/SeriesInfo'
 import { type Word } from '../../types/Word'
 import { type WorkInfo } from '../../types/WorkInfo'
 import { useGetWordsQuery } from '../../hooks/useGetWordsQuery'
+import { useUpdateWordsMutation } from '../../hooks/useUpdateWordsMutation'
 import Reading from './Reading'
 import Meaning from './Meaning'
 import ActionButtons from './ActionButtons'
@@ -90,6 +92,8 @@ export default function VocabTable(props: VocabTableProps) {
     // TODO: if minFrequency = 3 (for example) and the last row where
     //       minFrequency = 3 has been downloaded, loadMoreRecords should not
     //       trigger anymore, even though there are more records it could fetch
+    // ----> maybe fetch BATCH_SIZE + 1 rows, using that last row to determine
+    //       the required info without forwarding it to the frontend?
     getNextBatchOfWords(vocab.length)
   }
 
@@ -114,6 +118,15 @@ export default function VocabTable(props: VocabTableProps) {
       )
     )
   }, [vocab, debouncedMinFrequency, showIgnored, showUnignored])
+
+  const {
+    handleExcludeWord,
+    handleUnexcludeWord,
+    handleIgnoredWord,
+    handleUnignoredWord,
+    handleKnownWord,
+    handleUnknownWord,
+  } = useUpdateWordsMutation(seriesOrWork)
 
   // TODO: add 'page' column for manga glossaries (and maybe a minPageNumber
   //       filter to go with it?)
@@ -142,66 +155,13 @@ export default function VocabTable(props: VocabTableProps) {
       textAlign: 'right',
       render: (wordInRow: Word) =>
         ActionButtons({
-          onExcludeWord: () => {
-            // call to API
-            setVocab((prev) =>
-              prev.filter((wordInState) => wordInState.id !== wordInRow.id)
-            )
-            // TODO: update GQL cache as well, to prevent dropped or duplicated
-            //       rows due to offset pagination (in fact, one could probably
-            //       leave out the 'vocab' middle man entirely)
-            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-          },
-          onIgnoreWord: () => {
-            // call to API
-            setVocab((prev) =>
-              prev.map((wordInState) =>
-                wordInState.id === wordInRow.id
-                  ? { ...wordInState, ignored: true }
-                  : wordInState
-              )
-            )
-          },
-          onMarkWordAsKnown: () => {
-            // call to API
-            setVocab((prev) =>
-              prev.filter((wordInState) => wordInState.id !== wordInRow.id)
-            )
-            // TODO: update GQL cache as well, to prevent dropped or duplicated
-            //       rows due to offset pagination (in fact, one could probably
-            //       leave out the 'vocab' middle man entirely)
-            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-          },
-          onMarkWordAsUnknown: () => {
-            // call to API
-            setVocab((prev) =>
-              prev.filter((wordInState) => wordInState.id !== wordInRow.id)
-            )
-            // TODO: update GQL cache as well, to prevent dropped or duplicated
-            //       rows due to offset pagination (in fact, one could probably
-            //       leave out the 'vocab' middle man entirely)
-            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-          },
-          onUnexcludeWord: () => {
-            // call to API
-            setVocab((prev) =>
-              prev.filter((wordInState) => wordInState.id !== wordInRow.id)
-            )
-            // TODO: update GQL cache as well, to prevent dropped or duplicated
-            //       rows due to offset pagination (in fact, one could probably
-            //       leave out the 'vocab' middle man entirely)
-            //       https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly
-          },
-          onUnignoreWord: () => {
-            // call to API
-            setVocab((prev) =>
-              prev.map((wordInState) =>
-                wordInState.id === wordInRow.id
-                  ? { ...wordInState, ignored: false }
-                  : wordInState
-              )
-            )
-          },
+          // TODO: show a toast if it doesn't work?
+          onExcludeWord: () => handleExcludeWord(wordInRow.id),
+          onUnexcludeWord: () => handleUnexcludeWord(wordInRow.id),
+          onIgnoreWord: () => handleIgnoredWord(wordInRow.id),
+          onUnignoreWord: () => handleUnignoredWord(wordInRow.id),
+          onMarkWordAsKnown: () => handleKnownWord(wordInRow.id),
+          onMarkWordAsUnknown: () => handleUnknownWord(wordInRow.id),
           isSeries,
           vocabTableType: type,
           wordInRow,
@@ -213,7 +173,7 @@ export default function VocabTable(props: VocabTableProps) {
     (column) => column.accessor !== 'frequency'
   )
 
-  const columns: Record<VocabTableType, DataTableColumn<Word>[]> = {
+  const columnsPerType: Record<VocabTableType, DataTableColumn<Word>[]> = {
     [VocabTableType.SeriesOrWork]: allColumns,
     [VocabTableType.Recommended]: allColumns,
     [VocabTableType.Known]: nonFrequencyColumns,
@@ -253,7 +213,7 @@ export default function VocabTable(props: VocabTableProps) {
       <DataTable
         borderRadius='sm'
         classNames={{ table: classes.table }}
-        columns={columns[type]}
+        columns={columnsPerType[type]}
         fetching={loading}
         fz='md'
         height='75vh'

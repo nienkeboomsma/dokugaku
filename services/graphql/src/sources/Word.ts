@@ -3,17 +3,22 @@ import { getGlossary } from '../queries/getGlossary.js'
 import { getKnownOrExcludedWords } from '../queries/getKnownOrExcludedWords.js'
 import { getLearnableWordCount } from '../queries/getLearnableWordCount.js'
 import { getRecommendedWords } from '../queries/getRecommendedWords.js'
+import {
+  updateExcludedStatus,
+  updateIgnoredStatus,
+  updateKnownStatus,
+} from '../queries/updateWord.js'
 
 class Word {
-  async getFrequencyList(params: Parameters<typeof getFrequencyList>[0]) {
+  getFrequencyList(params: Parameters<typeof getFrequencyList>[0]) {
     return getFrequencyList(params)
   }
 
-  async getGlossary(params: Parameters<typeof getGlossary>[0]) {
+  getGlossary(params: Parameters<typeof getGlossary>[0]) {
     return getGlossary(params)
   }
 
-  async getKnownOrExcludedWords(
+  getKnownOrExcludedWords(
     params: Parameters<typeof getKnownOrExcludedWords>[0]
   ) {
     return getKnownOrExcludedWords(params)
@@ -26,8 +31,20 @@ class Word {
     return data.count
   }
 
-  async getRecommendedWords(params: Parameters<typeof getRecommendedWords>[0]) {
+  getRecommendedWords(params: Parameters<typeof getRecommendedWords>[0]) {
     return getRecommendedWords(params)
+  }
+
+  updateExcludedStatus(params: Parameters<typeof updateExcludedStatus>[0]) {
+    return updateExcludedStatus(params)
+  }
+
+  updateIgnoredStatus(params: Parameters<typeof updateIgnoredStatus>[0]) {
+    return updateIgnoredStatus(params)
+  }
+
+  updateKnownStatus(params: Parameters<typeof updateKnownStatus>[0]) {
+    return updateKnownStatus(params)
   }
 }
 

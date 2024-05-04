@@ -54,35 +54,90 @@ const resolvers: GQL_Resolvers = {
       })
     },
   },
-  // Mutation: {
-  //   updateIgnoredWord: async (
-  //     _,
-  //     { input },
-  //     { userId, dataSources: { word } }
-  //   ) => {
-  //     try {
-  //       const res = await word.updateIgnoredWord({
-  //         ...input,
-  //         userId,
-  //       })
+  Mutation: {
+    updateExcludedStatus: async (
+      _,
+      { input },
+      { userId, dataSources: { word } }
+    ) => {
+      try {
+        await word.updateExcludedStatus({
+          excluded: input.excluded,
+          userId,
+          wordId: input.id,
+        })
 
-  //       return {
-  //         code: 200,
-  //         success: true,
-  //         message: 'Word has successfully been updated',
-  //         status: res?.[0].ignored,
-  //       }
-  //     } catch (err) {
-  //       console.log(err, typeof err)
-  //       return {
-  //         code: 500,
-  //         success: false,
-  //         message: 'Unable to update word',
-  //         status: null,
-  //       }
-  //     }
-  //   },
-  // },
+        return {
+          code: 200,
+          success: true,
+          message: `Word has been successfully marked ${input.excluded ? 'excluded' : 'included'}`,
+        }
+      } catch {
+        return {
+          code: 500,
+          success: false,
+          message: `Unable to mark work as ${input.excluded ? 'excluded' : 'included'}`,
+        }
+      }
+    },
+    updateIgnoredStatus: async (
+      _,
+      { input },
+      { userId, dataSources: { word } }
+    ) => {
+      if (!input.seriesIdInWhichIgnored && !input.workIdInWhichIgnored) {
+        throw new Error(
+          "A value for 'seriesIdInWhichIgnored' or 'workIdInWhichIgnored' must also be supplied"
+        )
+      }
+      try {
+        await word.updateIgnoredStatus({
+          ignored: input.ignored,
+          seriesIdInWhichIgnored: input.seriesIdInWhichIgnored,
+          userId,
+          wordId: input.id,
+          workIdInWhichIgnored: input.workIdInWhichIgnored,
+        })
+
+        return {
+          code: 200,
+          success: true,
+          message: `Word has been successfully marked ${input.ignored ? 'ignored' : 'unignored'}`,
+        }
+      } catch {
+        return {
+          code: 500,
+          success: false,
+          message: `Unable to mark work as ${input.ignored ? 'ignored' : 'unignored'}`,
+        }
+      }
+    },
+    updateKnownStatus: async (
+      _,
+      { input },
+      { userId, dataSources: { word } }
+    ) => {
+      try {
+        await word.updateKnownStatus({
+          known: input.known,
+          userId,
+          wordId: input.id,
+        })
+
+        return {
+          code: 200,
+          success: true,
+          message: `Word has been successfully marked ${input.known ? 'known' : 'unknown'}`,
+        }
+      } catch {
+        return {
+          code: 500,
+          success: false,
+          message: `Unable to mark work as ${input.known ? 'known' : 'unknown'}`,
+        }
+      }
+    },
+  },
 }
 
 export default resolvers

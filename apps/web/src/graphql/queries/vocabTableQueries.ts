@@ -54,3 +54,27 @@ export const RECOMMENDED_WORDS = gql`
     }
   }
 `
+
+export const UPDATE_EXCLUDED_STATUS = gql`
+  mutation UpdateExcludedStatus($input: UpdateExcludedStatusInput!) {
+    updateExcludedStatus(input: $input) {
+      success
+    }
+  }
+`
+
+export const UPDATE_IGNORED_STATUS = gql`
+  mutation UpdateIgnoredStatus($input: UpdateIgnoredStatusInput!) {
+    updateIgnoredStatus(input: $input) {
+      success
+    }
+  }
+`
+
+export const UPDATE_KNOWN_STATUS = gql`
+  mutation UpdateKnownStatus($input: UpdateKnownStatusInput!) {
+    updateKnownStatus(input: $input) {
+      success
+    }
+  }
+`

@@ -15,7 +15,7 @@ import {
   GLOSSARY,
   KNOWN_WORDS,
   RECOMMENDED_WORDS,
-} from '../graphql/vocabTableQueries'
+} from '../graphql/queries/vocabTableQueries'
 
 type Variables = {
   isPartOfSeries: boolean
