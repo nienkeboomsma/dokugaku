@@ -1,10 +1,12 @@
 import { Indicator } from '@mantine/core'
 
-import { SeriesInfo } from '../../types/SeriesInfo'
+import classes from './Volume.module.css'
+import { type SeriesInfo } from '../../types/SeriesInfo'
 import ScaleLink from '../ScaleLink'
 import WorkCover from '../WorkCover'
+import WorkStatusBadge from '../BrowsePage/WorkStatusBadge'
 
-const MIN_WIDTH = '6rem'
+const MIN_WIDTH = '7.5rem'
 
 export default function Volume({
   indicatorSize,
@@ -15,14 +17,20 @@ export default function Volume({
 }) {
   return (
     <ScaleLink href={`/works/${volume.id}`}>
-      <Indicator label={volume.volumeNumber} offset={5} size={indicatorSize}>
-        <WorkCover
-          coverPath={`/works/${volume.id}/cover.webp`}
-          grow
-          // maxProgress={volume.maxProgress}
-          // progress={volume.progress}
+      <div className={classes.container}>
+        <Indicator label={volume.volumeNumber} offset={5} size={indicatorSize}>
+          <WorkCover
+            coverPath={`/works/${volume.id}/cover.webp`}
+            grow
+            // maxProgress={volume.maxProgress}
+            // progress={volume.progress}
+          />
+        </Indicator>
+        <WorkStatusBadge
+          className={classes.statusBadge}
+          status={volume.status}
         />
-      </Indicator>
+      </div>
     </ScaleLink>
   )
 }

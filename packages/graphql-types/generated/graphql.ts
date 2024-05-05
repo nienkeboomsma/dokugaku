@@ -338,7 +338,7 @@ export type GQL_SeriesInfoQueryVariables = Exact<{
 }>;
 
 
-export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', id: string, name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, volumeNumber?: number | null | undefined }> } | null | undefined };
+export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', id: string, name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, volumeNumber?: number | null | undefined }> } | null | undefined };
 
 export type GQL_WorkCardsQueryVariables = Exact<{
   worksInput?: InputMaybe<GQL_WorkListInput>;

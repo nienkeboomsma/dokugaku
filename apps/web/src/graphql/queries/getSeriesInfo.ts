@@ -22,6 +22,7 @@ const SERIES_INFO = gql`
         id
         maxProgress
         progress
+        status
         volumeNumber: numberInSeries
       }
     }

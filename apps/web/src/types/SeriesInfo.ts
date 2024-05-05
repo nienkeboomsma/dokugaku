@@ -4,6 +4,7 @@ export type VolumeInfo = {
   id: string
   maxProgress: number
   progress: number
+  status: GQL_ReadStatus
   volumeNumber: number
 }
 

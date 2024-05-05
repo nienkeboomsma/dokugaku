@@ -1,52 +1,38 @@
-import { Spoiler, ActionIcon } from '@mantine/core'
-import { IconChevronUp, IconChevronDown } from '@tabler/icons-react'
+import { useEffect, useRef } from 'react'
+import { ScrollArea } from '@mantine/core'
 
 import classes from './Volumes.module.css'
-import { VolumeInfo } from '../../types/SeriesInfo'
+import { type VolumeInfo } from '../../types/SeriesInfo'
 import SectionHeading from '../PaperContainer/SectionHeading'
-import Volume, { VolumeMinWidth } from './Volume'
+import Volume from './Volume'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
-const controlSize = '1.9rem'
 const indicatorSize = '1.4rem'
 
-const cssVariables = {
-  '--control-height': controlSize,
-  '--indicator-size': indicatorSize,
-  // 0.2rem extra to account for ScaleLink
-  '--indicator-offset': `calc(var(--indicator-size) / 2 + 0.2rem)`,
-  '--volume-min-width': VolumeMinWidth,
-} as React.CSSProperties
-
 export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const earliestReadingVolume = volumes.findIndex(
+    (volume) => volume.status === GQL_ReadStatus.Reading
+  )
+
+  useEffect(
+    () =>
+      viewportRef.current
+        ?.querySelectorAll('a')
+        ?.[
+          earliestReadingVolume
+        ]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }),
+    []
+  )
+
   return (
-    <div style={cssVariables}>
+    <div>
       <SectionHeading>Volumes</SectionHeading>
-      <Spoiler
-        classNames={{
-          root: classes.spoilerRoot,
-          control: classes.spoilerControl,
-        }}
-        maxHeight={288}
-        hideLabel={
-          <ActionIcon
-            component='div'
-            size={controlSize}
-            variant='filled'
-            radius='xl'
-          >
-            <IconChevronUp size={14} />
-          </ActionIcon>
-        }
-        showLabel={
-          <ActionIcon
-            component='div'
-            size={controlSize}
-            variant='filled'
-            radius='xl'
-          >
-            <IconChevronDown size={14} />
-          </ActionIcon>
-        }
+      <ScrollArea
+        className={classes.scrollArea}
+        offsetScrollbars
+        scrollbarSize={8}
+        viewportRef={viewportRef}
       >
         <div className={classes.volumesContainer}>
           {volumes.map((volume) => (
@@ -57,7 +43,7 @@ export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
             />
           ))}
         </div>
-      </Spoiler>
+      </ScrollArea>
     </div>
   )
 }

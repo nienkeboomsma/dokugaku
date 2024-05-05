@@ -1,36 +1,16 @@
-.spoilerRoot {
-  /* the control sticks out 50%, but it looks more balanced to compensate
-    for only half of that */
-  margin-bottom: calc(var(--control-height) / 4);
-  margin-right: calc(var(--indicator-offset) * -1);
-  margin-top: calc(var(--indicator-offset) * -1);
-  position: relative;
+.scrollArea {
+  margin-bottom: -1rem;
+  margin-top: -0.625rem;
+  padding-bottom: 0.375rem;
 }
 
 .volumesContainer {
-  --gap-size: 1rem;
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  padding: 0.625rem 0.625rem 0.1875rem 0.125rem;
 
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(var(--volume-min-width), 1fr)
-  );
-  margin-bottom: calc(var(--gap-size) * -1);
-  padding-right: var(--indicator-offset);
-  padding-top: var(--indicator-offset);
-
-  &::after {
-    content: '';
-    grid-column: 1 / -1;
+  & > a {
+    width: 8rem;
   }
-}
-
-.spoilerControl {
-  inset-inline-start: 0;
-  inset-inline-end: 0;
-  padding-right: var(--indicator-offset);
-  position: absolute;
-  top: calc(100% - var(--control-height) / 2);
-  z-index: 1;
 }
