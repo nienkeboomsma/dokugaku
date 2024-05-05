@@ -136,11 +136,10 @@ export const updateCacheOnIgnored = (
   })
 
   const itemsToEvict = [
-    // TODO: once ignored words are discounted in recommendedWords, turn this back on
-    // {
-    //   id: 'ROOT_QUERY',
-    //   fieldName: 'recommendedWords',
-    // },
+    {
+      id: 'ROOT_QUERY',
+      fieldName: 'recommendedWords',
+    },
     {
       id: 'ROOT_QUERY',
       fieldName: 'glossary',
@@ -171,11 +170,10 @@ export const updateCacheOnUnignored = (
   })
 
   const itemsToEvict = [
-    // TODO: once ignored words are discounted in recommendedWords, turn this back on
-    // {
-    //   id: 'ROOT_QUERY',
-    //   fieldName: 'recommendedWords',
-    // },
+    {
+      id: 'ROOT_QUERY',
+      fieldName: 'recommendedWords',
+    },
     {
       id: 'ROOT_QUERY',
       fieldName: 'glossary',

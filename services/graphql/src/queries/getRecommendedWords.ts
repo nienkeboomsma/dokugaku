@@ -1,8 +1,6 @@
 import sql from '../data/sql'
 import { type RecommendedWordModel } from '../models/RecommendedWordModel'
 
-// TODO: if a word is ignored in a particular series or work, those instances should not be counted
-
 export function getRecommendedWords({
   limit,
   offset,
@@ -24,19 +22,36 @@ export function getRecommendedWords({
       ON word_work.work_id = user_work.work_id
       AND user_work.user_id = ${userId}
       AND user_work.status = 'want_to_read'
-      AND NOT EXISTS (
-        SELECT 1
-        FROM user_word
-        WHERE user_word.user_id = user_work.user_id
-        AND user_word.word_id = word_work.word_id
-        AND (user_word.excluded = true OR user_word.known = true)
-      )
+    JOIN work
+      ON word_work.work_id = work.id
+    LEFT JOIN ignored_in_series
+      ON ignored_in_series.word_id = word_work.word_id
+      AND ignored_in_series.series_id = work.series_id
+      AND ignored_in_series.user_id = user_work.user_id
+    LEFT JOIN ignored_in_work
+      ON ignored_in_work.word_id = word_work.word_id
+      AND ignored_in_work.work_id = word_work.work_id
+      AND ignored_in_work.user_id = user_work.user_id
     JOIN word
       ON word_work.word_id = word.id
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM user_word
+      WHERE user_word.user_id = user_work.user_id
+        AND user_word.word_id = word_work.word_id
+        AND (user_word.excluded = true OR user_word.known = true)
+    ) 
+    AND (
+      ( ignored_in_series.ignored IS NULL AND ignored_in_work.ignored IS NULL )
+      OR
+      ( ignored_in_series.ignored IS NOT NULL AND ignored_in_series.ignored = false )
+      OR
+      ( ignored_in_work.ignored IS NOT NULL AND ignored_in_work.ignored = false )
+    )
     ${
       searchString
         ? sql`
-          WHERE word.info::text ILIKE '%' || ${searchString} || '%'
+          AND word.info::text ILIKE '%' || ${searchString} || '%'
         `
         : sql``
     }
