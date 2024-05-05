@@ -1,10 +1,15 @@
-type Word {
+type FrequencyListWord {
   id: ID!
   info: JSON!
-  known: Boolean!
-  ignored: Boolean
-  excluded: Boolean!
   frequency: Int!
+  ignored: Boolean!
+}
+
+type GlossaryWord {
+  id: ID!
+  info: JSON!
+  frequency: Int!
+  ignored: Boolean!
   volumeNumber: Int
   pageNumber: Int!
   sentenceNumber: Int!
@@ -12,69 +17,74 @@ type Word {
   componentNumber: Int
 }
 
-input WordInput {
-  """
-  Determines what series the 'ignored' value should be based on. If no
-  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  seriesIdInWhichIgnored: String
-  wordId: Int!
-  """
-  Determines what work the 'ignored' value should be based on. If no
-  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  workIdInWhichIgnored: String
-  """
-  If no workIds value is supplied information will be drawn from the entire
-  corpus. Filtering by workIds is most useful for works within the same series;
-  combining random works will yield uninformative values for
-  'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
-  'componentNumber'.
-  """
-  workIds: [String!]
+type KnownWord {
+  id: ID!
+  info: JSON!
 }
 
-input WordListInput {
-  """
-  Get only the first occurrence of each word, instead of each individual
-  occurrence.
-  """
-  distinctOnly: Boolean
-  excluded: Boolean
-  known: Boolean
-  """
-  Will return null if no seriesIdInWhichIgnored or workIdInWhichIgnored is supplied
-  """
-  ignored: Boolean
-  minFrequency: Int
-  minPageNumber: Int
-  pageNumber: Int
-  """
-  Determines what series the 'ignored' value should be based on. If no
-  seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  seriesIdInWhichIgnored: String
-  wordIds: [Int!]
-  """
-  Determines what work the 'ignored' value should be based on. If no
-  workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-  will default to null.
-  """
-  workIdInWhichIgnored: String
-  """
-  If no workIds value is supplied information will be drawn from the entire
-  corpus. Filtering by workIds is most useful for works within the same series;
-  combining random works will yield uninformative values for
-  'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
-  'componentNumber'.
-  """
-  workIds: [String!]
+type ExcludedWord {
+  id: ID!
+  info: JSON!
 }
 
-input UpdateIgnoredWordInput {
+type RecommendedWord {
+  id: ID!
+  info: JSON!
+  frequency: Int!
+}
+
+input CorpusScopedInput {
+  limit: Int
+  offset: Int
+  searchString: String
+}
+
+input FrequencyListInput {
+  isPartOfSeries: Boolean
+  """
+  If true, seriesId must be supplied; if false, isPartOfSeries and workId must be supplied.
+  """
+  isSeries: Boolean!
+  limit: Int
+  offset: Int
+  seriesId: String
+  searchString: String
+  workId: String
+}
+
+input GlossaryInput {
+  """
+  If true, seriesId must be supplied.
+  """
+  isPartOfSeries: Boolean!
+  limit: Int
+  offset: Int
+  searchString: String
+  seriesId: String
+  workId: String!
+}
+
+extend type Query {
+  excludedWords(input: CorpusScopedInput): [ExcludedWord!]!
+  frequencyList(input: FrequencyListInput!): [FrequencyListWord!]!
+  glossary(input: GlossaryInput!): [GlossaryWord!]!
+  knownWords(input: CorpusScopedInput): [KnownWord!]!
+  recommendedWords(input: CorpusScopedInput): [RecommendedWord!]!
+}
+
+type UpdateWordStatusResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+}
+
+input UpdateExcludedStatusInput {
+  id: ID!
+  excluded: Boolean!
+}
+
+input UpdateIgnoredStatusInput {
+  id: ID!
   ignored: Boolean!
   """
   A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
@@ -84,21 +94,19 @@ input UpdateIgnoredWordInput {
   A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored.
   """
   workIdInWhichIgnored: String
-  wordId: String!
 }
 
-extend type Query {
-  word(input: WordInput!): Word
-  wordList(input: WordListInput): [Word!]!
+input UpdateKnownStatusInput {
+  id: ID!
+  known: Boolean!
 }
 
 extend type Mutation {
-  updateIgnoredWord(input: UpdateIgnoredWordInput!): UpdateIgnoredWordResponse!
-}
-
-type UpdateIgnoredWordResponse {
-  code: Int!
-  success: Boolean!
-  message: String!
-  ignored: Boolean
+  updateExcludedStatus(
+    input: UpdateExcludedStatusInput!
+  ): UpdateWordStatusResponse!
+  updateIgnoredStatus(
+    input: UpdateIgnoredStatusInput!
+  ): UpdateWordStatusResponse!
+  updateKnownStatus(input: UpdateKnownStatusInput!): UpdateWordStatusResponse!
 }

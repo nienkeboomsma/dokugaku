@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import SeriesPage from '../../components/SeriesPage/SeriesPage'
 import { mockSeriesInfo } from '../../fixtures/seriesInfo'
-import { mockVocab } from '../../fixtures/vocab'
 
 const meta = {
   title: 'Series/Page',
@@ -17,14 +16,12 @@ export const FewVolumes: Story = {
       ...mockSeriesInfo,
       volumes: mockSeriesInfo.volumes.slice(0, 3),
     },
-    initialVocab: mockVocab,
   },
 }
 
 export const ManyVolumes: Story = {
   args: {
     series: mockSeriesInfo,
-    initialVocab: mockVocab,
   },
 }
 

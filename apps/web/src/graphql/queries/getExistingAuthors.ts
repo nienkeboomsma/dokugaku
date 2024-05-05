@@ -1,12 +1,13 @@
 import { gql } from '@apollo/client'
 import { type GQL_ExistingAuthorsQuery } from '@repo/graphql-types'
 
-import { getClient } from './ApolloClient'
-import { ExistingAuthors } from '../types/ExistingAuthors'
+import { getClient } from '../client/ApolloClient'
+import { ExistingAuthors } from '../../types/ExistingAuthors'
 
 const EXISTING_AUTHORS = gql`
   query ExistingAuthors {
     authorList {
+      id
       name
     }
   }

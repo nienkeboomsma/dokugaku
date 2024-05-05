@@ -5,46 +5,35 @@ import { Button } from '@mantine/core'
 import { IconBook2 } from '@tabler/icons-react'
 import { GQL_ReadStatus } from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
+import Link from 'next/link'
 
 import classes from './WorkPage.module.css'
 import { type WorkInfo } from '../../types/WorkInfo'
-import { type Word } from '../../types/Word'
-import { useVocab } from '../../hooks/useVocab'
-import { UPDATE_WORK_READ_STATUS } from '../../graphql/updateReadStatus'
+import { UPDATE_WORK_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
 import WorkCover from '../WorkCover'
 import ReadStatusSelector from '../ReadStatusSelector'
-import Link from 'next/link'
 import WorkTitle from '../WorkTitle'
 import AuthorList from '../AuthorList'
 import SectionHeading from '../PaperContainer/SectionHeading'
-import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
-import IgnoredWords from '../VocabTable/IgnoredWords'
+import VocabTable, {
+  VocabTableMaxWidth,
+  VocabTableType,
+} from '../VocabTable/VocabTable'
 
-const coverWidth = '10rem'
+const COVER_WIDTH = '10rem'
 
 const cssVariables = {
-  '--cover-width': coverWidth,
+  '--cover-width': COVER_WIDTH,
   '--second-column-max-width': VocabTableMaxWidth,
   '--second-column-width': 'calc(100% - var(--cover-width) - var(--gap))',
 } as React.CSSProperties
 
-export default function WorkPage({
-  initialVocab,
-  work,
-}: {
-  initialVocab: Word[]
-  work?: WorkInfo
-}) {
+export default function WorkPage({ work }: { work?: WorkInfo }) {
   // TODO: design a proper placeholder page
   if (!work) return 'Oops'
-
-  const { actions, vocab } = useVocab(initialVocab, {
-    isSeries: true,
-    seriesOrWorkId: work.id,
-  })
 
   const [readStatus, setReadStatus] = useState(work.status)
   const [readStatusLoading, setReadStatusLoading] = useState(false)
@@ -67,15 +56,15 @@ export default function WorkPage({
 
   return (
     <PaperContainer
-      maxWidth={`calc(${coverWidth} + ${VocabTableMaxWidth} + 3 * ${PaperContainerPadding})`}
+      maxWidth={`calc(${COVER_WIDTH} + ${VocabTableMaxWidth} + 3 * ${PaperContainerPadding})`}
     >
       <div className={classes.container} style={cssVariables}>
         <div className={classes.firstColumn}>
           <WorkCover
             coverPath={`/works/${work.id}/cover.webp`}
-            maxProgress={work.maxProgress}
-            progress={work.progress}
-            width={coverWidth}
+            // maxProgress={work.maxProgress}
+            // progress={work.progress}
+            width={COVER_WIDTH}
           />
           <ReadStatusSelector
             loading={readStatusLoading}
@@ -102,13 +91,11 @@ export default function WorkPage({
           <div>
             <SectionHeading>Frequency list</SectionHeading>
             <VocabTable
-              actions={actions}
               furigana
-              type='frequencyList'
-              vocab={vocab}
+              seriesOrWork={work}
+              type={VocabTableType.SeriesOrWork}
             />
           </div>
-          <IgnoredWords actions={actions} furigana vocab={vocab} />
         </div>
       </div>
     </PaperContainer>

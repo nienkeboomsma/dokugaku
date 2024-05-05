@@ -4,7 +4,7 @@ import 'mantine-datatable/styles.layer.css'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
 
-import { ApolloWrapper } from '../graphql/ApolloWrapper'
+import { ApolloWrapper } from '../graphql/client/ApolloWrapper'
 import AppShell from '../components/AppShell/AppShell'
 
 export const metadata = {

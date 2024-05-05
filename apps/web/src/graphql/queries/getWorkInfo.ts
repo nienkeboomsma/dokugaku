@@ -4,19 +4,23 @@ import {
   type GQL_WorkInfoQueryVariables,
 } from '@repo/graphql-types'
 
-import { getClient } from './ApolloClient'
-import { WorkInfo } from '../types/WorkInfo'
+import { getClient } from '../client/ApolloClient'
+import { WorkInfo } from '../../types/WorkInfo'
 
 export const getWorkInfo = async (workId: string) => {
   const WORK_INFO = gql`
     query WorkInfo($workInput: WorkInput!) {
       work(input: $workInput) {
         authors {
+          id
           name
         }
         id
         maxProgress
         progress
+        series {
+          id
+        }
         status
         title
       }
@@ -40,6 +44,8 @@ export const getWorkInfo = async (workId: string) => {
     const workInfo: WorkInfo = {
       ...data.work,
       authors: data.work.authors.map((author) => author.name),
+      series: false,
+      seriesId: data.work.series?.id ?? undefined,
     }
 
     return workInfo

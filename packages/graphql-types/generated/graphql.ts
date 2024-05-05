@@ -34,16 +34,88 @@ export type GQL_AuthorListInput = {
   authorIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export type GQL_CorpusScopedInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  searchString?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GQL_ExcludedWord = {
+  __typename?: 'ExcludedWord';
+  id: Scalars['ID']['output'];
+  info: Scalars['JSON']['output'];
+};
+
+export type GQL_FrequencyListInput = {
+  isPartOfSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  /** If true, seriesId must be supplied; if false, isPartOfSeries and workId must be supplied. */
+  isSeries: Scalars['Boolean']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  searchString?: InputMaybe<Scalars['String']['input']>;
+  seriesId?: InputMaybe<Scalars['String']['input']>;
+  workId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GQL_FrequencyListWord = {
+  __typename?: 'FrequencyListWord';
+  frequency: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  ignored: Scalars['Boolean']['output'];
+  info: Scalars['JSON']['output'];
+};
+
+export type GQL_GlossaryInput = {
+  /** If true, seriesId must be supplied. */
+  isPartOfSeries: Scalars['Boolean']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  searchString?: InputMaybe<Scalars['String']['input']>;
+  seriesId?: InputMaybe<Scalars['String']['input']>;
+  workId: Scalars['String']['input'];
+};
+
+export type GQL_GlossaryWord = {
+  __typename?: 'GlossaryWord';
+  componentNumber?: Maybe<Scalars['Int']['output']>;
+  entryNumber: Scalars['Int']['output'];
+  frequency: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  ignored: Scalars['Boolean']['output'];
+  info: Scalars['JSON']['output'];
+  pageNumber: Scalars['Int']['output'];
+  sentenceNumber: Scalars['Int']['output'];
+  volumeNumber?: Maybe<Scalars['Int']['output']>;
+};
+
+export type GQL_KnownWord = {
+  __typename?: 'KnownWord';
+  id: Scalars['ID']['output'];
+  info: Scalars['JSON']['output'];
+};
+
 export type GQL_Mutation = {
   __typename?: 'Mutation';
-  updateIgnoredWord: GQL_UpdateIgnoredWordResponse;
+  updateExcludedStatus: GQL_UpdateWordStatusResponse;
+  updateIgnoredStatus: GQL_UpdateWordStatusResponse;
+  updateKnownStatus: GQL_UpdateWordStatusResponse;
   updateSeriesReadStatus: GQL_UpdateReadStatusResponse;
   updateWorkReadStatus: GQL_UpdateReadStatusResponse;
 };
 
 
-export type GQL_MutationUpdateIgnoredWordArgs = {
-  input: GQL_UpdateIgnoredWordInput;
+export type GQL_MutationUpdateExcludedStatusArgs = {
+  input: GQL_UpdateExcludedStatusInput;
+};
+
+
+export type GQL_MutationUpdateIgnoredStatusArgs = {
+  input: GQL_UpdateIgnoredStatusInput;
+};
+
+
+export type GQL_MutationUpdateKnownStatusArgs = {
+  input: GQL_UpdateKnownStatusInput;
 };
 
 
@@ -60,10 +132,13 @@ export type GQL_Query = {
   __typename?: 'Query';
   author?: Maybe<GQL_Author>;
   authorList: Array<GQL_Author>;
+  excludedWords: Array<GQL_ExcludedWord>;
+  frequencyList: Array<GQL_FrequencyListWord>;
+  glossary: Array<GQL_GlossaryWord>;
+  knownWords: Array<GQL_KnownWord>;
+  recommendedWords: Array<GQL_RecommendedWord>;
   series?: Maybe<GQL_Series>;
   seriesList: Array<GQL_Series>;
-  word?: Maybe<GQL_Word>;
-  wordList: Array<GQL_Word>;
   work?: Maybe<GQL_Work>;
   workList: Array<GQL_Work>;
 };
@@ -79,6 +154,31 @@ export type GQL_QueryAuthorListArgs = {
 };
 
 
+export type GQL_QueryExcludedWordsArgs = {
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+};
+
+
+export type GQL_QueryFrequencyListArgs = {
+  input: GQL_FrequencyListInput;
+};
+
+
+export type GQL_QueryGlossaryArgs = {
+  input: GQL_GlossaryInput;
+};
+
+
+export type GQL_QueryKnownWordsArgs = {
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+};
+
+
+export type GQL_QueryRecommendedWordsArgs = {
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+};
+
+
 export type GQL_QuerySeriesArgs = {
   input: GQL_SeriesInput;
 };
@@ -86,16 +186,6 @@ export type GQL_QuerySeriesArgs = {
 
 export type GQL_QuerySeriesListArgs = {
   input?: InputMaybe<GQL_SeriesListInput>;
-};
-
-
-export type GQL_QueryWordArgs = {
-  input: GQL_WordInput;
-};
-
-
-export type GQL_QueryWordListArgs = {
-  input?: InputMaybe<GQL_WordListInput>;
 };
 
 
@@ -116,25 +206,24 @@ export enum GQL_ReadStatus {
   WantToRead = 'want_to_read'
 }
 
+export type GQL_RecommendedWord = {
+  __typename?: 'RecommendedWord';
+  frequency: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  info: Scalars['JSON']['output'];
+};
+
 export type GQL_Series = {
   __typename?: 'Series';
   authors: Array<GQL_Author>;
+  hapaxLegomena: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
+  learnableWords: Scalars['Int']['output'];
   status: GQL_ReadStatus;
   title: Scalars['String']['output'];
+  totalWords: Scalars['Int']['output'];
+  uniqueWords: Scalars['Int']['output'];
   volumes: Array<GQL_Work>;
-  wordCount: Scalars['Int']['output'];
-  words: Array<GQL_Word>;
-};
-
-
-export type GQL_SeriesWordCountArgs = {
-  input?: InputMaybe<GQL_WordCountInput>;
-};
-
-
-export type GQL_SeriesWordsArgs = {
-  input?: InputMaybe<GQL_SubQueryWordListInput>;
 };
 
 export type GQL_SeriesInput = {
@@ -147,36 +236,23 @@ export type GQL_SeriesListInput = {
   status?: InputMaybe<GQL_ReadStatus>;
 };
 
-export type GQL_SubQueryWordListInput = {
-  /**
-   * Get only the first occurrence of each word, instead of each individual
-   * occurrence.
-   */
-  distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
-  excluded?: InputMaybe<Scalars['Boolean']['input']>;
-  ignored?: InputMaybe<Scalars['Boolean']['input']>;
-  known?: InputMaybe<Scalars['Boolean']['input']>;
-  minFrequency?: InputMaybe<Scalars['Int']['input']>;
-  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
-  pageNumber?: InputMaybe<Scalars['Int']['input']>;
-  wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
+export type GQL_UpdateExcludedStatusInput = {
+  excluded: Scalars['Boolean']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type GQL_UpdateIgnoredWordInput = {
+export type GQL_UpdateIgnoredStatusInput = {
+  id: Scalars['ID']['input'];
   ignored: Scalars['Boolean']['input'];
   /** A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored. */
   seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
-  wordId: Scalars['String']['input'];
   /** A value must be supplied for either seriesIdInWhichIgnored or workIdInWhichIgnored. */
   workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type GQL_UpdateIgnoredWordResponse = {
-  __typename?: 'UpdateIgnoredWordResponse';
-  code: Scalars['Int']['output'];
-  ignored?: Maybe<Scalars['Boolean']['output']>;
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
+export type GQL_UpdateKnownStatusInput = {
+  id: Scalars['ID']['input'];
+  known: Scalars['Boolean']['input'];
 };
 
 export type GQL_UpdateReadStatusResponse = {
@@ -192,122 +268,33 @@ export type GQL_UpdateSeriesReadStatusInput = {
   status: GQL_ReadStatus;
 };
 
+export type GQL_UpdateWordStatusResponse = {
+  __typename?: 'UpdateWordStatusResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type GQL_UpdateWorkReadStatusInput = {
   status: GQL_ReadStatus;
   workId: Scalars['String']['input'];
 };
 
-export type GQL_Word = {
-  __typename?: 'Word';
-  componentNumber?: Maybe<Scalars['Int']['output']>;
-  entryNumber: Scalars['Int']['output'];
-  excluded: Scalars['Boolean']['output'];
-  frequency: Scalars['Int']['output'];
-  id: Scalars['ID']['output'];
-  ignored?: Maybe<Scalars['Boolean']['output']>;
-  info: Scalars['JSON']['output'];
-  known: Scalars['Boolean']['output'];
-  pageNumber: Scalars['Int']['output'];
-  sentenceNumber: Scalars['Int']['output'];
-  volumeNumber?: Maybe<Scalars['Int']['output']>;
-};
-
-export type GQL_WordCountInput = {
-  type?: InputMaybe<GQL_WordCountType>;
-};
-
-export enum GQL_WordCountType {
-  /** The number of unique words that occur only once within the work. */
-  Hapax = 'hapax',
-  /** The number of words that are not marked excluded, ignored or known. */
-  Learnable = 'learnable',
-  Total = 'total',
-  Unique = 'unique'
-}
-
-export type GQL_WordInput = {
-  /**
-   * Determines what series the 'ignored' value should be based on. If no
-   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
-  wordId: Scalars['Int']['input'];
-  /**
-   * Determines what work the 'ignored' value should be based on. If no
-   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * If no workIds value is supplied information will be drawn from the entire
-   * corpus. Filtering by workIds is most useful for works within the same series;
-   * combining random works will yield uninformative values for
-   * 'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
-   * 'componentNumber'.
-   */
-  workIds?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
-export type GQL_WordListInput = {
-  /**
-   * Get only the first occurrence of each word, instead of each individual
-   * occurrence.
-   */
-  distinctOnly?: InputMaybe<Scalars['Boolean']['input']>;
-  excluded?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Will return null if no seriesIdInWhichIgnored or workIdInWhichIgnored is supplied */
-  ignored?: InputMaybe<Scalars['Boolean']['input']>;
-  known?: InputMaybe<Scalars['Boolean']['input']>;
-  minFrequency?: InputMaybe<Scalars['Int']['input']>;
-  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
-  pageNumber?: InputMaybe<Scalars['Int']['input']>;
-  /**
-   * Determines what series the 'ignored' value should be based on. If no
-   * seriesIdInWhichIgnored or workIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  seriesIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
-  wordIds?: InputMaybe<Array<Scalars['Int']['input']>>;
-  /**
-   * Determines what work the 'ignored' value should be based on. If no
-   * workIdInWhichIgnored or seriesIdInWhichIgnored value is supplied 'ignored'
-   * will default to null.
-   */
-  workIdInWhichIgnored?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * If no workIds value is supplied information will be drawn from the entire
-   * corpus. Filtering by workIds is most useful for works within the same series;
-   * combining random works will yield uninformative values for
-   * 'volumeNumber', 'pageNumber', 'sentenceNumber', 'entryNumber' and
-   * 'componentNumber'.
-   */
-  workIds?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
 export type GQL_Work = {
   __typename?: 'Work';
   authors: Array<GQL_Author>;
+  hapaxLegomena: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
+  learnableWords: Scalars['Int']['output'];
   maxProgress: Scalars['Int']['output'];
   numberInSeries?: Maybe<Scalars['Int']['output']>;
   progress: Scalars['Int']['output'];
   series?: Maybe<GQL_Series>;
   status: GQL_ReadStatus;
   title: Scalars['String']['output'];
+  totalWords: Scalars['Int']['output'];
   type: GQL_WorkType;
-  wordCount: Scalars['Int']['output'];
-  words: Array<GQL_Word>;
-};
-
-
-export type GQL_WorkWordCountArgs = {
-  input?: InputMaybe<GQL_WordCountInput>;
-};
-
-
-export type GQL_WorkWordsArgs = {
-  input?: InputMaybe<GQL_SubQueryWordListInput>;
+  uniqueWords: Scalars['Int']['output'];
 };
 
 export type GQL_WorkInput = {
@@ -336,80 +323,36 @@ export type GQL_CurrentWorksQueryVariables = Exact<{
 
 export type GQL_CurrentWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number }> };
 
-export type GQL_ExcludedOrKnownWordsQueryVariables = Exact<{
-  input?: InputMaybe<GQL_WordListInput>;
-}>;
-
-
-export type GQL_ExcludedOrKnownWordsQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any }> };
-
 export type GQL_ExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_ExistingAuthorsQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', name: string }> };
+export type GQL_ExistingAuthorsQuery = { __typename?: 'Query', authorList: Array<{ __typename?: 'Author', id: string, name: string }> };
 
 export type GQL_ExistingSeriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GQL_ExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', title: string, volumes: Array<{ __typename?: 'Work', numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', name: string }> }> }> };
-
-export type GQL_WantToReadWorksQueryVariables = Exact<{
-  input?: InputMaybe<GQL_WorkListInput>;
-}>;
-
-
-export type GQL_WantToReadWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string }> };
-
-export type GQL_RecommendedVocabQueryVariables = Exact<{
-  input?: InputMaybe<GQL_WordListInput>;
-}>;
-
-
-export type GQL_RecommendedVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number }> };
+export type GQL_ExistingSeriesQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, title: string, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined, type: GQL_WorkType, authors: Array<{ __typename?: 'Author', id: string, name: string }> }> }> };
 
 export type GQL_SeriesInfoQueryVariables = Exact<{
   seriesInput: GQL_SeriesInput;
 }>;
 
 
-export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, volumeNumber?: number | null | undefined }> } | null | undefined };
-
-export type GQL_SeriesVocabQueryVariables = Exact<{
-  input?: InputMaybe<GQL_WordListInput>;
-}>;
-
-
-export type GQL_SeriesVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number, ignored?: boolean | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
+export type GQL_SeriesInfoQuery = { __typename?: 'Query', series?: { __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', id: string, name: string }>, volumes: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number, volumeNumber?: number | null | undefined }> } | null | undefined };
 
 export type GQL_WorkCardsQueryVariables = Exact<{
-  learnableWordsInput?: InputMaybe<GQL_WordCountInput>;
-  totalWordsInput?: InputMaybe<GQL_WordCountInput>;
   worksInput?: InputMaybe<GQL_WorkListInput>;
 }>;
 
 
-export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, status: GQL_ReadStatus, title: string, totalWords: number, learnableWords: number, authors: Array<{ __typename?: 'Author', name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, status: GQL_ReadStatus, title: string, totalWords: number, learnableWords: number, authors: Array<{ __typename?: 'Author', name: string }> }> };
+export type GQL_WorkCardsQuery = { __typename?: 'Query', seriesList: Array<{ __typename?: 'Series', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', id: string, name: string }>, volumes: Array<{ __typename?: 'Work', id: string, numberInSeries?: number | null | undefined }> }>, workList: Array<{ __typename?: 'Work', id: string, learnableWords: number, status: GQL_ReadStatus, title: string, totalWords: number, authors: Array<{ __typename?: 'Author', id: string, name: string }> }> };
 
 export type GQL_WorkInfoQueryVariables = Exact<{
   workInput: GQL_WorkInput;
 }>;
 
 
-export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', name: string }> } | null | undefined };
-
-export type GQL_WorkVocabQueryVariables = Exact<{
-  input?: InputMaybe<GQL_WordListInput>;
-}>;
-
-
-export type GQL_WorkVocabQuery = { __typename?: 'Query', wordList: Array<{ __typename?: 'Word', id: string, info: any, frequency: number, ignored?: boolean | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
-
-export type GQL_UpdateIgnoredWordMutationVariables = Exact<{
-  input: GQL_UpdateIgnoredWordInput;
-}>;
-
-
-export type GQL_UpdateIgnoredWordMutation = { __typename?: 'Mutation', updateIgnoredWord: { __typename?: 'UpdateIgnoredWordResponse', success: boolean } };
+export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, authors: Array<{ __typename?: 'Author', id: string, name: string }>, series?: { __typename?: 'Series', id: string } | null | undefined } | null | undefined };
 
 export type GQL_UpdateSeriesReadStatusMutationVariables = Exact<{
   input: GQL_UpdateSeriesReadStatusInput;
@@ -424,6 +367,62 @@ export type GQL_UpdateWorkReadStatusMutationVariables = Exact<{
 
 
 export type GQL_UpdateWorkReadStatusMutation = { __typename?: 'Mutation', updateWorkReadStatus: { __typename?: 'UpdateReadStatusResponse', status?: GQL_ReadStatus | null | undefined, success: boolean } };
+
+export type GQL_ExcludedWordsQueryVariables = Exact<{
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+}>;
+
+
+export type GQL_ExcludedWordsQuery = { __typename?: 'Query', excludedWords: Array<{ __typename?: 'ExcludedWord', id: string, info: any }> };
+
+export type GQL_FrequencyListQueryVariables = Exact<{
+  input: GQL_FrequencyListInput;
+}>;
+
+
+export type GQL_FrequencyListQuery = { __typename?: 'Query', frequencyList: Array<{ __typename?: 'FrequencyListWord', id: string, info: any, frequency: number, ignored: boolean }> };
+
+export type GQL_GlossaryQueryVariables = Exact<{
+  input: GQL_GlossaryInput;
+}>;
+
+
+export type GQL_GlossaryQuery = { __typename?: 'Query', glossary: Array<{ __typename?: 'GlossaryWord', id: string, info: any, frequency: number, ignored: boolean, volumeNumber?: number | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
+
+export type GQL_KnownWordsQueryVariables = Exact<{
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+}>;
+
+
+export type GQL_KnownWordsQuery = { __typename?: 'Query', knownWords: Array<{ __typename?: 'KnownWord', id: string, info: any }> };
+
+export type GQL_RecommendedWordsQueryVariables = Exact<{
+  input?: InputMaybe<GQL_CorpusScopedInput>;
+}>;
+
+
+export type GQL_RecommendedWordsQuery = { __typename?: 'Query', recommendedWords: Array<{ __typename?: 'RecommendedWord', id: string, info: any, frequency: number }> };
+
+export type GQL_UpdateExcludedStatusMutationVariables = Exact<{
+  input: GQL_UpdateExcludedStatusInput;
+}>;
+
+
+export type GQL_UpdateExcludedStatusMutation = { __typename?: 'Mutation', updateExcludedStatus: { __typename?: 'UpdateWordStatusResponse', success: boolean } };
+
+export type GQL_UpdateIgnoredStatusMutationVariables = Exact<{
+  input: GQL_UpdateIgnoredStatusInput;
+}>;
+
+
+export type GQL_UpdateIgnoredStatusMutation = { __typename?: 'Mutation', updateIgnoredStatus: { __typename?: 'UpdateWordStatusResponse', success: boolean } };
+
+export type GQL_UpdateKnownStatusMutationVariables = Exact<{
+  input: GQL_UpdateKnownStatusInput;
+}>;
+
+
+export type GQL_UpdateKnownStatusMutation = { __typename?: 'Mutation', updateKnownStatus: { __typename?: 'UpdateWordStatusResponse', success: boolean } };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;
@@ -501,27 +500,31 @@ export type GQL_ResolversTypes = ResolversObject<{
   AuthorInput: GQL_AuthorInput;
   AuthorListInput: GQL_AuthorListInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CorpusScopedInput: GQL_CorpusScopedInput;
+  ExcludedWord: ResolverTypeWrapper<GQL_ExcludedWord>;
+  FrequencyListInput: GQL_FrequencyListInput;
+  FrequencyListWord: ResolverTypeWrapper<GQL_FrequencyListWord>;
+  GlossaryInput: GQL_GlossaryInput;
+  GlossaryWord: ResolverTypeWrapper<GQL_GlossaryWord>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  KnownWord: ResolverTypeWrapper<GQL_KnownWord>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   ReadStatus: GQL_ReadStatus;
+  RecommendedWord: ResolverTypeWrapper<GQL_RecommendedWord>;
   Series: ResolverTypeWrapper<SeriesModel>;
   SeriesInput: GQL_SeriesInput;
   SeriesListInput: GQL_SeriesListInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  SubQueryWordListInput: GQL_SubQueryWordListInput;
-  UpdateIgnoredWordInput: GQL_UpdateIgnoredWordInput;
-  UpdateIgnoredWordResponse: ResolverTypeWrapper<GQL_UpdateIgnoredWordResponse>;
+  UpdateExcludedStatusInput: GQL_UpdateExcludedStatusInput;
+  UpdateIgnoredStatusInput: GQL_UpdateIgnoredStatusInput;
+  UpdateKnownStatusInput: GQL_UpdateKnownStatusInput;
   UpdateReadStatusResponse: ResolverTypeWrapper<GQL_UpdateReadStatusResponse>;
   UpdateSeriesReadStatusInput: GQL_UpdateSeriesReadStatusInput;
+  UpdateWordStatusResponse: ResolverTypeWrapper<GQL_UpdateWordStatusResponse>;
   UpdateWorkReadStatusInput: GQL_UpdateWorkReadStatusInput;
-  Word: ResolverTypeWrapper<GQL_Word>;
-  WordCountInput: GQL_WordCountInput;
-  WordCountType: GQL_WordCountType;
-  WordInput: GQL_WordInput;
-  WordListInput: GQL_WordListInput;
   Work: ResolverTypeWrapper<WorkModel>;
   WorkInput: GQL_WorkInput;
   WorkListInput: GQL_WorkListInput;
@@ -534,25 +537,30 @@ export type GQL_ResolversParentTypes = ResolversObject<{
   AuthorInput: GQL_AuthorInput;
   AuthorListInput: GQL_AuthorListInput;
   Boolean: Scalars['Boolean']['output'];
+  CorpusScopedInput: GQL_CorpusScopedInput;
+  ExcludedWord: GQL_ExcludedWord;
+  FrequencyListInput: GQL_FrequencyListInput;
+  FrequencyListWord: GQL_FrequencyListWord;
+  GlossaryInput: GQL_GlossaryInput;
+  GlossaryWord: GQL_GlossaryWord;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
+  KnownWord: GQL_KnownWord;
   Mutation: {};
   Query: {};
+  RecommendedWord: GQL_RecommendedWord;
   Series: SeriesModel;
   SeriesInput: GQL_SeriesInput;
   SeriesListInput: GQL_SeriesListInput;
   String: Scalars['String']['output'];
-  SubQueryWordListInput: GQL_SubQueryWordListInput;
-  UpdateIgnoredWordInput: GQL_UpdateIgnoredWordInput;
-  UpdateIgnoredWordResponse: GQL_UpdateIgnoredWordResponse;
+  UpdateExcludedStatusInput: GQL_UpdateExcludedStatusInput;
+  UpdateIgnoredStatusInput: GQL_UpdateIgnoredStatusInput;
+  UpdateKnownStatusInput: GQL_UpdateKnownStatusInput;
   UpdateReadStatusResponse: GQL_UpdateReadStatusResponse;
   UpdateSeriesReadStatusInput: GQL_UpdateSeriesReadStatusInput;
+  UpdateWordStatusResponse: GQL_UpdateWordStatusResponse;
   UpdateWorkReadStatusInput: GQL_UpdateWorkReadStatusInput;
-  Word: GQL_Word;
-  WordCountInput: GQL_WordCountInput;
-  WordInput: GQL_WordInput;
-  WordListInput: GQL_WordListInput;
   Work: WorkModel;
   WorkInput: GQL_WorkInput;
   WorkListInput: GQL_WorkListInput;
@@ -564,12 +572,47 @@ export type GQL_AuthorResolvers<ContextType = GQL_Context, ParentType extends GQ
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type GQL_ExcludedWordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['ExcludedWord'] = GQL_ResolversParentTypes['ExcludedWord']> = ResolversObject<{
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GQL_FrequencyListWordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['FrequencyListWord'] = GQL_ResolversParentTypes['FrequencyListWord']> = ResolversObject<{
+  frequency?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  ignored?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
+  info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GQL_GlossaryWordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['GlossaryWord'] = GQL_ResolversParentTypes['GlossaryWord']> = ResolversObject<{
+  componentNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  entryNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  frequency?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  ignored?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
+  info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  pageNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  sentenceNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  volumeNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export interface GQL_JsonScalarConfig extends GraphQLScalarTypeConfig<GQL_ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
 
+export type GQL_KnownWordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['KnownWord'] = GQL_ResolversParentTypes['KnownWord']> = ResolversObject<{
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type GQL_MutationResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Mutation'] = GQL_ResolversParentTypes['Mutation']> = ResolversObject<{
-  updateIgnoredWord?: Resolver<GQL_ResolversTypes['UpdateIgnoredWordResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateIgnoredWordArgs, 'input'>>;
+  updateExcludedStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateExcludedStatusArgs, 'input'>>;
+  updateIgnoredStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateIgnoredStatusArgs, 'input'>>;
+  updateKnownStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateKnownStatusArgs, 'input'>>;
   updateSeriesReadStatus?: Resolver<GQL_ResolversTypes['UpdateReadStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateSeriesReadStatusArgs, 'input'>>;
   updateWorkReadStatus?: Resolver<GQL_ResolversTypes['UpdateReadStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateWorkReadStatusArgs, 'input'>>;
 }>;
@@ -577,30 +620,34 @@ export type GQL_MutationResolvers<ContextType = GQL_Context, ParentType extends 
 export type GQL_QueryResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Query'] = GQL_ResolversParentTypes['Query']> = ResolversObject<{
   author?: Resolver<Maybe<GQL_ResolversTypes['Author']>, ParentType, ContextType, RequireFields<GQL_QueryAuthorArgs, 'input'>>;
   authorList?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType, Partial<GQL_QueryAuthorListArgs>>;
+  excludedWords?: Resolver<Array<GQL_ResolversTypes['ExcludedWord']>, ParentType, ContextType, Partial<GQL_QueryExcludedWordsArgs>>;
+  frequencyList?: Resolver<Array<GQL_ResolversTypes['FrequencyListWord']>, ParentType, ContextType, RequireFields<GQL_QueryFrequencyListArgs, 'input'>>;
+  glossary?: Resolver<Array<GQL_ResolversTypes['GlossaryWord']>, ParentType, ContextType, RequireFields<GQL_QueryGlossaryArgs, 'input'>>;
+  knownWords?: Resolver<Array<GQL_ResolversTypes['KnownWord']>, ParentType, ContextType, Partial<GQL_QueryKnownWordsArgs>>;
+  recommendedWords?: Resolver<Array<GQL_ResolversTypes['RecommendedWord']>, ParentType, ContextType, Partial<GQL_QueryRecommendedWordsArgs>>;
   series?: Resolver<Maybe<GQL_ResolversTypes['Series']>, ParentType, ContextType, RequireFields<GQL_QuerySeriesArgs, 'input'>>;
   seriesList?: Resolver<Array<GQL_ResolversTypes['Series']>, ParentType, ContextType, Partial<GQL_QuerySeriesListArgs>>;
-  word?: Resolver<Maybe<GQL_ResolversTypes['Word']>, ParentType, ContextType, RequireFields<GQL_QueryWordArgs, 'input'>>;
-  wordList?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_QueryWordListArgs>>;
   work?: Resolver<Maybe<GQL_ResolversTypes['Work']>, ParentType, ContextType, RequireFields<GQL_QueryWorkArgs, 'input'>>;
   workList?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType, Partial<GQL_QueryWorkListArgs>>;
 }>;
 
-export type GQL_SeriesResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Series'] = GQL_ResolversParentTypes['Series']> = ResolversObject<{
-  authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
+export type GQL_RecommendedWordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['RecommendedWord'] = GQL_ResolversParentTypes['RecommendedWord']> = ResolversObject<{
+  frequency?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
-  status?: Resolver<GQL_ResolversTypes['ReadStatus'], ParentType, ContextType>;
-  title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
-  volumes?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType>;
-  wordCount?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType, Partial<GQL_SeriesWordCountArgs>>;
-  words?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_SeriesWordsArgs>>;
+  info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type GQL_UpdateIgnoredWordResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['UpdateIgnoredWordResponse'] = GQL_ResolversParentTypes['UpdateIgnoredWordResponse']> = ResolversObject<{
-  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
-  ignored?: Resolver<Maybe<GQL_ResolversTypes['Boolean']>, ParentType, ContextType>;
-  message?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
+export type GQL_SeriesResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Series'] = GQL_ResolversParentTypes['Series']> = ResolversObject<{
+  authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
+  hapaxLegomena?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  learnableWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  status?: Resolver<GQL_ResolversTypes['ReadStatus'], ParentType, ContextType>;
+  title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  totalWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  uniqueWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  volumes?: Resolver<Array<GQL_ResolversTypes['Work']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -612,45 +659,43 @@ export type GQL_UpdateReadStatusResponseResolvers<ContextType = GQL_Context, Par
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type GQL_WordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Word'] = GQL_ResolversParentTypes['Word']> = ResolversObject<{
-  componentNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
-  entryNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
-  excluded?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
-  frequency?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
-  id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
-  ignored?: Resolver<Maybe<GQL_ResolversTypes['Boolean']>, ParentType, ContextType>;
-  info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
-  known?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
-  pageNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
-  sentenceNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
-  volumeNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+export type GQL_UpdateWordStatusResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['UpdateWordStatusResponse'] = GQL_ResolversParentTypes['UpdateWordStatusResponse']> = ResolversObject<{
+  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Work'] = GQL_ResolversParentTypes['Work']> = ResolversObject<{
   authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
+  hapaxLegomena?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
+  learnableWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   maxProgress?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   numberInSeries?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
   progress?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   series?: Resolver<Maybe<GQL_ResolversTypes['Series']>, ParentType, ContextType>;
   status?: Resolver<GQL_ResolversTypes['ReadStatus'], ParentType, ContextType>;
   title?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  totalWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   type?: Resolver<GQL_ResolversTypes['WorkType'], ParentType, ContextType>;
-  wordCount?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType, Partial<GQL_WorkWordCountArgs>>;
-  words?: Resolver<Array<GQL_ResolversTypes['Word']>, ParentType, ContextType, Partial<GQL_WorkWordsArgs>>;
+  uniqueWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type GQL_Resolvers<ContextType = GQL_Context> = ResolversObject<{
   Author?: GQL_AuthorResolvers<ContextType>;
+  ExcludedWord?: GQL_ExcludedWordResolvers<ContextType>;
+  FrequencyListWord?: GQL_FrequencyListWordResolvers<ContextType>;
+  GlossaryWord?: GQL_GlossaryWordResolvers<ContextType>;
   JSON?: GraphQLScalarType;
+  KnownWord?: GQL_KnownWordResolvers<ContextType>;
   Mutation?: GQL_MutationResolvers<ContextType>;
   Query?: GQL_QueryResolvers<ContextType>;
+  RecommendedWord?: GQL_RecommendedWordResolvers<ContextType>;
   Series?: GQL_SeriesResolvers<ContextType>;
-  UpdateIgnoredWordResponse?: GQL_UpdateIgnoredWordResponseResolvers<ContextType>;
   UpdateReadStatusResponse?: GQL_UpdateReadStatusResponseResolvers<ContextType>;
-  Word?: GQL_WordResolvers<ContextType>;
+  UpdateWordStatusResponse?: GQL_UpdateWordStatusResponseResolvers<ContextType>;
   Work?: GQL_WorkResolvers<ContextType>;
 }>;
 

@@ -7,9 +7,9 @@ export type Word = {
   }
   frequency?: number
   ignored?: boolean
-  volumeNumber?: number
+  volumeNumber?: number | null
   pageNumber?: number
   sentenceNumber?: number
   entryNumber?: number
-  componentNumber?: number
+  componentNumber?: number | null
 }

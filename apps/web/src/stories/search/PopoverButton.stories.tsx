@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import PopoverButton from '../../components/SearchFilterSort/PopoverButton'
 import { IconArrowsSort } from '@tabler/icons-react'
+
+import PopoverButton from '../../components/SearchFilterSort/PopoverButton'
 
 const meta = {
   title: 'Search/Popover button',

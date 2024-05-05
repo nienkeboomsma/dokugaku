@@ -12,8 +12,8 @@ export default function CurrentWorks({ works }: { works: CurrentWork[] }) {
           <ScaleLink href={`/works/${work.id}`} key={work.id}>
             <WorkCover
               coverPath={`/works/${work.id}/cover.webp`}
-              maxProgress={work.maxProgress}
-              progress={work.progress}
+              // maxProgress={work.maxProgress}
+              // progress={work.progress}
               width='7.5rem'
             />
           </ScaleLink>

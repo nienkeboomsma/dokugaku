@@ -25,8 +25,6 @@ export async function createContext({
   const token = req.headers.authorization || ''
   const userId = token.split(' ')[1]
 
-  console.log(userId)
-
   if (!userId) {
     // throw new GraphQLError('User is not authenticated', {
     //   extensions: {

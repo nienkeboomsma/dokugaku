@@ -1,19 +1,22 @@
 import { gql } from '@apollo/client'
 import { type GQL_ExistingSeriesQuery } from '@repo/graphql-types'
 
-import { getClient } from './ApolloClient'
-import { getLowestMissingNumber } from '../util/getLowestMissingNumber'
-import { isNumber } from '../types/utility'
-import { ExistingSeries } from '../types/ExistingSeries'
+import { getClient } from '../client/ApolloClient'
+import { getLowestMissingNumber } from '../../util/getLowestMissingNumber'
+import { isNumber } from '../../types/utility'
+import { ExistingSeries } from '../../types/ExistingSeries'
 
 const FORM_EXISTING_SERIES = gql`
   query ExistingSeries {
     seriesList {
+      id
       title
       volumes {
         authors {
+          id
           name
         }
+        id
         numberInSeries
         type
       }

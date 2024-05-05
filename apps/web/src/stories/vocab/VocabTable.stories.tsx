@@ -1,61 +1,55 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import VocabTable from '../../components/VocabTable/VocabTable'
-import { mockVocab } from '../../fixtures/vocab'
-import { useVocab } from '../../hooks/useVocab'
+import VocabTable, {
+  VocabTableType,
+} from '../../components/VocabTable/VocabTable'
+import { mockWorkInfo } from '../../fixtures/workInfo'
+import { mockSeriesInfo } from '../../fixtures/seriesInfo'
 
 // avoiding 'satisfies' fixes TS error with decorators (Storybook issue #24656)
-const meta: Meta<typeof VocabTable> = {
+const meta = {
   title: 'Vocab/Vocab table',
   component: VocabTable,
   parameters: {
     layout: 'fullscreen',
   },
-  decorators: [
-    (Story, context) => {
-      const { vocab, actions } = useVocab(context.args.vocab, {
-        isSeries: true,
-        seriesOrWorkId: 'someId',
-      })
-      return <Story args={{ ...context.args, actions, vocab }} />
-    },
-  ],
-}
+  // TODO: mock data successful and unsuccessful fetching
+  // decorators: [
+  //   (Story, context) => {
+  //     const { vocab, actions } = useVocab(context.args.vocab, {
+  //       isSeries: true,
+  //       seriesOrWorkId: 'someId',
+  //     })
+  //     return <Story args={{ ...context.args, actions, vocab }} />
+  //   },
+  // ],
+} satisfies Meta<typeof VocabTable>
 
 type Story = StoryObj<typeof meta>
 
 export const WithFurigana: Story = {
   args: {
     furigana: true,
-    type: 'frequencyList',
-    vocab: mockVocab,
+    seriesOrWork: mockWorkInfo,
+    type: VocabTableType.SeriesOrWork,
   },
 }
 
 export const WithoutFurigana: Story = {
   args: {
-    type: 'frequencyList',
-    vocab: mockVocab,
+    seriesOrWork: mockSeriesInfo,
+    type: VocabTableType.SeriesOrWork,
   },
 }
 export const KnownVocab: Story = {
   args: {
-    type: 'knownWords',
-    vocab: mockVocab,
+    type: VocabTableType.Known,
   },
 }
 
 export const ExcludedEverywhere: Story = {
   args: {
-    type: 'excludedEverywhere',
-    vocab: mockVocab,
-  },
-}
-
-export const NoRecords: Story = {
-  args: {
-    type: 'frequencyList',
-    vocab: [],
+    type: VocabTableType.Excluded,
   },
 }
 

@@ -1,43 +1,34 @@
-import { Word } from '../../types/Word'
-import { normalise } from '../../util/normaliseString'
+import { type Word } from '../../types/Word'
 import { isNumber } from '../../types/utility'
 import { VocabTableType } from './VocabTable'
 
-export default function filterVocab(
-  vocab: Word,
-  type: VocabTableType,
-  debouncedSearchValue: string,
+export default function filterVocab({
+  minFrequency,
+  showIgnored,
+  showUnignored,
+  type,
+  word,
+}: {
   minFrequency: string | number
-) {
-  if (type === 'frequencyList' && vocab.ignored === true) {
+  showIgnored: boolean
+  showUnignored: boolean
+  type: VocabTableType
+  word: Word
+}) {
+  if (type === VocabTableType.SeriesOrWork && !showIgnored && word.ignored) {
     return false
   }
 
-  if (type === 'excludedFromWork' && vocab.ignored === false) {
-    return false
-  }
-
-  if (
-    debouncedSearchValue !== '' &&
-    !vocab.info.kanji.some((kanji) =>
-      normalise(kanji).includes(normalise(debouncedSearchValue))
-    ) &&
-    !vocab.info.kana.some((kana) =>
-      normalise(kana).includes(normalise(debouncedSearchValue))
-    ) &&
-    !vocab.info.meaning.some((meaning) =>
-      meaning.some((synonym) =>
-        normalise(synonym).includes(normalise(debouncedSearchValue))
-      )
-    )
-  ) {
+  if (type === VocabTableType.SeriesOrWork && !showUnignored && !word.ignored) {
     return false
   }
 
   if (
-    isNumber(vocab.frequency) &&
+    (type === VocabTableType.SeriesOrWork ||
+      type === VocabTableType.Recommended) &&
+    isNumber(word.frequency) &&
     isNumber(minFrequency) &&
-    vocab.frequency < minFrequency
+    word.frequency < minFrequency
   ) {
     return false
   }

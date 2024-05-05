@@ -4,24 +4,23 @@ import VocabTable, {
   VocabTableMaxWidth,
   VocabTableType,
 } from '../VocabTable/VocabTable'
-import { type Word } from '../../types/Word'
-import { useVocab } from '../../hooks/useVocab'
-import PaperContainer from '../PaperContainer/PaperContainer'
+import PaperContainer, {
+  PaperContainerPadding,
+} from '../PaperContainer/PaperContainer'
 
 export default function WordsPage({
   heading,
   type,
-  initialVocab,
 }: {
   heading: string
-  type: VocabTableType
-  initialVocab: Word[]
+  type: VocabTableType.Excluded | VocabTableType.Known
 }) {
-  const { actions, vocab } = useVocab(initialVocab)
-
   return (
-    <PaperContainer heading={heading} maxWidth={VocabTableMaxWidth}>
-      <VocabTable actions={actions} furigana type={type} vocab={vocab} />
+    <PaperContainer
+      heading={heading}
+      maxWidth={`calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding})`}
+    >
+      <VocabTable furigana type={type} />
     </PaperContainer>
   )
 }

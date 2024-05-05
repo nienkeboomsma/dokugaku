@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useArgs } from '@storybook/preview-api'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 import ReadStatusSelector from '../../components/ReadStatusSelector'
-import { GQL_ReadStatus } from '@repo/graphql-types'
 
 const meta: Meta<typeof ReadStatusSelector> = {
   title: 'Work/Read status selector',

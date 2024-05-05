@@ -6,9 +6,7 @@ import { useMutation } from '@apollo/client'
 
 import classes from './SeriesPage.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
-import { type Word } from '../../types/Word'
-import { useVocab } from '../../hooks/useVocab'
-import { UPDATE_SERIES_READ_STATUS } from '../../graphql/updateReadStatus'
+import { UPDATE_SERIES_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
@@ -17,23 +15,14 @@ import AuthorList from '../AuthorList'
 import ReadStatusSelector from '../ReadStatusSelector'
 import Volumes from './Volumes'
 import SectionHeading from '../PaperContainer/SectionHeading'
-import VocabTable, { VocabTableMaxWidth } from '../VocabTable/VocabTable'
-import IgnoredWords from '../VocabTable/IgnoredWords'
+import VocabTable, {
+  VocabTableMaxWidth,
+  VocabTableType,
+} from '../VocabTable/VocabTable'
 
-export default function SeriesPage({
-  initialVocab,
-  series,
-}: {
-  initialVocab: Word[]
-  series?: SeriesInfo
-}) {
+export default function SeriesPage({ series }: { series?: SeriesInfo }) {
   // TODO: design a proper placeholder page
   if (!series) return 'Oops'
-
-  const { actions, vocab } = useVocab(initialVocab, {
-    isSeries: true,
-    seriesOrWorkId: series.id,
-  })
 
   const [seriesStatus, setSeriesStatus] = useState(series.status)
   const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
@@ -81,13 +70,11 @@ export default function SeriesPage({
         <div>
           <SectionHeading>Frequency list</SectionHeading>
           <VocabTable
-            actions={actions}
             furigana
-            type='frequencyList'
-            vocab={vocab}
+            seriesOrWork={series}
+            type={VocabTableType.SeriesOrWork}
           />
         </div>
-        <IgnoredWords actions={actions} furigana vocab={vocab} />
       </div>
     </PaperContainer>
   )

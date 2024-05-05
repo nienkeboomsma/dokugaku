@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+
 import WorkCover from '../../components/WorkCover'
 import { resizer } from '../../../.storybook/decorators/resizer'
 

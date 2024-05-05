@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+
 import AuthorList from '../../components/AuthorList'
 import { resizer } from '../../../.storybook/decorators/resizer'
 

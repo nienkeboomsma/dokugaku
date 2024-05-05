@@ -1,3 +1,7 @@
+# TODO: update to use output: standalone
+# https://github.com/vercel/turbo/issues/5462
+
+
 FROM node:21.7-alpine3.19 AS base
 # Update the package list and install libc6-compat. This package is often required for binary Node.js modules.
 RUN apk update && apk add --no-cache libc6-compat
@@ -53,10 +57,9 @@ COPY --from=pruner /app/out/full/ .
 # Use turbo to build the project, followed by pruning development dependencies to minimize the final image size.
 # Remove source files to further reduce the image size, keeping only the compiled output and necessary runtime files.
 
-# production
-# RUN turbo build --filter=web... && \
-#     --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional && \
-#     rm -rf ./**/*/src
+RUN turbo build --filter=web...
+RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
+RUN rm -rf ./**/*/src
 
 # Final production image
 # Start the final stage for the production-ready image.
@@ -73,8 +76,4 @@ COPY --from=builder --chown=nodejs:nodejs /app .
 
 WORKDIR /app/apps/web
 
-# production
-# CMD npm run start
-
-# development
-CMD npm run dev
+CMD npm run start

@@ -74,7 +74,7 @@ class WorkQuery {
     return sql``
   }
 
-  getQuery() {
+  runQuery() {
     return sql<WorkModel[]>`
       SELECT
         work.id,

@@ -1,7 +1,8 @@
+import { Dispatch, SetStateAction } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useArgs } from '@storybook/preview-api'
+
 import Search from '../../components/SearchFilterSort/Search'
-import { Dispatch, SetStateAction } from 'react'
 
 const meta = {
   title: 'Search/Search',

@@ -1,79 +1,139 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Box } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { IconMoodSad } from '@tabler/icons-react'
 import { DataTable, DataTableColumn } from 'mantine-datatable'
 
 import classes from './VocabTable.module.css'
+import { type SeriesInfo } from '../../types/SeriesInfo'
 import { type Word } from '../../types/Word'
-import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
+import { type WorkInfo } from '../../types/WorkInfo'
+import { useGetWordsQuery } from '../../hooks/useGetWordsQuery'
+import { useUpdateWordsMutation } from '../../hooks/useUpdateWordsMutation'
 import Reading from './Reading'
 import Meaning from './Meaning'
 import ActionButtons from './ActionButtons'
-import filterVocab from './filterVocab'
-import sortVocab from './sortVocab'
+import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import VocabFilter from './VocabFilter'
-import VocabSort from './VocabSort'
+import filterVocab from './filterVocab'
+import VocabSort, { ListType } from './VocabSort'
 
+const BATCH_SIZE = 500
 const MAX_WIDTH = '52rem'
 
-export type VocabTableType =
-  | 'frequencyList'
-  | 'recommendedVocab'
-  | 'knownWords'
-  | 'excludedFromWork'
-  | 'excludedEverywhere'
+export enum VocabTableType {
+  Excluded = 'excluded',
+  Known = 'known',
+  Recommended = 'recommended',
+  SeriesOrWork = 'seriesOrWork',
+}
 
-// eslint-disable-next-line no-unused-vars
-export type VocabAction = (id: Word['id']) => void
-
-export type VocabTableProps = {
-  actions: {
-    onExcludeWord: VocabAction
-    onIgnoreWord: VocabAction
-    onMarkWordAsKnown: VocabAction
-    onMarkWordAsUnknown: VocabAction
-    onUnexcludeWord: VocabAction
-    onUnignoreWord: VocabAction
-  }
+type VocabTablePropsCorpus = {
   furigana?: boolean
-  type: VocabTableType
-  vocab: Word[]
+  type:
+    | VocabTableType.Excluded
+    | VocabTableType.Known
+    | VocabTableType.Recommended
 }
 
-type TableProperties = {
-  columns: DataTableColumn<Word>[]
-  filter: boolean
-  sort: boolean
+type VocabTablePropsSeriesOrWork = {
+  furigana?: boolean
+  seriesOrWork: SeriesInfo | WorkInfo
+  type: VocabTableType.SeriesOrWork
 }
 
-export default function VocabTable({
-  actions,
-  furigana,
-  type,
-  vocab,
-}: VocabTableProps) {
-  const [records, setRecords] = useState(vocab)
+export type VocabTableProps =
+  | VocabTablePropsCorpus
+  | VocabTablePropsSeriesOrWork
+
+export default function VocabTable(props: VocabTableProps) {
+  const { furigana, type } = props
+  const seriesOrWork =
+    type === VocabTableType.SeriesOrWork ? props.seriesOrWork : undefined
+  const isSeries = seriesOrWork?.series
+  const isPartOfSeries = !isSeries && !!seriesOrWork?.seriesId
+
+  // TODO: save these preferences somewhere
+  const [showIgnored, setShowIgnored] = useState(false)
+  const [showUnignored, setShowUnignored] = useState(true)
+  const [minFrequency, setMinFrequency] = useState<string | number>(1)
+  const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
+  const [listType, setListType] = useState<ListType>(ListType.Frequency)
+  // TODO: implement search
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
-  // TODO: save these preferences somewhere
-  const [minFrequency, setMinFrequency] = useState<string | number>(3)
-  const [sortOrder, setSortOrder] = useState<'frequency' | 'firstOccurrence'>(
-    'frequency'
+
+  const scrollViewportRef = useRef<HTMLDivElement>(null)
+  const [vocab, setVocab] = useState<Word[]>([])
+  const [records, setRecords] = useState(vocab)
+
+  const queryVariables = {
+    isPartOfSeries,
+    isSeries,
+    limit: BATCH_SIZE,
+    offset: 0,
+    seriesId: isSeries ? seriesOrWork.id : seriesOrWork?.seriesId,
+    workId: isSeries ? undefined : seriesOrWork?.id,
+  }
+
+  const { data, getNextBatchOfWords, loading } = useGetWordsQuery(
+    listType,
+    type,
+    queryVariables,
+    debouncedSearchValue
   )
+
+  const loadMoreRecords = () => {
+    // TODO: loadMoreRecords continues to be triggered (and to show a spinner)
+    //       even if there are no more records to fetch
+    // TODO: if minFrequency = 3 (for example) and the last row where
+    //       minFrequency = 3 has been downloaded, loadMoreRecords should not
+    //       trigger anymore, even though there are more records it could fetch
+    // ----> maybe fetch BATCH_SIZE + 1 rows, using that last row to determine
+    //       the required info without forwarding it to the frontend?
+    getNextBatchOfWords(vocab.length)
+  }
+
+  useEffect(() => {
+    setRecords([])
+  }, [debouncedSearchValue, listType])
+
+  useEffect(() => {
+    setVocab(data ?? [])
+  }, [data])
 
   useEffect(() => {
     setRecords(
-      vocab
-        .filter((vocab) =>
-          filterVocab(vocab, type, debouncedSearchValue, minFrequency)
-        )
-        .sort((vocabA, vocabB) => sortVocab(vocabA, vocabB, sortOrder))
+      vocab.filter((word) =>
+        filterVocab({
+          minFrequency: debouncedMinFrequency,
+          showIgnored,
+          showUnignored,
+          type,
+          word,
+        })
+      )
     )
-  }, [vocab, debouncedSearchValue, minFrequency, sortOrder])
+  }, [vocab, debouncedMinFrequency, showIgnored, showUnignored])
 
+  const {
+    handleExcludeWord,
+    handleUnexcludeWord,
+    handleIgnoredWord,
+    handleUnignoredWord,
+    handleKnownWord,
+    handleUnknownWord,
+  } = useUpdateWordsMutation(seriesOrWork)
+
+  // TODO: add 'page' column for manga glossaries (and maybe a minPageNumber
+  //       filter to go with it?)
+  // TODO: in that case, allow glossaries for series after all, and allow to
+  //       filter by minVolumeNumber and minPagenumber
+  // TODO: give novels a pageNumber that corresponds to a specific block of
+  //       text that could eventually be linked to
   const allColumns: DataTableColumn<Word>[] = [
     {
       accessor: 'reading',
@@ -93,15 +153,18 @@ export default function VocabTable({
       accessor: 'actions',
       title: '',
       textAlign: 'right',
-      render: (vocab: Word) =>
+      render: (wordInRow: Word) =>
         ActionButtons({
-          onExcludeWord: () => actions.onExcludeWord(vocab.id),
-          onIgnoreWord: () => actions.onIgnoreWord(vocab.id),
-          onMarkWordAsKnown: () => actions.onMarkWordAsKnown(vocab.id),
-          onMarkWordAsUnknown: () => actions.onMarkWordAsUnknown(vocab.id),
-          onUnexcludeWord: () => actions.onUnexcludeWord(vocab.id),
-          onUnignoreWord: () => actions.onUnignoreWord(vocab.id),
-          type: type,
+          // TODO: show a toast if it doesn't work?
+          onExcludeWord: () => handleExcludeWord(wordInRow.id),
+          onUnexcludeWord: () => handleUnexcludeWord(wordInRow.id),
+          onIgnoreWord: () => handleIgnoredWord(wordInRow.id),
+          onUnignoreWord: () => handleUnignoredWord(wordInRow.id),
+          onMarkWordAsKnown: () => handleKnownWord(wordInRow.id),
+          onMarkWordAsUnknown: () => handleUnknownWord(wordInRow.id),
+          isSeries,
+          vocabTableType: type,
+          wordInRow,
         }),
     },
   ]
@@ -110,32 +173,11 @@ export default function VocabTable({
     (column) => column.accessor !== 'frequency'
   )
 
-  const tableProperties: Record<VocabTableType, TableProperties> = {
-    frequencyList: {
-      columns: allColumns,
-      filter: true,
-      sort: true,
-    },
-    recommendedVocab: {
-      columns: allColumns,
-      filter: true,
-      sort: false,
-    },
-    knownWords: {
-      columns: nonFrequencyColumns,
-      filter: false,
-      sort: false,
-    },
-    excludedFromWork: {
-      columns: nonFrequencyColumns,
-      filter: false,
-      sort: true,
-    },
-    excludedEverywhere: {
-      columns: nonFrequencyColumns,
-      filter: false,
-      sort: false,
-    },
+  const columnsPerType: Record<VocabTableType, DataTableColumn<Word>[]> = {
+    [VocabTableType.SeriesOrWork]: allColumns,
+    [VocabTableType.Recommended]: allColumns,
+    [VocabTableType.Known]: nonFrequencyColumns,
+    [VocabTableType.Excluded]: nonFrequencyColumns,
   }
 
   return (
@@ -145,18 +187,25 @@ export default function VocabTable({
     >
       <SearchFilterSort
         filterContent={
-          tableProperties[type].filter && (
+          (type === VocabTableType.SeriesOrWork ||
+            type === VocabTableType.Recommended) && (
             <VocabFilter
               minFrequency={minFrequency}
               setMinFrequency={setMinFrequency}
+              setShowIgnored={setShowIgnored}
+              setShowUnignored={setShowUnignored}
+              showIgnored={showIgnored}
+              showUnignored={showUnignored}
+              vocabTableType={type}
             />
           )
         }
         searchValue={searchValue}
         setSearchValue={setSearchValue}
         sortContent={
-          tableProperties[type].sort && (
-            <VocabSort sortOrder={sortOrder} setSortOrder={setSortOrder} />
+          type === VocabTableType.SeriesOrWork &&
+          !isSeries && (
+            <VocabSort listType={listType} setListType={setListType} />
           )
         }
       />
@@ -164,9 +213,15 @@ export default function VocabTable({
       <DataTable
         borderRadius='sm'
         classNames={{ table: classes.table }}
-        columns={tableProperties[type].columns}
+        columns={columnsPerType[type]}
+        fetching={loading}
         fz='md'
-        minHeight={160}
+        height='75vh'
+        idAccessor={(word: Word) =>
+          listType === ListType.Glossary
+            ? `${word.id}-${word.pageNumber}-${word.sentenceNumber}-${word.entryNumber}`
+            : word.id
+        }
         noHeader={records.length === 0 ? true : false}
         noRecordsIcon={
           <Box className={classes.noRecordsBox}>
@@ -174,7 +229,9 @@ export default function VocabTable({
           </Box>
         }
         noRecordsText='Nothing to display'
+        onScrollToBottom={loadMoreRecords}
         records={records}
+        scrollViewportRef={scrollViewportRef}
         striped
         withRowBorders={false}
         withTableBorder

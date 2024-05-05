@@ -1,4 +1,4 @@
-import { GQL_WordCountType, type GQL_Resolvers } from '@repo/graphql-types'
+import { type GQL_Resolvers } from '@repo/graphql-types'
 
 const resolvers: GQL_Resolvers = {
   Query: {
@@ -39,45 +39,27 @@ const resolvers: GQL_Resolvers = {
     },
   },
   Series: {
+    learnableWords: async (parent, _, { userId, dataSources: { word } }) => {
+      return word.getLearnableWordCount({
+        isSeries: true,
+        seriesId: parent.id,
+        userId,
+      })
+    },
     volumes: async (parent, _, { userId, dataSources: { work } }) => {
       return work.getWorks({
         userId,
         workIds: parent.workIds,
       })
     },
-    wordCount: async (
-      parent,
-      { input },
-      { userId, dataSources: { series, word } }
-    ) => {
-      const type = input?.type ?? GQL_WordCountType.Total
-
-      if (type === GQL_WordCountType.Learnable) {
-        const [data] = await word.getWords({
-          excluded: false,
-          ignored: false,
-          known: false,
-          rowCountOnly: true,
-          seriesIdInWhichIgnored: parent.id,
-          userId,
-          workIds: parent.workIds,
-        })
-        return data.count
-      }
-
-      return series.getSeriesWordCount({
-        seriesId: parent.id,
-        type,
-      })
-    },
-    words: (parent, { input }, { userId, dataSources: { word } }) => {
-      return word.getWords({
-        ...input,
-        seriesIdInWhichIgnored: parent.id,
-        userId,
-        workIds: parent.workIds,
-      })
-    },
+    // words: (parent, { input }, { userId, dataSources: { word } }) => {
+    //   return word.getWords({
+    //     ...input,
+    //     seriesIdInWhichIgnored: parent.id,
+    //     userId,
+    //     workIds: parent.workIds,
+    //   })
+    // },
   },
 }
 

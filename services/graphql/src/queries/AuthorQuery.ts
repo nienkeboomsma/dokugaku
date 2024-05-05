@@ -35,7 +35,7 @@ class AuthorQuery {
     }
   }
 
-  getQuery() {
+  runQuery() {
     return sql<AuthorModel[]>`
       SELECT 
         id,

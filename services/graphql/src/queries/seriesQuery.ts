@@ -59,7 +59,7 @@ class SeriesQuery {
     return sql``
   }
 
-  getQuery() {
+  runQuery() {
     return sql<SeriesModel[]>`
       SELECT 
         series.id, 

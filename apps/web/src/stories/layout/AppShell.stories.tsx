@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+
 import AppShell from '../../components/AppShell/AppShell'
 
 const meta = {

@@ -5,8 +5,8 @@ import {
   GQL_ReadStatus,
 } from '@repo/graphql-types'
 
-import { getClient } from './ApolloClient'
-import { type CurrentWork } from '../types/CurrentWork'
+import { getClient } from '../client/ApolloClient'
+import { type CurrentWork } from '../../types/CurrentWork'
 
 const CURRENT_WORKS = gql`
   query CurrentWorks($input: WorkListInput) {

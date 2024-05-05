@@ -7,6 +7,7 @@ export default function SeriesInput({
   findVolumeNumberBySeriesTitle,
   uploadForm,
 }: {
+  // eslint-disable-next-line no-unused-vars
   findVolumeNumberBySeriesTitle: (seriesTitle: string) => string
   uploadForm: UploadForm
 }) {

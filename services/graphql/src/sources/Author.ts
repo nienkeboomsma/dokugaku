@@ -6,7 +6,7 @@ class Author {
       authorId: input.authorId,
       return: 'single',
     })
-    const [author] = await authorQuery.getQuery()
+    const [author] = await authorQuery.runQuery()
     return author ?? null
   }
 
@@ -20,14 +20,14 @@ class Author {
         authorIds: input.authorIds,
         return: 'multiple' as const,
       })
-      const authors = await authorQuery.getQuery()
+      const authors = await authorQuery.runQuery()
       return authors ?? []
     }
 
     const authorQuery = new AuthorQuery({
       return: 'all' as const,
     })
-    const authors = await authorQuery.getQuery()
+    const authors = await authorQuery.runQuery()
     return authors ?? []
   }
 }

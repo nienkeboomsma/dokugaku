@@ -1,15 +1,17 @@
 type Work {
   authors: [Author!]!
+  hapaxLegomena: Int!
   id: ID!
+  learnableWords: Int!
   maxProgress: Int!
   numberInSeries: Int
   progress: Int!
   series: Series
   status: ReadStatus!
   title: String!
+  totalWords: Int!
   type: WorkType!
-  wordCount(input: WordCountInput): Int!
-  words(input: SubQueryWordListInput): [Word!]!
+  uniqueWords: Int!
 }
 
 input WorkInput {

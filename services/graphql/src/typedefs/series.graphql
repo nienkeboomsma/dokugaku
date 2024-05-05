@@ -1,10 +1,12 @@
 type Series {
   authors: [Author!]!
+  hapaxLegomena: Int!
   id: ID!
+  learnableWords: Int!
   status: ReadStatus!
   title: String!
-  wordCount(input: WordCountInput): Int!
-  words(input: SubQueryWordListInput): [Word!]!
+  totalWords: Int!
+  uniqueWords: Int!
   volumes: [Work!]!
 }
 

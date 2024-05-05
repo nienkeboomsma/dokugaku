@@ -68,9 +68,12 @@ function ProgressLabel({
 export default function WorkCard({
   workCardInfo,
 }: {
-  workCardInfo: WorkCardInfo
+  workCardInfo?: WorkCardInfo
 }) {
   const theme = useMantineTheme()
+
+  // TODO: make a proper dummy workCard
+  if (!workCardInfo) return 'Oops'
 
   return (
     <Paper

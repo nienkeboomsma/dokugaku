@@ -51,10 +51,18 @@ Please note that images inside of `.md` or `.html` files will be stripped during
 
 # Managing vocab
 
-## Ignored words
+Words can be marked as excluded, ignored and known. In all three cases they will be filtered out of frequency lists, glossaries and recommended vocab, but they are intended for different use cases.
 
-// per work, per series
+## Excluded
 
-## Known words
+Excluding words is intended to be used for words that have no business being in a frequency list or glossary. This includes particles (e.g. が, わよ), grammatical constructs (e.g. そう, たい) and exclamations (e.g. え, あー). Marking a word as excluded means it will be filtered out of _all_ frequency lists and glossaries and will not count toward the frequency score in the list of recommended vocab.
 
-// upload from Anki
+## Ignored
+
+Ignoring words is intended to be used for words that have been spuriously parsed. In most cases this will be names (e.g. 臼井 儀人 being interpreted as four individual single-kanji words), but it can also happen when a word is written is an unusual script (e.g. カゼ being parsed as 'casein' instead of the intended 風邪 'cold'). Marking a word as ignored is work or series specific; it will only be filtered out of the frequency lists and glossaries of the same work (and of other works within the same series) and instances in unrelated works will still count towards the frequency score in the list of recommended vocab.
+
+## Known
+
+Self-explanatory. These words are filtered out from _all_ frequency lists, glossaries and recommended vocab because they are (fortunately!) no longer worth learning. Marking these words manually would be cumbersome, which is why there is an option to upload a list of known words and have them automatically marked as known.
+
+// TODO: upload from Anki
