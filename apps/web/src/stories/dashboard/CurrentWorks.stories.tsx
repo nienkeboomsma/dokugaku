@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import CurrentWorks from '../../components/DashboardPage/CurrentWorks'
-import { mockCurrentWorks } from '../../fixtures/currentWorks'
+import { mockCurrentWorks } from '../../../.storybook/fixtures/currentWorks'
 
 const meta = {
   title: 'Dashboard/Current works',
@@ -10,9 +10,15 @@ const meta = {
 
 type Story = StoryObj<typeof meta>
 
-export const CurrentlyReading: Story = {
+export const Default: Story = {
   args: {
     works: mockCurrentWorks,
+  },
+}
+
+export const NoData: Story = {
+  args: {
+    works: undefined,
   },
 }
 

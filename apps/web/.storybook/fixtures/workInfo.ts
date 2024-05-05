@@ -1,6 +1,6 @@
 import { GQL_ReadStatus } from '@repo/graphql-types'
 
-import { type WorkInfo } from '../types/WorkInfo'
+import { type WorkInfo } from '../../src/types/WorkInfo'
 
 export const mockWorkInfo: WorkInfo = {
   authors: ['臼井 儀人'],

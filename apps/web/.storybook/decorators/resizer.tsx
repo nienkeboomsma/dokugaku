@@ -1,3 +1,5 @@
+import React from 'react'
+
 type Options = {
   contentMaxWidth?: string
   contentMinWidth?: string

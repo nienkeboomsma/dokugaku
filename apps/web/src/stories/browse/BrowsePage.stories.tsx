@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import BrowsePage from '../../components/BrowsePage/BrowsePage'
-import { mockWorkCards } from '../../fixtures/workCards'
+import { mockWorkCards } from '../../../.storybook/fixtures/workCards'
 
 const meta = {
   title: 'Browse/Page',

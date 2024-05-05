@@ -1,7 +1,8 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { offsetLimitPagination } from '@apollo/client/utilities'
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc'
+
+import { cache } from '../cache/cache'
 
 export const { getClient } = registerApolloClient(() => {
   const httpLink = createHttpLink({
@@ -21,39 +22,7 @@ export const { getClient } = registerApolloClient(() => {
   })
 
   return new ApolloClient({
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            excludedWords: offsetLimitPagination(['input', ['searchString']]),
-            frequencyList: offsetLimitPagination([
-              'input',
-              ['searchString', 'seriesId', 'workId'],
-            ]),
-            glossary: offsetLimitPagination([
-              'input',
-              ['searchString', 'workId'],
-            ]),
-            knownWords: offsetLimitPagination(['input', ['searchString']]),
-            recommendedWords: offsetLimitPagination([
-              'input',
-              ['searchString'],
-            ]),
-          },
-        },
-        // The 'id' property is not a unique identifier, as each distinct word
-        // can occur more than once within a glossary.
-        GlossaryWord: {
-          keyFields: [
-            'volumeNumber',
-            'pageNumber',
-            'sentenceNumber',
-            'entryNumber',
-            'componentNumber',
-          ],
-        },
-      },
-    }),
+    cache: new InMemoryCache(cache),
     link: authLink.concat(httpLink),
     connectToDevTools: true,
   })

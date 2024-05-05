@@ -2,13 +2,14 @@
 
 import { ApolloLink, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { offsetLimitPagination } from '@apollo/client/utilities'
 import {
   ApolloNextAppProvider,
   NextSSRInMemoryCache,
   NextSSRApolloClient,
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr'
+
+import { cache } from '../cache/cache'
 
 const isServer = () => typeof window === `undefined`
 
@@ -37,39 +38,7 @@ export function makeClient() {
   })
 
   return new NextSSRApolloClient({
-    cache: new NextSSRInMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            excludedWords: offsetLimitPagination(['input', ['searchString']]),
-            frequencyList: offsetLimitPagination([
-              'input',
-              ['searchString', 'seriesId', 'workId'],
-            ]),
-            glossary: offsetLimitPagination([
-              'input',
-              ['searchString', 'workId'],
-            ]),
-            knownWords: offsetLimitPagination(['input', ['searchString']]),
-            recommendedWords: offsetLimitPagination([
-              'input',
-              ['searchString'],
-            ]),
-          },
-        },
-        // The 'id' property is not a unique identifier, as each distinct word
-        // can occur more than once within a glossary.
-        GlossaryWord: {
-          keyFields: [
-            'volumeNumber',
-            'pageNumber',
-            'sentenceNumber',
-            'entryNumber',
-            'componentNumber',
-          ],
-        },
-      },
-    }),
+    cache: new NextSSRInMemoryCache(cache),
     link: isServer()
       ? ApolloLink.from([
           new SSRMultipartLink({

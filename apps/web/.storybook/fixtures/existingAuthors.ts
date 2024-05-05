@@ -1,4 +1,4 @@
-import { ExistingAuthors } from '../types/ExistingAuthors'
+import { ExistingAuthors } from '../../src/types/ExistingAuthors'
 
 export const mockExistingAuthors: ExistingAuthors[] = [
   new Set(['鳥山 明', 'オオイシ ナホ']),

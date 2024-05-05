@@ -1,5 +1,6 @@
 import { GQL_ReadStatus } from '@repo/graphql-types'
-import { type WorkCardInfo } from '../types/WorkCardInfo'
+
+import { type WorkCardInfo } from '../../src/types/WorkCardInfo'
 
 export const mockWorkCards: WorkCardInfo[] = [
   {

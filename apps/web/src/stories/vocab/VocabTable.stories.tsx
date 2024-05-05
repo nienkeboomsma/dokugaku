@@ -3,26 +3,35 @@ import type { Meta, StoryObj } from '@storybook/react'
 import VocabTable, {
   VocabTableType,
 } from '../../components/VocabTable/VocabTable'
-import { mockWorkInfo } from '../../fixtures/workInfo'
-import { mockSeriesInfo } from '../../fixtures/seriesInfo'
+import { ApolloMockedProvider } from '../../../.storybook/decorators/mocks'
+import { excludedWords } from '../../../.storybook/mocks/excludedWords'
+import { frequencyList } from '../../../.storybook/mocks/frequencyList'
+import { glossary } from '../../../.storybook/mocks/glossary'
+import { knownWords } from '../../../.storybook/mocks/knownWords'
+import { updateExcludedStatus } from '../../../.storybook/mocks/updateExcludedStatus'
+import { updateIgnoredStatus } from '../../../.storybook/mocks/updateIgnoredStatus'
+import { updateKnownStatus } from '../../../.storybook/mocks/updateKnownStatus'
+import { mockWorkInfo } from '../../../.storybook/fixtures/workInfo'
+import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
 
 // avoiding 'satisfies' fixes TS error with decorators (Storybook issue #24656)
 const meta = {
   title: 'Vocab/Vocab table',
   component: VocabTable,
+  decorators: [
+    ApolloMockedProvider([
+      excludedWords,
+      frequencyList,
+      glossary,
+      knownWords,
+      updateExcludedStatus,
+      updateIgnoredStatus,
+      updateKnownStatus,
+    ]),
+  ],
   parameters: {
     layout: 'fullscreen',
   },
-  // TODO: mock data successful and unsuccessful fetching
-  // decorators: [
-  //   (Story, context) => {
-  //     const { vocab, actions } = useVocab(context.args.vocab, {
-  //       isSeries: true,
-  //       seriesOrWorkId: 'someId',
-  //     })
-  //     return <Story args={{ ...context.args, actions, vocab }} />
-  //   },
-  // ],
 } satisfies Meta<typeof VocabTable>
 
 type Story = StoryObj<typeof meta>

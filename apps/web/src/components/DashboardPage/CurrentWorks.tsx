@@ -4,7 +4,10 @@ import PaperContainer from '../PaperContainer/PaperContainer'
 import ScaleLink from '../ScaleLink'
 import WorkCover from '../WorkCover'
 
-export default function CurrentWorks({ works }: { works: CurrentWork[] }) {
+export default function CurrentWorks({ works }: { works?: CurrentWork[] }) {
+  // TODO: add a placeholder
+  if (!works) return 'Oops'
+
   return (
     <PaperContainer heading='Currently reading' maxWidth='100%'>
       <div className={classes.worksContainer}>

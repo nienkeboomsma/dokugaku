@@ -1,4 +1,4 @@
-import { type Word } from '../types/Word'
+import { type Word } from '../../src/types/Word'
 
 export const mockVocab: Word[] = [
   {

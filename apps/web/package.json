@@ -27,6 +27,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@apollo/react-testing": "^4.0.0",
     "@chromatic-com/storybook": "^1.2.25",
     "@next/eslint-plugin-next": "^14.1.1",
     "@repo/eslint-config": "workspace:*",

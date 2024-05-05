@@ -4,7 +4,7 @@ import WorkCard, {
   WorkCardMaxWidth,
   WorkCardMinWidthMobile,
 } from '../../components/BrowsePage/WorkCard'
-import { mockWorkCards } from '../../fixtures/workCards'
+import { mockWorkCards } from '../../../.storybook/fixtures/workCards'
 import { resizer } from '../../../.storybook/decorators/resizer'
 
 const meta = {

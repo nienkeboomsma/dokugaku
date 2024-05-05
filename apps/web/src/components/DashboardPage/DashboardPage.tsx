@@ -10,7 +10,7 @@ import VocabTable, {
   VocabTableType,
 } from '../VocabTable/VocabTable'
 
-export default function DashboardPage({ works }: { works: CurrentWork[] }) {
+export default function DashboardPage({ works }: { works?: CurrentWork[] }) {
   return (
     <div
       style={{

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import ActionButtons from '../../components/VocabTable/ActionButtons'
 import { VocabTableType } from '../../components/VocabTable/VocabTable'
-import { mockVocab } from '../../fixtures/vocab'
+import { mockVocab } from '../../../.storybook/fixtures/vocab'
 import { Word } from '../../types/Word'
 
 const meta = {

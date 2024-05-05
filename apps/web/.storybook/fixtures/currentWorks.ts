@@ -1,4 +1,4 @@
-import { CurrentWork } from '../types/CurrentWork'
+import { CurrentWork } from '../../src/types/CurrentWork'
 
 export const mockCurrentWorks: CurrentWork[] = [
   {

@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { GQL_WorkType } from '@repo/graphql-types'
 
 import UploadForm from '../../components/UploadPage/UploadForm'
-import { mockExistingAuthors } from '../../fixtures/existingAuthors'
-import { mockExistingSeries } from '../../fixtures/existingSeries'
+import { mockExistingAuthors } from '../../../.storybook/fixtures/existingAuthors'
+import { mockExistingSeries } from '../../../.storybook/fixtures/existingSeries'
 
 // avoiding 'satisfies' fixes TS error with decorators (Storybook issue #24656)
 const meta: Meta<typeof UploadForm> = {
@@ -36,7 +36,7 @@ export const Novel: Story = {
   },
 }
 
-export const WithoutExistingData: Story = {
+export const NoData: Story = {
   args: {
     initialExistingAuthors: new Set(),
     initialExistingSeries: [],

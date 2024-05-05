@@ -1,6 +1,6 @@
 import { GQL_ReadStatus } from '@repo/graphql-types'
 
-import { type SeriesInfo } from '../types/SeriesInfo'
+import { type SeriesInfo } from '../../src/types/SeriesInfo'
 
 export const mockSeriesInfo: SeriesInfo = {
   authors: ['臼井 儀人'],

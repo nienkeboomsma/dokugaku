@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import Volumes from '../../components/SeriesPage/Volumes'
 import { resizer } from '../../../.storybook/decorators/resizer'
-import { mockSeriesInfo } from '../../fixtures/seriesInfo'
+import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
 
 const meta = {
   title: 'Series/Volumes',

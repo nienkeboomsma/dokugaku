@@ -1,6 +1,6 @@
 import { GQL_WorkType } from '@repo/graphql-types'
 
-import { ExistingSeries } from '../types/ExistingSeries'
+import { ExistingSeries } from '../../src/types/ExistingSeries'
 
 export const mockExistingSeries: ExistingSeries[] = [
   [
