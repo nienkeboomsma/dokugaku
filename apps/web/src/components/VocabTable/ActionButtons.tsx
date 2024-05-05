@@ -15,6 +15,7 @@ import { type Word } from '../../types/Word'
 type VocabAction = () => void
 
 type ActionButtonsProps = {
+  isPartOfSeries?: boolean
   isSeries?: boolean
   onExcludeWord: VocabAction
   onIgnoreWord: VocabAction
@@ -52,8 +53,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
             icon={IconEyeOff}
             iconColor='blue'
             onClick={props.onIgnoreWord}
-            // TODO: show either 'work' or 'series
-            tooltipLabel={`Exclude from this ${props.isSeries ? 'series' : 'work'}`}
+            tooltipLabel={`Exclude from this ${props.isSeries || props.isPartOfSeries ? 'series' : 'work'}`}
           />
         )}
       {props.vocabTableType === VocabTableType.SeriesOrWork &&
@@ -62,8 +62,7 @@ export default function ActionButtons(props: ActionButtonsProps) {
             icon={IconEye}
             iconColor='blue'
             onClick={props.onUnignoreWord}
-            // TODO: show either 'work' or 'series
-            tooltipLabel={`Include in this ${props.isSeries ? 'series' : 'work'}`}
+            tooltipLabel={`Include in this ${props.isSeries || props.isPartOfSeries ? 'series' : 'work'}`}
           />
         )}
       {(props.vocabTableType === VocabTableType.SeriesOrWork ||

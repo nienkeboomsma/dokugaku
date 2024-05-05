@@ -62,7 +62,6 @@ export default function VocabTable(props: VocabTableProps) {
   const [minFrequency, setMinFrequency] = useState<string | number>(1)
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
   const [listType, setListType] = useState<ListType>(ListType.Frequency)
-  // TODO: implement search
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 
@@ -162,6 +161,7 @@ export default function VocabTable(props: VocabTableProps) {
           onUnignoreWord: () => handleUnignoredWord(wordInRow.id),
           onMarkWordAsKnown: () => handleKnownWord(wordInRow.id),
           onMarkWordAsUnknown: () => handleUnknownWord(wordInRow.id),
+          isPartOfSeries,
           isSeries,
           vocabTableType: type,
           wordInRow,
