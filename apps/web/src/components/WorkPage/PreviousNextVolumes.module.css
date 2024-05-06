@@ -1,15 +1,23 @@
 .container {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-  margin-top: -0.25rem;
+  margin-bottom: 0.75rem;
+  margin-top: -0.125rem;
   width: 100%;
 }
 
 .previous {
   margin-right: auto;
+
+  & > span {
+    font-size: rem(15);
+  }
 }
 
 .next {
   margin-left: auto;
+
+  & > span {
+    font-size: rem(15);
+  }
 }

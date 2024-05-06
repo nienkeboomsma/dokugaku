@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Box } from '@mantine/core'
-import { useDebouncedValue } from '@mantine/hooks'
+import { useDebouncedValue, useLocalStorage } from '@mantine/hooks'
 import { IconMoodSad } from '@tabler/icons-react'
 import { DataTable, DataTableColumn } from 'mantine-datatable'
 
@@ -56,12 +56,23 @@ export default function VocabTable(props: VocabTableProps) {
   const isSeries = seriesOrWork?.isSeries
   const isPartOfSeries = !isSeries && !!seriesOrWork?.seriesId
 
-  // TODO: save these preferences somewhere
-  const [showIgnored, setShowIgnored] = useState(false)
-  const [showUnignored, setShowUnignored] = useState(true)
-  const [minFrequency, setMinFrequency] = useState<string | number>(1)
+  const [showIgnored, setShowIgnored] = useLocalStorage({
+    defaultValue: false,
+    key: 'DOKUGAKU_SHOW_IGNORED',
+  })
+  const [showUnignored, setShowUnignored] = useLocalStorage({
+    defaultValue: true,
+    key: 'DOKUGAKU_SHOW_UNIGNORED',
+  })
+  const [minFrequency, setMinFrequency] = useLocalStorage<string | number>({
+    defaultValue: 1,
+    key: 'DOKUGAKU_MINIMUM_FREQUENCY',
+  })
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
-  const [listType, setListType] = useState<ListType>(ListType.Frequency)
+  const [listType, setListType] = useLocalStorage({
+    defaultValue: ListType.Frequency,
+    key: 'DOKUGAKU_LIST_TYPE',
+  })
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useDebouncedValue } from '@mantine/hooks'
+import { useDebouncedValue, useLocalStorage } from '@mantine/hooks'
 
 import classes from './BrowsePage.module.css'
 import { type WorkCardInfo } from '../../types/WorkCardInfo'
@@ -23,9 +23,15 @@ export default function BrowsePage({
   const [workCards, setWorkCards] = useState(initialWorkCards)
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
-  // TODO: save these preferences somewhere
-  const [showFinished, setShowFinished] = useState(true)
-  const [showAbandoned, setShowAbandoned] = useState(true)
+
+  const [showFinished, setShowFinished] = useLocalStorage({
+    defaultValue: true,
+    key: 'DOKUGAKU_SHOW_FINISHED',
+  })
+  const [showAbandoned, setShowAbandoned] = useLocalStorage({
+    defaultValue: true,
+    key: 'DOKUGAKU_SHOW_ABANDONED',
+  })
 
   useEffect(() => {
     setWorkCards(
