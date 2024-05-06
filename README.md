@@ -1,10 +1,20 @@
+# What is it?
+
+Dokugaku is a tool to help Japanese learners read manga and novels.
+
+You upload the manga and novels you want to read and it will show you (1) what percentage of the words in that work you already know and (2) what words are most common in that particular work, in the series it belongs to or across all uploaded works. This way you can make an informed decision about what works to read first and what words would be most useful to learn.
+
 # Scope of this project
 
-This project has been expressly designed to be used locally by a single user (it is called *Doku*gaku after all). While it would technically be possible to implement multi-user support, I would strongly advise against it due to the risk of copyright infringement.
+This project is expressly intended to be used locally by a single user (it is called *Doku*gaku after all). While the backend has been designed with multiple users in mind, I would strongly advise against it due to the risk of copyright infringement.
 
 # How to install
 
-Create a `.env` file in the `dokugaku` root directory in line with the following example:
+1. Make sure you have [Docker](https://docs.docker.com/engine/install/) installed.
+
+2. Click on the green 'Code' button in the top right and download the ZIP file.
+
+3. Use your text editor of choice to create a file named `.env` inside of the `dokugaku` folder you just unzipped. It should contain the following information (except you replace `password` with your own unique passwords of course!):
 
 ```
 DB_PG_PASSWORD=password
@@ -17,37 +27,59 @@ MOKURO_PORT=3003
 WORK_PROCESSOR_PORT=3004
 ```
 
-Then use `docker compose up` to spin up the containers.
+4. Use your terminal of choice to navigate to the `dokugaku` folder and run `docker compose up`.
+
+5. Go to `http://localhost:3000` in your browser.
 
 # Uploading files
 
 ## Manga
 
-### Cover
+### File formats
 
-When uploading manga, please note that the first image will be used as the cover image.
+The manga page files can be `.jpg`, `.jpeg`, `.png` and `.webp`.
 
 ### Page numbers
 
 When manga files are uploaded each vocab item is assigned to the page on which it was found. It is assumed that the (alphabetically) first image is page 1, the second image is page 2, etc. Unfortunately this assumption is not always correct, so it is worthwhile to check this before you upload the images. It will sometimes be necessary to remove some of the first few pages to make the page numbers line up properly.
 
+### Cover
+
+The alphabetically first image will be used as the cover image.
+
 ### Pre-mokuro'd manga
 
-It might make more sense to run Mokuro on your host machine instead of leaving it to the mokuro container (on my own machine it's about 8 times as fast). In that case, check the relevant checkbox and upload the `.json` files along with the images.
+It might make more sense to run Mokuro on your host machine instead of leaving it to the mokuro container (on my own machine it is significantly faster). In that case, check the relevant checkbox and upload the `.json` files along with the images.
 
 ## Novels
 
-### Multiple files
+### File formats
 
-It is possible to upload a novel across multiple files (for example, when using Calibre's edit function to extract a novel's `.html` files). Do make sure the files are named in alphabetically ascending order, otherwise the novel will be scrambled.
+The cover image can be `.jpg`, `.jpeg`, `.png` or `.webp`. The text files can be `.html`, `.md` and `.txt`.
+
+### Text formatting
+
+Uploaded texts will be converted to a barebones `.html` file containing only headers, paragraphs and ruby. There are some things to keep in mind:
+
+#### Multiple files
+
+It is possible to upload a novel across multiple files (for example, when using Calibre's edit function to extract a novel's `.html` files). These separate files will automatically be stitched together. It is important that they are named in alphabetically ascending order, otherwise they will be stitched together in the wrong order.
+
+### Paragraphs
+
+In `.html` files paragraphs can be clearly distinguished by their `p` tags. In `.md` files paragraphs must be separated by a blank line. In `.txt` files a single newline is sufficient, but a blank line works as well.
+
+#### Title
+
+An `h1` header will automatically be inserted based on the title provided in the upload form. It is therefore not necessary to include one in the uploaded text files.
+
+### Images
+
+Any images inside of `.md` or `.html` files will be stripped during processing. This can be problematic if images are used for chapter titles (as they often are in Kindle books). In that case, be sure to manually replace the images with an appropriate text string before uploading the files.
 
 ### 'Page numbers'
 
-In the case of novels the 'page number' actually refers to the number of the chunk in which that particular vocab item happened to pass through the parsing engine. It is a rather arbitrary value, but it is crucial to have _some_ value in order to enable sorting vocab by first appearance.
-
-### Texts with images
-
-Please note that images inside of `.md` or `.html` files will be stripped during processing. This can be problematic if images are used for chapter titles (as they often are in Kindle books). In that case, be sure to manually replace the images with an appropriate text string before uploading the files.
+In the case of novels the `pageNumber` variable actually refers to the _paragraph_ number. It is used across Dokugaku for the same purposes as the page numbers in manga (i.e. tracking reading progress and ordering glossary words) so it did not seem worth it to muddy up the types by adding a different property name to the mix.
 
 # Managing vocab
 
@@ -65,4 +97,19 @@ Ignoring words is intended to be used for words that have been spuriously parsed
 
 Self-explanatory. These words are filtered out from _all_ frequency lists, glossaries and recommended vocab because they are (fortunately!) no longer worth learning. Marking these words manually would be cumbersome, which is why there is an option to upload a list of known words and have them automatically marked as known.
 
-// TODO: upload from Anki
+# Roadmap
+
+## New features
+
+- [ ] bulk upload of known words (e.g. from Anki)
+- [ ] built-in reader for uploaded manga and novels
+- [ ] filtering glossaries by page number or paragraph number
+- [ ] word search across the entire corpus, linking to the appropriate page or paragraph
+
+## Improvements
+
+- [ ] replace RSC GraphQL queries with hooks, implement loading skeletons and finetune caching
+- [ ] improve vocab pagination (specifically when there are no more records to load)
+- [ ] improve the management of common environment variables between backend and frontend
+- [ ] optimise the performance of Docker images
+- [ ] improve validation and error handling
