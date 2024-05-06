@@ -34,7 +34,7 @@ export const useUpdateWordsMutation = (
     useMutation<GQL_UpdateKnownStatusMutation>(UPDATE_KNOWN_STATUS)
 
   const seriesOrWorkIdInWhichIgnored = () => {
-    const isSeries = seriesOrWork?.series
+    const isSeries = seriesOrWork?.isSeries
     const isPartOfSeries = !isSeries && !!seriesOrWork?.seriesId
 
     if (isSeries) {
