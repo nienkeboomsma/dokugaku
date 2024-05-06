@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+  margin-top: -0.25rem;
+  width: 100%;
+}
+
+.previous {
+  margin-right: auto;
+}
+
+.next {
+  margin-left: auto;
+}

@@ -1,13 +1,18 @@
 import { GQL_ReadStatus } from '@repo/graphql-types'
 
 export type WorkInfo = {
-  id: string
-  title: string
   authors: string[]
+  id: string
   isSeries: false
+  maxProgress: number
+  progress: number
   seriesId?: string
   seriesTitle?: string
   status: GQL_ReadStatus
-  progress: number
-  maxProgress: number
+  title: string
+  volumeNumber?: number
+  volumes?: {
+    id: string
+    volumeNumber: number
+  }[]
 }

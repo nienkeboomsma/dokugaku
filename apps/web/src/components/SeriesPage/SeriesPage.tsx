@@ -26,6 +26,7 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
 
   const [seriesStatus, setSeriesStatus] = useState(series.status)
   const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
+  // TODO: evict stale data from cache
   const [updateSeriesStatus] = useMutation(UPDATE_SERIES_READ_STATUS)
 
   const seriesStatusHandler = async (status: GQL_ReadStatus) => {
@@ -68,7 +69,7 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
         <Volumes volumes={series.volumes} />
 
         <div>
-          <SectionHeading>Frequency list</SectionHeading>
+          <SectionHeading>Vocab</SectionHeading>
           <VocabTable
             furigana
             seriesOrWork={series}

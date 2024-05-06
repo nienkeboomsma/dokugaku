@@ -15,6 +15,7 @@ import PaperContainer, {
 } from '../PaperContainer/PaperContainer'
 import WorkCover from '../WorkCover'
 import ReadStatusSelector from '../ReadStatusSelector'
+import PreviousNextVolumes from './PreviousNextVolumes'
 import WorkTitle from '../WorkTitle'
 import LinkToSeries from './LinkToSeries'
 import AuthorList from '../AuthorList'
@@ -56,8 +57,6 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
     setReadStatusLoading(false)
   }
 
-  // TODO: inlcude links to previous and next volume in series
-
   return (
     <PaperContainer
       maxWidth={`calc(${COVER_WIDTH} + ${VocabTableMaxWidth} + 3 * ${PaperContainerPadding})`}
@@ -75,18 +74,25 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
             status={readStatus}
             updateStatus={readStatusHandler}
           />
-          <Button
+          {/* TODO: add reader functionality */}
+          {/* <Button
             component={Link}
             href='/'
             leftSection={<IconBook2 size={14} />}
             variant='light'
           >
             Go to reader
-          </Button>
+          </Button> */}
         </div>
 
         <div className={classes.secondColumn}>
           <div className={classes.titleAndAuthors}>
+            {work.volumeNumber && work.volumes && (
+              <PreviousNextVolumes
+                currentVolumeNumber={work.volumeNumber}
+                volumes={work.volumes}
+              />
+            )}
             <WorkTitle order={1} size='h3'>
               {work.title}
             </WorkTitle>
@@ -99,7 +105,7 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
             <AuthorList authors={work.authors} />
           </div>
           <div>
-            <SectionHeading>Frequency list</SectionHeading>
+            <SectionHeading>Vocab</SectionHeading>
             <VocabTable
               furigana
               seriesOrWork={work}

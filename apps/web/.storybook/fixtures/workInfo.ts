@@ -12,7 +12,26 @@ export const mockWorkInfo: WorkInfo[] = [
     seriesId: '321192a0-d330-4ead-b2db-2f40100e9046',
     seriesTitle: 'クレヨンしんちゃん',
     status: GQL_ReadStatus.Reading,
-    title: 'クレヨンしんちゃん 6',
+    title: 'クレヨンしんちゃん 3',
+    volumeNumber: 2,
+    volumes: [
+      {
+        id: '',
+        volumeNumber: 1,
+      },
+      {
+        id: '',
+        volumeNumber: 2,
+      },
+      {
+        id: '',
+        volumeNumber: 3,
+      },
+      {
+        id: '',
+        volumeNumber: 4,
+      },
+    ],
   },
   {
     authors: ['赤川 次郎'],
