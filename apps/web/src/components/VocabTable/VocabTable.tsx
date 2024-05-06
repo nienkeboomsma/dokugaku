@@ -140,10 +140,8 @@ export default function VocabTable(props: VocabTableProps) {
 
   // TODO: add 'page' column for manga glossaries (and maybe a minPageNumber
   //       filter to go with it?)
-  // TODO: in that case, allow glossaries for series after all, and allow to
-  //       filter by minVolumeNumber and minPagenumber
-  // TODO: give novels a pageNumber that corresponds to a specific block of
-  //       text that could eventually be linked to
+  // TODO: in that case, allow glossaries for series after all, and allow
+  //       filtering by minVolumeNumber and minPagenumber
   const allColumns: DataTableColumn<Word>[] = [
     {
       accessor: 'reading',

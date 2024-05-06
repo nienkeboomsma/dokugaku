@@ -13,7 +13,7 @@ import { HTMLToJSON } from 'html-to-json-parser'
 
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 import { ichiranTimePer100Char, novelTextExtensions } from './constants.js'
-import { type NovelTextJson } from './types.js'
+import type { NovelTextJsonNode, NovelTextJsonTopLevel } from './types.js'
 
 function markdownToHtml(markdown: string) {
   const strippedMdast = fromMarkdown(markdown)
@@ -123,44 +123,45 @@ export async function saveHtmlAsJson(fullPath: string) {
   const jsonString = await HTMLToJSON(singleLine, true)
   fs.writeFileSync(path.join(fullPath, 'text.json'), jsonString, 'utf8')
 
-  const jsonObject: NovelTextJson = JSON.parse(jsonString)
-
-  return jsonObject.content.length
+  const jsonObject: NovelTextJsonTopLevel = JSON.parse(jsonString)
+  return jsonObject
 }
 
-export function getTextStringFromHtml(fullPath: string) {
-  const filePath = path.join(fullPath, 'index.html')
-  const html = fs.readFileSync(filePath).toString()
-  return html
-    .replaceAll('\n', '')
-    .replaceAll(/<rt>.*?<\/rt>/g, '')
-    .replaceAll(/<[!-/a-zA-Z0-9]*?>/g, '')
-}
-
-export function divideTextStringIntoChunks(
-  text: string,
-  charsPerChunk: number
+export function divideTextJsonIntoParagraphs(
+  novelTextJson: NovelTextJsonTopLevel
 ) {
-  const strippedText = text.replaceAll(/\s/g, '').replaceAll('、', '')
-  const totalChars = strippedText.length
-  const numberOfChunks = Math.ceil(totalChars / charsPerChunk)
-  const textSentences = text.split('。')
-  const sentencesPerChunk = Math.ceil(textSentences.length / numberOfChunks)
+  const content = novelTextJson.content
 
-  console.table({
-    totalChars,
-    numberOfChunks,
-    numberOfSentences: textSentences.length,
-    sentencesPerChunk,
-  })
+  let totalChars = 0
+  let paragraphs = [] as string[]
 
-  const chunks = Array.from({ length: numberOfChunks }, (_, index) => {
-    const firstIndex = index * sentencesPerChunk
-    const lastIndex = (index + 1) * sentencesPerChunk
-    return textSentences.slice(firstIndex, lastIndex).join('。')
-  })
+  const processParagraphNode = (paragraphNode: NovelTextJsonNode) => {
+    const paragraphStrings = [] as string[]
 
-  return { chunks, totalChars }
+    const processChildNode = (
+      childNode: NovelTextJsonNode | string | Array<NovelTextJsonNode | string>
+    ) => {
+      if (typeof childNode === 'string') {
+        paragraphStrings.push(childNode)
+      } else if (Array.isArray(childNode)) {
+        childNode.forEach((childNode) => processChildNode(childNode))
+      } else if ('type' in childNode && childNode.type !== 'rt') {
+        processChildNode(childNode.content)
+      }
+    }
+
+    paragraphNode.content.forEach((childNode: string | NovelTextJsonNode) =>
+      processChildNode(childNode)
+    )
+
+    const paragraph = paragraphStrings.join('')
+    paragraphs.push(paragraph)
+    totalChars += paragraph.length
+  }
+
+  content.forEach((paragraphNode) => processParagraphNode(paragraphNode))
+
+  return { paragraphs, totalChars }
 }
 
 export function getTimeEstimate(totalChars: number) {
@@ -170,24 +171,26 @@ export function getTimeEstimate(totalChars: number) {
   return { estimatedDuration, timeWhenFinished }
 }
 
-export async function runIchiranOnEachChunk(
-  chunks: string[],
+export async function runIchiranOnEachParagraph(
+  paragraphs: string[],
   fullPath: string
 ) {
-  const timeTaken = `Time to run Ichiran on ${chunks.length} chunks`
+  const timeTaken = `Time to run Ichiran on ${paragraphs.length} paragraphs`
   console.time(timeTaken)
 
-  for (const [index, chunk] of chunks.entries()) {
-    console.log(`Running Ichiran on chunk ${index + 1} of ${chunks.length}`)
-    const words = await runIchiran(chunk)
+  for (const [index, paragraph] of paragraphs.entries()) {
+    console.log(
+      `Running Ichiran on paragraph ${index + 1} of ${paragraphs.length}`
+    )
+    const words = await runIchiran(paragraph)
 
     for (let word of words) {
-      const chunkNumber = index + 1
-      word.pageNumber = chunkNumber
+      const paragraphNumber = index + 1
+      word.pageNumber = paragraphNumber
     }
 
     const isFirstPass = index === 0
-    const isLastPass = index === chunks.length - 1
+    const isLastPass = index === paragraphs.length - 1
     const outputPath = path.join(fullPath, 'ichiran.json')
 
     concatToJson(outputPath, words, isFirstPass, isLastPass)

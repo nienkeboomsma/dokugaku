@@ -38,9 +38,14 @@ export type MokuroData = {
   blocks: Array<Block>
 }
 
-export type NovelTextJson = {
+export type NovelTextJsonTopLevel = {
   type: string
-  content: Array<string | NovelTextJson>
+  content: NovelTextJsonNode[]
+}
+
+export type NovelTextJsonNode = {
+  type: string
+  content: Array<string | NovelTextJsonNode>
 }
 
 export type Word = {

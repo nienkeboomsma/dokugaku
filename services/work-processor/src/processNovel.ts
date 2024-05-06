@@ -5,10 +5,9 @@ import path from 'node:path'
 import { novelTextExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
-  divideTextStringIntoChunks,
-  getTextStringFromHtml,
+  divideTextJsonIntoParagraphs,
   getTimeEstimate,
-  runIchiranOnEachChunk,
+  runIchiranOnEachParagraph,
   saveHtmlAsJson,
   stripAndCombineFiles,
 } from './utils/novel-utils.js'
@@ -29,9 +28,10 @@ export async function processNovel(req: Express.Request, res: Response) {
 
   renameFilesSequentially(fullPath, novelTextExtensions, 'part')
   stripAndCombineFiles(fullPath, req.body.title)
-  const numberOfParagraphs = await saveHtmlAsJson(fullPath)
-  const text = getTextStringFromHtml(fullPath)
-  const { chunks, totalChars } = divideTextStringIntoChunks(text, 2500)
+  const novelTextJson = await saveHtmlAsJson(fullPath)
+
+  const { paragraphs, totalChars } = divideTextJsonIntoParagraphs(novelTextJson)
+  const numberOfParagraphs = paragraphs.length
 
   const { estimatedDuration, timeWhenFinished } = getTimeEstimate(totalChars)
   res.status(200).json({
@@ -41,7 +41,7 @@ export async function processNovel(req: Express.Request, res: Response) {
   })
 
   try {
-    await runIchiranOnEachChunk(chunks, fullPath)
+    await runIchiranOnEachParagraph(paragraphs, fullPath)
     await convertImagesToWebP(fullPath)
     await insertIntoDatabase(
       {
