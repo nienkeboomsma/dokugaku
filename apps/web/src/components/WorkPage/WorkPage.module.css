@@ -33,9 +33,9 @@
   @media (max-width: 47em) {
     --second-column-width: 100% !important;
 
-    align-items: center;
     flex-direction: column;
     max-width: revert;
+    text-align: center;
   }
 }
 
