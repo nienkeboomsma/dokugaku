@@ -4,8 +4,9 @@ export type WorkInfo = {
   id: string
   title: string
   authors: string[]
-  series: false
+  isSeries: false
   seriesId?: string
+  seriesTitle?: string
   status: GQL_ReadStatus
   progress: number
   maxProgress: number

@@ -1,3 +1,4 @@
+import '../styles/global.css'
 import '@mantine/core/styles.layer.css'
 import '@mantine/notifications/styles.layer.css'
 import 'mantine-datatable/styles.layer.css'

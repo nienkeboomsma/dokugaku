@@ -11,6 +11,7 @@ import { knownWords } from '../../../.storybook/mocks/knownWords'
 import { updateExcludedStatus } from '../../../.storybook/mocks/updateExcludedStatus'
 import { updateIgnoredStatus } from '../../../.storybook/mocks/updateIgnoredStatus'
 import { updateKnownStatus } from '../../../.storybook/mocks/updateKnownStatus'
+import { type WorkInfo } from '../../types/WorkInfo'
 import { mockWorkInfo } from '../../../.storybook/fixtures/workInfo'
 import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
 
@@ -39,7 +40,7 @@ type Story = StoryObj<typeof meta>
 export const WithFurigana: Story = {
   args: {
     furigana: true,
-    seriesOrWork: mockWorkInfo,
+    seriesOrWork: mockWorkInfo[0] as WorkInfo,
     type: VocabTableType.SeriesOrWork,
   },
 }

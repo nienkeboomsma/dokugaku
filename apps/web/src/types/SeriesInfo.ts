@@ -11,7 +11,7 @@ export type VolumeInfo = {
 export type SeriesInfo = {
   authors: string[]
   id: string
-  series: true
+  isSeries: true
   status: GQL_ReadStatus
   title: string
   volumes: VolumeInfo[]

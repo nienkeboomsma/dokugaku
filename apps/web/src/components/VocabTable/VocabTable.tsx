@@ -53,7 +53,7 @@ export default function VocabTable(props: VocabTableProps) {
   const { furigana, type } = props
   const seriesOrWork =
     type === VocabTableType.SeriesOrWork ? props.seriesOrWork : undefined
-  const isSeries = seriesOrWork?.series
+  const isSeries = seriesOrWork?.isSeries
   const isPartOfSeries = !isSeries && !!seriesOrWork?.seriesId
 
   // TODO: save these preferences somewhere

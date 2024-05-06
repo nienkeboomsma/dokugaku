@@ -1,3 +1,4 @@
+import '../src/styles/global.css'
 import '@mantine/core/styles.layer.css'
 import 'mantine-datatable/styles.layer.css'
 import React, { useEffect } from 'react'

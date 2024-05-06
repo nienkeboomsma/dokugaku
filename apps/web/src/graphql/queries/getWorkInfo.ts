@@ -5,7 +5,7 @@ import {
 } from '@repo/graphql-types'
 
 import { getClient } from '../client/ApolloClient'
-import { WorkInfo } from '../../types/WorkInfo'
+import { type WorkInfo } from '../../types/WorkInfo'
 
 export const getWorkInfo = async (workId: string) => {
   const WORK_INFO = gql`
@@ -20,6 +20,7 @@ export const getWorkInfo = async (workId: string) => {
         progress
         series {
           id
+          title
         }
         status
         title
@@ -44,8 +45,9 @@ export const getWorkInfo = async (workId: string) => {
     const workInfo: WorkInfo = {
       ...data.work,
       authors: data.work.authors.map((author) => author.name),
-      series: false,
+      isSeries: false,
       seriesId: data.work.series?.id ?? undefined,
+      seriesTitle: data.work.series?.title ?? undefined,
     }
 
     return workInfo

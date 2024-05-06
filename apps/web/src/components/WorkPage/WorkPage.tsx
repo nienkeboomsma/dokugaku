@@ -16,6 +16,7 @@ import PaperContainer, {
 import WorkCover from '../WorkCover'
 import ReadStatusSelector from '../ReadStatusSelector'
 import WorkTitle from '../WorkTitle'
+import LinkToSeries from './LinkToSeries'
 import AuthorList from '../AuthorList'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import VocabTable, {
@@ -37,6 +38,7 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
 
   const [readStatus, setReadStatus] = useState(work.status)
   const [readStatusLoading, setReadStatusLoading] = useState(false)
+  // TODO: evict stale data from cache
   const [updateReadStatus] = useMutation(UPDATE_WORK_READ_STATUS)
 
   const readStatusHandler = async (status: GQL_ReadStatus) => {
@@ -53,6 +55,8 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
 
     setReadStatusLoading(false)
   }
+
+  // TODO: inlcude links to previous and next volume in series
 
   return (
     <PaperContainer
@@ -86,6 +90,12 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
             <WorkTitle order={1} size='h3'>
               {work.title}
             </WorkTitle>
+            {work.seriesId && work.seriesTitle && (
+              <LinkToSeries
+                seriesId={work.seriesId}
+                seriesTitle={work.seriesTitle}
+              />
+            )}
             <AuthorList authors={work.authors} />
           </div>
           <div>

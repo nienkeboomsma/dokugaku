@@ -27,9 +27,15 @@ const meta = {
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const InSeries: Story = {
   args: {
-    work: mockWorkInfo,
+    work: mockWorkInfo[0],
+  },
+}
+
+export const NotInSeries: Story = {
+  args: {
+    work: mockWorkInfo[1],
   },
 }
 
