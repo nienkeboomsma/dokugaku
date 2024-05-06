@@ -65,12 +65,11 @@ export default function BrowsePage({
       />
       <div className={classes.worksContainer}>
         {workCards.map((card) => {
-          return card.series ? (
-            <ScaleLink href={`/series/${card.id}`} key={card.id}>
-              <WorkCard workCardInfo={card} />
-            </ScaleLink>
-          ) : (
-            <ScaleLink href={`/works/${card.id}`} key={card.id}>
+          return (
+            <ScaleLink
+              href={`/${card.isSeries ? 'series' : 'works'}/${card.id}`}
+              key={card.id}
+            >
               <WorkCard workCardInfo={card} />
             </ScaleLink>
           )

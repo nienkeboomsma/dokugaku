@@ -76,7 +76,7 @@ export const getWorkCards = async () => {
       id: series.id,
       knownVocab,
       numberOfVolumes: series.volumes.length,
-      series: true,
+      isSeries: true,
       status: series.status,
       title: series.title,
     }
@@ -90,7 +90,7 @@ export const getWorkCards = async () => {
       authors: work.authors.map((author) => author.name),
       id: work.id,
       knownVocab,
-      series: false,
+      isSeries: false,
       status: work.status,
       title: work.title,
     }

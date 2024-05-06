@@ -54,7 +54,10 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
             <WorkTitle order={1} size='h3'>
               {series.title}
             </WorkTitle>
-            <AuthorList authors={series.authors} />
+            <AuthorList
+              authors={series.authors}
+              classNames={{ author: classes.author }}
+            />
           </div>
 
           <div>

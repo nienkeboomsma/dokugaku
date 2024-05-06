@@ -11,7 +11,7 @@ function Author({
   className?: string
 }) {
   return (
-    <Text c='dimmed' className={className} span>
+    <Text c='dimmed' className={className} lh={1} span>
       {children}
     </Text>
   )

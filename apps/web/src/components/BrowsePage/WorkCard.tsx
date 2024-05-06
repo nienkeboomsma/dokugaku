@@ -107,6 +107,7 @@ export default function WorkCard({
             {isSeries(workCardInfo) && workCardInfo.numberOfVolumes > 0 && (
               <Text
                 c='dimmed'
+                className={classes.numberOfVolumes}
                 size={rem(13)}
               >{`${workCardInfo.numberOfVolumes} ${workCardInfo.numberOfVolumes > 1 ? 'volumes' : 'volume'}`}</Text>
             )}

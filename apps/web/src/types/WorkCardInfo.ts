@@ -10,24 +10,24 @@ type WorkCardCommon = {
 
 type WorkCardSeries = {
   firstVolumeId?: string
-  series: true
+  isSeries: true
   numberOfVolumes: number
 } & WorkCardCommon
 
 export const isSeries = (
   workCardInfo: WorkCardInfo
 ): workCardInfo is WorkCardSeries => {
-  return workCardInfo.series
+  return workCardInfo.isSeries
 }
 
 type WorkCardVolume = {
-  series: false
+  isSeries: false
 } & WorkCardCommon
 
 export const isVolume = (
   workCardInfo: WorkCardInfo
 ): workCardInfo is WorkCardVolume => {
-  return !workCardInfo.series
+  return !workCardInfo.isSeries
 }
 
 export type WorkCardInfo = WorkCardSeries | WorkCardVolume

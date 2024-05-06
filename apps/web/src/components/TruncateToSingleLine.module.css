@@ -2,6 +2,7 @@
 .truncate *:has(span),
 .truncate *:is(h1, h2, h3, h4, h5, h6, p) {
   color: var(--dot-color);
+  line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

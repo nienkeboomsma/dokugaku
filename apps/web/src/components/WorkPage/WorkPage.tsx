@@ -102,7 +102,10 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
                 seriesTitle={work.seriesTitle}
               />
             )}
-            <AuthorList authors={work.authors} />
+            <AuthorList
+              authors={work.authors}
+              classNames={{ author: classes.author }}
+            />
           </div>
           <div>
             <SectionHeading>Vocab</SectionHeading>
