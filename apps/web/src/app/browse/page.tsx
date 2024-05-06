@@ -1,9 +1,7 @@
 import BrowsePage from '../../components/BrowsePage/BrowsePage'
 import { getWorkCards } from '../../graphql/queries/getWorkCards'
 
-// TODO: speed up the known vocab generation; use indexes in PG
-//       and consider caching the value somehow
-
+// TODO: if necessary: cache the knownVocab value
 // TODO: add pagination
 
 export default async function Browse() {
