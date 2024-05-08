@@ -6,8 +6,7 @@ import { cache } from '../cache/cache'
 
 export const { getClient } = registerApolloClient(() => {
   const httpLink = createHttpLink({
-    // uri: 'http://graphql:3001',
-    uri: 'http://localhost:3001',
+    uri: 'http://graphql:3001'
   })
 
   const authLink = setContext((_, { headers }) => {
