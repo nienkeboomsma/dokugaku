@@ -118,6 +118,7 @@ export default function UploadForm({
 
       updateExistingAuthors(values)
       updateExistingSeries(values)
+      // TODO: the file uploads are cleared, but APPEAR like they still have a selection
       uploadForm.reset()
       notifications.show({
         title: `${values.title} uploaded successfully`,

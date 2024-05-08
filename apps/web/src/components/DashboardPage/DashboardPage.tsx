@@ -18,6 +18,7 @@ export default function DashboardPage({ works }: { works?: CurrentWork[] }) {
         maxWidth: `calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding} )`,
       }}
     >
+      {/* TODO: CurrentWorks should be hidden if there are no current works */}
       <CurrentWorks works={works} />
       <PaperContainer
         heading='Recommended vocab'

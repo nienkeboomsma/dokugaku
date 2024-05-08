@@ -57,9 +57,10 @@ COPY --from=pruner /app/out/full/ .
 # Use turbo to build the project, followed by pruning development dependencies to minimize the final image size.
 # Remove source files to further reduce the image size, keeping only the compiled output and necessary runtime files.
 
-RUN turbo build --filter=web...
-RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
-RUN rm -rf ./**/*/src
+# production
+# RUN turbo build --filter=web...
+# RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
+# RUN rm -rf ./**/*/src
 
 # Final production image
 # Start the final stage for the production-ready image.
@@ -76,4 +77,10 @@ COPY --from=builder --chown=nodejs:nodejs /app .
 
 WORKDIR /app/apps/web
 
-CMD npm run start
+# TODO: Nextjs can only serve files that were present in 'public' at build time
+#       find a way to serve newly added files (Express server?)
+# development
+CMD npm run dev
+
+# production
+# CMD npm run start

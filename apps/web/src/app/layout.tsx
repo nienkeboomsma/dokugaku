@@ -1,4 +1,5 @@
 import '../styles/global.css'
+// TODO: import Mantine Core styles per component to reduce bundle size
 import '@mantine/core/styles.layer.css'
 import '@mantine/notifications/styles.layer.css'
 import 'mantine-datatable/styles.layer.css'

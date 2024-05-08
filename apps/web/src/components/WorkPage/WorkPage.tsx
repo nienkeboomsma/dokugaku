@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@mantine/core'
-import { IconBook2 } from '@tabler/icons-react'
+// import { Button } from '@mantine/core'
+// import { IconBook2 } from '@tabler/icons-react'
 import { GQL_ReadStatus } from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
-import Link from 'next/link'
+// import Link from 'next/link'
 
 import classes from './WorkPage.module.css'
 import { type WorkInfo } from '../../types/WorkInfo'
