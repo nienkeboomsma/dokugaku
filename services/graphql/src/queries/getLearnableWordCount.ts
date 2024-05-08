@@ -1,8 +1,6 @@
 import sql from '../data/sql'
 import { LearnableWordCountModel } from '../models/LearnableWordCountModel'
 
-// TODO: test JOIN vs NOT EXISTS
-
 type GetLearnableWordCountParamsCommon = {
   userId: string
 }
