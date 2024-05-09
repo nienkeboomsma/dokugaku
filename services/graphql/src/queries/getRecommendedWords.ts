@@ -21,7 +21,8 @@ export function getRecommendedWords({
     JOIN user_work 
       ON word_work.work_id = user_work.work_id
       AND user_work.user_id = ${userId}
-      AND user_work.status = 'want_to_read'
+      AND ( user_work.status = 'want_to_read'
+        OR user_work.status = 'reading' )
     JOIN work
       ON word_work.work_id = work.id
     LEFT JOIN ignored_in_series
