@@ -16,6 +16,11 @@ export const getExistingAuthors = async (): Promise<ExistingAuthors> => {
   try {
     const { data } = await getClient().query<GQL_ExistingAuthorsQuery>({
       query: EXISTING_AUTHORS,
+      context: {
+        fetchOptions: {
+          cache: 'no-store'
+        },
+      },
     })
 
     const authorNames = data.authorList

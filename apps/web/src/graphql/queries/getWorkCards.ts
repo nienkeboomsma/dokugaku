@@ -54,6 +54,11 @@ export const getWorkCards = async () => {
   const { data } = await getClient().query<GQL_WorkCardsQuery>({
     query: WORKCARDS,
     variables,
+    context: {
+      fetchOptions: {
+        cache: 'no-store'
+      },
+    },
   })
 
   const seriesCards: WorkCardInfo[] = data.seriesList.map((series) => {

@@ -50,6 +50,11 @@ export const getSeriesInfo = async (seriesId: string) => {
     const { data } = await getClient().query<GQL_SeriesInfoQuery>({
       query: SERIES_INFO,
       variables,
+      context: {
+        fetchOptions: {
+          cache: 'no-store'
+        },
+      },
     })
 
     if (!data.series) return undefined

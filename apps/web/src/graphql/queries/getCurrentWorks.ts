@@ -29,6 +29,11 @@ export const getCurrentWorks = async () => {
     const { data } = await getClient().query<GQL_CurrentWorksQuery>({
       query: CURRENT_WORKS,
       variables,
+      context: {
+        fetchOptions: {
+          cache: 'no-store'
+        },
+      },
     })
 
     const currentWorks: CurrentWork[] = data.workList

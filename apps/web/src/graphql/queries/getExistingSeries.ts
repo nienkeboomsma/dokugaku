@@ -27,6 +27,11 @@ export const getExistingSeries = async (): Promise<ExistingSeries> => {
   try {
     const { data } = await getClient().query<GQL_ExistingSeriesQuery>({
       query: FORM_EXISTING_SERIES,
+      context: {
+        fetchOptions: {
+          cache: 'no-store'
+        },
+      },
     })
 
     const seriesInfo = data.seriesList.map((series) => {

@@ -57,6 +57,11 @@ export const getWorkInfo = async (workId: string) => {
     const { data } = await getClient().query<GQL_WorkInfoQuery>({
       query: WORK_INFO,
       variables,
+      context: {
+        fetchOptions: {
+          cache: 'no-store'
+        },
+      },
     })
 
     if (!data.work) return undefined
