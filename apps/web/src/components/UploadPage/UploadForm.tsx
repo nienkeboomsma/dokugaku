@@ -93,7 +93,7 @@ export default function UploadForm({
     const newSeriesEntry = {
       authors: new Set(values.authors),
       nextVolumeNumber: Number(values.volumeNumber) + 1,
-      title: values.title,
+      title: values.series,
       volumeNumbers: [Number(values.volumeNumber)],
       workTypes: new Set([workType]),
     }
