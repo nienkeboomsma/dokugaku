@@ -81,6 +81,10 @@ Any images inside of `.md` or `.html` files will be stripped during processing. 
 
 In the case of novels the `pageNumber` variable actually refers to the _paragraph_ number. It is used across Dokugaku for the same purposes as the page numbers in manga (i.e. tracking reading progress and ordering glossary words) so it did not seem worth it to muddy up the types by adding a different property name to the mix.
 
+## Processing time estimate
+
+There is currently no way to track the processing of an uploaded work other than keeping an eye on the `work-processor` logs. When uploading a work, a toast appears to give some estimate of the required processing time. This estimate is based on a few constants in `/services/work-processor/src/utils/constants.ts`. It is recommended to keep an eye on the `work-processor` logs for the first few uploads in order to determine more accurate values for your own hardware.
+
 # Managing vocab
 
 Words can be marked as excluded, ignored and known. In all three cases they will be filtered out of frequency lists, glossaries and recommended vocab, but they are intended for different use cases.
@@ -105,6 +109,8 @@ Self-explanatory. These words are filtered out from _all_ frequency lists, gloss
 - [ ] built-in reader for uploaded manga and novels
 - [ ] filtering glossaries by page number or paragraph number
 - [ ] word search across the entire corpus, linking to the appropriate page or paragraph
+- [ ] dashboard to track the processing status of uploaded works
+- [ ] removing works and series
 
 ## Improvements
 
