@@ -9,18 +9,34 @@ import { GQL_ReadStatus } from '@repo/graphql-types'
 
 const indicatorSize = '1.4rem'
 
+const getVolumeIndexToScrollTo = (volumes: VolumeInfo[]) => {
+  const statusPriorities = [
+    GQL_ReadStatus.Reading,
+    GQL_ReadStatus.WantToRead,
+    GQL_ReadStatus.New,
+  ]
+
+  for (let statusPriority of statusPriorities) {
+    const earliestIndex = volumes.findIndex(
+      (volume) => volume.status === statusPriority
+    )
+
+    if (earliestIndex > -1) return earliestIndex
+  }
+
+  return -1
+}
+
 export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
   const viewportRef = useRef<HTMLDivElement>(null)
-  const earliestReadingVolume = volumes.findIndex(
-    (volume) => volume.status === GQL_ReadStatus.Reading
-  )
+  const volumeIndexToScrollTo = getVolumeIndexToScrollTo(volumes)
 
   useEffect(
     () =>
       viewportRef.current
         ?.querySelectorAll('a')
         ?.[
-          earliestReadingVolume
+          volumeIndexToScrollTo
         ]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }),
     []
   )

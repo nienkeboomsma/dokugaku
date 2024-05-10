@@ -18,4 +18,20 @@ export const Default: Story = {
   },
 }
 
+export const NoReading: Story = {
+  args: {
+    volumes: mockSeriesInfo.volumes
+      .slice(0, 3)
+      .concat(mockSeriesInfo.volumes.slice(4)),
+  },
+}
+
+export const NoReadingOrWantToRead: Story = {
+  args: {
+    volumes: mockSeriesInfo.volumes
+      .slice(0, 3)
+      .concat(mockSeriesInfo.volumes.slice(6)),
+  },
+}
+
 export default meta
