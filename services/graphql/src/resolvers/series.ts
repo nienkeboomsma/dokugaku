@@ -47,9 +47,15 @@ const resolvers: GQL_Resolvers = {
       })
     },
     volumes: async (parent, _, { userId, dataSources: { work } }) => {
-      return work.getWorks({
+      const volumes = await work.getWorks({
         userId,
         workIds: parent.workIds,
+      })
+
+      return volumes.sort((volumeA, volumeB) => {
+        if (!volumeA.numberInSeries || !volumeB.numberInSeries) return 1
+
+        return volumeA.numberInSeries - volumeB.numberInSeries
       })
     },
     // words: (parent, { input }, { userId, dataSources: { word } }) => {
