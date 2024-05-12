@@ -20,7 +20,7 @@ export default function Volume({
       <div className={classes.container}>
         <Indicator label={volume.volumeNumber} offset={5} size={indicatorSize}>
           <WorkCover
-            coverPath={`/works/${volume.id}/cover.webp`}
+            coverPath={`/assets/${volume.id}/cover.webp`}
             grow
             // maxProgress={volume.maxProgress}
             // progress={volume.progress}

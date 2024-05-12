@@ -30,15 +30,15 @@ const cssVariables = {
 
 const getCoverSrc = (workCardInfo: WorkCardInfo) => {
   if (isSeries(workCardInfo) && workCardInfo.firstVolumeId) {
-    return `/works/${workCardInfo.firstVolumeId}/cover.webp`
+    return `/assets/${workCardInfo.firstVolumeId}/cover.webp`
   }
 
   if (isSeries(workCardInfo) && !workCardInfo.firstVolumeId) {
     // TODO: add dummyCover file
-    return `/works/dummyCover.webp`
+    return `/assets/dummyCover.webp`
   }
 
-  return `/works/${workCardInfo.id}/cover.webp`
+  return `/assets/${workCardInfo.id}/cover.webp`
 }
 
 function ProgressLabel({

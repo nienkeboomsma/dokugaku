@@ -119,9 +119,7 @@ services:
     privileged: true
     restart: always
     volumes:
-      - files:/app/apps/web/public/works
-      ### for dev use only ###
-      - ./apps/web/src:/app/apps/web/src
+      - files:/dokugaku
   work-processor:
     container_name: work-processor
     build:

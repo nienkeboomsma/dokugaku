@@ -64,7 +64,7 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
       <div className={classes.container} style={cssVariables}>
         <div className={classes.firstColumn}>
           <WorkCover
-            coverPath={`/works/${work.id}/cover.webp`}
+            coverPath={`/assets/${work.id}/cover.webp`}
             // maxProgress={work.maxProgress}
             // progress={work.progress}
             width={COVER_WIDTH}
