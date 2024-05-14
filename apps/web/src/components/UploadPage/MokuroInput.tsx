@@ -1,18 +1,14 @@
 import { Checkbox } from '@mantine/core'
 
-import { UploadForm } from '../../hooks/useUploadForm'
+import type { WorkUploadForm } from '../../hooks/useWorkUploadForm'
 
-export default function MokuroInput({
-  uploadForm,
-}: {
-  uploadForm: UploadForm
-}) {
+export default function MokuroInput({ form }: { form: WorkUploadForm }) {
   return (
     <Checkbox
       label='I have already run the files through Mokuro'
       mb={6}
       mt={12}
-      {...uploadForm.getInputProps('mokuro', { type: 'checkbox' })}
+      {...form.getInputProps('mokuro', { type: 'checkbox' })}
     />
   )
 }

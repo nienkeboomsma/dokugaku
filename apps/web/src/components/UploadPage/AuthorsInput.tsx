@@ -1,30 +1,27 @@
 import { TagsInput } from '@mantine/core'
 
 import { type ExistingAuthors } from '../../types/ExistingAuthors'
-import { type UploadForm } from '../../hooks/useUploadForm'
+import type { WorkUploadForm } from '../../hooks/useWorkUploadForm'
 import AutofillButton from './AutofillButton'
 
 export default function AuthorsInput({
   existingAuthors,
   findAuthorsBySeriesTitle,
-  uploadForm,
+  form,
 }: {
   existingAuthors: ExistingAuthors
   // eslint-disable-next-line no-unused-vars
   findAuthorsBySeriesTitle: (seriesTitle: string) => string[] | []
-  uploadForm: UploadForm
+  form: WorkUploadForm
 }) {
   const showAutofillButton = !!(
-    !uploadForm.values.authors.length &&
-    uploadForm.values.series &&
-    findAuthorsBySeriesTitle(uploadForm.values.series).length
+    !form.values.authors.length &&
+    form.values.series &&
+    findAuthorsBySeriesTitle(form.values.series).length
   )
 
   const autofillAction = () =>
-    uploadForm.setFieldValue(
-      'authors',
-      findAuthorsBySeriesTitle(uploadForm.values.series)
-    )
+    form.setFieldValue('authors', findAuthorsBySeriesTitle(form.values.series))
 
   return (
     <TagsInput
@@ -38,7 +35,7 @@ export default function AuthorsInput({
         />
       }
       withAsterisk
-      {...uploadForm.getInputProps('authors')}
+      {...form.getInputProps('authors')}
     />
   )
 }

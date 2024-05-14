@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { GQL_WorkType } from '@repo/graphql-types'
 
-import UploadForm from '../../components/UploadPage/UploadForm'
+import WorkUploadForm from '../../components/UploadPage/WorkUploadForm'
 import { mockExistingAuthors } from '../../../.storybook/fixtures/existingAuthors'
 import { mockExistingSeries } from '../../../.storybook/fixtures/existingSeries'
 
 // avoiding 'satisfies' fixes TS error with decorators (Storybook issue #24656)
-const meta: Meta<typeof UploadForm> = {
+const meta: Meta<typeof WorkUploadForm> = {
   title: 'Upload/Form',
-  component: UploadForm,
+  component: WorkUploadForm,
   decorators: [
     (Story) => (
       <div style={{ width: '25rem' }}>

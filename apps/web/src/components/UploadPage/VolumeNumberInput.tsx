@@ -1,32 +1,32 @@
 import { TextInput } from '@mantine/core'
 
-import { type UploadForm } from '../../hooks/useUploadForm'
+import type { WorkUploadForm } from '../../hooks/useWorkUploadForm'
 import AutofillButton from './AutofillButton'
 
 export default function SeriesInput({
   findVolumeNumberBySeriesTitle,
-  uploadForm,
+  form,
 }: {
   // eslint-disable-next-line no-unused-vars
   findVolumeNumberBySeriesTitle: (seriesTitle: string) => string
-  uploadForm: UploadForm
+  form: WorkUploadForm
 }) {
   const showAutofillButton = !!(
-    uploadForm.values.series &&
-    findVolumeNumberBySeriesTitle(uploadForm.values.series) &&
-    uploadForm.values.volumeNumber !==
-      findVolumeNumberBySeriesTitle(uploadForm.values.series)
+    form.values.series &&
+    findVolumeNumberBySeriesTitle(form.values.series) &&
+    form.values.volumeNumber !==
+      findVolumeNumberBySeriesTitle(form.values.series)
   )
 
   const autofillAction = () =>
-    uploadForm.setFieldValue(
+    form.setFieldValue(
       'volumeNumber',
-      findVolumeNumberBySeriesTitle(uploadForm.values.series)
+      findVolumeNumberBySeriesTitle(form.values.series)
     )
 
   return (
     <TextInput
-      disabled={uploadForm.values.series === ''}
+      disabled={form.values.series === ''}
       inputMode='numeric'
       label='Volume number'
       rightSection={
@@ -36,8 +36,8 @@ export default function SeriesInput({
           showButton={showAutofillButton}
         />
       }
-      withAsterisk={uploadForm.values.series !== ''}
-      {...uploadForm.getInputProps('volumeNumber')}
+      withAsterisk={form.values.series !== ''}
+      {...form.getInputProps('volumeNumber')}
     />
   )
 }
