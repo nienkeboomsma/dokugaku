@@ -182,7 +182,7 @@ export async function runIchiranOnEachParagraph(
     console.log(
       `Running Ichiran on paragraph ${index + 1} of ${paragraphs.length}`
     )
-    const words = await runIchiran(paragraph)
+    const words = await runIchiran(paragraph, 'processedSegmentation')
 
     for (let word of words) {
       const paragraphNumber = index + 1

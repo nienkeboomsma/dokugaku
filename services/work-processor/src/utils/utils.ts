@@ -36,15 +36,28 @@ export function renameFilesSequentially(
   return sortedFiles.length
 }
 
-export async function runIchiran(string: string) {
+export async function runIchiran(
+  string: string,
+  endpoint: 'idsOnly'
+): Promise<number[]>
+export async function runIchiran(
+  string: string,
+  endpoint: 'processedSegmentation'
+): Promise<IchiranData>
+export async function runIchiran(
+  string: string,
+  endpoint: 'idsOnly' | 'processedSegmentation'
+): Promise<number[] | IchiranData> {
+  const url = `http://ichiran:${process.env.ICHIRAN_PORT}/${endpoint}`
+
   const res = await axios.post(
-    `http://ichiran:${process.env.ICHIRAN_PORT}/processedSegmentation`,
+    url,
     { string },
     // TODO: use Redis to track Ichiran progress instead
     { timeout: 1000 * 60 * 60 }
   )
 
-  return res.data as Promise<IchiranData>
+  return res.data
 }
 
 export function concatToJson(

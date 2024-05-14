@@ -65,7 +65,7 @@ export async function runIchiranOnEachPage(fullPath: string) {
     const string = getTextFromMokuroData(mokuroData)
 
     console.log(`Running Ichiran on page ${index + 1} of ${pages.length}`)
-    const words = await runIchiran(string)
+    const words = await runIchiran(string, 'processedSegmentation')
 
     for (let word of words) {
       const pageNumber = Number(path.parse(page).name.slice(-4))
