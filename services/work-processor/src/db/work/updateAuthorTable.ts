@@ -1,6 +1,6 @@
 import { type TransactionSql } from 'postgres'
 
-import { type WorkMetadata } from '../utils/types.js'
+import { type WorkMetadata } from '../../utils/types.js'
 
 type AuthorId = {
   id: string

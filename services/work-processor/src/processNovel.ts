@@ -12,7 +12,7 @@ import {
   saveHtmlAsJson,
   stripAndCombineFiles,
 } from './utils/novel-utils.js'
-import { insertIntoDatabase } from './db/insertIntoDatabase.js'
+import { insertWorkIntoDatabase } from './db/work/insertWorksIntoDatabase.js'
 
 export async function processNovel(
   req: NovelUploadRequest,
@@ -52,7 +52,7 @@ export async function processNovel(
   try {
     await runIchiranOnEachParagraph(paragraphs, fullPath)
     await convertImagesToWebP(fullPath)
-    await insertIntoDatabase(
+    await insertWorkIntoDatabase(
       {
         authors: authors,
         seriesTitle: series,

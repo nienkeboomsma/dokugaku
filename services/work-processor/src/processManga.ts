@@ -11,7 +11,7 @@ import {
   runIchiranOnEachPage,
   runMokuro,
 } from './utils/manga-utils.js'
-import { insertIntoDatabase } from './db/insertIntoDatabase.js'
+import { insertWorkIntoDatabase } from './db/work/insertWorksIntoDatabase.js'
 
 export async function processManga(
   req: MangaUploadRequest,
@@ -58,7 +58,7 @@ export async function processManga(
     createCoverImage(fullPath)
     await convertImagesToWebP(fullPath)
 
-    await insertIntoDatabase(
+    await insertWorkIntoDatabase(
       {
         authors: req.body.authors,
         seriesTitle: req.body.series,

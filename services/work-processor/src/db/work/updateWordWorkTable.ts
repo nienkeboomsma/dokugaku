@@ -1,7 +1,7 @@
 import { type TransactionSql } from 'postgres'
 import fs from 'node:fs'
 import path from 'node:path'
-import { type Word, type WorkMetadata } from '../utils/types.js'
+import { type Word, type WorkMetadata } from '../../utils/types.js'
 
 export async function updateWordWorkTable(
   sql: TransactionSql,

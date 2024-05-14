@@ -3,7 +3,7 @@ import {
   isPartOfSeries,
   type WorkMetadata,
   type WorkMetadataSeries,
-} from '../utils/types.js'
+} from '../../utils/types.js'
 
 type Work = {
   id: WorkMetadataSeries['workId']
