@@ -61,9 +61,12 @@ export async function updateWordWorkTable(
       ${pageNumbers}::smallint[], 
       ${sentenceNumbers}::smallint[], 
       ${entryNumbers}::smallint[], 
-      ${componentNumbers}::smallint[])
-    AS data (${sql(columns)})
-    WHERE EXISTS (SELECT 1 FROM word WHERE word.id = data.word_id)
+      ${componentNumbers}::smallint[]
+    ) AS data (${sql(columns)})
+    WHERE EXISTS (
+      SELECT 1 FROM word 
+      WHERE word.id = data.word_id
+    )
   `
 
   console.log('Updated word_work table')

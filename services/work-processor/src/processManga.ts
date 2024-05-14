@@ -25,6 +25,7 @@ export async function processManga(
   const timeTaken = 'Time to process the entire request'
   console.time(timeTaken)
 
+  // TODO: userId should be set in an auth header
   const {
     folderName,
     body: { authors, series, title, userId, volumeNumber },
