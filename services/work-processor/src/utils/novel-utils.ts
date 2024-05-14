@@ -133,10 +133,10 @@ export function divideTextJsonIntoParagraphs(
   const content = novelTextJson.content
 
   let totalChars = 0
-  let paragraphs = [] as string[]
+  let paragraphs: string[] = []
 
   const processParagraphNode = (paragraphNode: NovelTextJsonNode) => {
-    const paragraphStrings = [] as string[]
+    const paragraphStrings: string[] = []
 
     const processChildNode = (
       childNode: NovelTextJsonNode | string | Array<NovelTextJsonNode | string>
