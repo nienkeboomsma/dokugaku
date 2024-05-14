@@ -1,7 +1,8 @@
-import { type Express, type Response } from 'express'
+import type { NextFunction, Response } from 'express'
 import fs from 'node:fs'
 import path from 'node:path'
 
+import type { MangaUploadRequest } from './utils/types.js'
 import { mokuroExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
@@ -12,13 +13,21 @@ import {
 } from './utils/manga-utils.js'
 import { insertIntoDatabase } from './db/insertIntoDatabase.js'
 
-export async function processManga(req: Express.Request, res: Response) {
+export async function processManga(
+  req: MangaUploadRequest,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.folderName) {
+    throw new Error('Something went wrong with Multer storage')
+  }
+
   const timeTaken = 'Time to process the entire request'
   console.time(timeTaken)
 
   const {
     folderName,
-    body: { series, volumeNumber, title, authors, userId },
+    body: { authors, series, title, userId, volumeNumber },
   } = req
   console.table({ folderName, userId, series, volumeNumber, title, authors })
 
@@ -42,6 +51,7 @@ export async function processManga(req: Express.Request, res: Response) {
     estimatedDurationInMin: estimatedDuration / 1000 / 60,
     estimatedFinishTime: timeWhenFinished,
   })
+
   try {
     if (!filesAreMokurod) await runMokuro(folderName)
     await runIchiranOnEachPage(fullPath)
@@ -65,7 +75,6 @@ export async function processManga(req: Express.Request, res: Response) {
     console.timeEnd(timeTaken)
   } catch (err) {
     fs.rmSync(fullPath, { recursive: true, force: true })
-    console.log('An error occurred: ', err)
-    process.exit(1)
+    next(err)
   }
 }

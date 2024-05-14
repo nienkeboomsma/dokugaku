@@ -1,12 +1,17 @@
-import { Express, Response, NextFunction } from 'express'
+import type { Express, Response, NextFunction } from 'express'
 import path from 'node:path'
 
 import { mokuroExtensions } from './utils/constants.js'
-import { isNumber } from './utils/types.js'
+import {
+  type MangaUploadRequest,
+  type NovelUploadRequest,
+  type UploadRequest,
+  isNumber,
+} from './utils/types.js'
 
 // TODO: look into Zod for validation
 export function validateMetadata(
-  req: Express.Request,
+  req: UploadRequest,
   res: Response,
   next: NextFunction
 ) {
@@ -85,7 +90,7 @@ export function mokurodFilesAreValid(files: Express.Multer.File[]) {
 }
 
 export function validateMangaFiles(
-  req: Express.Request,
+  req: MangaUploadRequest,
   res: Response,
   next: NextFunction
 ) {
@@ -111,7 +116,7 @@ export function validateMangaFiles(
 }
 
 export function validateNovelFiles(
-  req: Express.Request,
+  req: NovelUploadRequest,
   res: Response,
   next: NextFunction
 ) {
