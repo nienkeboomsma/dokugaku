@@ -29,31 +29,23 @@ export async function getConjugations() {
 
   type Row = { seq: number; from: number }
 
-  try {
-    const { rows } = await client.query<Row>(query)
-    const keyValuePairs: [number, number][] = rows.map(({ seq, from }) => [
-      seq,
-      from,
-    ])
-    client.end()
-    return new Map(keyValuePairs)
-  } catch (err) {
-    client.end()
-    throw Error('Unable to retrieve conjugation list')
-  }
+  const { rows } = await client.query<Row>(query)
+  const keyValuePairs: [number, number][] = rows.map(({ seq, from }) => [
+    seq,
+    from,
+  ])
+  client.end()
+  return new Map(keyValuePairs)
 }
 
 export function getSegmentation(string: string): Segmentation {
-  try {
-    console.log(
-      `Segmenting ${string.length > 500 ? string.slice(0, 500) + '... etc.' : string}`
-    )
-    const data = execSync(`ichiran-cli -f -- "${string}"`).toString()
-    return JSON.parse(data)
-  } catch (error) {
-    // restart the container
-    process.exit(1)
-  }
+  const strippedString = string.replaceAll(/"/g, '')
+
+  console.log(
+    `Segmenting ${strippedString.length > 500 ? strippedString.slice(0, 500) + '... etc.' : strippedString}`
+  )
+  const data = execSync(`ichiran-cli -f -- "${strippedString}"`).toString()
+  return JSON.parse(data)
 }
 
 function getIdFromNonCompoundWord(
@@ -84,10 +76,8 @@ function getReadingFromNonCompoundWord(nonCompoundWord: NonCompoundWord) {
   return stripFuriganaFromReading(nonCompoundWord.reading)
 }
 
-export function getWordListFromSegmentation(
-  segmentation: Segmentation,
-  conjugations: Map<number, number>
-) {
+export async function getWordListFromSegmentation(segmentation: Segmentation) {
+  const conjugations = await getConjugations()
   const sentences = segmentation.filter(isSentence)
   const wordList = sentences.reduce<Array<ProcessedWord>>(
     (wordList, sentence, sentenceIndex) => {

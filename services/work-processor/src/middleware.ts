@@ -1,15 +1,43 @@
-import { Express, Response, NextFunction } from 'express'
+import type { Express, Response, NextFunction } from 'express'
 import path from 'node:path'
 
 import { mokuroExtensions } from './utils/constants.js'
-import { isNumber } from './utils/types.js'
+import {
+  type MangaUploadRequest,
+  type NovelUploadRequest,
+  type UploadRequest,
+  isNumber,
+  KnownWordsRequest,
+} from './utils/types.js'
 
 // TODO: look into Zod for validation
-export function validateMetadata(
-  req: Express.Request,
+export function validateKnownWords(
+  req: KnownWordsRequest,
   res: Response,
   next: NextFunction
 ) {
+  // TODO: userId should be in header
+  const { userId, words } = req.body
+
+  if (!userId) {
+    return res.status(500).send({ error: 'Make sure to provide a user ID' })
+  }
+
+  if (!words) {
+    return res
+      .status(500)
+      .send({ error: 'Make sure to provide a list of known words' })
+  }
+
+  next()
+}
+
+export function validateWorkMetadata(
+  req: UploadRequest,
+  res: Response,
+  next: NextFunction
+) {
+  // TODO: userId should be in header
   const { authors, series, title, userId, volumeNumber } = req.body
 
   if (!authors) {
@@ -85,7 +113,7 @@ export function mokurodFilesAreValid(files: Express.Multer.File[]) {
 }
 
 export function validateMangaFiles(
-  req: Express.Request,
+  req: MangaUploadRequest,
   res: Response,
   next: NextFunction
 ) {
@@ -111,7 +139,7 @@ export function validateMangaFiles(
 }
 
 export function validateNovelFiles(
-  req: Express.Request,
+  req: NovelUploadRequest,
   res: Response,
   next: NextFunction
 ) {

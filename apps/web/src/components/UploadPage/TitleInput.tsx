@@ -1,20 +1,19 @@
 import { TextInput } from '@mantine/core'
 
-import { type UploadForm } from '../../hooks/useUploadForm'
+import type { WorkUploadForm } from '../../hooks/useWorkUploadForm'
 import AutofillButton from './AutofillButton'
 
-export default function TitleInput({ uploadForm }: { uploadForm: UploadForm }) {
+export default function TitleInput({ form }: { form: WorkUploadForm }) {
   const showAutofillButton = !!(
-    uploadForm.values.series &&
-    uploadForm.values.volumeNumber &&
-    uploadForm.values.title !==
-      `${uploadForm.values.series} ${uploadForm.values.volumeNumber}`
+    form.values.series &&
+    form.values.volumeNumber &&
+    form.values.title !== `${form.values.series} ${form.values.volumeNumber}`
   )
 
   const autofillAction = () =>
-    uploadForm.setFieldValue(
+    form.setFieldValue(
       'title',
-      `${uploadForm.values.series} ${uploadForm.values.volumeNumber}`
+      `${form.values.series} ${form.values.volumeNumber}`
     )
 
   return (
@@ -28,7 +27,7 @@ export default function TitleInput({ uploadForm }: { uploadForm: UploadForm }) {
         />
       }
       withAsterisk
-      {...uploadForm.getInputProps('title')}
+      {...form.getInputProps('title')}
     />
   )
 }

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { UseFormReturnType, useForm } from '@mantine/form'
+import { type UseFormReturnType, useForm } from '@mantine/form'
 import { GQL_WorkType } from '@repo/graphql-types'
 
 export type FormValues = {
@@ -12,7 +12,7 @@ export type FormValues = {
   files: File[]
 }
 
-export type UploadForm = UseFormReturnType<FormValues>
+export type WorkUploadForm = UseFormReturnType<FormValues>
 const getInitialValues = (type: GQL_WorkType) => {
   const commonValues = {
     series: '',
@@ -45,6 +45,7 @@ const titleValidator = (value: FormValues['title']) =>
 const authorsValidator = (value: FormValues['authors']) =>
   value.length === 0 ? 'Please supply at least one author' : null
 
+// TODO: if mokuro === true, manga files should contain a json for each img
 const mangaFilesValidator = (value: FormValues['files']) => {
   return value.length === 0 ? `Please supply the manga's image files` : null
 }
@@ -77,17 +78,17 @@ const getValidators = (type: GQL_WorkType) => {
     }
 }
 
-export default function useUploadForm(type: GQL_WorkType) {
-  const uploadForm = useForm<FormValues>({
+export default function useWorkUploadForm(type: GQL_WorkType) {
+  const form = useForm<FormValues>({
     initialValues: getInitialValues(type),
     validate: getValidators(type),
   })
 
   useEffect(() => {
-    if (uploadForm.values.series === '') {
-      uploadForm.setFieldValue('volumeNumber', '')
+    if (form.values.series === '') {
+      form.setFieldValue('volumeNumber', '')
     }
-  }, [uploadForm.values.series])
+  }, [form.values.series])
 
   const sendFormData = async (
     values: FormValues,
@@ -113,7 +114,7 @@ export default function useUploadForm(type: GQL_WorkType) {
       formData.append('cover', values.cover ?? '')
     }
 
-    // TODO: the id should be supplied centrally via Docker Compose
+    // TODO: userId should be supplied via env variable and set in an auth header
     formData.append('userId', '6e41e9fd-c813-40e9-91fd-c51e47efab42')
 
     const res = await fetch(
@@ -128,5 +129,5 @@ export default function useUploadForm(type: GQL_WorkType) {
     return data
   }
 
-  return { uploadForm, sendFormData }
+  return { form, sendFormData }
 }

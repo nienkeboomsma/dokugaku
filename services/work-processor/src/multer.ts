@@ -1,4 +1,4 @@
-import { type RequestHandler } from 'express'
+import type { RequestHandler } from 'express'
 import multer from 'multer'
 import { randomUUID } from 'node:crypto'
 import { execSync } from 'node:child_process'
@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
 })
 
 export const processMangaFiles: RequestHandler = multer({
-  storage: storage,
+  storage,
   fileFilter: (_, file, cb) => {
     const fileName = file.originalname
     const extension = path.extname(fileName).toLowerCase()
@@ -43,7 +43,7 @@ export const processMangaFiles: RequestHandler = multer({
 }).array('files')
 
 export const processNovelFiles: RequestHandler = multer({
-  storage: storage,
+  storage,
   fileFilter: (_, file, cb) => {
     const fileName = file.originalname
     const extension = path.extname(fileName).toLowerCase()

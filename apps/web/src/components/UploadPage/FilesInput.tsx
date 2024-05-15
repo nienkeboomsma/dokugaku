@@ -1,15 +1,15 @@
 import { FileInput } from '@mantine/core'
 import { IconPhoto, IconFiles } from '@tabler/icons-react'
 
-import { type UploadForm } from '../../hooks/useUploadForm'
+import type { WorkUploadForm } from '../../hooks/useWorkUploadForm'
 import { GQL_WorkType } from '@repo/graphql-types'
 
 const getAcceptedExtensions = (
-  uploadForm: UploadForm,
+  form: WorkUploadForm,
   workType: GQL_WorkType
 ) => {
   if (workType === GQL_WorkType.Manga) {
-    return `.png, .jpg, .jpeg, .webp${uploadForm.values.mokuro ? ', .json' : ''}`
+    return `.png, .jpg, .jpeg, .webp${form.values.mokuro ? ', .json' : ''}`
   }
   if (workType === GQL_WorkType.Novel) {
     return '.html, .md, .txt'
@@ -36,21 +36,21 @@ const RightSection = ({ workType }: { workType: GQL_WorkType }) => {
 
 export default function FilesInput({
   workType,
-  uploadForm,
+  form,
 }: {
   workType: GQL_WorkType
-  uploadForm: UploadForm
+  form: WorkUploadForm
 }) {
   return (
     <FileInput
-      accept={getAcceptedExtensions(uploadForm, workType)}
+      accept={getAcceptedExtensions(form, workType)}
       clearable
       label={getLabel(workType)}
       rightSection={<RightSection workType={workType} />}
       rightSectionPointerEvents='none'
       multiple
       withAsterisk
-      {...uploadForm.getInputProps('files')}
+      {...form.getInputProps('files')}
     />
   )
 }

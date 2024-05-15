@@ -1,6 +1,6 @@
 import { type TransactionSql } from 'postgres'
 
-import { type WorkMetadata } from '../utils/types.js'
+import { type WorkMetadata } from '../../utils/types.js'
 
 type AuthorId = {
   id: string
@@ -23,6 +23,4 @@ export async function updateAuthorWorkTable(
   })
 
   await sql`INSERT INTO author_work ${sql(values)}`
-
-  console.log('Updated author_work table')
 }

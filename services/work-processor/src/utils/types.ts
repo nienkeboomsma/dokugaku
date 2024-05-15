@@ -1,20 +1,36 @@
+import type { Request } from 'express'
+
 declare global {
   // eslint-disable-next-line no-unused-vars
   namespace Express {
     // eslint-disable-next-line no-unused-vars
     interface Request {
-      body: {
-        authors: string[]
-        mokuro: 'true' | 'false'
-        series?: string
-        userId: string
-        volumeNumber?: number
-        title: string
-      }
-      folderName: string
+      folderName?: string
     }
   }
 }
+
+type TypedRequest<T> = Request<{}, {}, T>
+
+type MangaUploadBody = {
+  authors: string[]
+  mokuro: 'true' | 'false'
+  series?: string
+  userId: string
+  volumeNumber?: number
+  title: string
+}
+
+type NovelUploadBody = Omit<MangaUploadBody, 'mokuro'>
+
+export type MangaUploadRequest = TypedRequest<MangaUploadBody>
+export type NovelUploadRequest = TypedRequest<NovelUploadBody>
+export type UploadRequest = MangaUploadRequest | NovelUploadRequest
+
+export type KnownWordsRequest = TypedRequest<{
+  userId: string
+  words: string
+}>
 
 type LineCoordinates = [
   [number, number],

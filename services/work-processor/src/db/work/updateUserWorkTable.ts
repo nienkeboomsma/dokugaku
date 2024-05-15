@@ -12,6 +12,4 @@ export async function updateUserWorkTable(
   }
 
   await sql`INSERT INTO user_work ${sql(userWork)}`
-
-  console.log('Updated user_work table')
 }

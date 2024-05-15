@@ -27,11 +27,11 @@ export function getTimeEstimate(
   return { estimatedDuration, timeWhenFinished }
 }
 
-export async function runMokuro(folderName: string) {
-  const timeTaken = 'Time to run Mokuro'
+export async function runMokuro(folderName: string, title: string) {
+  const timeTaken = `${title} ・ Time to run Mokuro`
   console.time(timeTaken)
 
-  console.log(`Starting Mokuro`)
+  console.log(`${title} ・ Starting Mokuro`)
 
   await axios.post(
     `http://mokuro:${process.env.MOKURO_PORT}/mokuro`,
@@ -52,10 +52,10 @@ function getTextFromMokuroData(data: MokuroData) {
   return linesString
 }
 
-export async function runIchiranOnEachPage(fullPath: string) {
+export async function runIchiranOnEachPage(fullPath: string, title: string) {
   const pages = getAllFilesByExtension(fullPath, ['.json'])
 
-  const timeTaken = `Time to run Ichiran on ${pages.length} pages`
+  const timeTaken = `${title} ・ Time to run Ichiran on ${pages.length} pages`
   console.time(timeTaken)
 
   for (const [index, page] of pages.entries()) {
@@ -64,8 +64,10 @@ export async function runIchiranOnEachPage(fullPath: string) {
     const mokuroData = JSON.parse(mokuroOutput)
     const string = getTextFromMokuroData(mokuroData)
 
-    console.log(`Running Ichiran on page ${index + 1} of ${pages.length}`)
-    const words = await runIchiran(string)
+    console.log(
+      `${title} ・ Running Ichiran on page ${index + 1} of ${pages.length}`
+    )
+    const words = await runIchiran(string, 'processedSegmentation')
 
     for (let word of words) {
       const pageNumber = Number(path.parse(page).name.slice(-4))
@@ -82,18 +84,16 @@ export async function runIchiranOnEachPage(fullPath: string) {
   console.timeEnd(timeTaken)
 }
 
-export function createCoverImage(fullPath: string) {
+export function createCoverImage(fullPath: string, title: string) {
   const images = getAllFilesByExtension(fullPath, mokuroExtensions)
   const [firstPage] = images.sort()
 
   if (!firstPage) {
-    return console.log('Unable to generate a cover image')
+    return console.log(`${title} ・ Unable to generate a cover image`)
   }
 
   const firstPagePath = path.join(fullPath, firstPage)
   const coverPath = path.join(fullPath, `cover${path.extname(firstPage)}`)
-
-  console.table({ firstPagePath, coverPath })
 
   fs.copyFileSync(firstPagePath, coverPath)
 }

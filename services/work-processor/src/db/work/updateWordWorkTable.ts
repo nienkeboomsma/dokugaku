@@ -1,7 +1,7 @@
 import { type TransactionSql } from 'postgres'
 import fs from 'node:fs'
 import path from 'node:path'
-import { type Word, type WorkMetadata } from '../utils/types.js'
+import { type Word, type WorkMetadata } from '../../utils/types.js'
 
 export async function updateWordWorkTable(
   sql: TransactionSql,
@@ -61,10 +61,11 @@ export async function updateWordWorkTable(
       ${pageNumbers}::smallint[], 
       ${sentenceNumbers}::smallint[], 
       ${entryNumbers}::smallint[], 
-      ${componentNumbers}::smallint[])
-    AS data (${sql(columns)})
-    WHERE EXISTS (SELECT 1 FROM word WHERE word.id = data.word_id)
+      ${componentNumbers}::smallint[]
+    ) AS data (${sql(columns)})
+    WHERE EXISTS (
+      SELECT 1 FROM word 
+      WHERE word.id = data.word_id
+    )
   `
-
-  console.log('Updated word_work table')
 }

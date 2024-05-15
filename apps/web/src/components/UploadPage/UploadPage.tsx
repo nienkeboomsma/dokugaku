@@ -7,7 +7,7 @@ import classes from './UploadPage.module.css'
 import { type ExistingSeries } from '../../types/ExistingSeries'
 import { type ExistingAuthors } from '../../types/ExistingAuthors'
 import PaperContainer from '../PaperContainer/PaperContainer'
-import UploadForm from './UploadForm'
+import WorkUploadForm from './WorkUploadForm'
 
 export default function UploadPage({
   existingAuthors,
@@ -27,14 +27,14 @@ export default function UploadPage({
         </Tabs.List>
 
         <Tabs.Panel value='manga'>
-          <UploadForm
+          <WorkUploadForm
             initialExistingAuthors={existingAuthors}
             initialExistingSeries={existingMangaSeries}
             workType={GQL_WorkType.Manga}
           />
         </Tabs.Panel>
         <Tabs.Panel value='novel'>
-          <UploadForm
+          <WorkUploadForm
             initialExistingAuthors={existingAuthors}
             initialExistingSeries={existingNovelSeries}
             workType={GQL_WorkType.Novel}

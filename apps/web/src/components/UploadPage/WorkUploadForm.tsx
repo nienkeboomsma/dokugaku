@@ -3,10 +3,12 @@ import { Button } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { GQL_WorkType } from '@repo/graphql-types'
 
-import classes from './UploadForm.module.css'
-import { type ExistingSeries } from '../../types/ExistingSeries'
-import { type ExistingAuthors } from '../../types/ExistingAuthors'
-import useUploadForm, { type FormValues } from '../../hooks/useUploadForm'
+import classes from './WorkUploadForm.module.css'
+import type { ExistingSeries } from '../../types/ExistingSeries'
+import type { ExistingAuthors } from '../../types/ExistingAuthors'
+import useWorkUploadForm, {
+  type FormValues,
+} from '../../hooks/useWorkUploadForm'
 import SeriesInput from './SeriesInput'
 import VolumeNumberInput from './VolumeNumberInput'
 import TitleInput from './TitleInput'
@@ -16,7 +18,7 @@ import CoverInput from './CoverInput'
 import FilesInput from './FilesInput'
 import { getLowestMissingNumber } from '../../util/getLowestMissingNumber'
 
-export default function UploadForm({
+export default function WorkUploadForm({
   initialExistingAuthors,
   initialExistingSeries,
   workType,
@@ -25,7 +27,7 @@ export default function UploadForm({
   initialExistingSeries: ExistingSeries
   workType: GQL_WorkType
 }) {
-  const { uploadForm, sendFormData } = useUploadForm(workType)
+  const { form, sendFormData } = useWorkUploadForm(workType)
   const [loading, setLoading] = useState(false)
   const [existingAuthors, setExistingAuthors] = useState(initialExistingAuthors)
   const [existingSeries, setExistingSeries] = useState(initialExistingSeries)
@@ -90,11 +92,13 @@ export default function UploadForm({
       return setExistingSeries(updatedSeries)
     }
 
+    const volumeNumbers = [Number(values.volumeNumber)]
+
     const newSeriesEntry = {
       authors: new Set(values.authors),
-      nextVolumeNumber: Number(values.volumeNumber) + 1,
+      nextVolumeNumber: getLowestMissingNumber(volumeNumbers),
       title: values.series,
-      volumeNumbers: [Number(values.volumeNumber)],
+      volumeNumbers,
       workTypes: new Set([workType]),
     }
 
@@ -110,16 +114,17 @@ export default function UploadForm({
       const data = await sendFormData(values, event)
 
       if (data.error) {
-        return notifications.show({
+        notifications.show({
           title: `Unable to process ${values.title}`,
           message: data.error,
         })
+        return setLoading(false)
       }
 
       updateExistingAuthors(values)
       updateExistingSeries(values)
       // TODO: the file uploads are cleared, but APPEAR like they still have a selection
-      uploadForm.reset()
+      form.reset()
       notifications.show({
         title: `${values.title} uploaded successfully`,
         message: `Please check back in about ${Math.ceil(data.estimatedDurationInMin)} minutes`,
@@ -135,30 +140,23 @@ export default function UploadForm({
   }
 
   return (
-    <form
-      className={classes.form}
-      onSubmit={uploadForm.onSubmit(submitHandler)}
-    >
-      <SeriesInput existingSeries={existingSeries} uploadForm={uploadForm} />
+    <form className={classes.form} onSubmit={form.onSubmit(submitHandler)}>
+      <SeriesInput existingSeries={existingSeries} form={form} />
       <VolumeNumberInput
         findVolumeNumberBySeriesTitle={findVolumeNumberBySeriesTitle}
-        uploadForm={uploadForm}
+        form={form}
       />
-      <TitleInput uploadForm={uploadForm} />
+      <TitleInput form={form} />
       <AuthorsInput
         existingAuthors={existingAuthors}
         findAuthorsBySeriesTitle={findAuthorsBySeriesTitle}
-        uploadForm={uploadForm}
+        form={form}
       />
 
-      {workType === GQL_WorkType.Manga && (
-        <MokuroInput uploadForm={uploadForm} />
-      )}
-      {workType === GQL_WorkType.Novel && (
-        <CoverInput uploadForm={uploadForm} />
-      )}
+      {workType === GQL_WorkType.Manga && <MokuroInput form={form} />}
+      {workType === GQL_WorkType.Novel && <CoverInput form={form} />}
 
-      <FilesInput workType={workType} uploadForm={uploadForm} />
+      <FilesInput workType={workType} form={form} />
 
       <Button
         mt={20}

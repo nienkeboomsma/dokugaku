@@ -133,10 +133,10 @@ export function divideTextJsonIntoParagraphs(
   const content = novelTextJson.content
 
   let totalChars = 0
-  let paragraphs = [] as string[]
+  let paragraphs: string[] = []
 
   const processParagraphNode = (paragraphNode: NovelTextJsonNode) => {
-    const paragraphStrings = [] as string[]
+    const paragraphStrings: string[] = []
 
     const processChildNode = (
       childNode: NovelTextJsonNode | string | Array<NovelTextJsonNode | string>
@@ -173,16 +173,17 @@ export function getTimeEstimate(totalChars: number) {
 
 export async function runIchiranOnEachParagraph(
   paragraphs: string[],
-  fullPath: string
+  fullPath: string,
+  title: string
 ) {
-  const timeTaken = `Time to run Ichiran on ${paragraphs.length} paragraphs`
+  const timeTaken = `${title} ・ Time to run Ichiran on ${paragraphs.length} paragraphs`
   console.time(timeTaken)
 
   for (const [index, paragraph] of paragraphs.entries()) {
     console.log(
-      `Running Ichiran on paragraph ${index + 1} of ${paragraphs.length}`
+      `${title} ・ Running Ichiran on paragraph ${index + 1} of ${paragraphs.length}`
     )
-    const words = await runIchiran(paragraph)
+    const words = await runIchiran(paragraph, 'processedSegmentation')
 
     for (let word of words) {
       const paragraphNumber = index + 1

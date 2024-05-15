@@ -1,5 +1,5 @@
-import sql from './sql.js'
-import { isPartOfSeries, type WorkMetadata } from '../utils/types.js'
+import sql from '../sql.js'
+import { isPartOfSeries, type WorkMetadata } from '../../utils/types.js'
 import { updateAuthorTable } from './updateAuthorTable.js'
 import { updateAuthorWorkTable } from './updateAuthorWorkTable.js'
 import { updateSeriesTable } from './updateSeriesTable.js'
@@ -10,10 +10,11 @@ import { updateWorkTable } from './updateWorkTable.js'
 import { updateWorkWordCounts } from './updateWorkWordCounts.js'
 import { updateSeriesWordCounts } from './updateSeriesWordCounts.js'
 
-export async function insertIntoDatabase(
+export async function insertWorkIntoDatabase(
   workMetadata: WorkMetadata,
   userId: string,
-  fullPath: string
+  fullPath: string,
+  title: string
 ) {
   sql.begin(async (sql) => {
     if (isPartOfSeries(workMetadata)) {
@@ -42,6 +43,6 @@ export async function insertIntoDatabase(
       await updateSeriesWordCounts(sql, workMetadata.seriesId)
     }
 
-    console.log('Work was successfully added to the database')
+    console.log(`${title} ・ Work was successfully added to the database`)
   })
 }

@@ -3,7 +3,7 @@ import {
   isPartOfSeries,
   type WorkMetadata,
   type WorkMetadataSeries,
-} from '../utils/types.js'
+} from '../../utils/types.js'
 
 type Work = {
   id: WorkMetadataSeries['workId']
@@ -35,6 +35,4 @@ export async function updateWorkTable(
   }
 
   await sql`INSERT INTO work ${sql(work)}`
-
-  console.log('Updated work table')
 }
