@@ -83,7 +83,7 @@ In the case of novels the `pageNumber` variable actually refers to the _paragrap
 
 ## Processing time estimate
 
-There is currently no way to track the processing of an uploaded work other than keeping an eye on the `work-processor` logs. When uploading a work, a toast appears to give some estimate of the required processing time. This estimate is based on a few constants in `/services/work-processor/src/utils/constants.ts`. It is recommended to keep an eye on the `work-processor` logs for the first few uploads in order to determine more accurate values for your own hardware.
+There is currently no way to track the processing of an uploaded work other than keeping an eye on the `work-processor` logs. When uploading a work, a toast will provide some estimate of the required processing time. This estimate is based on a few constants in `/services/work-processor/src/utils/constants.ts`. It is recommended to keep an eye on the `work-processor` logs for the first few uploads in order to provide these constants with more accurate values for your own hardware.
 
 # Managing vocab
 
@@ -100,6 +100,19 @@ Ignoring words is intended to be used for words that have been spuriously parsed
 ## Known
 
 Self-explanatory. These words are filtered out from _all_ frequency lists, glossaries and recommended vocab because they are (fortunately!) no longer worth learning. Marking these words manually would be cumbersome, which is why there is an option to upload a list of known words and have them automatically marked as known.
+
+## Uploading known words
+
+On the 'known words' page there is an option to mark words as known in bulk by uploading them as a (white)space-separated or comma-separated list.
+
+### Exporting from Anki
+
+1. In the Browse window you can use filters to select only those words you feel you truly know. For example, the filter `prop:ivl>=30 prop:r>0.9 -is:suspended` will select non-suspended cards with an interval of 30 days or more and a retention rate of 90% or more.
+2. Go to `Notes > Export Notes...` and `Notes in Plain Text (.txt)` as the export format. There is no need to check any of the boxes.
+3. Open the resulting `.txt` in a spreadsheet app of your choice.
+4. remove all columns except for the one that represents the Japanese headword with kanji and without furigana syntax
+5. Export the remaining column as a `.csv` file.
+6. If you open this file in a text editor, you will be able to copy/paste the contents into the upload form.
 
 # Roadmap
 
