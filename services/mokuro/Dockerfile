@@ -39,7 +39,7 @@ COPY --from=build-server /app /app
 WORKDIR /app/services/mokuro
 
 # production
-# CMD node dist/index.js
+CMD node dist/index.js
 
 # development
-CMD npm run dev
+# CMD npm run dev
