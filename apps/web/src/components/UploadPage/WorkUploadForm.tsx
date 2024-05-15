@@ -4,8 +4,8 @@ import { notifications } from '@mantine/notifications'
 import { GQL_WorkType } from '@repo/graphql-types'
 
 import classes from './WorkUploadForm.module.css'
-import { type ExistingSeries } from '../../types/ExistingSeries'
-import { type ExistingAuthors } from '../../types/ExistingAuthors'
+import type { ExistingSeries } from '../../types/ExistingSeries'
+import type { ExistingAuthors } from '../../types/ExistingAuthors'
 import useWorkUploadForm, {
   type FormValues,
 } from '../../hooks/useWorkUploadForm'
@@ -114,10 +114,11 @@ export default function WorkUploadForm({
       const data = await sendFormData(values, event)
 
       if (data.error) {
-        return notifications.show({
+        notifications.show({
           title: `Unable to process ${values.title}`,
           message: data.error,
         })
+        return setLoading(false)
       }
 
       updateExistingAuthors(values)
