@@ -4,8 +4,9 @@ import express, { type Express } from 'express'
 import { processMangaFiles, processNovelFiles } from './multer.js'
 import {
   validateMangaFiles,
-  validateMetadata,
+  validateWorkMetadata,
   validateNovelFiles,
+  validateKnownWords,
 } from './middleware.js'
 import { processManga } from './processManga.js'
 import { processNovel } from './processNovel.js'
@@ -15,13 +16,13 @@ import { errorHandler } from './errorHandler.js'
 const app: Express = express()
 
 app.use(cors())
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }))
 
 app.post(
   '/processManga',
   processMangaFiles,
   validateMangaFiles,
-  validateMetadata,
+  validateWorkMetadata,
   processManga
 )
 
@@ -29,11 +30,11 @@ app.post(
   '/processNovel',
   processNovelFiles,
   validateNovelFiles,
-  validateMetadata,
+  validateWorkMetadata,
   processNovel
 )
 
-app.post('/knownWords', processKnownWords)
+app.post('/knownWords', validateKnownWords, processKnownWords)
 
 app.use(errorHandler)
 

@@ -7,14 +7,37 @@ import {
   type NovelUploadRequest,
   type UploadRequest,
   isNumber,
+  KnownWordsRequest,
 } from './utils/types.js'
 
 // TODO: look into Zod for validation
-export function validateMetadata(
+export function validateKnownWords(
+  req: KnownWordsRequest,
+  res: Response,
+  next: NextFunction
+) {
+  // TODO: userId should be in header
+  const { userId, words } = req.body
+
+  if (!userId) {
+    return res.status(500).send({ error: 'Make sure to provide a user ID' })
+  }
+
+  if (!words) {
+    return res
+      .status(500)
+      .send({ error: 'Make sure to provide a list of known words' })
+  }
+
+  next()
+}
+
+export function validateWorkMetadata(
   req: UploadRequest,
   res: Response,
   next: NextFunction
 ) {
+  // TODO: userId should be in header
   const { authors, series, title, userId, volumeNumber } = req.body
 
   if (!authors) {
