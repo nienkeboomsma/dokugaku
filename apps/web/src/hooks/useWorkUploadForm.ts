@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { UseFormReturnType, useForm } from '@mantine/form'
+import { type UseFormReturnType, useForm } from '@mantine/form'
 import { GQL_WorkType } from '@repo/graphql-types'
 
 export type FormValues = {

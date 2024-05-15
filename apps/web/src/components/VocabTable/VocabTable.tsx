@@ -142,6 +142,7 @@ export default function VocabTable(props: VocabTableProps) {
   //       filter to go with it?)
   // TODO: in that case, allow glossaries for series after all, and allow
   //       filtering by minVolumeNumber and minPagenumber
+  // TODO: see if a fixed width for reading/frequency/actions makes sense
   const allColumns: DataTableColumn<Word>[] = [
     {
       accessor: 'reading',
