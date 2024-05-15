@@ -16,10 +16,7 @@ export async function processKnownWords(req: KnownWordsRequest, res: Response) {
     body: { userId, words },
   } = req
 
-  console.table({ userId, words: words.slice(0, 100) })
-
-  const { chunks, totalChars } = divideWordsStringIntoChunks(words, 2500)
-
+  const { chunks, totalChars } = divideWordsStringIntoChunks(words, 2000)
   const { estimatedDuration, timeWhenFinished } = getTimeEstimate(totalChars)
 
   res.status(200).json({

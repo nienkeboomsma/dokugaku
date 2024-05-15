@@ -12,7 +12,7 @@ import {
   saveHtmlAsJson,
   stripAndCombineFiles,
 } from './utils/novel-utils.js'
-import { insertWorkIntoDatabase } from './db/work/insertWorksIntoDatabase.js'
+import { insertWorkIntoDatabase } from './db/work/insertWorkIntoDatabase.js'
 
 export async function processNovel(
   req: NovelUploadRequest,
@@ -23,16 +23,15 @@ export async function processNovel(
     throw new Error('Something went wrong with Multer storage')
   }
 
-  const timeTaken = 'Time to process the entire request'
-  console.time(timeTaken)
-
   // TODO: userId should be set in an auth header
   const {
     folderName,
     body: { authors, series, title, userId, volumeNumber },
   } = req
-
   console.table({ folderName, userId, series, volumeNumber, title, authors })
+
+  const timeTaken = `${title} ・ Time to process the entire request`
+  console.time(timeTaken)
 
   const fullPath = path.join(volumePath, folderName)
 
@@ -51,8 +50,8 @@ export async function processNovel(
   })
 
   try {
-    await runIchiranOnEachParagraph(paragraphs, fullPath)
-    await convertImagesToWebP(fullPath)
+    await runIchiranOnEachParagraph(paragraphs, fullPath, title)
+    await convertImagesToWebP(fullPath, title)
     await insertWorkIntoDatabase(
       {
         authors: authors,
@@ -64,11 +63,13 @@ export async function processNovel(
         workVolumeNumber: volumeNumber,
       },
       userId,
-      fullPath
+      fullPath,
+      title
     )
 
     console.timeEnd(timeTaken)
   } catch (err) {
+    console.log(`${title} ・ Removing the directory ${fullPath}`)
     fs.rmSync(fullPath, { recursive: true, force: true })
     next(err)
   }

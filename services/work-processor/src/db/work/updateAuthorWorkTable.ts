@@ -23,6 +23,4 @@ export async function updateAuthorWorkTable(
   })
 
   await sql`INSERT INTO author_work ${sql(values)}`
-
-  console.log('Updated author_work table')
 }

@@ -17,8 +17,6 @@ export async function updateSeriesTable(
     RETURNING id
   `
 
-  console.log('Updated series table')
-
   const seriesId = res[0].id
   return { seriesId }
 }

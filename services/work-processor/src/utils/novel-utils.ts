@@ -173,14 +173,15 @@ export function getTimeEstimate(totalChars: number) {
 
 export async function runIchiranOnEachParagraph(
   paragraphs: string[],
-  fullPath: string
+  fullPath: string,
+  title: string
 ) {
-  const timeTaken = `Time to run Ichiran on ${paragraphs.length} paragraphs`
+  const timeTaken = `${title} ・ Time to run Ichiran on ${paragraphs.length} paragraphs`
   console.time(timeTaken)
 
   for (const [index, paragraph] of paragraphs.entries()) {
     console.log(
-      `Running Ichiran on paragraph ${index + 1} of ${paragraphs.length}`
+      `${title} ・ Running Ichiran on paragraph ${index + 1} of ${paragraphs.length}`
     )
     const words = await runIchiran(paragraph, 'processedSegmentation')
 

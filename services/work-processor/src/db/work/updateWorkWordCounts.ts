@@ -28,6 +28,4 @@ export async function updateWorkWordCounts(
     FROM total_counts
     WHERE work.id = ${workId}
   `
-
-  console.log('Updated work word counts')
 }

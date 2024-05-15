@@ -83,12 +83,12 @@ export function concatToJson(
   }
 }
 
-export async function convertImagesToWebP(fullPath: string) {
-  console.log('Converting images to WebP')
+export async function convertImagesToWebP(fullPath: string, title: string) {
+  console.log(`${title} ・ Converting images to WebP`)
 
   const images = getAllFilesByExtension(fullPath, mokuroExtensions)
 
-  const timeTaken = `Time to convert ${images.length} images to WebP`
+  const timeTaken = `${title} ・ Time to convert ${images.length} images to WebP`
   console.time(timeTaken)
 
   for (const inputFile of images) {
@@ -99,7 +99,9 @@ export async function convertImagesToWebP(fullPath: string) {
     const outputPath = path.join(fullPath, outputFile)
 
     if (inputFileName === 'cover') {
-      await sharp(inputPath)
+      // failOnError deals with issue #1859
+      // https://github.com/lovell/sharp/issues/1859
+      await sharp(inputPath, { failOnError: false })
         .resize({ width: 320 })
         .toFormat('webp')
         .toFile(outputPath)

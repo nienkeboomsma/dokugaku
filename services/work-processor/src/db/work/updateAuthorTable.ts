@@ -21,6 +21,5 @@ export async function updateAuthorTable(
     RETURNING id
   `
 
-  console.log('Updated author table')
   return authorIds
 }

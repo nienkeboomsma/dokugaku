@@ -33,6 +33,4 @@ export async function updateSeriesWordCounts(
     FROM total_counts
     WHERE series.id = ${seriesId}
   `
-
-  console.log('Updated series word counts')
 }

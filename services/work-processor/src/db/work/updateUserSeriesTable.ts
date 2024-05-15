@@ -15,6 +15,4 @@ export async function updateUserSeriesTable(
     INSERT INTO user_series ${sql(userSeries)} 
     ON CONFLICT (user_id, series_id) DO NOTHING
   `
-
-  console.log('Updated user_series table')
 }

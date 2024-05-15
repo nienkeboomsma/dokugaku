@@ -11,7 +11,7 @@ import {
   runIchiranOnEachPage,
   runMokuro,
 } from './utils/manga-utils.js'
-import { insertWorkIntoDatabase } from './db/work/insertWorksIntoDatabase.js'
+import { insertWorkIntoDatabase } from './db/work/insertWorkIntoDatabase.js'
 
 export async function processManga(
   req: MangaUploadRequest,
@@ -22,15 +22,15 @@ export async function processManga(
     throw new Error('Something went wrong with Multer storage')
   }
 
-  const timeTaken = 'Time to process the entire request'
-  console.time(timeTaken)
-
   // TODO: userId should be set in an auth header
   const {
     folderName,
     body: { authors, series, title, userId, volumeNumber },
   } = req
   console.table({ folderName, userId, series, volumeNumber, title, authors })
+
+  const timeTaken = `${title} ・ Time to process the entire request`
+  console.time(timeTaken)
 
   const fullPath = path.join(volumePath, folderName)
 
@@ -54,10 +54,10 @@ export async function processManga(
   })
 
   try {
-    if (!filesAreMokurod) await runMokuro(folderName)
-    await runIchiranOnEachPage(fullPath)
-    createCoverImage(fullPath)
-    await convertImagesToWebP(fullPath)
+    if (!filesAreMokurod) await runMokuro(folderName, title)
+    await runIchiranOnEachPage(fullPath, title)
+    createCoverImage(fullPath, title)
+    await convertImagesToWebP(fullPath, title)
 
     await insertWorkIntoDatabase(
       {
@@ -70,11 +70,13 @@ export async function processManga(
         workVolumeNumber: req.body.volumeNumber,
       },
       req.body.userId,
-      fullPath
+      fullPath,
+      title
     )
 
     console.timeEnd(timeTaken)
   } catch (err) {
+    console.log(`${title} ・ Removing the directory ${fullPath}`)
     fs.rmSync(fullPath, { recursive: true, force: true })
     next(err)
   }

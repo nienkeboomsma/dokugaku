@@ -68,6 +68,4 @@ export async function updateWordWorkTable(
       WHERE word.id = data.word_id
     )
   `
-
-  console.log('Updated word_work table')
 }

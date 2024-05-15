@@ -20,7 +20,7 @@ export function divideWordsStringIntoChunks(
   const chunks = Array.from({ length: numberOfChunks }, (_, index) => {
     const firstIndex = index * wordsPerChunk
     const lastIndex = (index + 1) * wordsPerChunk
-    return words.slice(firstIndex, lastIndex).join('。')
+    return words.slice(firstIndex, lastIndex).join(',')
   })
 
   return { chunks, totalChars }
