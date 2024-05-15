@@ -59,9 +59,9 @@ COPY --from=build-server /app /app
 WORKDIR /app/services/ichiran
 
 # production
-# CMD sh init.sh && \
-#     node dist/index.js
+CMD sh init.sh && \
+    node dist/index.js
 
 # development
-CMD sh init.sh && \
-    npm run dev
+# CMD sh init.sh && \
+#     npm run dev
