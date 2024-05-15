@@ -61,7 +61,7 @@ The cover image can be `.jpg`, `.jpeg`, `.png` or `.webp`. The text files can be
 
 Uploaded texts will be converted to a barebones `.html` file containing only headers, paragraphs and ruby. There are some things to keep in mind:
 
-#### Multiple files
+### Multiple files
 
 It is possible to upload a novel across multiple files (for example, when using Calibre's edit function to extract a novel's `.html` files). These separate files will automatically be stitched together. It is important that they are named in alphabetically ascending order, otherwise they will be stitched together in the wrong order.
 
@@ -69,7 +69,7 @@ It is possible to upload a novel across multiple files (for example, when using 
 
 In `.html` files paragraphs can be clearly distinguished by their `p` tags. In `.md` files paragraphs must be separated by a blank line. In `.txt` files a single newline is sufficient, but a blank line works as well.
 
-#### Title
+### Title
 
 An `h1` header will automatically be inserted based on the title provided in the upload form. It is therefore not necessary to include one in the uploaded text files.
 
@@ -118,7 +118,6 @@ On the 'known words' page there is an option to mark words as known in bulk by u
 
 ## New features
 
-- [ ] bulk upload of known words (e.g. from Anki)
 - [ ] built-in reader for uploaded manga and novels
 - [ ] filtering glossaries by page number or paragraph number
 - [ ] word search across the entire corpus, linking to the appropriate page or paragraph
@@ -132,3 +131,4 @@ On the 'known words' page there is an option to mark words as known in bulk by u
 - [ ] improve the management of common environment variables between backend and frontend
 - [ ] optimise the performance of Docker images
 - [ ] improve validation and error handling
+- [ ] lift component state up; improve stories
