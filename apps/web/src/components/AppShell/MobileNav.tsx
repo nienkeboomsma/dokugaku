@@ -7,6 +7,7 @@ const links = [
   { label: 'Upload', href: '/upload' },
   { label: 'Known words', href: '/user/known-words' },
   { label: 'Excluded words', href: '/user/excluded-words' },
+  { label: 'Settings', href: '/user/settings' },
 ]
 
 export default function MobileNav({ toggleNav }: { toggleNav: () => void }) {

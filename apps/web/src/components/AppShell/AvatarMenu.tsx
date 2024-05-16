@@ -4,6 +4,7 @@ import Link from 'next/link'
 const links = [
   { label: 'Known words', href: '/user/known-words' },
   { label: 'Excluded words', href: '/user/excluded-words' },
+  { label: 'Settings', href: '/user/settings' },
 ]
 
 export default function AvatarMenu({
