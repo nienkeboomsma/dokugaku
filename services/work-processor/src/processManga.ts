@@ -27,7 +27,6 @@ export async function processManga(
     folderName,
     body: { authors, series, title, userId, volumeNumber },
   } = req
-  console.table({ folderName, userId, series, volumeNumber, title, authors })
 
   const timeTaken = `${title} ・ Time to process the entire request`
   console.time(timeTaken)
@@ -61,23 +60,23 @@ export async function processManga(
 
     await insertWorkIntoDatabase(
       {
-        authors: req.body.authors,
-        seriesTitle: req.body.series,
+        authors: authors,
+        seriesTitle: series,
         workId: folderName,
         workMaxProgress: numberOfImages.toString(),
-        workTitle: req.body.title,
+        workTitle: title,
         workType: 'manga',
-        workVolumeNumber: req.body.volumeNumber,
+        workVolumeNumber: volumeNumber,
       },
-      req.body.userId,
-      fullPath,
-      title
+      userId,
+      fullPath
     )
 
     console.timeEnd(timeTaken)
   } catch (err) {
     console.log(`${title} ・ Removing the directory ${fullPath}`)
     fs.rmSync(fullPath, { recursive: true, force: true })
+    console.timeEnd(timeTaken)
     next(err)
   }
 }

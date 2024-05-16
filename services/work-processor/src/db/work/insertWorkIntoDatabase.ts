@@ -13,8 +13,7 @@ import { updateSeriesWordCounts } from './updateSeriesWordCounts.js'
 export async function insertWorkIntoDatabase(
   workMetadata: WorkMetadata,
   userId: string,
-  fullPath: string,
-  title: string
+  fullPath: string
 ) {
   sql.begin(async (sql) => {
     if (isPartOfSeries(workMetadata)) {
@@ -43,6 +42,8 @@ export async function insertWorkIntoDatabase(
       await updateSeriesWordCounts(sql, workMetadata.seriesId)
     }
 
-    console.log(`${title} ・ Work was successfully added to the database`)
+    console.log(
+      `${workMetadata.workTitle} ・ Work was successfully added to the database`
+    )
   })
 }

@@ -31,6 +31,7 @@ export async function processKnownWords(req: KnownWordsRequest, res: Response) {
     console.timeEnd(timeTaken)
   } catch (err) {
     console.log('An error occurred: ', err)
+    console.timeEnd(timeTaken)
     process.exit(1)
   }
 }

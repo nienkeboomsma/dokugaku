@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import axios from 'axios'
+import cliProgress from 'cli-progress'
 
 import { type MokuroData } from './types.js'
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
@@ -58,16 +59,24 @@ export async function runIchiranOnEachPage(fullPath: string, title: string) {
   const timeTaken = `${title} ・ Time to run Ichiran on ${pages.length} pages`
   console.time(timeTaken)
 
+  const progressBar = new cliProgress.SingleBar(
+    {
+      format: `${title} ・ {bar} ・ {percentage}% ・ {value}/{total} ・ {eta_formatted} to go`,
+      noTTYOutput: true,
+      notTTYSchedule: 10000,
+    },
+    cliProgress.Presets.shades_classic
+  )
+  progressBar.start(pages.length, 0)
+
   for (const [index, page] of pages.entries()) {
     const filePath = path.join(fullPath, page)
     const mokuroOutput = fs.readFileSync(filePath).toString()
     const mokuroData = JSON.parse(mokuroOutput)
     const string = getTextFromMokuroData(mokuroData)
 
-    console.log(
-      `${title} ・ Running Ichiran on page ${index + 1} of ${pages.length}`
-    )
     const words = await runIchiran(string, 'processedSegmentation')
+    progressBar.update(index + 1)
 
     for (let word of words) {
       const pageNumber = Number(path.parse(page).name.slice(-4))
@@ -81,6 +90,7 @@ export async function runIchiranOnEachPage(fullPath: string, title: string) {
     concatToJson(outputPath, words, isFirstPass, isLastPass)
   }
 
+  progressBar.stop()
   console.timeEnd(timeTaken)
 }
 

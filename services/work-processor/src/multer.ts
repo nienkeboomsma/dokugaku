@@ -15,7 +15,11 @@ const storage = multer.diskStorage({
     const folderName = req.folderName ?? randomUUID()
     const fullPath = path.join('/dokugaku/', folderName)
 
-    if (!req.folderName) execSync(`mkdir ${fullPath}`)
+    if (!req.folderName) {
+      console.log(`${req.body.title} ・ Assigned the id ${folderName}`)
+      execSync(`mkdir ${fullPath}`)
+    }
+
     req.folderName = folderName
     cb(null, fullPath)
   },

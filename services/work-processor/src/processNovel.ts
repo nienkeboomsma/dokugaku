@@ -28,7 +28,6 @@ export async function processNovel(
     folderName,
     body: { authors, series, title, userId, volumeNumber },
   } = req
-  console.table({ folderName, userId, series, volumeNumber, title, authors })
 
   const timeTaken = `${title} ・ Time to process the entire request`
   console.time(timeTaken)
@@ -63,14 +62,14 @@ export async function processNovel(
         workVolumeNumber: volumeNumber,
       },
       userId,
-      fullPath,
-      title
+      fullPath
     )
 
     console.timeEnd(timeTaken)
   } catch (err) {
     console.log(`${title} ・ Removing the directory ${fullPath}`)
     fs.rmSync(fullPath, { recursive: true, force: true })
+    console.timeEnd(timeTaken)
     next(err)
   }
 }

@@ -10,6 +10,7 @@ import { toHast } from 'mdast-util-to-hast'
 import { toHtml } from 'hast-util-to-html'
 // @ts-expect-error
 import { HTMLToJSON } from 'html-to-json-parser'
+import cliProgress from 'cli-progress'
 
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 import { ichiranTimePer100Char, novelTextExtensions } from './constants.js'
@@ -179,11 +180,19 @@ export async function runIchiranOnEachParagraph(
   const timeTaken = `${title} ・ Time to run Ichiran on ${paragraphs.length} paragraphs`
   console.time(timeTaken)
 
+  const progressBar = new cliProgress.SingleBar(
+    {
+      format: `${title} ・ {bar} ・ {percentage}% ・ {value}/{total} ・ {eta_formatted} to go`,
+      noTTYOutput: true,
+      notTTYSchedule: 10000,
+    },
+    cliProgress.Presets.shades_classic
+  )
+  progressBar.start(paragraphs.length, 0)
+
   for (const [index, paragraph] of paragraphs.entries()) {
-    console.log(
-      `${title} ・ Running Ichiran on paragraph ${index + 1} of ${paragraphs.length}`
-    )
     const words = await runIchiran(paragraph, 'processedSegmentation')
+    progressBar.update(index + 1)
 
     for (let word of words) {
       const paragraphNumber = index + 1
@@ -196,5 +205,7 @@ export async function runIchiranOnEachParagraph(
 
     concatToJson(outputPath, words, isFirstPass, isLastPass)
   }
+
+  progressBar.stop()
   console.timeEnd(timeTaken)
 }
