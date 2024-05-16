@@ -6,12 +6,14 @@ const app: Express = express()
 app.use(express.json())
 
 app.post('/originalSegmentation', async (req, res) => {
+  req.setTimeout(600000)
   const jpString = req.body.string
   const segmentation = getSegmentation(jpString)
   res.status(200).json(segmentation)
 })
 
 app.post('/processedSegmentation', async (req, res) => {
+  req.setTimeout(600000)
   const jpString = req.body.string
   const segmentation = getSegmentation(jpString)
   const processedSegmentation = await getWordListFromSegmentation(segmentation)
@@ -19,6 +21,7 @@ app.post('/processedSegmentation', async (req, res) => {
 })
 
 app.post('/idsOnly', async (req, res) => {
+  req.setTimeout(600000)
   const jpString = req.body.string
   const segmentation = getSegmentation(jpString)
   const processedSegmentation = await getWordListFromSegmentation(segmentation)
