@@ -32,7 +32,7 @@ export default function RootLayout({
             theme={{ primaryColor: 'blue' }}
           >
             <Notifications />
-            <AppShell>{children}</AppShell>
+            {children}
           </MantineProvider>
         </ApolloWrapper>
       </body>

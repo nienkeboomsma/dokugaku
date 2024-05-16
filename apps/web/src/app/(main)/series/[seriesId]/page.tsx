@@ -1,5 +1,5 @@
-import SeriesPage from '../../../components/SeriesPage/SeriesPage'
-import { getSeriesInfo } from '../../../graphql/queries/getSeriesInfo'
+import SeriesPage from '../../../../components/SeriesPage/SeriesPage'
+import { getSeriesInfo } from '../../../../graphql/queries/getSeriesInfo'
 
 export default async function Series({
   params,

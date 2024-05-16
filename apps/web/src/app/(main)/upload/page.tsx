@@ -1,8 +1,8 @@
 import { GQL_WorkType } from '@repo/graphql-types'
 
-import UploadPage from '../../components/UploadPage/UploadPage'
-import { getExistingAuthors } from '../../graphql/queries/getExistingAuthors'
-import { getExistingSeries } from '../../graphql/queries/getExistingSeries'
+import UploadPage from '../../../components/UploadPage/UploadPage'
+import { getExistingAuthors } from '../../../graphql/queries/getExistingAuthors'
+import { getExistingSeries } from '../../../graphql/queries/getExistingSeries'
 
 // TODO: as the collection grows, it might make more sense to fetch
 //       this data once the user starts typing a series title or author name

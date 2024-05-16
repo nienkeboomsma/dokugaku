@@ -1,5 +1,5 @@
-import BrowsePage from '../../components/BrowsePage/BrowsePage'
-import { getWorkCards } from '../../graphql/queries/getWorkCards'
+import BrowsePage from '../../../components/BrowsePage/BrowsePage'
+import { getWorkCards } from '../../../graphql/queries/getWorkCards'
 
 // TODO: if necessary: cache the knownVocab value
 // TODO: add pagination
