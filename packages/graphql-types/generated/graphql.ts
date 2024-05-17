@@ -352,7 +352,7 @@ export type GQL_WorkInfoQueryVariables = Exact<{
 }>;
 
 
-export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, volumeNumber?: number | null | undefined, authors: Array<{ __typename?: 'Author', id: string, name: string }>, series?: { __typename?: 'Series', id: string, title: string, volumes: Array<{ __typename?: 'Work', id: string, volumeNumber?: number | null | undefined }> } | null | undefined } | null | undefined };
+export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, type: GQL_WorkType, volumeNumber?: number | null | undefined, authors: Array<{ __typename?: 'Author', id: string, name: string }>, series?: { __typename?: 'Series', id: string, title: string, volumes: Array<{ __typename?: 'Work', id: string, volumeNumber?: number | null | undefined }> } | null | undefined } | null | undefined };
 
 export type GQL_UpdateSeriesReadStatusMutationVariables = Exact<{
   input: GQL_UpdateSeriesReadStatusInput;

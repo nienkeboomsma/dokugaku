@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-// import { Button } from '@mantine/core'
-// import { IconBook2 } from '@tabler/icons-react'
-import { GQL_ReadStatus } from '@repo/graphql-types'
+import { Button } from '@mantine/core'
+import { IconBook2 } from '@tabler/icons-react'
+import { GQL_ReadStatus, GQL_WorkType } from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
-// import Link from 'next/link'
+import Link from 'next/link'
 
 import classes from './WorkPage.module.css'
 import { type WorkInfo } from '../../types/WorkInfo'
@@ -65,8 +65,12 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
         <div className={classes.firstColumn}>
           <WorkCover
             coverPath={`/assets/${work.id}/cover.webp`}
-            // maxProgress={work.maxProgress}
-            // progress={work.progress}
+            maxProgress={
+              work.type === GQL_WorkType.Novel ? work.maxProgress : undefined
+            }
+            progress={
+              work.type === GQL_WorkType.Novel ? work.progress : undefined
+            }
             width={COVER_WIDTH}
           />
           <ReadStatusSelector
@@ -75,14 +79,16 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
             updateStatus={readStatusHandler}
           />
           {/* TODO: add reader functionality */}
-          {/* <Button
-            component={Link}
-            href='/'
-            leftSection={<IconBook2 size={14} />}
-            variant='light'
-          >
-            Go to reader
-          </Button> */}
+          {work.type === GQL_WorkType.Novel && (
+            <Button
+              component={Link}
+              href={`/reader/${work.type}/${work.id}`}
+              leftSection={<IconBook2 size={14} />}
+              variant='light'
+            >
+              Go to reader
+            </Button>
+          )}
         </div>
 
         <div className={classes.secondColumn}>
