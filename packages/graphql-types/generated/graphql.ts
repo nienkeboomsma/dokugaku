@@ -100,6 +100,7 @@ export type GQL_Mutation = {
   updateIgnoredStatus: GQL_UpdateWordStatusResponse;
   updateKnownStatus: GQL_UpdateWordStatusResponse;
   updateSeriesReadStatus: GQL_UpdateReadStatusResponse;
+  updateWorkProgress: GQL_UpdateWorkProgressResponse;
   updateWorkReadStatus: GQL_UpdateReadStatusResponse;
 };
 
@@ -121,6 +122,11 @@ export type GQL_MutationUpdateKnownStatusArgs = {
 
 export type GQL_MutationUpdateSeriesReadStatusArgs = {
   input: GQL_UpdateSeriesReadStatusInput;
+};
+
+
+export type GQL_MutationUpdateWorkProgressArgs = {
+  input: GQL_UpdateWorkProgressInput;
 };
 
 
@@ -275,6 +281,19 @@ export type GQL_UpdateWordStatusResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+export type GQL_UpdateWorkProgressInput = {
+  progress: Scalars['Int']['input'];
+  workId: Scalars['String']['input'];
+};
+
+export type GQL_UpdateWorkProgressResponse = {
+  __typename?: 'UpdateWorkProgressResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  progress?: Maybe<Scalars['Int']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type GQL_UpdateWorkReadStatusInput = {
   status: GQL_ReadStatus;
   workId: Scalars['String']['input'];
@@ -354,6 +373,13 @@ export type GQL_WorkInfoQueryVariables = Exact<{
 
 export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, type: GQL_WorkType, volumeNumber?: number | null | undefined, authors: Array<{ __typename?: 'Author', id: string, name: string }>, series?: { __typename?: 'Series', id: string, title: string, volumes: Array<{ __typename?: 'Work', id: string, volumeNumber?: number | null | undefined }> } | null | undefined } | null | undefined };
 
+export type GQL_WorkProgressQueryVariables = Exact<{
+  workInput: GQL_WorkInput;
+}>;
+
+
+export type GQL_WorkProgressQuery = { __typename?: 'Query', work?: { __typename?: 'Work', progress: number } | null | undefined };
+
 export type GQL_UpdateSeriesReadStatusMutationVariables = Exact<{
   input: GQL_UpdateSeriesReadStatusInput;
 }>;
@@ -367,6 +393,13 @@ export type GQL_UpdateWorkReadStatusMutationVariables = Exact<{
 
 
 export type GQL_UpdateWorkReadStatusMutation = { __typename?: 'Mutation', updateWorkReadStatus: { __typename?: 'UpdateReadStatusResponse', status?: GQL_ReadStatus | null | undefined, success: boolean } };
+
+export type GQL_UpdateWorkProgressMutationVariables = Exact<{
+  input: GQL_UpdateWorkProgressInput;
+}>;
+
+
+export type GQL_UpdateWorkProgressMutation = { __typename?: 'Mutation', updateWorkProgress: { __typename?: 'UpdateWorkProgressResponse', progress?: number | null | undefined, success: boolean } };
 
 export type GQL_ExcludedWordsQueryVariables = Exact<{
   input?: InputMaybe<GQL_CorpusScopedInput>;
@@ -524,6 +557,8 @@ export type GQL_ResolversTypes = ResolversObject<{
   UpdateReadStatusResponse: ResolverTypeWrapper<GQL_UpdateReadStatusResponse>;
   UpdateSeriesReadStatusInput: GQL_UpdateSeriesReadStatusInput;
   UpdateWordStatusResponse: ResolverTypeWrapper<GQL_UpdateWordStatusResponse>;
+  UpdateWorkProgressInput: GQL_UpdateWorkProgressInput;
+  UpdateWorkProgressResponse: ResolverTypeWrapper<GQL_UpdateWorkProgressResponse>;
   UpdateWorkReadStatusInput: GQL_UpdateWorkReadStatusInput;
   Work: ResolverTypeWrapper<WorkModel>;
   WorkInput: GQL_WorkInput;
@@ -560,6 +595,8 @@ export type GQL_ResolversParentTypes = ResolversObject<{
   UpdateReadStatusResponse: GQL_UpdateReadStatusResponse;
   UpdateSeriesReadStatusInput: GQL_UpdateSeriesReadStatusInput;
   UpdateWordStatusResponse: GQL_UpdateWordStatusResponse;
+  UpdateWorkProgressInput: GQL_UpdateWorkProgressInput;
+  UpdateWorkProgressResponse: GQL_UpdateWorkProgressResponse;
   UpdateWorkReadStatusInput: GQL_UpdateWorkReadStatusInput;
   Work: WorkModel;
   WorkInput: GQL_WorkInput;
@@ -614,6 +651,7 @@ export type GQL_MutationResolvers<ContextType = GQL_Context, ParentType extends 
   updateIgnoredStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateIgnoredStatusArgs, 'input'>>;
   updateKnownStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateKnownStatusArgs, 'input'>>;
   updateSeriesReadStatus?: Resolver<GQL_ResolversTypes['UpdateReadStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateSeriesReadStatusArgs, 'input'>>;
+  updateWorkProgress?: Resolver<GQL_ResolversTypes['UpdateWorkProgressResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateWorkProgressArgs, 'input'>>;
   updateWorkReadStatus?: Resolver<GQL_ResolversTypes['UpdateReadStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateWorkReadStatusArgs, 'input'>>;
 }>;
 
@@ -666,6 +704,14 @@ export type GQL_UpdateWordStatusResponseResolvers<ContextType = GQL_Context, Par
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type GQL_UpdateWorkProgressResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['UpdateWorkProgressResponse'] = GQL_ResolversParentTypes['UpdateWorkProgressResponse']> = ResolversObject<{
+  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  progress?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
+  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Work'] = GQL_ResolversParentTypes['Work']> = ResolversObject<{
   authors?: Resolver<Array<GQL_ResolversTypes['Author']>, ParentType, ContextType>;
   hapaxLegomena?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
@@ -696,6 +742,7 @@ export type GQL_Resolvers<ContextType = GQL_Context> = ResolversObject<{
   Series?: GQL_SeriesResolvers<ContextType>;
   UpdateReadStatusResponse?: GQL_UpdateReadStatusResponseResolvers<ContextType>;
   UpdateWordStatusResponse?: GQL_UpdateWordStatusResponseResolvers<ContextType>;
+  UpdateWorkProgressResponse?: GQL_UpdateWorkProgressResponseResolvers<ContextType>;
   Work?: GQL_WorkResolvers<ContextType>;
 }>;
 

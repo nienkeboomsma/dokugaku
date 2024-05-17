@@ -10,6 +10,34 @@ const resolvers: GQL_Resolvers = {
     },
   },
   Mutation: {
+    updateWorkProgress: async (
+      _,
+      { input },
+      { userId, dataSources: { work } }
+    ) => {
+      try {
+        const [res] = await work.updateWorkProgress({
+          progress: input.progress,
+          userId,
+          workId: input.workId,
+        })
+
+        return {
+          code: 200,
+          success: true,
+          message: 'Work progress has successfully been updated',
+          progress: res?.progress,
+        }
+      } catch (err) {
+        console.log(err, typeof err)
+        return {
+          code: 500,
+          success: false,
+          message: 'Unable to update work progress',
+          progress: null,
+        }
+      }
+    },
     updateWorkReadStatus: async (
       _,
       { input },

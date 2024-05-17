@@ -1,4 +1,5 @@
 import NovelReaderPage from '../../../../components/NovelReaderPage/NovelReaderPage'
+import { getWorkProgress } from '../../../../graphql/queries/getWorkProgress'
 import type { NovelJSONContent } from '../../../../types/NovelJSONContent'
 
 export default async function NovelReader({
@@ -6,8 +7,7 @@ export default async function NovelReader({
 }: {
   params: { workId: string }
 }) {
-  // TODO: get initialProgress from db
-  const initialProgress = 35
+  const initialProgress = await getWorkProgress(params.workId)
 
   const res = await fetch(
     // TODO: env
@@ -19,7 +19,7 @@ export default async function NovelReader({
 
   return (
     <NovelReaderPage
-      initialProgress={initialProgress}
+      initialProgress={initialProgress ?? 0}
       textNodes={textNodes}
       workId={params.workId}
     />

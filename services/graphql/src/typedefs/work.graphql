@@ -32,6 +32,18 @@ input WorkListInput {
   workIds: [String!]
 }
 
+input UpdateWorkProgressInput {
+  progress: Int!
+  workId: String!
+}
+
+type UpdateWorkProgressResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  progress: Int
+}
+
 input UpdateWorkReadStatusInput {
   status: ReadStatus!
   workId: String!
@@ -43,6 +55,9 @@ extend type Query {
 }
 
 extend type Mutation {
+  updateWorkProgress(
+    input: UpdateWorkProgressInput!
+  ): UpdateWorkProgressResponse!
   updateWorkReadStatus(
     input: UpdateWorkReadStatusInput!
   ): UpdateReadStatusResponse!
