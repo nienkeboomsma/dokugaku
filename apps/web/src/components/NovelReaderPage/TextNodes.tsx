@@ -5,6 +5,20 @@ import { Fragment, type ReactNode } from 'react'
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
 import Bookmark from './Bookmark'
 
+// none of these components will ever change their relative order, nor will
+// any components ever be added or removed, so I think this is fine
+let uniqueKey = 0
+
+function ContentNodes({ children }: { children: NovelJSONContent['content'] }) {
+  return children.map((child) => {
+    if (typeof child === 'string') {
+      return <Fragment key={uniqueKey++}>{child}</Fragment>
+    }
+
+    return <ParentNode key={uniqueKey++} node={child} />
+  })
+}
+
 function ParentNode({
   children,
   node,
@@ -32,16 +46,6 @@ function ParentNode({
   )
 }
 
-function ContentNodes({ children }: { children: NovelJSONContent['content'] }) {
-  return children.map((child, index) => {
-    if (typeof child === 'string') {
-      return <Fragment key={child}>{child}</Fragment>
-    }
-
-    return <ParentNode key={JSON.stringify(child)} node={child} />
-  })
-}
-
 export default function TextNodes({
   progress,
   textNodes,
@@ -52,15 +56,13 @@ export default function TextNodes({
   updateProgress: (paragraphNumber: number) => void
 }) {
   return textNodes.map((parentNode, index) => (
-    <>
-      <ParentNode key={`parentNode-${index}`} node={parentNode}>
-        <Bookmark
-          progress={progress}
-          key={`bookmark-${index}`}
-          paragraphNumber={index + 1}
-          updateProgress={updateProgress}
-        />
-      </ParentNode>
-    </>
+    <ParentNode key={uniqueKey++} node={parentNode}>
+      <Bookmark
+        progress={progress}
+        key={`bookmark-${index + 1}`}
+        paragraphNumber={index + 1}
+        updateProgress={updateProgress}
+      />
+    </ParentNode>
   ))
 }
