@@ -21,6 +21,7 @@ import {
   updateCacheOnUnknown,
 } from '../graphql/cache/updateVocabCache'
 
+// TODO: implement optimistic responses
 export const useUpdateWordsMutation = (
   seriesOrWork?: SeriesInfo | WorkInfo
 ) => {
