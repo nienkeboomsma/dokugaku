@@ -1,0 +1,99 @@
+.outerContainer {
+  --base-text-size: 1.25rem;
+  --outer-container-padding: 4rem;
+
+  direction: ltr;
+  padding: var(--outer-container-padding);
+
+  & h1 {
+    font-size: calc(var(--base-text-size) * 1.7);
+  }
+
+  & h2 {
+    font-size: calc(var(--base-text-size) * 1.3);
+  }
+
+  & h3 {
+    font-size: calc(var(--base-text-size) * 1.1);
+  }
+
+  & rt {
+    user-select: none;
+  }
+}
+
+.containerHorizontal {
+  margin-inline: auto;
+  max-inline-size: calc(var(--base-text-size) * 35);
+
+  & p {
+    font-size: var(--base-text-size);
+    font-family: 'Hiragino Sans', sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+    margin-block-end: 1rem;
+  }
+
+  & h1 {
+    margin-block-end: calc(var(--base-text-size) * 4);
+  }
+
+  & h2,
+  & h3 {
+    margin-block-start: calc(var(--base-text-size) * 2);
+    margin-block-end: calc(var(--base-text-size) * 2);
+  }
+
+  & p + h2,
+  & p + h3 {
+    margin-block-start: calc(var(--base-text-size) * 6);
+  }
+
+  & button {
+    top: 0.075em;
+  }
+}
+
+.containerVertical {
+  --max-inline-content-size: calc(var(--base-text-size) * 38);
+  --inline-size: min(
+    var(--max-inline-content-size),
+    calc(100vh - 2 * var(--outer-container-padding))
+  );
+
+  margin-inline: calc(
+    ((100vh - var(--inline-size)) - (2 * var(--outer-container-padding))) / 2
+  );
+  inline-size: var(--inline-size);
+
+  & p {
+    font-size: var(--base-text-size);
+    font-family: 'Hiragino Sans', sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    line-height: 2.1;
+    margin-block: 0;
+  }
+
+  & h1 {
+    margin-block-end: calc(var(--base-text-size) * 3);
+    margin-inline-start: var(--base-text-size);
+  }
+
+  & h2 {
+    margin-block-start: calc(var(--base-text-size) * 8);
+    margin-block-end: calc(var(--base-text-size) * 3);
+    margin-inline-start: var(--base-text-size);
+  }
+
+  & h3 {
+    margin-block-start: calc(var(--base-text-size) * 3);
+    margin-block-end: calc(var(--base-text-size) * 2.5);
+    margin-inline-start: calc(var(--base-text-size) * 4);
+  }
+
+  & p + h3 {
+    margin-block-start: calc(var(--base-text-size) * 6);
+  }
+}

@@ -1,0 +1,9 @@
+.button {
+  h1 > &,
+  h2 > &,
+  h3 > & {
+    margin-inline-start: 0.625em;
+  }
+
+  font-size: inherit;
+}
