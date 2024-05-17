@@ -7,20 +7,21 @@ import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
 
 import { ApolloWrapper } from '../graphql/client/ApolloWrapper'
-import AppShell from '../components/AppShell/AppShell'
 
 export const metadata = {
   title: 'Dokugaku',
   description: 'Read Japanese manga and novels with frequency lists',
 }
 
-export default function RootLayout({
+export default function Providers({
   children,
+  direction,
 }: {
   children: React.ReactNode
+  direction?: 'ltr' | 'rtl'
 }) {
   return (
-    <html lang='en'>
+    <html lang='en' style={{ direction }}>
       {/* Prevents this error: https://www.reddit.com/r/nextjs/comments/138smpm/how_to_fix_extra_attributes_from_the_server_error/ */}
       <head suppressHydrationWarning>
         <ColorSchemeScript />
