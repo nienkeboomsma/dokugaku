@@ -28,6 +28,7 @@ const WORK_INFO = gql`
       }
       status
       title
+      type
       volumeNumber: numberInSeries
     }
   }
@@ -59,7 +60,7 @@ export const getWorkInfo = async (workId: string) => {
       variables,
       context: {
         fetchOptions: {
-          cache: 'no-store'
+          cache: 'no-store',
         },
       },
     })

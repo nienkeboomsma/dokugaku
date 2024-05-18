@@ -42,6 +42,20 @@ class Work {
     return works ?? []
   }
 
+  async updateWorkProgress(input: {
+    progress: number
+    userId: string
+    workId: string
+  }) {
+    return sql<[{ progress: number }]>`
+      UPDATE user_work
+      SET current_progress = ${input.progress}
+      WHERE user_id = ${input.userId} 
+        AND work_id = ${input.workId}
+      RETURNING current_progress AS progress;
+    `
+  }
+
   async updateWorkReadStatus(input: {
     status: GQL_ReadStatus
     userId: string

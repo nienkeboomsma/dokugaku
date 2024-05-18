@@ -1,4 +1,4 @@
-import { GQL_ReadStatus } from '@repo/graphql-types'
+import { GQL_ReadStatus, GQL_WorkType } from '@repo/graphql-types'
 
 import { type WorkInfo } from '../../src/types/WorkInfo'
 
@@ -13,6 +13,7 @@ export const mockWorkInfo: WorkInfo[] = [
     seriesTitle: 'クレヨンしんちゃん',
     status: GQL_ReadStatus.Reading,
     title: 'クレヨンしんちゃん 3',
+    type: GQL_WorkType.Manga,
     volumeNumber: 2,
     volumes: [
       {
@@ -41,5 +42,6 @@ export const mockWorkInfo: WorkInfo[] = [
     isSeries: false,
     status: GQL_ReadStatus.WantToRead,
     title: 'セーラー服と機関銃',
+    type: GQL_WorkType.Novel,
   },
 ]

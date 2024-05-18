@@ -1,4 +1,4 @@
-import { GQL_ReadStatus } from '@repo/graphql-types'
+import { GQL_ReadStatus, GQL_WorkType } from '@repo/graphql-types'
 
 export type WorkInfo = {
   authors: string[]
@@ -10,6 +10,7 @@ export type WorkInfo = {
   seriesTitle?: string
   status: GQL_ReadStatus
   title: string
+  type: GQL_WorkType
   volumeNumber?: number
   volumes?: {
     id: string

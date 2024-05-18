@@ -1,0 +1,8 @@
+.container {
+  display: flex;
+  flex-direction: var(--flex-direction);
+  gap: 0.5rem;
+  top: 1rem;
+  left: 1rem;
+  position: fixed;
+}
