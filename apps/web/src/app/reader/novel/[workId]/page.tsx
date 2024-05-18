@@ -9,19 +9,24 @@ export default async function NovelReader({
 }) {
   const initialProgress = await getWorkProgress(params.workId)
 
-  const res = await fetch(
-    // TODO: env
-    `http://localhost:3000/assets/${params.workId}/text.json`,
-    { cache: 'no-store' }
-  )
-  const json = await res.json()
-  const textNodes: NovelJSONContent[] = json.content
+  try {
+    const res = await fetch(
+      // TODO: env
+      `http://localhost:3000/assets/${params.workId}/text.json`,
+      { cache: 'no-store' }
+    )
+    const json = await res.json()
+    const textNodes: NovelJSONContent[] = json.content
 
-  return (
-    <NovelReaderPage
-      initialProgress={initialProgress ?? 0}
-      textNodes={textNodes}
-      workId={params.workId}
-    />
-  )
+    return (
+      <NovelReaderPage
+        initialProgress={initialProgress ?? 0}
+        textNodes={textNodes}
+        workId={params.workId}
+      />
+    )
+  } catch {
+    // TODO: add a proper error message
+    return 'Oops'
+  }
 }

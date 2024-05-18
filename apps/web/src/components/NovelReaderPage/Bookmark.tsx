@@ -1,18 +1,18 @@
+import { memo } from 'react'
 import { ActionIcon } from '@mantine/core'
 import { IconBookmark, IconBookmarkFilled } from '@tabler/icons-react'
 
 import classes from './Bookmark.module.css'
 
-export default function Bookmark({
-  progress,
+const Bookmark = memo(function Bookmark({
+  isCurrentProgress,
   paragraphNumber,
   updateProgress,
 }: {
-  progress: number
+  isCurrentProgress: boolean
   paragraphNumber: number
-  updateProgress: (paragraphNumber: number) => void
+  updateProgress: () => void
 }) {
-  const isCurrentProgress = progress === paragraphNumber
   const ariaLabel = isCurrentProgress
     ? 'This paragraph is bookmarked'
     : 'Bookmark this paragraph'
@@ -23,11 +23,13 @@ export default function Bookmark({
       aria-label={ariaLabel}
       classNames={{ root: classes.button }}
       id={`bookmark-${paragraphNumber}`}
-      onClick={() => updateProgress(paragraphNumber)}
+      onClick={updateProgress}
       size='1em'
       variant='subtle'
     >
       <Icon size='100%' stroke={1.5} />
     </ActionIcon>
   )
-}
+})
+
+export default Bookmark

@@ -1,15 +1,20 @@
 'use client'
 
-import { Fragment, type ReactNode } from 'react'
+import { Fragment, memo, useCallback, type ReactNode } from 'react'
 
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
 import Bookmark from './Bookmark'
 
-// none of these components will ever change their relative order, nor will
-// any components ever be added or removed, so I think this is fine
-let uniqueKey = 0
+// Is this hacky? Yes. Does it work? Also yes.
+// None of these components will change their order or be added/removed between
+// renders, so each component will have the same key on each render.
+let uniqueKey: number
 
-function ContentNodes({ children }: { children: NovelJSONContent['content'] }) {
+const ContentNodes = memo(function ContentNodes({
+  children,
+}: {
+  children: NovelJSONContent['content']
+}) {
   return children.map((child) => {
     if (typeof child === 'string') {
       return <Fragment key={uniqueKey++}>{child}</Fragment>
@@ -17,7 +22,7 @@ function ContentNodes({ children }: { children: NovelJSONContent['content'] }) {
 
     return <ParentNode key={uniqueKey++} node={child} />
   })
-}
+})
 
 function ParentNode({
   children,
@@ -53,16 +58,26 @@ export default function TextNodes({
 }: {
   progress: number
   textNodes: NovelJSONContent[]
-  updateProgress: (paragraphNumber: number) => void
+  updateProgress: (paragraphNumber: number, isCurrentProgress: boolean) => void
 }) {
-  return textNodes.map((parentNode, index) => (
-    <ParentNode key={uniqueKey++} node={parentNode}>
-      <Bookmark
-        progress={progress}
-        key={`bookmark-${index + 1}`}
-        paragraphNumber={index + 1}
-        updateProgress={updateProgress}
-      />
-    </ParentNode>
-  ))
+  uniqueKey = 0
+
+  return textNodes.map((parentNode, index) => {
+    const paragraphNumber = index + 1
+    const isCurrentProgress = progress === paragraphNumber
+
+    return (
+      <ParentNode key={`paragraph-${paragraphNumber}`} node={parentNode}>
+        <Bookmark
+          isCurrentProgress={isCurrentProgress}
+          key={`bookmark-${paragraphNumber}`}
+          paragraphNumber={paragraphNumber}
+          updateProgress={useCallback(
+            () => updateProgress(paragraphNumber, isCurrentProgress),
+            [paragraphNumber, isCurrentProgress]
+          )}
+        />
+      </ParentNode>
+    )
+  })
 }

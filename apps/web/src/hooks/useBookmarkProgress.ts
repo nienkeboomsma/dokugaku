@@ -1,28 +1,45 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
+import { GQL_UpdateWorkProgressMutation } from '@repo/graphql-types'
+import { notifications } from '@mantine/notifications'
 
 import { UPDATE_WORK_PROGRESS } from '../graphql/queries/updateWorkProgress'
 
-export default function useBookmarkProgress(initialProgress: number) {
+export default function useBookmarkProgress(
+  initialProgress: number,
+  workId: string
+) {
   const [progress, setProgress] = useState(initialProgress)
   // TODO: evict stale data from cache
   // TODO: implement optimistic response
-  const [updateProgress] = useMutation(UPDATE_WORK_PROGRESS)
+  const [updateProgressMutation] =
+    useMutation<GQL_UpdateWorkProgressMutation>(UPDATE_WORK_PROGRESS)
 
-  const createUpdateProgress =
-    (workId: string) => async (paragraphNumber: number) => {
-      console.table({ paragraphNumber, progress })
-      const newProgress = paragraphNumber !== progress ? paragraphNumber : 0
+  const updateProgress = async (
+    paragraphNumber: number,
+    isCurrentProgress: boolean
+  ) => {
+    const newProgress = !isCurrentProgress ? paragraphNumber : 0
 
-      const { data } = await updateProgress({
+    try {
+      const { data } = await updateProgressMutation({
         variables: { input: { progress: newProgress, workId } },
       })
+
+      if (!data) throw Error('Something went wrong')
+
       const { progress: updatedProgress, success } = data.updateWorkProgress
 
-      if (success) {
-        setProgress(updatedProgress)
-      }
-    }
+      if (!success || !updatedProgress) throw Error('Something went wrong')
 
-  return { progress, createUpdateProgress }
+      setProgress(updatedProgress)
+    } catch {
+      notifications.show({
+        title: 'Something went wrong',
+        message: 'Please try again later',
+      })
+    }
+  }
+
+  return { progress, updateProgress }
 }
