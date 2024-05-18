@@ -4,6 +4,7 @@ import { GQL_UpdateWorkProgressMutation } from '@repo/graphql-types'
 import { notifications } from '@mantine/notifications'
 
 import { UPDATE_WORK_PROGRESS } from '../graphql/queries/updateWorkProgress'
+import { isNumber } from '../types/utility'
 
 export default function useBookmarkProgress(
   initialProgress: number,
@@ -30,13 +31,15 @@ export default function useBookmarkProgress(
 
       const { progress: updatedProgress, success } = data.updateWorkProgress
 
-      if (!success || !updatedProgress) throw Error('Something went wrong')
+      if (!success || !isNumber(updatedProgress))
+        throw Error('Something went wrong')
 
       setProgress(updatedProgress)
     } catch {
       notifications.show({
         title: 'Something went wrong',
         message: 'Please try again later',
+        style: { direction: 'ltr' },
       })
     }
   }
