@@ -19,8 +19,10 @@ export default function NovelReaderPage({
   workId: string
 }) {
   const { direction, toggleDirection } = useNovelReaderDirection('vertical')
-  const { progress, createUpdateProgress } =
-    useBookmarkProgress(initialProgress)
+  const { progress, updateProgress } = useBookmarkProgress(
+    initialProgress,
+    workId
+  )
 
   useEffect(() => {
     const bodyElement = document.body.querySelector(`#bookmark-${progress}`)
@@ -41,7 +43,7 @@ export default function NovelReaderPage({
         <TextNodes
           progress={progress}
           textNodes={textNodes}
-          updateProgress={createUpdateProgress(workId)}
+          updateProgress={updateProgress}
         />
       </TextContainer>
     </>
