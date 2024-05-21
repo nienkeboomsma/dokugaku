@@ -38,7 +38,7 @@ export async function runMokuro(folderName: string, title: string) {
     `http://mokuro:${process.env.MOKURO_PORT}/mokuro`,
     { folderName },
     // TODO: use Redis to track Mokuro progress instead
-    { timeout: 1000 * 60 * 120 }
+    { timeout: 1000 * 60 * 240 }
   )
 
   console.timeEnd(timeTaken)

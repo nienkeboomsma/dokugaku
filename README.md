@@ -49,7 +49,7 @@ The alphabetically first image will be used as the cover image.
 
 ### Pre-mokuro'd manga
 
-It might make more sense to run Mokuro on your host machine instead of leaving it to the mokuro container (on my own machine it is significantly faster). In that case, check the relevant checkbox and upload the `.json` files along with the images.
+It probably makes more sense to run Mokuro on your host machine instead of leaving it to the Mokuro container, [especially if you are using Apple Silicon](https://github.com/sonoisa/arm64-docker-pytorch-tensorflow/issues/1#issuecomment-1382653203). In that case, check the relevant checkbox and upload the `.json` files along with the images.
 
 ## Novels
 
