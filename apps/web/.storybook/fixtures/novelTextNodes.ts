@@ -76,8 +76,16 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
     content: ['「いいえ、私、一人でいいんです」'],
   },
   {
+    type: 'h2',
+    content: ['もう一度の例'],
+  },
+  {
     type: 'h3',
     content: ['ペン'],
+  },
+  {
+    type: 'h4',
+    content: ['これは例の文章です'],
   },
   {
     type: 'p',
