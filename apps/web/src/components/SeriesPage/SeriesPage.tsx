@@ -1,8 +1,13 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { GQL_ReadStatus } from '@repo/graphql-types'
+import {
+  GQL_ReadStatus,
+  GQL_UpdateSeriesReadStatusMutation,
+} from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
+import { notifications } from '@mantine/notifications'
 
 import classes from './SeriesPage.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
@@ -26,22 +31,37 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
 
   const [seriesStatus, setSeriesStatus] = useState(series.status)
   const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
-  // TODO: evict stale data from cache
-  const [updateSeriesStatus] = useMutation(UPDATE_SERIES_READ_STATUS)
+
+  const router = useRouter()
+
+  const [updateSeriesStatus] = useMutation<GQL_UpdateSeriesReadStatusMutation>(
+    UPDATE_SERIES_READ_STATUS
+  )
 
   const seriesStatusHandler = async (status: GQL_ReadStatus) => {
     setSeriesStatusLoading(true)
 
-    const { data } = await updateSeriesStatus({
-      variables: { input: { seriesId: series.id, status } },
-    })
-    const { status: newStatus, success } = data.updateSeriesReadStatus
+    try {
+      const { data } = await updateSeriesStatus({
+        variables: { input: { seriesId: series.id, status } },
+      })
 
-    if (success) {
+      if (!data) throw Error('Something went wrong')
+
+      const { status: newStatus, success } = data.updateSeriesReadStatus
+
+      if (!success || !newStatus) throw Error('Something went wrong')
+
       setSeriesStatus(newStatus)
+      router.refresh()
+    } catch {
+      notifications.show({
+        title: 'Something went wrong',
+        message: 'Please try again later',
+      })
+    } finally {
+      setSeriesStatusLoading(false)
     }
-
-    setSeriesStatusLoading(false)
   }
 
   return (

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { GQL_UpdateWorkProgressMutation } from '@repo/graphql-types'
@@ -11,8 +12,8 @@ export default function useBookmarkProgress(
   workId: string
 ) {
   const [progress, setProgress] = useState(initialProgress)
-  // TODO: evict stale data from cache
-  // TODO: implement optimistic response
+  const router = useRouter()
+
   const [updateProgressMutation] =
     useMutation<GQL_UpdateWorkProgressMutation>(UPDATE_WORK_PROGRESS)
 
@@ -35,6 +36,7 @@ export default function useBookmarkProgress(
         throw Error('Something went wrong')
 
       setProgress(updatedProgress)
+      router.refresh()
     } catch {
       notifications.show({
         title: 'Something went wrong',

@@ -1,10 +1,16 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '@mantine/core'
 import { IconBook2 } from '@tabler/icons-react'
-import { GQL_ReadStatus, GQL_WorkType } from '@repo/graphql-types'
+import {
+  GQL_ReadStatus,
+  GQL_UpdateWorkReadStatusMutation,
+  GQL_WorkType,
+} from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
+import { notifications } from '@mantine/notifications'
 import Link from 'next/link'
 
 import classes from './WorkPage.module.css'
@@ -39,22 +45,37 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
 
   const [readStatus, setReadStatus] = useState(work.status)
   const [readStatusLoading, setReadStatusLoading] = useState(false)
-  // TODO: evict stale data from cache
-  const [updateReadStatus] = useMutation(UPDATE_WORK_READ_STATUS)
+
+  const router = useRouter()
+
+  const [updateReadStatus] = useMutation<GQL_UpdateWorkReadStatusMutation>(
+    UPDATE_WORK_READ_STATUS
+  )
 
   const readStatusHandler = async (status: GQL_ReadStatus) => {
     setReadStatusLoading(true)
 
-    const { data } = await updateReadStatus({
-      variables: { input: { status, workId: work.id } },
-    })
-    const { status: newStatus, success } = data.updateWorkReadStatus
+    try {
+      const { data } = await updateReadStatus({
+        variables: { input: { status, workId: work.id } },
+      })
 
-    if (success) {
+      if (!data) throw Error('Something went wrong')
+
+      const { status: newStatus, success } = data.updateWorkReadStatus
+
+      if (!success || !newStatus) throw Error('Something went wrong')
+
       setReadStatus(newStatus)
+      router.refresh()
+    } catch {
+      notifications.show({
+        title: 'Something went wrong',
+        message: 'Please try again later',
+      })
+    } finally {
+      setReadStatusLoading(false)
     }
-
-    setReadStatusLoading(false)
   }
 
   return (
