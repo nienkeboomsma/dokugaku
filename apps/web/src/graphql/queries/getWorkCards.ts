@@ -47,7 +47,7 @@ const variables: GQL_WorkCardsQueryVariables = {
 
 const getKnownVocab = (learnableWords: number, totalWords: number) => {
   const knownVocab = totalWords - learnableWords
-  return Math.floor(getPercentage(knownVocab, totalWords))
+  return getPercentage(knownVocab, totalWords, { round: 'down' })
 }
 
 export const getWorkCards = async () => {
