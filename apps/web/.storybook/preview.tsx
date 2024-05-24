@@ -48,6 +48,9 @@ const preview: Preview = {
       },
     },
     layout: 'centered',
+    nextjs: {
+      appDirectory: true,
+    },
     options: {
       storySort: {
         method: 'alphabetical',
