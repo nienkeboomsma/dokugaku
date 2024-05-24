@@ -1,7 +1,8 @@
 .button {
   h1 > &,
   h2 > &,
-  h3 > & {
+  h3 > &,
+  h4 > & {
     margin-inline-start: 0.625em;
   }
 
