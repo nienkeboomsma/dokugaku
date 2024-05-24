@@ -29,6 +29,8 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    maxProgress: 345,
+    progress: 20,
     workId: 'abc',
   },
 }

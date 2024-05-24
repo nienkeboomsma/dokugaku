@@ -8,24 +8,34 @@ import {
 
 import classes from './NovelReaderMenu.module.css'
 import type { Direction } from '../../hooks/useNovelReaderDirection'
+import { getPercentage } from '../../util/getPercentage'
 
 export default function NovelReaderMenu({
   direction,
+  maxProgress,
+  progress,
   toggleDirection,
   workId,
 }: {
   direction: Direction
+  maxProgress: number
+  progress: number
   toggleDirection: () => void
   workId: string
 }) {
+  const flexDirection = direction === 'horizontal' ? 'column' : 'row-reverse'
+
+  const progressClassName =
+    direction === 'horizontal'
+      ? `${classes.progress} ${classes.progressHorizontal}`
+      : `${classes.progress} ${classes.progressVertical}`
+
   const DirectionIcon =
     direction === 'horizontal' ? IconArrowAutofitDown : IconArrowAutofitRight
 
-  const flexDirection = direction === 'horizontal' ? 'column' : 'row-reverse'
-
   return (
     <div
-      className={classes.container}
+      className={`${classes.container} `}
       style={{ '--flex-direction': flexDirection } as React.CSSProperties}
     >
       <ActionIcon
@@ -39,6 +49,9 @@ export default function NovelReaderMenu({
       <ActionIcon onClick={toggleDirection} size='2rem' variant='subtle'>
         <DirectionIcon size='70%' stroke={2} />
       </ActionIcon>
+      <div className={progressClassName}>
+        <span>{getPercentage(progress, maxProgress, { round: 'up' })}%</span>
+      </div>
     </div>
   )
 }

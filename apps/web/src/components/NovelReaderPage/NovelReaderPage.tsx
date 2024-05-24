@@ -24,6 +24,8 @@ export default function NovelReaderPage({
     workId
   )
 
+  const maxProgress = textNodes.length
+
   useEffect(() => {
     const bodyElement = document.body.querySelector(`#bookmark-${progress}`)
 
@@ -36,6 +38,8 @@ export default function NovelReaderPage({
     <>
       <NovelReaderMenu
         direction={direction}
+        maxProgress={maxProgress}
+        progress={progress}
         toggleDirection={toggleDirection}
         workId={workId}
       />

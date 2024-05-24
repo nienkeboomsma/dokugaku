@@ -6,3 +6,23 @@
   left: 1rem;
   position: fixed;
 }
+
+.progress {
+  align-items: center;
+  color: var(--mantine-primary-color-filled);
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.progressHorizontal {
+  padding-block: 0.2rem;
+  width: 2rem;
+}
+
+.progressVertical {
+  height: 2rem;
+  margin-top: -0.05rem;
+  padding-inline: 0.5rem;
+}
