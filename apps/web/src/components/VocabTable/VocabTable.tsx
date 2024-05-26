@@ -2,7 +2,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Box } from '@mantine/core'
+import { Box, List } from '@mantine/core'
 import { useDebouncedValue, useLocalStorage } from '@mantine/hooks'
 import { IconMoodSad } from '@tabler/icons-react'
 import { DataTable, DataTableColumn } from 'mantine-datatable'
@@ -21,7 +21,7 @@ import VocabFilter from './VocabFilter'
 import filterVocab from './filterVocab'
 import VocabSort, { ListType } from './VocabSort'
 
-const BATCH_SIZE = 500
+const BATCH_SIZE = 250
 const MAX_WIDTH = '52rem'
 
 export enum VocabTableType {
@@ -41,8 +41,23 @@ type VocabTablePropsCorpus = {
 
 type VocabTablePropsSeriesOrWork = {
   furigana?: boolean
+  progress?: number
   seriesOrWork: SeriesInfo | WorkInfo
   type: VocabTableType.SeriesOrWork
+}
+
+const isSeries = (
+  seriesOrWork: SeriesInfo | WorkInfo | undefined
+): seriesOrWork is SeriesInfo => {
+  if (!seriesOrWork) return false
+  return seriesOrWork?.isSeries
+}
+
+const isWork = (
+  seriesOrWork: SeriesInfo | WorkInfo | undefined
+): seriesOrWork is WorkInfo => {
+  if (!seriesOrWork) return false
+  return !isSeries(seriesOrWork)
 }
 
 export type VocabTableProps =
@@ -53,8 +68,7 @@ export default function VocabTable(props: VocabTableProps) {
   const { furigana, type } = props
   const seriesOrWork =
     type === VocabTableType.SeriesOrWork ? props.seriesOrWork : undefined
-  const isSeries = seriesOrWork?.isSeries
-  const isPartOfSeries = !isSeries && !!seriesOrWork?.seriesId
+  const isPartOfSeries = isWork(seriesOrWork) && !!seriesOrWork?.seriesId
 
   const [showIgnored, setShowIgnored] = useLocalStorage({
     defaultValue: false,
@@ -69,10 +83,11 @@ export default function VocabTable(props: VocabTableProps) {
     key: 'DOKUGAKU_MINIMUM_FREQUENCY',
   })
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
-  const [listType, setListType] = useLocalStorage({
-    defaultValue: ListType.Frequency,
-    key: 'DOKUGAKU_LIST_TYPE',
-  })
+  const [minPageNumber, setMinPageNumber] = useState<string | number>(
+    isWork(seriesOrWork) ? seriesOrWork.progress : 1
+  )
+  const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
+  const [listType, setListType] = useState<ListType>(ListType.Frequency)
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 
@@ -82,18 +97,19 @@ export default function VocabTable(props: VocabTableProps) {
 
   const queryVariables = {
     isPartOfSeries,
-    isSeries,
+    isSeries: isSeries(seriesOrWork),
     limit: BATCH_SIZE,
     offset: 0,
-    seriesId: isSeries ? seriesOrWork.id : seriesOrWork?.seriesId,
-    workId: isSeries ? undefined : seriesOrWork?.id,
+    seriesId: isSeries(seriesOrWork) ? seriesOrWork.id : seriesOrWork?.seriesId,
+    workId: isWork(seriesOrWork) ? seriesOrWork?.id : undefined,
   }
 
   const { data, getNextBatchOfWords, loading } = useGetWordsQuery(
     listType,
     type,
     queryVariables,
-    debouncedSearchValue
+    debouncedSearchValue,
+    debouncedMinPageNumber
   )
 
   const loadMoreRecords = () => {
@@ -109,7 +125,7 @@ export default function VocabTable(props: VocabTableProps) {
 
   useEffect(() => {
     setRecords([])
-  }, [debouncedSearchValue, listType])
+  }, [debouncedMinPageNumber, debouncedSearchValue, listType])
 
   useEffect(() => {
     setVocab(data ?? [])
@@ -127,7 +143,13 @@ export default function VocabTable(props: VocabTableProps) {
         })
       )
     )
-  }, [vocab, debouncedMinFrequency, showIgnored, showUnignored])
+  }, [
+    vocab,
+    debouncedMinFrequency,
+    debouncedMinPageNumber,
+    showIgnored,
+    showUnignored,
+  ])
 
   const {
     handleExcludeWord,
@@ -138,10 +160,6 @@ export default function VocabTable(props: VocabTableProps) {
     handleUnknownWord,
   } = useUpdateWordsMutation(seriesOrWork)
 
-  // TODO: add 'page' column for manga glossaries (and maybe a minPageNumber
-  //       filter to go with it?)
-  // TODO: in that case, allow glossaries for series after all, and allow
-  //       filtering by minVolumeNumber and minPagenumber
   // TODO: see if a fixed width for reading/frequency/actions makes sense
   const allColumns: DataTableColumn<Word>[] = [
     {
@@ -152,6 +170,11 @@ export default function VocabTable(props: VocabTableProps) {
     {
       accessor: 'meaning',
       render: (vocab: Word) => Meaning({ vocab }),
+    },
+    {
+      accessor: 'pageNumber',
+      title: 'Page',
+      textAlign: 'right',
     },
     {
       accessor: 'frequency',
@@ -172,22 +195,34 @@ export default function VocabTable(props: VocabTableProps) {
           onMarkWordAsKnown: () => handleKnownWord(wordInRow.id),
           onMarkWordAsUnknown: () => handleUnknownWord(wordInRow.id),
           isPartOfSeries,
-          isSeries,
+          isSeries: isSeries(seriesOrWork),
           vocabTableType: type,
           wordInRow,
         }),
     },
   ]
 
-  const nonFrequencyColumns = allColumns.filter(
-    (column) => column.accessor !== 'frequency'
-  )
+  const getAllowedColumns = (type: VocabTableType, listType: ListType) => {
+    if (type === VocabTableType.Known || type === VocabTableType.Excluded) {
+      return ['reading', 'meaning', 'actions']
+    }
 
-  const columnsPerType: Record<VocabTableType, DataTableColumn<Word>[]> = {
-    [VocabTableType.SeriesOrWork]: allColumns,
-    [VocabTableType.Recommended]: allColumns,
-    [VocabTableType.Known]: nonFrequencyColumns,
-    [VocabTableType.Excluded]: nonFrequencyColumns,
+    if (
+      type === VocabTableType.Recommended ||
+      (type === VocabTableType.SeriesOrWork && listType === ListType.Frequency)
+    ) {
+      return ['reading', 'meaning', 'frequency', 'actions']
+    }
+
+    return ['reading', 'meaning', 'pageNumber', 'frequency', 'actions']
+  }
+
+  const selectColumns = (type: VocabTableType, listType: ListType) => {
+    const allowedColumns = getAllowedColumns(type, listType)
+
+    return allColumns.filter((column) =>
+      allowedColumns.includes(column.accessor)
+    )
   }
 
   return (
@@ -200,8 +235,11 @@ export default function VocabTable(props: VocabTableProps) {
           (type === VocabTableType.SeriesOrWork ||
             type === VocabTableType.Recommended) && (
             <VocabFilter
+              listType={listType}
               minFrequency={minFrequency}
+              minPageNumber={minPageNumber}
               setMinFrequency={setMinFrequency}
+              setMinPageNumber={setMinPageNumber}
               setShowIgnored={setShowIgnored}
               setShowUnignored={setShowUnignored}
               showIgnored={showIgnored}
@@ -214,7 +252,7 @@ export default function VocabTable(props: VocabTableProps) {
         setSearchValue={setSearchValue}
         sortContent={
           type === VocabTableType.SeriesOrWork &&
-          !isSeries && (
+          isWork(seriesOrWork) && (
             <VocabSort listType={listType} setListType={setListType} />
           )
         }
@@ -223,7 +261,7 @@ export default function VocabTable(props: VocabTableProps) {
       <DataTable
         borderRadius='sm'
         classNames={{ table: classes.table }}
-        columns={columnsPerType[type]}
+        columns={selectColumns(type, listType)}
         fetching={loading}
         fz='md'
         height='75vh'

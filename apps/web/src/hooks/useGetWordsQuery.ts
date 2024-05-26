@@ -21,6 +21,7 @@ type Variables = {
   isPartOfSeries: boolean
   isSeries?: boolean
   limit: number
+  minPageNumber?: number
   offset: number
   seriesId?: string
   workId?: string
@@ -30,7 +31,8 @@ export const useGetWordsQuery = (
   listType: ListType,
   kind: VocabTableType,
   variables: Variables,
-  searchString: string
+  searchString: string,
+  minPageNumber: number
 ) => {
   if (kind === VocabTableType.Excluded) {
     const { data, error, fetchMore, loading } =
@@ -40,7 +42,7 @@ export const useGetWordsQuery = (
           input: {
             limit: variables.limit,
             offset: variables.offset,
-            searchString: searchString,
+            searchString,
           },
         },
       })
@@ -80,7 +82,7 @@ export const useGetWordsQuery = (
           input: {
             limit: variables.limit,
             offset: variables.offset,
-            searchString: searchString,
+            searchString,
           },
         },
       }
@@ -120,7 +122,7 @@ export const useGetWordsQuery = (
           input: {
             limit: variables.limit,
             offset: variables.offset,
-            searchString: searchString,
+            searchString,
           },
         },
         onCompleted: () => {},
@@ -156,6 +158,7 @@ export const useGetWordsQuery = (
     if (listType === ListType.Frequency) {
       const { data, error, fetchMore, loading } =
         useQuery<GQL_FrequencyListQuery>(FREQUENCY_LIST, {
+          fetchPolicy: 'network-only',
           notifyOnNetworkStatusChange: true,
           variables: {
             input: {
@@ -163,7 +166,7 @@ export const useGetWordsQuery = (
               isSeries: variables.isSeries,
               limit: variables.limit,
               offset: variables.offset,
-              searchString: searchString,
+              searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },
@@ -207,13 +210,15 @@ export const useGetWordsQuery = (
       const { data, error, fetchMore, loading } = useQuery<GQL_GlossaryQuery>(
         GLOSSARY,
         {
+          fetchPolicy: 'network-only',
           notifyOnNetworkStatusChange: true,
           variables: {
             input: {
               isPartOfSeries: variables.isPartOfSeries,
               limit: variables.limit,
+              minPageNumber,
               offset: variables.offset,
-              searchString: searchString,
+              searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },
@@ -227,6 +232,7 @@ export const useGetWordsQuery = (
             input: {
               isPartOfSeries: variables.isPartOfSeries,
               limit: variables.limit,
+              minPageNumber,
               offset: nextOffset,
               seriesId: variables.seriesId,
               workId: variables.workId,
