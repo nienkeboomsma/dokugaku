@@ -3,6 +3,7 @@ import { type GlossaryModel } from '../models/GlossaryModel'
 
 type GetGlossaryParamsCommon = {
   limit?: number
+  minPageNumber?: number
   offset?: number
   searchString?: string
   userId: string
@@ -88,6 +89,13 @@ export function getGlossary(params: GetGlossaryParams) {
           params.searchString
             ? sql`
               AND word.info::text ILIKE '%' || ${params.searchString} || '%'
+            `
+            : sql``
+        }
+        ${
+          params.minPageNumber
+            ? sql`
+              AND word_work.page_number >= ${params.minPageNumber}
             `
             : sql``
         }

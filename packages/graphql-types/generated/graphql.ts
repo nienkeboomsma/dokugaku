@@ -69,6 +69,7 @@ export type GQL_GlossaryInput = {
   /** If true, seriesId must be supplied. */
   isPartOfSeries: Scalars['Boolean']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
+  minPageNumber?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   searchString?: InputMaybe<Scalars['String']['input']>;
   seriesId?: InputMaybe<Scalars['String']['input']>;
