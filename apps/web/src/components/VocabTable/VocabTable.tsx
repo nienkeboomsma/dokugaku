@@ -225,6 +225,14 @@ export default function VocabTable(props: VocabTableProps) {
     )
   }
 
+  const idAccessor = (word: Word) => {
+    if (word.pageNumber && word.sentenceNumber && word.entryNumber) {
+      return `${word.id}-${word.pageNumber}-${word.sentenceNumber}-${word.entryNumber}`
+    }
+
+    return word.id
+  }
+
   return (
     <div
       className={classes.container}
@@ -265,11 +273,7 @@ export default function VocabTable(props: VocabTableProps) {
         fetching={loading}
         fz='md'
         height='75vh'
-        idAccessor={(word: Word) =>
-          listType === ListType.Glossary
-            ? `${word.id}-${word.pageNumber}-${word.sentenceNumber}-${word.entryNumber}`
-            : word.id
-        }
+        idAccessor={idAccessor}
         noHeader={records.length === 0 ? true : false}
         noRecordsIcon={
           <Box className={classes.noRecordsBox}>
