@@ -84,7 +84,7 @@ export default function VocabTable(props: VocabTableProps) {
   })
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
   const [minPageNumber, setMinPageNumber] = useState<string | number>(
-    isWork(seriesOrWork) ? seriesOrWork.progress : 1
+    isWork(seriesOrWork) ? seriesOrWork.progress + 1 : 1
   )
   const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
   const [listType, setListType] = useState<ListType>(ListType.Frequency)
