@@ -87,7 +87,10 @@ export default function VocabTable(props: VocabTableProps) {
     isWork(seriesOrWork) ? seriesOrWork.progress + 1 : 1
   )
   const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
-  const [listType, setListType] = useState<ListType>(ListType.Frequency)
+  const [listType, setListType] = useLocalStorage({
+    defaultValue: ListType.Frequency,
+    key: `DOKUGAKU_LIST_TYPE-${seriesOrWork?.id}`,
+  })
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 
