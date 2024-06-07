@@ -35,7 +35,6 @@
 
     flex-direction: column;
     max-width: revert;
-    text-align: center;
   }
 }
 
@@ -47,6 +46,7 @@
 
   @media (max-width: 47em) {
     align-items: center;
+    text-align: center;
   }
 }
 

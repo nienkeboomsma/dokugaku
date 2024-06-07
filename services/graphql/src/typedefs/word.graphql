@@ -58,6 +58,7 @@ input GlossaryInput {
   """
   isPartOfSeries: Boolean!
   limit: Int
+  minPageNumber: Int
   offset: Int
   searchString: String
   seriesId: String
