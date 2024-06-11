@@ -1,3 +1,4 @@
+import classes from './layout.module.css'
 import Providers from '../../../../components/Providers'
 
 export default function NovelReaderLayout({
@@ -5,5 +6,9 @@ export default function NovelReaderLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <Providers direction='rtl'>{children}</Providers>
+  return (
+    <Providers bodyClassName={classes.body ?? ''} direction='rtl'>
+      {children}
+    </Providers>
+  )
 }

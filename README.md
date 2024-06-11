@@ -118,8 +118,8 @@ On the 'known words' page there is an option to mark words as known in bulk by u
 
 ## New features
 
-- [ ] built-in reader for uploaded manga and novels
-- [ ] filtering glossaries by page number or paragraph number
+- [ ] built-in reader for uploaded manga
+- [ ] series glossaries (filterable by volume)
 - [ ] word search across the entire corpus, linking to the appropriate page or paragraph
 - [ ] dashboard to track the processing status of uploaded works
 - [ ] removing works and series
