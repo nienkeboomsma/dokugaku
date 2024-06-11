@@ -9,7 +9,7 @@
 
 .progress {
   align-items: center;
-  color: var(--mantine-primary-color-filled);
+  color: var(--mantine-color-blue-light-color);
   display: flex;
   font-size: 0.9rem;
   font-weight: 700;
