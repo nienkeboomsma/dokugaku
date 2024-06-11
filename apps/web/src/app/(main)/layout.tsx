@@ -1,3 +1,4 @@
+import classes from './layout.module.css'
 import AppShell from '../../components/AppShell/AppShell'
 import Providers from '../../components/Providers'
 
@@ -7,7 +8,7 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <Providers>
+    <Providers bodyClassName={classes.body ?? ''}>
       <AppShell>{children}</AppShell>
     </Providers>
   )
