@@ -1,4 +1,3 @@
-import '../styles/global.css'
 // TODO: import Mantine Core styles per component to reduce bundle size
 import '@mantine/core/styles.layer.css'
 import '@mantine/notifications/styles.layer.css'
@@ -14,9 +13,11 @@ export const metadata = {
 }
 
 export default function Providers({
+  bodyClassName,
   children,
   direction,
 }: {
+  bodyClassName?: string
   children: React.ReactNode
   direction?: 'ltr' | 'rtl'
 }) {
@@ -26,7 +27,7 @@ export default function Providers({
       <head suppressHydrationWarning>
         <ColorSchemeScript />
       </head>
-      <body>
+      <body className={bodyClassName}>
         <ApolloWrapper>
           <MantineProvider
             defaultColorScheme='auto'

@@ -1,3 +1,4 @@
+import classes from './layout.module.css'
 import Providers from '../../../../components/Providers'
 
 export default function MangaReaderLayout({
@@ -5,5 +6,5 @@ export default function MangaReaderLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <Providers>{children}</Providers>
+  return <Providers bodyClassName={classes.body ?? ''}>{children}</Providers>
 }

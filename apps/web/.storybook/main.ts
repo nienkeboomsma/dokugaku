@@ -25,6 +25,8 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
+  // TODO: double assets folder, because that's the URL format the components
+  //       expect; clean up the components so they are pure
   staticDirs: ['../public', './assets'],
 }
 export default config
