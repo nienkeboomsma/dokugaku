@@ -30,7 +30,7 @@ export const WithProgress: Story = {
 
 export const WithGrow: Story = {
   args: {
-    coverPath: '/assets/ffaf662c-81c0-46dd-839a-ed88fbd41fb7/cover.webp',
+    coverPath: '/assets/works/ffaf662c-81c0-46dd-839a-ed88fbd41fb7/cover.webp',
     grow: true,
   },
   decorators: [resizer()],
