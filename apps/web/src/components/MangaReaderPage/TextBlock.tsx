@@ -31,12 +31,10 @@ const determineFontSize = (
 
 export default function TextBlock({
   coordinates,
-  // fontSize,
   lines,
   vertical,
 }: {
   coordinates: [number, number, number, number]
-  // fontSize: number
   lines: string[]
   vertical: boolean
 }) {

@@ -21,12 +21,10 @@ export const Default: Story = {
 
 export const MutationError: Story = {
   args: {
-    initialProgress: 3,
-    textNodes: mockNovelTextNodes,
+    ...Default.args,
     updateProgress: async (newProgress) => {
       throw Error
     },
-    workId: 'xyz',
   },
 }
 

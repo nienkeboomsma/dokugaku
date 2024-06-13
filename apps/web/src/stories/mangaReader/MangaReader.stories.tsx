@@ -10,17 +10,25 @@ const meta: Meta<typeof MangaReader> = {
 
 type Story = StoryObj<typeof meta>
 
-export const Loading: Story = {
+export const Default: Story = {
   args: {
-    loading: true,
+    getPageData: async (pageNumbers) =>
+      pageNumbers.map((pageNumber) =>
+        mockMangaPages.find((page) => page.pageNumber === pageNumber)
+      ),
+    initialPageNumber: 1,
+    initialPages: mockMangaPages.slice(0, 2),
+    maxPageNumber: mockMangaPages.length,
+    updateProgress: async (newProgress) => newProgress,
   },
 }
 
-export const TwoPageLayout: Story = {
+export const MutationError: Story = {
   args: {
-    initialPageNumber: 1,
-    maxPageNumber: 6,
-    pages: mockMangaPages,
+    ...Default.args,
+    updateProgress: async (newProgress) => {
+      throw Error
+    },
   },
 }
 

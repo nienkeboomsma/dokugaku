@@ -3,26 +3,16 @@ import type { Page } from '../../types/MangaPage'
 import MangaPage from './MangaPage'
 
 export default function MangaPages({
-  currentPageNumber,
   pages,
   showTwoPages,
 }: {
-  currentPageNumber: number
-  pages: Page[]
+  pages: Array<Page | undefined>
   showTwoPages: boolean
 }) {
   return (
     <div className={classes.container}>
-      {showTwoPages && (
-        <MangaPage
-          key={pages[currentPageNumber]?.pageNumber}
-          page={pages[currentPageNumber]}
-        />
-      )}
-      <MangaPage
-        key={pages[currentPageNumber - 1]?.pageNumber}
-        page={pages[currentPageNumber - 1]}
-      />
+      {showTwoPages && <MangaPage key={pages[1]?.pageNumber} page={pages[1]} />}
+      <MangaPage key={pages[0]?.pageNumber} page={pages[0]} />
     </div>
   )
 }

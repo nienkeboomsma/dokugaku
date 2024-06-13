@@ -12,16 +12,14 @@ type Story = StoryObj<typeof meta>
 
 export const OnePageLayout: Story = {
   args: {
-    currentPageNumber: 5,
-    pages: mockMangaPages,
+    pages: mockMangaPages.slice(4, 5),
     showTwoPages: false,
   },
 }
 
 export const TwoPageLayout: Story = {
   args: {
-    currentPageNumber: 5,
-    pages: mockMangaPages,
+    pages: mockMangaPages.slice(4, 6),
     showTwoPages: true,
   },
 }

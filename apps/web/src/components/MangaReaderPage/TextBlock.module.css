@@ -19,5 +19,6 @@
 }
 
 .line {
+  white-space: nowrap;
   writing-mode: var(--writing-mode);
 }

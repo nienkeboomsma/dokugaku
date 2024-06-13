@@ -1,29 +1,46 @@
-'use client'
-
 import { useEffect, useMemo, useState } from 'react'
-import { LoadingOverlay } from '@mantine/core'
+import { useIsFirstRender } from '@mantine/hooks'
 
 import MangaPages from './MangaPages'
 import type { Page } from '../../types/MangaPage'
 
 export default function MangaReader({
+  getPageData,
   initialPageNumber,
-  loading,
+  initialPages,
   maxPageNumber,
-  pages,
+  updateProgress,
 }: {
+  getPageData: (pageNumbers: number[]) => Promise<Array<Page | undefined>>
   initialPageNumber: number
-  loading: boolean
+  initialPages: Array<Page | undefined>
   maxPageNumber: number
-  pages?: Page[]
+  updateProgress: (newProgress: number) => Promise<number>
 }) {
   const [currentPageNumber, setCurrentPageNumber] = useState(initialPageNumber)
   const [twoPageLayout, setTwoPageLayout] = useState(true)
+  const [pages, setPages] = useState<Array<Page | undefined>>(initialPages)
 
   const showTwoPages = useMemo(() => {
     const isCover = currentPageNumber === 1
     return twoPageLayout && !isCover
   }, [currentPageNumber, twoPageLayout])
+
+  const firstRender = useIsFirstRender()
+
+  useEffect(() => {
+    if (firstRender) return
+    // when switching from a one-page to a two-page view (and vice versa) it
+    // briefly displays the pages incorrectly before rerendering and showing
+    // them correctly; this prevents that
+    if (!showTwoPages) setPages([])
+
+    const pageNumbers = showTwoPages
+      ? [currentPageNumber, currentPageNumber + 1]
+      : [currentPageNumber]
+
+    getPageData(pageNumbers).then((data) => setPages(data))
+  }, [currentPageNumber, showTwoPages])
 
   const getNewPageNumber = (
     currentPageNumber: number,
@@ -62,13 +79,5 @@ export default function MangaReader({
     }
   }, [showTwoPages])
 
-  if (loading || !pages) return <LoadingOverlay visible />
-
-  return (
-    <MangaPages
-      currentPageNumber={currentPageNumber}
-      pages={pages}
-      showTwoPages={showTwoPages}
-    />
-  )
+  return <MangaPages pages={pages} showTwoPages={showTwoPages} />
 }

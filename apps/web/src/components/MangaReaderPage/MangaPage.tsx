@@ -19,7 +19,6 @@ export default function MangaPage({ page }: { page?: Page }) {
       {page.textJson.blocks.map((textBlock, index) => (
         <TextBlock
           coordinates={textBlock.box}
-          // fontSize={textBlock.font_size}
           key={index}
           lines={textBlock.lines}
           vertical={textBlock.vertical}
