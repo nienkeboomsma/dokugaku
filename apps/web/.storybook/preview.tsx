@@ -1,11 +1,13 @@
 import '../src/styles/global.css'
 import '@mantine/core/styles.layer.css'
+import '@mantine/notifications/styles.layer.css'
 import 'mantine-datatable/styles.layer.css'
 import React, { useEffect } from 'react'
 import type { Preview } from '@storybook/react'
 import { addons } from '@storybook/preview-api'
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode'
 import { MantineProvider, useMantineColorScheme } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
 
 const channel = addons.getChannel()
 
@@ -32,6 +34,7 @@ const preview: Preview = {
       // TODO: define a theme file centrally
       <MantineProvider theme={{ primaryColor: 'blue' }}>
         <ColorSchemeWrapper>
+          <Notifications />
           <Story />
         </ColorSchemeWrapper>
       </MantineProvider>
