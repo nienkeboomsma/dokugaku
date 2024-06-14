@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import MangaReader from '../../components/MangaReaderPage/MangaReader'
+import MangaReader from '../../components/MangaReader/MangaReader'
 import { mockMangaPages } from '../../../.storybook/fixtures/mangaPages'
 import { useEffect, useRef } from 'react'
 

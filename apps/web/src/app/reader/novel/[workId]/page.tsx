@@ -8,7 +8,7 @@ import { LoadingOverlay } from '@mantine/core'
 import type { NovelJSONContent } from '../../../../types/NovelJSONContent'
 import { WORK_PROGRESS } from '../../../../graphql/queries/workProgress'
 import { useUpdateWorkProgress } from '../../../../hooks/useUpdateWorkProgress'
-import NovelReader from '../../../../components/NovelReaderPage/NovelReader'
+import NovelReader from '../../../../components/NovelReader/NovelReader'
 
 export default function NovelReaderPage({
   params,

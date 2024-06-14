@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import MangaPages from '../../components/MangaReaderPage/MangaPages'
+import MangaPages from '../../components/MangaReader/MangaPages'
 import { mockMangaPages } from '../../../.storybook/fixtures/mangaPages'
 
 const meta: Meta<typeof MangaPages> = {

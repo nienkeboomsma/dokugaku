@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import NovelReader from '../../components/NovelReaderPage/NovelReader'
+import NovelReader from '../../components/NovelReader/NovelReader'
 import { mockNovelTextNodes } from '../../../.storybook/fixtures/novelTextNodes'
 
 const meta: Meta<typeof NovelReader> = {

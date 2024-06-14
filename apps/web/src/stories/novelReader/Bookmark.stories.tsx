@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { useArgs } from '@storybook/preview-api'
 
-import Bookmark from '../../components/NovelReaderPage/Bookmark'
+import Bookmark from '../../components/NovelReader/Bookmark'
 import { ApolloMockedProvider } from '../../../.storybook/decorators/mocks'
 import { updateWorkProgress } from '../../../.storybook/mocks/updateWorkProgress'
 import { rtl } from '../../../.storybook/decorators/rtl'
-import { useArgs } from '@storybook/preview-api'
 
 const meta: Meta<typeof Bookmark> = {
   title: 'Novel reader/Bookmark',

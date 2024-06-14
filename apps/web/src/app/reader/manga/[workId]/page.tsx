@@ -7,7 +7,7 @@ import { LoadingOverlay } from '@mantine/core'
 
 import type { Page } from '../../../../types/MangaPage'
 import { WORK_PROGRESS } from '../../../../graphql/queries/workProgress'
-import MangaReader from '../../../../components/MangaReaderPage/MangaReader'
+import MangaReader from '../../../../components/MangaReader/MangaReader'
 import { useUpdateWorkProgress } from '../../../../hooks/useUpdateWorkProgress'
 
 const getImageSrc = (pageNumber: number, workId: string) => {
