@@ -6,6 +6,16 @@ import { mockMangaPages } from '../../../.storybook/fixtures/mangaPages'
 const meta: Meta<typeof MangaPages> = {
   title: 'Manga reader/Manga pages',
   component: MangaPages,
+  parameters: {
+    layout: 'fullscreen',
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ height: '100vh', width: '100vw' }}>
+        <Story />
+      </div>
+    ),
+  ],
 }
 
 type Story = StoryObj<typeof meta>

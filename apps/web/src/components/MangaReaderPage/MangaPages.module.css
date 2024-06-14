@@ -1,4 +1,12 @@
+.transform {
+  height: 100% !important;
+  width: 100% !important;
+}
+
 .container {
   display: flex;
-  justify-content: center;
+  flex-wrap: nowrap;
+  height: fit-content;
+  margin: auto;
+  width: fit-content;
 }

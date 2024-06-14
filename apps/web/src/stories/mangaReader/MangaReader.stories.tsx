@@ -2,10 +2,38 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import MangaReader from '../../components/MangaReaderPage/MangaReader'
 import { mockMangaPages } from '../../../.storybook/fixtures/mangaPages'
+import { useEffect, useRef } from 'react'
 
 const meta: Meta<typeof MangaReader> = {
   title: 'Manga reader/Manga reader',
   component: MangaReader,
+  parameters: {
+    layout: 'fullscreen',
+  },
+  decorators: [
+    (Story) => {
+      const divRef = useRef<HTMLDivElement>(null)
+
+      useEffect(() => {
+        if (!divRef.current) return
+        divRef.current.focus()
+      }, [])
+
+      return (
+        <div
+          ref={divRef}
+          style={{
+            height: '100%',
+            outline: 'none',
+            width: '100%',
+          }}
+          tabIndex={-1}
+        >
+          <Story />
+        </div>
+      )
+    },
+  ],
 }
 
 type Story = StoryObj<typeof meta>

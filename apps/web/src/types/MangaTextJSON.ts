@@ -1,6 +1,6 @@
 type Coordinates = [number, number]
 
-export type TextBox = {
+export type TextBoxData = {
   box: [number, number, number, number]
   vertical: boolean
   font_size: number
@@ -12,5 +12,5 @@ export type MangaTextJSON = {
   version: string
   img_width: number
   img_height: number
-  blocks: TextBox[]
+  blocks: TextBoxData[]
 }

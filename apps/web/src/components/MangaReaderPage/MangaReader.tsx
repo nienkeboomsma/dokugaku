@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useIsFirstRender } from '@mantine/hooks'
 
+import classes from './MangaReader.module.css'
 import MangaPages from './MangaPages'
 import type { Page } from '../../types/MangaPage'
 
@@ -30,9 +31,9 @@ export default function MangaReader({
 
   useEffect(() => {
     if (firstRender) return
-    // when switching from a one-page to a two-page view (and vice versa) it
+    // When switching from a one-page to a two-page view (and vice versa) it
     // briefly displays the pages incorrectly before rerendering and showing
-    // them correctly; this prevents that
+    // them correctly; this prevents that.
     if (!showTwoPages) setPages([])
 
     const pageNumbers = showTwoPages
@@ -79,5 +80,9 @@ export default function MangaReader({
     }
   }, [showTwoPages])
 
-  return <MangaPages pages={pages} showTwoPages={showTwoPages} />
+  return (
+    <div className={classes.container}>
+      <MangaPages pages={pages} showTwoPages={showTwoPages} />
+    </div>
+  )
 }

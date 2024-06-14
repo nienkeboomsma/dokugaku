@@ -1,14 +1,15 @@
+import { memo } from 'react'
 import Image from 'next/image'
 
+import classes from './MangaPage.module.css'
 import type { Page } from '../../types/MangaPage'
-import TextBlock from './TextBlock'
+import TextBox from './TextBox'
 
-export default function MangaPage({ page }: { page?: Page }) {
+const MangaPage = memo(function MangaPage({ page }: { page?: Page }) {
   if (!page) return
 
   return (
-    // TODO: clean up
-    <div style={{ position: 'relative' }}>
+    <div className={classes.container}>
       <Image
         alt={`Page ${page.pageNumber}`}
         height={page.textJson.img_height}
@@ -16,14 +17,15 @@ export default function MangaPage({ page }: { page?: Page }) {
         src={page.imageSrc}
         width={page.textJson.img_width}
       />
-      {page.textJson.blocks.map((textBlock, index) => (
-        <TextBlock
-          coordinates={textBlock.box}
+      {page.textJson.blocks.map((textBox, index) => (
+        <TextBox
+          imageWidth={page.textJson.img_width}
           key={index}
-          lines={textBlock.lines}
-          vertical={textBlock.vertical}
+          textBox={textBox}
         />
       ))}
     </div>
   )
-}
+})
+
+export default MangaPage
