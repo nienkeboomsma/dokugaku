@@ -24,7 +24,7 @@ export default function MangaPages({
       <TransformWrapper
         doubleClick={
           dblClickAction === 'zoomIn'
-            ? { disabled: false, step: 0.7 }
+            ? { disabled: false, step: 0.5 }
             : { disabled: true }
         }
         limitToBounds={false}
