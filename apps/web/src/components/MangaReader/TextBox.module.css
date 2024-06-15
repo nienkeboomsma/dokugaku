@@ -25,7 +25,13 @@
   height: var(--text-box-height);
   justify-content: space-around;
   position: relative;
+  z-index: 1;
   width: var(--text-box-width);
+
+  @mixin hover {
+    opacity: 1;
+    overflow: visible;
+  }
 }
 
 .line {
