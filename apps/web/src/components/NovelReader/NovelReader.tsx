@@ -1,9 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Progress } from '@mantine/core'
 
+import classes from './NovelReader.module.css'
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
 import useNovelReaderDirection from '../../hooks/useNovelReaderDirection'
+import { getPercentage } from '../../util/getPercentage'
 import NovelReaderMenu from './NovelReaderMenu'
 import TextContainer from './TextContainer'
 import TextNodes from './TextNodes'
@@ -33,6 +36,12 @@ export default function NovelReader({
 
   return (
     <>
+      <Progress
+        classNames={{ root: classes.progress }}
+        radius={0}
+        size='xs'
+        value={getPercentage(progress, maxProgress)}
+      />
       <NovelReaderMenu
         direction={direction}
         maxProgress={maxProgress}
