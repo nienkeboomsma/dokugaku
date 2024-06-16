@@ -1,9 +1,10 @@
 import type { Dispatch, SetStateAction } from 'react'
-import { ActionIcon } from '@mantine/core'
+import { ActionIcon, Progress } from '@mantine/core'
 import { IconChevronsLeft } from '@tabler/icons-react'
 import Link from 'next/link'
 
 import classes from './MangaReaderHeader.module.css'
+import { getPercentage } from '../../util/getPercentage'
 import Pagination from './Pagination'
 import Settings from './Settings'
 
@@ -28,29 +29,41 @@ export default function MangaReaderHeader({
   twoPageLayout: boolean
   workId: string
 }) {
+  const progress = showTwoPages
+    ? getPercentage(currentPageNumber + 1, maxPageNumber)
+    : getPercentage(currentPageNumber, maxPageNumber)
+
   return (
     <div className={classes.container}>
-      <ActionIcon
-        component={Link}
-        href={`/works/${workId}`}
-        size='2rem'
-        variant='subtle'
-      >
-        <IconChevronsLeft size='100%' stroke={1.5} />
-      </ActionIcon>
-      <Pagination
-        currentPageNumber={currentPageNumber}
-        maxPageNumber={maxPageNumber}
-        setCurrentPageNumber={setCurrentPageNumber}
-        showTwoPages={showTwoPages}
-        twoPageLayout={twoPageLayout}
+      <Progress
+        classNames={{ root: classes.progress }}
+        radius={0}
+        size='xs'
+        value={progress}
       />
-      <Settings
-        fullscreen={fullscreen}
-        setTwoPageLayout={setTwoPageLayout}
-        toggleFullscreen={toggleFullscreen}
-        twoPageLayout={twoPageLayout}
-      />
+      <div className={classes.controls}>
+        <ActionIcon
+          component={Link}
+          href={`/works/${workId}`}
+          size='2rem'
+          variant='subtle'
+        >
+          <IconChevronsLeft size='100%' stroke={1.5} />
+        </ActionIcon>
+        <Pagination
+          currentPageNumber={currentPageNumber}
+          maxPageNumber={maxPageNumber}
+          setCurrentPageNumber={setCurrentPageNumber}
+          showTwoPages={showTwoPages}
+          twoPageLayout={twoPageLayout}
+        />
+        <Settings
+          fullscreen={fullscreen}
+          setTwoPageLayout={setTwoPageLayout}
+          toggleFullscreen={toggleFullscreen}
+          twoPageLayout={twoPageLayout}
+        />
+      </div>
     </div>
   )
 }

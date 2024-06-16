@@ -122,7 +122,7 @@ export default function MangaReader({
   ])
 
   const { fullscreen, toggleFullscreen } = useFullscreen()
-  const headerHeight = fullscreen ? '0px' : rem(48)
+  const headerHeight = fullscreen ? '0px' : rem(50)
 
   return (
     <AppShell

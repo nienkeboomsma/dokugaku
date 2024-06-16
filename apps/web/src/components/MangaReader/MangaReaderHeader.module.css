@@ -1,4 +1,14 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.progress {
+  background-color: transparent;
+}
+
+.controls {
   align-items: center;
   display: flex;
   gap: 1rem;
