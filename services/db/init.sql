@@ -67,7 +67,7 @@ CREATE TABLE work (
   modified timestamptz NOT NULL DEFAULT now(),
   hapax_legomenon_count integer NULL,
   max_progress integer NOT NULL,
-  series_id uuid NULL DEFAULT NULL REFERENCES series,
+  series_id uuid NULL DEFAULT NULL REFERENCES series ON DELETE CASCADE,
   title text NOT NULL,
   total_word_count integer NULL,
   type worktype NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE user_series (
   modified timestamptz NOT NULL DEFAULT now(),
   series_id uuid NOT NULL REFERENCES series ON DELETE CASCADE,
   status readstatus NOT NULL DEFAULT 'new',
-  user_id uuid NOT NULL REFERENCES user_account,
+  user_id uuid NOT NULL REFERENCES user_account ON DELETE CASCADE,
   UNIQUE (user_id, series_id)
 );
 
@@ -114,7 +114,7 @@ CREATE TABLE user_work (
   modified timestamptz NOT NULL DEFAULT now(),
   current_progress integer NULL DEFAULT 0,
   status readstatus NOT NULL DEFAULT 'new',
-  user_id uuid NOT NULL REFERENCES user_account,
+  user_id uuid NOT NULL REFERENCES user_account ON DELETE CASCADE,
   work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
   UNIQUE (user_id, work_id)
 );
@@ -141,6 +141,21 @@ CREATE TRIGGER update_author_modified
 BEFORE UPDATE ON author
 FOR EACH ROW
 EXECUTE PROCEDURE update_modified_column();
+
+CREATE OR REPLACE FUNCTION delete_orphaned_authors() 
+RETURNS TRIGGER AS $$
+BEGIN
+  DELETE FROM author
+  WHERE id = OLD.author_id
+  AND NOT EXISTS (SELECT 1 FROM author_work WHERE author_id = OLD.author_id);
+  RETURN OLD;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER delete_orphaned_authors_trigger
+AFTER DELETE ON author_work
+FOR EACH ROW
+EXECUTE FUNCTION delete_orphaned_authors();
 
 -- author_work
 
@@ -193,7 +208,7 @@ CREATE TABLE user_word (
   modified timestamptz NOT NULL DEFAULT now(),
   excluded boolean NOT NULL DEFAULT false,
   known boolean NOT NULL DEFAULT false,
-  user_id uuid NOT NULL REFERENCES user_account,
+  user_id uuid NOT NULL REFERENCES user_account ON DELETE CASCADE,
   word_id integer NOT NULL REFERENCES word,
   UNIQUE (user_id, word_id)
 );
@@ -214,7 +229,7 @@ CREATE TABLE ignored_in_work (
   created timestamptz NOT NULL DEFAULT now(),
   modified timestamptz NOT NULL DEFAULT now(),
   ignored boolean NOT NULL DEFAULT false,
-  user_id uuid NOT NULL REFERENCES user_account,
+  user_id uuid NOT NULL REFERENCES user_account, ON DELETE CASCADE,
   word_id integer NOT NULL REFERENCES word,
   work_id uuid NOT NULL REFERENCES work ON DELETE CASCADE,
   UNIQUE (user_id, word_id, work_id)
@@ -234,8 +249,8 @@ CREATE TABLE ignored_in_series (
   created timestamptz NOT NULL DEFAULT now(),
   modified timestamptz NOT NULL DEFAULT now(),
   ignored boolean NOT NULL DEFAULT false,
-  series_id uuid NOT NULL REFERENCES series,
-  user_id uuid NOT NULL REFERENCES user_account,
+  series_id uuid NOT NULL REFERENCES series ON DELETE CASCADE,
+  user_id uuid NOT NULL REFERENCES user_account ON DELETE CASCADE,
   word_id integer NOT NULL REFERENCES word,
   UNIQUE (series_id, user_id, word_id)
 );
