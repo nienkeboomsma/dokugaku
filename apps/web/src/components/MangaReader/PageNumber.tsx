@@ -96,6 +96,7 @@ export default function PageNumber({
   return (
     <div className={classes.container}>
       <NumberInput
+        autoComplete='off'
         classNames={{
           input: classes.pageNumberInput,
         }}
