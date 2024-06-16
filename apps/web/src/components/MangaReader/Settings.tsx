@@ -24,6 +24,7 @@ export default function Settings({
     <div className={classes.container}>
       {twoPageLayout ? (
         <ActionIcon
+          aria-label='Display one page'
           onClick={() => setTwoPageLayout(false)}
           size='2rem'
           variant='subtle'
@@ -32,6 +33,7 @@ export default function Settings({
         </ActionIcon>
       ) : (
         <ActionIcon
+          aria-label='Display two pages'
           onClick={() => setTwoPageLayout(true)}
           size='2rem'
           variant='subtle'
@@ -40,7 +42,12 @@ export default function Settings({
         </ActionIcon>
       )}
 
-      <ActionIcon onClick={toggleFullscreen} size='2rem' variant='subtle'>
+      <ActionIcon
+        aria-label='Toggle fullscreen mode'
+        onClick={toggleFullscreen}
+        size='2rem'
+        variant='subtle'
+      >
         {fullscreen ? (
           <IconMinimize size='90%' stroke={1.6} />
         ) : (

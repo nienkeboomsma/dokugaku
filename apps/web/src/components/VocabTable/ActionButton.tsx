@@ -14,6 +14,7 @@ export default function ActionButton({
   return (
     <Tooltip label={tooltipLabel}>
       <ActionIcon
+        aria-label={tooltipLabel}
         color={iconColor}
         onClick={onClick}
         size='sm'

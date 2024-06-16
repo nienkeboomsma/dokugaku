@@ -27,6 +27,7 @@ export default function Pagination({
   return (
     <div className={classes.container}>
       <ActionIcon
+        aria-label='Go to last page'
         onClick={() => {
           setCurrentPageNumber(getLastPageNumber(maxPageNumber, twoPageLayout))
         }}
@@ -36,6 +37,7 @@ export default function Pagination({
         <IconChevronsLeft size='100%' stroke={1.5} />
       </ActionIcon>
       <ActionIcon
+        aria-label='Go to next page'
         onClick={() => {
           setCurrentPageNumber(
             getNewPageNumber(
@@ -59,6 +61,7 @@ export default function Pagination({
         twoPageLayout={twoPageLayout}
       />
       <ActionIcon
+        aria-label='Go to previous page'
         onClick={() => {
           setCurrentPageNumber(
             getNewPageNumber(
@@ -75,6 +78,7 @@ export default function Pagination({
         <IconChevronRight size='83%' stroke={1.8} />
       </ActionIcon>
       <ActionIcon
+        aria-label='Go to first page'
         onClick={() => {
           setCurrentPageNumber(1)
         }}

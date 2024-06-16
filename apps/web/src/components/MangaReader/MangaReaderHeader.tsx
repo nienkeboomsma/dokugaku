@@ -43,6 +43,7 @@ export default function MangaReaderHeader({
       />
       <div className={classes.controls}>
         <ActionIcon
+          aria-label='Go to work page'
           component={Link}
           href={`/works/${workId}`}
           size='2rem'
