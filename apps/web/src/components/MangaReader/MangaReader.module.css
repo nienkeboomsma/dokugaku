@@ -1,4 +1,18 @@
-.container {
-  height: 100vh;
+.header {
+  border-color: light-dark(
+    var(--mantine-color-gray-3),
+    var(--mantine-color-dark-6)
+  );
+}
+
+.main {
+  height: calc(100vh - var(--header-height));
   width: 100vw;
+}
+
+body:not(.userIsTabbing) button:focus,
+body:not(.userIsTabbing) input:focus,
+body:not(.userIsTabbing) select:focus,
+body:not(.userIsTabbing) textarea:focus {
+  outline: none;
 }

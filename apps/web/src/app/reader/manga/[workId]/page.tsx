@@ -91,6 +91,7 @@ export default function MangaReaderPage({
       updateProgress={(newProgress) =>
         updateProgress(newProgress, params.workId)
       }
+      workId={params.workId}
     />
   )
 }

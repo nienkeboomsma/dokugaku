@@ -1,9 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useIsFirstRender } from '@mantine/hooks'
+import { useHotkeys, useIsFirstRender, useLocalStorage } from '@mantine/hooks'
+import { AppShell, rem } from '@mantine/core'
 
 import classes from './MangaReader.module.css'
-import MangaPages from './MangaPages'
 import type { Page } from '../../types/MangaPage'
+import {
+  getLastPageNumber,
+  getNewPageNumber,
+  getShowTwoPages,
+} from '../../util/getPageNumber'
+import useFullscreen from '../../hooks/useFullscreen'
+import MangaReaderHeader from './MangaReaderHeader'
+import MangaPages from './MangaPages'
 
 export default function MangaReader({
   getPageData,
@@ -11,78 +19,125 @@ export default function MangaReader({
   initialPages,
   maxPageNumber,
   updateProgress,
+  workId,
 }: {
+  // TODO: decouple json from img; allow img to start loading before json
+  //       arrives; filling in the textBoxes later is fine
   getPageData: (pageNumbers: number[]) => Promise<Array<Page | undefined>>
   initialPageNumber: number
   initialPages: Array<Page | undefined>
   maxPageNumber: number
   updateProgress: (newProgress: number) => Promise<number>
+  workId: string
 }) {
   const [currentPageNumber, setCurrentPageNumber] = useState(initialPageNumber)
-  const [twoPageLayout, setTwoPageLayout] = useState(true)
+  // const [debouncedCurrentPageNumber] = useDebouncedValue(currentPageNumber, 300)
   const [pages, setPages] = useState<Array<Page | undefined>>(initialPages)
+  const [twoPageLayout, setTwoPageLayout] = useLocalStorage({
+    defaultValue: true,
+    key: `DOKUGAKU_TWO_PAGE_LAYOUT-${workId}`,
+  })
 
-  const showTwoPages = useMemo(() => {
-    const isCover = currentPageNumber === 1
-    return twoPageLayout && !isCover
-  }, [currentPageNumber, twoPageLayout])
+  const showTwoPages = getShowTwoPages(
+    currentPageNumber,
+    maxPageNumber,
+    twoPageLayout
+  )
 
   const firstRender = useIsFirstRender()
 
   useEffect(() => {
+    if (!twoPageLayout) return
+
+    const isCover = currentPageNumber === 1
+    const isEvenPage = currentPageNumber % 2 === 0
+
+    if (isEvenPage || isCover) return
+
+    setCurrentPageNumber((prev) => prev - 1)
+  }, [twoPageLayout])
+
+  useEffect(() => {
     if (firstRender) return
-    // When switching from a one-page to a two-page view (and vice versa) it
-    // briefly displays the pages incorrectly before rerendering and showing
-    // them correctly; this prevents that.
-    if (!showTwoPages) setPages([])
+
+    // TODO: When showTwoPages changes value between rerenders it briefly
+    //       displays the pages incorrectly; use a ref to compare values and
+    //       adjust accordingly...?
 
     const pageNumbers = showTwoPages
       ? [currentPageNumber, currentPageNumber + 1]
       : [currentPageNumber]
 
     getPageData(pageNumbers).then((data) => setPages(data))
-  }, [currentPageNumber, showTwoPages])
+  }, [currentPageNumber, twoPageLayout])
 
-  const getNewPageNumber = (
-    currentPageNumber: number,
-    direction: 'backward' | 'forward'
-  ) => {
-    const increment = showTwoPages ? 2 : 1
-    const newPageNumber =
-      direction === 'backward'
-        ? currentPageNumber - increment
-        : currentPageNumber + increment
+  useHotkeys([
+    [
+      'Tab',
+      (event) => {
+        if (event.key === 'Tab') {
+          document.body.classList.add(`${classes.userIsTabbing}`)
+        }
+      },
+      { preventDefault: false },
+    ],
+    [
+      'ArrowLeft',
+      () =>
+        setCurrentPageNumber((prev) =>
+          getNewPageNumber(prev, maxPageNumber, 'forward', twoPageLayout)
+        ),
+      { preventDefault: true },
+    ],
+    [
+      'ArrowRight',
+      () =>
+        setCurrentPageNumber((prev) =>
+          getNewPageNumber(prev, maxPageNumber, 'backward', twoPageLayout)
+        ),
+      { preventDefault: true },
+    ],
+    [']', () => setCurrentPageNumber(1), { preventDefault: true }],
+    [
+      '[',
+      () =>
+        setCurrentPageNumber(getLastPageNumber(maxPageNumber, twoPageLayout)),
+      { preventDefault: true },
+    ],
+    ['1', () => setTwoPageLayout(false), { preventDefault: true }],
+    ['2', () => setTwoPageLayout(true), { preventDefault: true }],
+  ])
 
-    if (newPageNumber < 1) return 1
-    if (newPageNumber > maxPageNumber) return maxPageNumber
-
-    return newPageNumber
-  }
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      setCurrentPageNumber((prev) => getNewPageNumber(prev, 'forward'))
-    }
-    if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      setCurrentPageNumber((prev) => getNewPageNumber(prev, 'backward'))
-    }
-  }
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    document.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [showTwoPages])
+  const { fullscreen, toggleFullscreen } = useFullscreen()
+  const headerHeight = fullscreen ? '0px' : rem(48)
 
   return (
-    <div className={classes.container}>
-      <MangaPages pages={pages} showTwoPages={showTwoPages} />
-    </div>
+    <AppShell
+      // TODO: consolidate with header in mainLayout
+      classNames={{
+        header: classes.header,
+        main: classes.main,
+      }}
+      header={fullscreen ? undefined : { height: headerHeight }}
+    >
+      {!fullscreen && (
+        <AppShell.Header>
+          <MangaReaderHeader
+            currentPageNumber={currentPageNumber}
+            fullscreen={fullscreen}
+            maxPageNumber={maxPageNumber}
+            setCurrentPageNumber={setCurrentPageNumber}
+            setTwoPageLayout={setTwoPageLayout}
+            showTwoPages={showTwoPages}
+            toggleFullscreen={toggleFullscreen}
+            twoPageLayout={twoPageLayout}
+            workId={workId}
+          />
+        </AppShell.Header>
+      )}
+      <AppShell.Main style={{ '--header-height': headerHeight }}>
+        <MangaPages pages={pages} showTwoPages={showTwoPages} />
+      </AppShell.Main>
+    </AppShell>
   )
 }
