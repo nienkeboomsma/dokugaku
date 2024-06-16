@@ -26,11 +26,11 @@ export default function DesktopNav({ visibleFrom }: { visibleFrom: string }) {
       ))}
       <AvatarMenu>
         <ActionIcon
-          variant='light'
+          aria-label='User settings'
           ml='md'
           radius='xl'
           size='lg'
-          aria-label='User settings'
+          variant='light'
         >
           <IconUserCircle size='70%' stroke={1.5} />
         </ActionIcon>

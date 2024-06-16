@@ -46,6 +46,7 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
   const [readStatus, setReadStatus] = useState(work.status)
   const [readStatusLoading, setReadStatusLoading] = useState(false)
 
+  // TODO: not necessary once using useQuery with no-cache
   const router = useRouter()
 
   const [updateReadStatus] = useMutation<GQL_UpdateWorkReadStatusMutation>(
@@ -86,12 +87,8 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
         <div className={classes.firstColumn}>
           <WorkCover
             coverPath={`/assets/${work.id}/cover.webp`}
-            maxProgress={
-              work.type === GQL_WorkType.Novel ? work.maxProgress : undefined
-            }
-            progress={
-              work.type === GQL_WorkType.Novel ? work.progress : undefined
-            }
+            maxProgress={work.maxProgress}
+            progress={work.progress}
             width={COVER_WIDTH}
           />
           <ReadStatusSelector
@@ -99,17 +96,15 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
             status={readStatus}
             updateStatus={readStatusHandler}
           />
-          {/* TODO: add reader functionality */}
-          {work.type === GQL_WorkType.Novel && (
-            <Button
-              component={Link}
-              href={`/reader/${work.type}/${work.id}`}
-              leftSection={<IconBook2 size={14} />}
-              variant='light'
-            >
-              Go to reader
-            </Button>
-          )}
+
+          <Button
+            component={Link}
+            href={`/reader/${work.type}/${work.id}`}
+            leftSection={<IconBook2 size={14} />}
+            variant='light'
+          >
+            Go to reader
+          </Button>
         </div>
 
         <div className={classes.secondColumn}>

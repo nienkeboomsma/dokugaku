@@ -32,6 +32,7 @@ export default function NovelReaderMenu({
 
   const DirectionIcon =
     direction === 'horizontal' ? IconArrowAutofitDown : IconArrowAutofitRight
+  const ariabLabel = `Set writing mode to ${direction === 'horizontal' ? 'vertical' : 'horizontal'}`
 
   return (
     <div
@@ -39,6 +40,7 @@ export default function NovelReaderMenu({
       style={{ '--flex-direction': flexDirection } as React.CSSProperties}
     >
       <ActionIcon
+        aria-label='Go to work page'
         component={Link}
         href={`/works/${workId}`}
         size='2rem'
@@ -46,7 +48,12 @@ export default function NovelReaderMenu({
       >
         <IconChevronsLeft size='100%' stroke={1.5} />
       </ActionIcon>
-      <ActionIcon onClick={toggleDirection} size='2rem' variant='subtle'>
+      <ActionIcon
+        aria-label={ariabLabel}
+        onClick={toggleDirection}
+        size='2rem'
+        variant='subtle'
+      >
         <DirectionIcon size='70%' stroke={2} />
       </ActionIcon>
       <div className={progressClassName}>

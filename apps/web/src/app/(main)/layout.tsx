@@ -1,5 +1,5 @@
 import classes from './layout.module.css'
-import AppShell from '../../components/AppShell/AppShell'
+import AppShell from '../../components/MainLayout/AppShell'
 import Providers from '../../components/Providers'
 
 export default function MainLayout({

@@ -1,0 +1,5 @@
+.progress {
+  direction: ltr;
+  position: fixed;
+  width: 100%;
+}

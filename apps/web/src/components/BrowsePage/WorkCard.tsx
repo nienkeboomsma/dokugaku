@@ -1,11 +1,11 @@
 import {
-  ActionIcon,
   Center,
   MantineTheme,
   Paper,
   rem,
   RingProgress,
   Text,
+  ThemeIcon,
   useMantineTheme,
 } from '@mantine/core'
 import { IconCheck } from '@tabler/icons-react'
@@ -51,9 +51,9 @@ function ProgressLabel({
   if (knownVocab === 100) {
     return (
       <Center>
-        <ActionIcon variant='light' radius='lg' size='sm'>
+        <ThemeIcon aria-label='100%' radius='lg' size='sm' variant='light'>
           <IconCheck size={22} />
-        </ActionIcon>
+        </ThemeIcon>
       </Center>
     )
   }

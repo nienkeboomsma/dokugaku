@@ -1,6 +1,14 @@
 'use client'
 
-import { Fragment, memo, useCallback, type ReactNode } from 'react'
+import {
+  type Dispatch,
+  Fragment,
+  type SetStateAction,
+  memo,
+  useCallback,
+  type ReactNode,
+} from 'react'
+import { notifications } from '@mantine/notifications'
 
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
 import Bookmark from './Bookmark'
@@ -53,12 +61,14 @@ function ParentNode({
 
 export default function TextNodes({
   progress,
+  setProgress,
   textNodes,
   updateProgress,
 }: {
   progress: number
+  setProgress: Dispatch<SetStateAction<number>>
   textNodes: NovelJSONContent[]
-  updateProgress: (paragraphNumber: number, isCurrentProgress: boolean) => void
+  updateProgress: (newProgress: number) => Promise<number>
 }) {
   uniqueKey = 0
 
@@ -66,16 +76,28 @@ export default function TextNodes({
     const paragraphNumber = index + 1
     const isCurrentProgress = progress === paragraphNumber
 
+    const memoizedUpdateProgress = useCallback(async () => {
+      try {
+        const newProgress = !isCurrentProgress ? paragraphNumber : 0
+        const updatedProgress = await updateProgress(newProgress)
+        setProgress(updatedProgress)
+      } catch {
+        console.log('catch')
+        notifications.show({
+          title: 'Something went wrong',
+          message: 'Please try again later',
+          style: { direction: 'ltr' },
+        })
+      }
+    }, [paragraphNumber, isCurrentProgress])
+
     return (
       <ParentNode key={`paragraph-${paragraphNumber}`} node={parentNode}>
         <Bookmark
           isCurrentProgress={isCurrentProgress}
           key={`bookmark-${paragraphNumber}`}
           paragraphNumber={paragraphNumber}
-          updateProgress={useCallback(
-            () => updateProgress(paragraphNumber, isCurrentProgress),
-            [paragraphNumber, isCurrentProgress]
-          )}
+          updateProgress={memoizedUpdateProgress}
         />
       </ParentNode>
     )

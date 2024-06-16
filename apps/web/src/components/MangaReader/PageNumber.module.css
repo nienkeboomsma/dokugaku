@@ -1,0 +1,14 @@
+.container {
+  margin-inline: 0.4rem;
+  position: relative;
+}
+
+.pageNumberInput {
+  text-align: center;
+  width: 4.5rem;
+}
+
+.pageNumberDisplay {
+  position: absolute;
+  top: 0;
+}

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import AppShell from '../../components/AppShell/AppShell'
+import AppShell from '../../components/MainLayout/AppShell'
 
 const meta = {
-  title: 'Layout/App shell',
+  title: 'Main layout/App shell',
   component: AppShell,
   parameters: {
     layout: 'fullscreen',

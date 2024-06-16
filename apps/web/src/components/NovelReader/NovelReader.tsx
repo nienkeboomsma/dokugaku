@@ -1,29 +1,29 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { Progress } from '@mantine/core'
 
+import classes from './NovelReader.module.css'
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
-import useBookmarkProgress from '../../hooks/useBookmarkProgress'
 import useNovelReaderDirection from '../../hooks/useNovelReaderDirection'
+import { getPercentage } from '../../util/getPercentage'
 import NovelReaderMenu from './NovelReaderMenu'
 import TextContainer from './TextContainer'
 import TextNodes from './TextNodes'
 
-export default function NovelReaderPage({
+export default function NovelReader({
   initialProgress,
   textNodes,
+  updateProgress,
   workId,
 }: {
   initialProgress: number
   textNodes: NovelJSONContent[]
+  updateProgress: (newProgress: number) => Promise<number>
   workId: string
 }) {
+  const [progress, setProgress] = useState(initialProgress)
   const { direction, toggleDirection } = useNovelReaderDirection('vertical')
-  const { progress, updateProgress } = useBookmarkProgress(
-    initialProgress,
-    workId
-  )
-
   const maxProgress = textNodes.length
 
   useEffect(() => {
@@ -36,6 +36,12 @@ export default function NovelReaderPage({
 
   return (
     <>
+      <Progress
+        classNames={{ root: classes.progress }}
+        radius={0}
+        size='xs'
+        value={getPercentage(progress, maxProgress)}
+      />
       <NovelReaderMenu
         direction={direction}
         maxProgress={maxProgress}
@@ -46,6 +52,7 @@ export default function NovelReaderPage({
       <TextContainer direction={direction}>
         <TextNodes
           progress={progress}
+          setProgress={setProgress}
           textNodes={textNodes}
           updateProgress={updateProgress}
         />

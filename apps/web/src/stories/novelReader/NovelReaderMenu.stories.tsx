@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import NovelReaderMenu from '../../components/NovelReaderPage/NovelReaderMenu'
+import NovelReaderMenu from '../../components/NovelReader/NovelReaderMenu'
 import { rtl } from '../../../.storybook/decorators/rtl'
 import useNovelReaderDirection from '../../hooks/useNovelReaderDirection'
 

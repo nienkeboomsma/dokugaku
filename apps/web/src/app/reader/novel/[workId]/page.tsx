@@ -1,32 +1,60 @@
-import NovelReaderPage from '../../../../components/NovelReaderPage/NovelReaderPage'
-import { getWorkProgress } from '../../../../graphql/queries/getWorkProgress'
-import type { NovelJSONContent } from '../../../../types/NovelJSONContent'
+'use client'
 
-export default async function NovelReader({
+import { useEffect, useState } from 'react'
+import { useQuery } from '@apollo/client'
+import type { GQL_WorkProgressQuery } from '@repo/graphql-types'
+import { LoadingOverlay } from '@mantine/core'
+
+import type { NovelJSONContent } from '../../../../types/NovelJSONContent'
+import { WORK_PROGRESS } from '../../../../graphql/queries/workProgress'
+import { useUpdateWorkProgress } from '../../../../hooks/useUpdateWorkProgress'
+import NovelReader from '../../../../components/NovelReader/NovelReader'
+
+export default function NovelReaderPage({
   params,
 }: {
   params: { workId: string }
 }) {
-  const initialProgress = await getWorkProgress(params.workId)
+  const [textNodesLoading, setTextNodesLoading] = useState(true)
+  const [textNodes, setTextNodes] = useState<NovelJSONContent[]>()
 
-  try {
-    const res = await fetch(
+  useEffect(() => {
+    fetch(
       // TODO: env
-      `http://localhost:3000/assets/${params.workId}/text.json`,
-      { cache: 'no-store' }
+      `http://localhost:3000/assets/${params.workId}/text.json`
     )
-    const json = await res.json()
-    const textNodes: NovelJSONContent[] = json.content
+      .then((data) => data.json())
+      .then((json) => {
+        setTextNodes(json.content)
+        setTextNodesLoading(false)
+      })
+  }, [])
 
-    return (
-      <NovelReaderPage
-        initialProgress={initialProgress ?? 0}
-        textNodes={textNodes}
-        workId={params.workId}
-      />
-    )
-  } catch {
-    // TODO: add a proper error message
-    return 'Oops'
-  }
+  const { data, loading: progressLoading } = useQuery<GQL_WorkProgressQuery>(
+    WORK_PROGRESS,
+    {
+      variables: {
+        workInput: {
+          workId: params.workId,
+        },
+      },
+      fetchPolicy: 'no-cache',
+    }
+  )
+
+  const updateProgress = useUpdateWorkProgress()
+
+  if (textNodesLoading || progressLoading || !textNodes || !data || !data.work)
+    return <LoadingOverlay visible />
+
+  return (
+    <NovelReader
+      initialProgress={data.work.progress}
+      updateProgress={(newProgress) =>
+        updateProgress(newProgress, params.workId)
+      }
+      textNodes={textNodes}
+      workId={params.workId}
+    />
+  )
 }

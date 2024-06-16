@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import PaperContainer from '../../components/PaperContainer/PaperContainer'
 
 const meta = {
-  title: 'Layout/Paper container',
+  title: 'Main layout/Paper container',
   component: PaperContainer,
 } satisfies Meta<typeof PaperContainer>
 

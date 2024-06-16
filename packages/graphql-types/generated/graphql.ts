@@ -379,7 +379,7 @@ export type GQL_WorkProgressQueryVariables = Exact<{
 }>;
 
 
-export type GQL_WorkProgressQuery = { __typename?: 'Query', work?: { __typename?: 'Work', progress: number } | null | undefined };
+export type GQL_WorkProgressQuery = { __typename?: 'Query', work?: { __typename?: 'Work', maxProgress: number, progress: number } | null | undefined };
 
 export type GQL_UpdateSeriesReadStatusMutationVariables = Exact<{
   input: GQL_UpdateSeriesReadStatusInput;
