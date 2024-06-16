@@ -22,8 +22,8 @@ export default function Volume({
           <WorkCover
             coverPath={`/assets/${volume.id}/cover.webp`}
             grow
-            // maxProgress={volume.maxProgress}
-            // progress={volume.progress}
+            maxProgress={volume.maxProgress}
+            progress={volume.progress}
           />
         </Indicator>
         <WorkStatusBadge

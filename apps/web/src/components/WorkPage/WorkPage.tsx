@@ -87,12 +87,8 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
         <div className={classes.firstColumn}>
           <WorkCover
             coverPath={`/assets/${work.id}/cover.webp`}
-            maxProgress={
-              work.type === GQL_WorkType.Novel ? work.maxProgress : undefined
-            }
-            progress={
-              work.type === GQL_WorkType.Novel ? work.progress : undefined
-            }
+            maxProgress={work.maxProgress}
+            progress={work.progress}
             width={COVER_WIDTH}
           />
           <ReadStatusSelector

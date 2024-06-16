@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useHotkeys, useIsFirstRender, useLocalStorage } from '@mantine/hooks'
+import { useEffect, useState } from 'react'
+import {
+  useDebouncedValue,
+  useHotkeys,
+  useIsFirstRender,
+  useLocalStorage,
+} from '@mantine/hooks'
 import { AppShell, rem } from '@mantine/core'
 
 import classes from './MangaReader.module.css'
@@ -31,7 +36,10 @@ export default function MangaReader({
   workId: string
 }) {
   const [currentPageNumber, setCurrentPageNumber] = useState(initialPageNumber)
-  // const [debouncedCurrentPageNumber] = useDebouncedValue(currentPageNumber, 300)
+  const [debouncedCurrentPageNumber] = useDebouncedValue(
+    currentPageNumber,
+    1000
+  )
   const [pages, setPages] = useState<Array<Page | undefined>>(initialPages)
   const [twoPageLayout, setTwoPageLayout] = useLocalStorage({
     defaultValue: true,
@@ -70,6 +78,11 @@ export default function MangaReader({
 
     getPageData(pageNumbers).then((data) => setPages(data))
   }, [currentPageNumber, twoPageLayout])
+
+  useEffect(() => {
+    const newProgress = showTwoPages ? currentPageNumber + 1 : currentPageNumber
+    updateProgress(newProgress)
+  }, [debouncedCurrentPageNumber])
 
   useHotkeys([
     [
