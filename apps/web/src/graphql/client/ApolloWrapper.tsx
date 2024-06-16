@@ -27,7 +27,7 @@ export function makeClient() {
   })
 
   const authLink = setContext((_, { headers }) => {
-    // TODO: figure out how to do auth properly
+    // TODO: env variable
     const token = '6e41e9fd-c813-40e9-91fd-c51e47efab42'
     return {
       headers: {

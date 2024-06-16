@@ -12,7 +12,7 @@ export default function TextContainer({
   children: ReactNode
   direction: Direction
 }) {
-  // TODO: allow user to change line height, font size etc. in settings
+  // TODO: allow user to change line height, font size etc. in settings?
   const className =
     direction === 'horizontal'
       ? classes.containerHorizontal

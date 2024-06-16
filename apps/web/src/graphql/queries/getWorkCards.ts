@@ -102,9 +102,12 @@ export const getWorkCards = async () => {
       }
     })
 
-    return seriesCards
-      .concat(workCards)
-      .sort((cardA, cardB) => cardA.title.localeCompare(cardB.title))
+    return (
+      seriesCards
+        .concat(workCards)
+        // TODO: allow user to sort work cards alphabetically, by known words or by status
+        .sort((cardA, cardB) => cardB.knownVocab - cardA.knownVocab)
+    )
   } catch {
     return []
   }

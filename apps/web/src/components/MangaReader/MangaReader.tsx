@@ -116,7 +116,6 @@ export default function MangaReader({
 
   return (
     <AppShell
-      // TODO: consolidate with header in mainLayout
       classNames={{
         header: classes.header,
         main: classes.main,
