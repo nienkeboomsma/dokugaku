@@ -32,6 +32,7 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
   const [seriesStatus, setSeriesStatus] = useState(series.status)
   const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
 
+  // TODO: not necessary once using useQuery with no-cache
   const router = useRouter()
 
   const [updateSeriesStatus] = useMutation<GQL_UpdateSeriesReadStatusMutation>(
