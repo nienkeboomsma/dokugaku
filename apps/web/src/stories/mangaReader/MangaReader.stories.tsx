@@ -45,7 +45,6 @@ export const Default: Story = {
         mockMangaPages.find((page) => page.pageNumber === pageNumber)
       ),
     initialPageNumber: 1,
-    initialPages: mockMangaPages.slice(0, 2),
     maxPageNumber: mockMangaPages.length,
     updateProgress: async (newProgress) => newProgress,
   },

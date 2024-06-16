@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  useDebouncedValue,
-  useHotkeys,
-  useIsFirstRender,
-  useLocalStorage,
-} from '@mantine/hooks'
+import { useDebouncedValue, useHotkeys, useLocalStorage } from '@mantine/hooks'
 import { AppShell, rem } from '@mantine/core'
 
 import classes from './MangaReader.module.css'
@@ -21,7 +16,6 @@ import MangaPages from './MangaPages'
 export default function MangaReader({
   getPageData,
   initialPageNumber,
-  initialPages,
   maxPageNumber,
   updateProgress,
   workId,
@@ -30,7 +24,6 @@ export default function MangaReader({
   //       arrives; filling in the textBoxes later is fine
   getPageData: (pageNumbers: number[]) => Promise<Array<Page | undefined>>
   initialPageNumber: number
-  initialPages: Array<Page | undefined>
   maxPageNumber: number
   updateProgress: (newProgress: number) => Promise<number>
   workId: string
@@ -40,9 +33,10 @@ export default function MangaReader({
     currentPageNumber,
     1000
   )
-  const [pages, setPages] = useState<Array<Page | undefined>>(initialPages)
+  const [pages, setPages] = useState<Array<Page | undefined>>([])
   const [twoPageLayout, setTwoPageLayout] = useLocalStorage({
     defaultValue: true,
+    getInitialValueInEffect: false,
     key: `DOKUGAKU_TWO_PAGE_LAYOUT-${workId}`,
   })
 
@@ -52,8 +46,6 @@ export default function MangaReader({
     twoPageLayout
   )
 
-  const firstRender = useIsFirstRender()
-
   useEffect(() => {
     if (!twoPageLayout) return
 
@@ -62,12 +54,10 @@ export default function MangaReader({
 
     if (isEvenPage || isCover) return
 
-    setCurrentPageNumber((prev) => prev - 1)
+    setCurrentPageNumber(currentPageNumber - 1)
   }, [twoPageLayout])
 
   useEffect(() => {
-    if (firstRender) return
-
     // TODO: When showTwoPages changes value between rerenders it briefly
     //       displays the pages incorrectly; use a ref to compare values and
     //       adjust accordingly...?
