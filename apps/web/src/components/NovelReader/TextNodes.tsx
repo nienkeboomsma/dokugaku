@@ -23,6 +23,8 @@ const ContentNodes = memo(function ContentNodes({
 }: {
   children: NovelJSONContent['content']
 }) {
+  if (!children) return
+
   return children.map((child) => {
     if (typeof child === 'string') {
       return <Fragment key={uniqueKey++}>{child}</Fragment>
@@ -45,12 +47,17 @@ function ParentNode({
     'h2',
     'h3',
     'h4',
+    'hr',
     'p',
     'ruby',
     'rt',
   ]
 
+  const voidTags: Array<keyof JSX.IntrinsicElements> = ['hr']
+
   const Component = tags.includes(node.type) ? node.type : 'span'
+
+  if (voidTags.includes(Component)) return <Component />
 
   return (
     <Component>
@@ -94,12 +101,14 @@ export default function TextNodes({
 
     return (
       <ParentNode key={`paragraph-${paragraphNumber}`} node={parentNode}>
-        <Bookmark
-          isCurrentProgress={isCurrentProgress}
-          key={`bookmark-${paragraphNumber}`}
-          paragraphNumber={paragraphNumber}
-          updateProgress={memoizedUpdateProgress}
-        />
+        {parentNode.type !== 'hr' && (
+          <Bookmark
+            isCurrentProgress={isCurrentProgress}
+            key={`bookmark-${paragraphNumber}`}
+            paragraphNumber={paragraphNumber}
+            updateProgress={memoizedUpdateProgress}
+          />
+        )}
       </ParentNode>
     )
   })

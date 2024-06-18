@@ -16,6 +16,10 @@
     font-style: normal;
   }
 
+  & hr {
+    visibility: hidden;
+  }
+
   & h1 {
     font-size: calc(var(--base-text-size) * 1.8);
     line-height: 2;
@@ -50,6 +54,10 @@
 
   & em {
     text-emphasis: filled circle;
+  }
+
+  & hr {
+    block-size: 3.6rem;
   }
 
   & h1 {
@@ -105,6 +113,10 @@
 
   & em {
     text-emphasis: filled sesame;
+  }
+
+  & hr {
+    block-size: 2rem;
   }
 
   & h1 {

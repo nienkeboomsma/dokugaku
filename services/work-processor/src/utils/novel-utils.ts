@@ -146,12 +146,16 @@ export function divideTextJsonIntoParagraphs(
         paragraphStrings.push(childNode)
       } else if (Array.isArray(childNode)) {
         childNode.forEach((childNode) => processChildNode(childNode))
-      } else if ('type' in childNode && childNode.type !== 'rt') {
+      } else if (
+        'type' in childNode &&
+        childNode.type !== 'rt' &&
+        childNode.content
+      ) {
         processChildNode(childNode.content)
       }
     }
 
-    paragraphNode.content.forEach((childNode: string | NovelTextJsonNode) =>
+    paragraphNode.content?.forEach((childNode: string | NovelTextJsonNode) =>
       processChildNode(childNode)
     )
 

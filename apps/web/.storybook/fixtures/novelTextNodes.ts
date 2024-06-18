@@ -52,7 +52,6 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       'とさえ言える。',
     ],
   },
-
   {
     type: 'p',
     content: [
@@ -76,6 +75,7 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       'だった。',
     ],
   },
+  { type: 'hr' },
   {
     type: 'p',
     content: ['「いいえ、私、一人でいいんです」'],

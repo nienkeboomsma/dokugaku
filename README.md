@@ -57,27 +57,31 @@ It probably makes more sense to run Mokuro on your host machine instead of leavi
 
 The cover image can be `.jpg`, `.jpeg`, `.png` or `.webp`. The text files can be `.html`, `.md` and `.txt`.
 
-### Text formatting
-
-Uploaded texts will be converted to a barebones `.html` file containing only headers, paragraphs and ruby. There are some things to keep in mind:
-
 ### Multiple files
 
 It is possible to upload a novel across multiple files (for example, when using Calibre's edit function to extract a novel's `.html` files). These separate files will automatically be stitched together. It is important that they are named in alphabetically ascending order, otherwise they will be stitched together in the wrong order.
 
-### Paragraphs
+### Text formatting
 
-In `.html` files paragraphs can be clearly distinguished by their `p` tags. In `.md` files paragraphs must be separated by a blank line. In `.txt` files a single newline is sufficient, but a blank line works as well.
+Uploaded texts will be converted to a barebones `.html` file containing only headers, paragraphs and ruby. There are some things to keep in mind:
 
-### Emphasis dots
-
-Some works contain [emphasis dots](https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html). If they are rendered through `em` tags they will be retained, but if they are rendered by other means (such as `span` tags with a particular class) you will need to add `em` tags yourself.
-
-### Title
+#### Title
 
 An `h1` header will automatically be inserted based on the title provided in the upload form. It is therefore not necessary to include one in the uploaded text files.
 
-### Images
+#### Paragraphs
+
+In `.html` files paragraphs can be clearly distinguished by their `p` tags. In `.md` files paragraphs must be separated by a blank line. In `.txt` files a single newline is sufficient, but a blank line works as well.
+
+#### Blank lines
+
+Empty lines (besides those that demarcate paragraphs) are filtered out. This can be problematic if those blank lines demarcate different scenes within the same chapter. It is advisable to go through the text files before uploading them to check whether the work contains such empty lines and replace them with `hr` tags.
+
+#### Emphasis dots
+
+Some works contain [emphasis dots](https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html). If they are rendered through `em` tags they will be retained, but if they are rendered by other means (such as `span` tags with a particular class) you will need to add `em` tags yourself.
+
+#### Images
 
 Any images inside of `.md` or `.html` files will be stripped during processing. This can be problematic if images are used for chapter titles (as they often are in Kindle books). In that case, be sure to manually replace the images with an appropriate text string before uploading the files.
 
