@@ -32,7 +32,12 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       { type: 'ruby', content: ['靄', { type: 'rt', content: ['もや'] }] },
       'のせいで、ヘッドライトを',
       { type: 'ruby', content: ['点', { type: 'rt', content: ['つ'] }] },
-      'けなければならないほどなのだから、そのスピードは',
+      'けなければならないほどなのだから、その',
+      {
+        type: 'em',
+        content: ['スピード'],
+      },
+      'は',
       {
         type: 'ruby',
         content: [

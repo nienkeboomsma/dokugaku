@@ -3,10 +3,10 @@
 import {
   type Dispatch,
   Fragment,
+  type ReactNode,
   type SetStateAction,
   memo,
   useCallback,
-  type ReactNode,
 } from 'react'
 import { notifications } from '@mantine/notifications'
 
@@ -40,6 +40,7 @@ function ParentNode({
   node: NovelJSONContent
 }) {
   const tags: Array<keyof JSX.IntrinsicElements> = [
+    'em',
     'h1',
     'h2',
     'h3',

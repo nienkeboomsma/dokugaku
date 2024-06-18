@@ -6,6 +6,9 @@ import { mockNovelTextNodes } from '../../../.storybook/fixtures/novelTextNodes'
 const meta: Meta<typeof NovelReader> = {
   title: 'Novel reader/Novel reader',
   component: NovelReader,
+  parameters: {
+    layout: 'fullscreen',
+  },
 }
 
 type Story = StoryObj<typeof meta>

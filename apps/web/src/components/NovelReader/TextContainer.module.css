@@ -5,6 +5,17 @@
   direction: ltr;
   padding: var(--outer-container-padding);
 
+  & p {
+    font-size: var(--base-text-size);
+    font-family: 'Hiragino Sans', sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+  }
+
+  & em {
+    font-style: normal;
+  }
+
   & h1 {
     font-size: calc(var(--base-text-size) * 1.8);
     line-height: 2;
@@ -32,13 +43,13 @@
   max-inline-size: calc(var(--base-text-size) * 35);
 
   & p {
-    font-size: var(--base-text-size);
-    font-family: 'Hiragino Sans', sans-serif;
-    font-weight: 200;
-    letter-spacing: 0.05em;
     line-height: 1.8;
     margin-block-end: 1rem;
     margin-block-start: 0;
+  }
+
+  & em {
+    text-emphasis: filled circle;
   }
 
   & h1 {
@@ -88,12 +99,12 @@
   inline-size: var(--inline-size);
 
   & p {
-    font-size: var(--base-text-size);
-    font-family: 'Hiragino Sans', sans-serif;
-    font-weight: 200;
-    letter-spacing: 0.05em;
     line-height: 2;
     margin-block: 0;
+  }
+
+  & em {
+    text-emphasis: filled sesame;
   }
 
   & h1 {

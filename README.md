@@ -69,6 +69,10 @@ It is possible to upload a novel across multiple files (for example, when using 
 
 In `.html` files paragraphs can be clearly distinguished by their `p` tags. In `.md` files paragraphs must be separated by a blank line. In `.txt` files a single newline is sufficient, but a blank line works as well.
 
+### Emphasis dots
+
+Some works contain [emphasis dots](https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html). If they are rendered through `em` tags they will be retained, but if they are rendered by other means (such as `span` tags with a particular class) you will need to add `em` tags yourself.
+
 ### Title
 
 An `h1` header will automatically be inserted based on the title provided in the upload form. It is therefore not necessary to include one in the uploaded text files.
