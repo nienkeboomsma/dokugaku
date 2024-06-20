@@ -3,7 +3,7 @@ import { TextInput } from '@mantine/core'
 import type { WorkUploadForm } from '../../hooks/useWorkUploadForm'
 import AutofillButton from './AutofillButton'
 
-export default function SeriesInput({
+export default function VolumeNumberInput({
   findVolumeNumberBySeriesTitle,
   form,
 }: {

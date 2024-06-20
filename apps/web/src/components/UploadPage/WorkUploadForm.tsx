@@ -45,7 +45,7 @@ export default function WorkUploadForm({
       (series) => series.title === seriesTitle
     )
 
-    return seriesInfo ? seriesInfo.nextVolumeNumber.toString() : ''
+    return seriesInfo ? seriesInfo.nextVolumeNumber.toString() : '1'
   }
 
   const updateExistingAuthors = (values: FormValues) => {
