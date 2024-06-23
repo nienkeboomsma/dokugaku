@@ -20,13 +20,11 @@ export function validateKnownWords(
   const { userId, words } = req.body
 
   if (!userId) {
-    return res.status(500).send({ error: 'Make sure to provide a user ID' })
+    throw new Error('Make sure to provide a user ID')
   }
 
   if (!words) {
-    return res
-      .status(500)
-      .send({ error: 'Make sure to provide a list of known words' })
+    throw new Error('Make sure to provide a list of known words')
   }
 
   next()
@@ -41,9 +39,7 @@ export function validateWorkMetadata(
   const { authors, series, title, userId, volumeNumber } = req.body
 
   if (!authors) {
-    return res.status(500).send({
-      error: 'Make sure to provide one or more authors',
-    })
+    throw new Error('Make sure to provide one or more authors')
   }
 
   if (!Array.isArray(authors)) {
@@ -59,15 +55,11 @@ export function validateWorkMetadata(
   }
 
   if (series && !volumeNumber) {
-    return res
-      .status(500)
-      .send({ error: 'Make sure to provide a volume number' })
+    throw new Error('Make sure to provide a volume number')
   }
 
   if (!series && volumeNumber) {
-    return res
-      .status(500)
-      .send({ error: 'Make sure to provide a series title' })
+    throw new Error('Make sure to provide a series title')
   }
 
   if (volumeNumber && !isNumber(volumeNumber)) {
@@ -75,11 +67,11 @@ export function validateWorkMetadata(
   }
 
   if (!title) {
-    return res.status(500).send({ error: 'Make sure to provide a title' })
+    throw new Error('Make sure to provide a title')
   }
 
   if (!userId) {
-    return res.status(500).send({ error: 'Make sure to provide a user ID' })
+    throw new Error('Make sure to provide a user ID')
   }
 
   // TODO: Check if a work with the same title or series/number already exists
@@ -120,19 +112,17 @@ export function validateMangaFiles(
   const filesAreMokurod = req.body.mokuro === 'true'
 
   if (!req.files) {
-    return res.status(500).send({ error: 'Make sure to include the images' })
+    throw new Error('Make sure to include the images')
   }
 
   if (!Array.isArray(req.files)) {
-    return res
-      .status(500)
-      .send({ error: 'Make sure there is only one "files" input in the form' })
+    throw new Error('Make sure there is only one "files" input in the form')
   }
 
   if (filesAreMokurod && !mokurodFilesAreValid(req.files)) {
-    return res.status(500).send({
-      error: 'Make sure there is a corresponding JSON file for each image',
-    })
+    throw new Error(
+      'Make sure there is a corresponding JSON file for each image'
+    )
   }
 
   next()
@@ -144,23 +134,17 @@ export function validateNovelFiles(
   next: NextFunction
 ) {
   if (!req.files) {
-    return res
-      .status(500)
-      .send({ error: 'Make sure to attach a cover and text file(s)' })
+    throw new Error('Make sure to attach a cover and text file(s)')
   }
 
   if (Array.isArray(req.files)) {
-    return res
-      .status(500)
-      .send(
-        'Make sure there is a "cover" input and a "files" input in the form'
-      )
+    throw new Error(
+      'Make sure there is a "cover" input and a "files" input in the form'
+    )
   }
 
   if (!req.files.cover || !req.files.files) {
-    return res
-      .status(500)
-      .send({ error: 'Make sure to attach both a cover and text file(s)' })
+    throw new Error('Make sure to attach both a cover and text file(s)')
   }
 
   next()

@@ -29,9 +29,6 @@ export function getTimeEstimate(
 }
 
 export async function runMokuro(folderName: string, title: string) {
-  const timeTaken = `${title} ・ Time to run Mokuro`
-  console.time(timeTaken)
-
   console.log(`${title} ・ Starting Mokuro`)
 
   await axios.post(
@@ -40,8 +37,6 @@ export async function runMokuro(folderName: string, title: string) {
     // TODO: use Redis to track Mokuro progress instead
     { timeout: 1000 * 60 * 240 }
   )
-
-  console.timeEnd(timeTaken)
 }
 
 function getTextFromMokuroData(data: MokuroData) {
@@ -56,42 +51,42 @@ function getTextFromMokuroData(data: MokuroData) {
 export async function runIchiranOnEachPage(fullPath: string, title: string) {
   const pages = getAllFilesByExtension(fullPath, ['.json'])
 
-  const timeTaken = `${title} ・ Time to run Ichiran on ${pages.length} pages`
-  console.time(timeTaken)
-
   const progressBar = new cliProgress.SingleBar(
     {
       format: `${title} ・ {bar} ・ {percentage}% ・ {value}/{total} ・ {eta_formatted} to go`,
       noTTYOutput: true,
-      notTTYSchedule: 10000,
+      notTTYSchedule: 60000,
     },
     cliProgress.Presets.shades_classic
   )
   progressBar.start(pages.length, 0)
 
-  for (const [index, page] of pages.entries()) {
-    const filePath = path.join(fullPath, page)
-    const mokuroOutput = fs.readFileSync(filePath).toString()
-    const mokuroData = JSON.parse(mokuroOutput)
-    const string = getTextFromMokuroData(mokuroData)
+  try {
+    for (const [index, page] of pages.entries()) {
+      const filePath = path.join(fullPath, page)
+      const mokuroOutput = fs.readFileSync(filePath).toString()
+      const mokuroData = JSON.parse(mokuroOutput)
+      const string = getTextFromMokuroData(mokuroData)
 
-    const words = await runIchiran(string, 'processedSegmentation')
-    progressBar.update(index + 1)
+      const words = await runIchiran(string, 'processedSegmentation', 3)
+      if (!words) throw new Error('Unable to complete segmentation')
 
-    for (let word of words) {
-      const pageNumber = Number(path.parse(page).name.slice(-4))
-      word.pageNumber = pageNumber
+      progressBar.update(index + 1)
+
+      for (let word of words) {
+        const pageNumber = Number(path.parse(page).name.slice(-4))
+        word.pageNumber = pageNumber
+      }
+
+      const isFirstPass = index === 0
+      const isLastPass = index === pages.length - 1
+      const outputPath = path.join(fullPath, 'ichiran.json')
+
+      concatToJson(outputPath, words, isFirstPass, isLastPass)
     }
-
-    const isFirstPass = index === 0
-    const isLastPass = index === pages.length - 1
-    const outputPath = path.join(fullPath, 'ichiran.json')
-
-    concatToJson(outputPath, words, isFirstPass, isLastPass)
+  } finally {
+    progressBar.stop()
   }
-
-  progressBar.stop()
-  console.timeEnd(timeTaken)
 }
 
 export function createCoverImage(fullPath: string, title: string) {

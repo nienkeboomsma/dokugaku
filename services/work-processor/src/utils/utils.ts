@@ -38,26 +38,36 @@ export function renameFilesSequentially(
 
 export async function runIchiran(
   string: string,
-  endpoint: 'idsOnly'
-): Promise<number[]>
+  endpoint: 'idsOnly',
+  maxTries?: number
+): Promise<number[] | undefined>
 export async function runIchiran(
   string: string,
-  endpoint: 'processedSegmentation'
-): Promise<IchiranData>
+  endpoint: 'processedSegmentation',
+  maxTries?: number
+): Promise<IchiranData | undefined>
 export async function runIchiran(
   string: string,
-  endpoint: 'idsOnly' | 'processedSegmentation'
-): Promise<number[] | IchiranData> {
+  endpoint: 'idsOnly' | 'processedSegmentation',
+  maxTries?: number
+): Promise<number[] | IchiranData | undefined> {
   const url = `http://ichiran:${process.env.ICHIRAN_PORT}/${endpoint}`
+  let count = 0
 
-  const res = await axios.post(
-    url,
-    { string },
-    // TODO: use Redis to track Ichiran progress instead
-    { timeout: 1000 * 60 * 60 }
-  )
+  while (count++ < (maxTries ?? 1)) {
+    try {
+      const res = await axios.post(
+        url,
+        { string },
+        // TODO: use Redis to track Ichiran progress instead
+        { timeout: 1000 * 60 * 60 }
+      )
 
-  return res.data
+      return res.data
+    } catch (err) {
+      if (count === maxTries) throw err
+    }
+  }
 }
 
 export function concatToJson(
@@ -84,12 +94,7 @@ export function concatToJson(
 }
 
 export async function convertImagesToWebP(fullPath: string, title: string) {
-  console.log(`${title} ・ Converting images to WebP`)
-
   const images = getAllFilesByExtension(fullPath, mokuroExtensions)
-
-  const timeTaken = `${title} ・ Time to convert ${images.length} images to WebP`
-  console.time(timeTaken)
 
   for (const inputFile of images) {
     const inputPath = path.join(fullPath, inputFile)
@@ -111,6 +116,4 @@ export async function convertImagesToWebP(fullPath: string, title: string) {
 
     fs.rmSync(inputPath)
   }
-
-  console.timeEnd(timeTaken)
 }

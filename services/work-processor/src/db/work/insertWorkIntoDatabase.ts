@@ -43,7 +43,7 @@ export async function insertWorkIntoDatabase(
     }
 
     console.log(
-      `${workMetadata.workTitle} ・ Work was successfully added to the database`
+      `${workMetadata.workTitle} ・ ✅ Work was successfully added to the database ✅`
     )
   })
 }

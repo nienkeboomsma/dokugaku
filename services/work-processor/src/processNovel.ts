@@ -1,5 +1,4 @@
 import type { NextFunction, Response } from 'express'
-import fs from 'node:fs'
 import path from 'node:path'
 
 import type { NovelUploadRequest } from './utils/types.js'
@@ -28,9 +27,6 @@ export async function processNovel(
     folderName,
     body: { authors, series, title, userId, volumeNumber },
   } = req
-
-  const timeTaken = `${title} ・ Time to process the entire request`
-  console.time(timeTaken)
 
   const fullPath = path.join(volumePath, folderName)
 
@@ -64,12 +60,7 @@ export async function processNovel(
       userId,
       fullPath
     )
-
-    console.timeEnd(timeTaken)
   } catch (err) {
-    console.log(`${title} ・ Removing the directory ${fullPath}`)
-    fs.rmSync(fullPath, { recursive: true, force: true })
-    console.timeEnd(timeTaken)
     next(err)
   }
 }

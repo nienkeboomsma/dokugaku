@@ -181,35 +181,35 @@ export async function runIchiranOnEachParagraph(
   fullPath: string,
   title: string
 ) {
-  const timeTaken = `${title} ・ Time to run Ichiran on ${paragraphs.length} paragraphs`
-  console.time(timeTaken)
-
   const progressBar = new cliProgress.SingleBar(
     {
       format: `${title} ・ {bar} ・ {percentage}% ・ {value}/{total} ・ {eta_formatted} to go`,
       noTTYOutput: true,
-      notTTYSchedule: 10000,
+      notTTYSchedule: 60000,
     },
     cliProgress.Presets.shades_classic
   )
   progressBar.start(paragraphs.length, 0)
 
-  for (const [index, paragraph] of paragraphs.entries()) {
-    const words = await runIchiran(paragraph, 'processedSegmentation')
-    progressBar.update(index + 1)
+  try {
+    for (const [index, paragraph] of paragraphs.entries()) {
+      const words = await runIchiran(paragraph, 'processedSegmentation', 3)
+      if (!words) throw new Error('Unable to complete segmentation')
 
-    for (let word of words) {
-      const paragraphNumber = index + 1
-      word.pageNumber = paragraphNumber
+      progressBar.update(index + 1)
+
+      for (let word of words) {
+        const paragraphNumber = index + 1
+        word.pageNumber = paragraphNumber
+      }
+
+      const isFirstPass = index === 0
+      const isLastPass = index === paragraphs.length - 1
+      const outputPath = path.join(fullPath, 'ichiran.json')
+
+      concatToJson(outputPath, words, isFirstPass, isLastPass)
     }
-
-    const isFirstPass = index === 0
-    const isLastPass = index === paragraphs.length - 1
-    const outputPath = path.join(fullPath, 'ichiran.json')
-
-    concatToJson(outputPath, words, isFirstPass, isLastPass)
+  } finally {
+    progressBar.stop()
   }
-
-  progressBar.stop()
-  console.timeEnd(timeTaken)
 }
