@@ -5,28 +5,7 @@ import cliProgress from 'cli-progress'
 
 import { type MokuroData } from './types.js'
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
-import {
-  ichiranTimePerPage,
-  mokuroExtensions,
-  mokuroInitTime,
-  mokuroTimePerPage,
-  webpConversionPerImage,
-} from './constants.js'
-
-export function getTimeEstimate(
-  alreadyMokurod: boolean,
-  numberOfImages: number
-) {
-  const estimatedDuration = alreadyMokurod
-    ? numberOfImages * (ichiranTimePerPage + webpConversionPerImage)
-    : mokuroInitTime +
-      numberOfImages *
-        (mokuroTimePerPage + ichiranTimePerPage + webpConversionPerImage)
-
-  const timeWhenFinished = new Date(Date.now() + estimatedDuration)
-
-  return { estimatedDuration, timeWhenFinished }
-}
+import { mokuroExtensions } from './constants.js'
 
 export async function runMokuro(folderName: string, title: string) {
   console.log(`${title} ・ Starting Mokuro`)

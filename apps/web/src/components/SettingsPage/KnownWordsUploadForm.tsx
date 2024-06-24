@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button, Textarea, Title } from '@mantine/core'
+import { Button, Fieldset, Textarea, Title } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
 import classes from './KnownWordsUploadForm.module.css'
@@ -55,7 +55,7 @@ export default function KnownWordsUploadForm() {
       setWords('')
       notifications.show({
         title: `Known words uploaded successfully`,
-        message: `Please check back in about ${Math.ceil(data.estimatedDurationInMin)} minutes`,
+        message: 'Processing can be monitored in the work-processor logs',
       })
       setLoading(false)
     } catch {
@@ -68,16 +68,12 @@ export default function KnownWordsUploadForm() {
   }
 
   return (
-    <>
-      <Title order={3} size='h5'>
-        Upload known words
-      </Title>
+    <Fieldset legend='Upload known words'>
       <form onSubmit={handleSubmit}>
         <Textarea
           aria-label='Known words'
           classNames={{ input: classes.input }}
           error={error}
-          mt={12}
           onChange={(event) => setWords(event.currentTarget.value)}
           placeholder='A (white)space-separated or comma-separated list'
           value={words}
@@ -94,6 +90,6 @@ export default function KnownWordsUploadForm() {
           Upload
         </Button>
       </form>
-    </>
+    </Fieldset>
   )
 }

@@ -13,7 +13,7 @@ import { HTMLToJSON } from 'html-to-json-parser'
 import cliProgress from 'cli-progress'
 
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
-import { ichiranTimePer100Char, novelTextExtensions } from './constants.js'
+import { novelTextExtensions } from './constants.js'
 import type { NovelTextJsonNode, NovelTextJsonTopLevel } from './types.js'
 
 function markdownToHtml(markdown: string) {
@@ -133,7 +133,6 @@ export function divideTextJsonIntoParagraphs(
 ) {
   const content = novelTextJson.content
 
-  let totalChars = 0
   let paragraphs: string[] = []
 
   const processParagraphNode = (paragraphNode: NovelTextJsonNode) => {
@@ -161,19 +160,11 @@ export function divideTextJsonIntoParagraphs(
 
     const paragraph = paragraphStrings.join('')
     paragraphs.push(paragraph)
-    totalChars += paragraph.length
   }
 
   content.forEach((paragraphNode) => processParagraphNode(paragraphNode))
 
-  return { paragraphs, totalChars }
-}
-
-export function getTimeEstimate(totalChars: number) {
-  const estimatedDuration = (totalChars / 100) * ichiranTimePer100Char
-  const timeWhenFinished = new Date(Date.now() + estimatedDuration)
-
-  return { estimatedDuration, timeWhenFinished }
+  return { paragraphs }
 }
 
 export async function runIchiranOnEachParagraph(

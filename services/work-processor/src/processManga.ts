@@ -6,7 +6,6 @@ import { mokuroExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
   createCoverImage,
-  getTimeEstimate,
   runIchiranOnEachPage,
   runMokuro,
 } from './utils/manga-utils.js'
@@ -38,14 +37,9 @@ export async function processManga(
   )
   if (filesAreMokurod) renameFilesSequentially(fullPath, ['.json'], 'img')
 
-  const { estimatedDuration, timeWhenFinished } = getTimeEstimate(
-    filesAreMokurod,
-    numberOfImages
-  )
   res.status(200).json({
     id: folderName,
-    estimatedDurationInMin: estimatedDuration / 1000 / 60,
-    estimatedFinishTime: timeWhenFinished,
+    success: true,
   })
 
   try {

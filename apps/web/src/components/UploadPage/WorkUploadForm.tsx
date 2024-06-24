@@ -128,7 +128,7 @@ export default function WorkUploadForm({
       form.reset()
       notifications.show({
         title: `${values.title} uploaded successfully`,
-        message: `Please check back in about ${Math.ceil(data.estimatedDurationInMin)} minutes`,
+        message: 'Processing can be monitored in the work-processor logs',
       })
     } catch {
       notifications.show({

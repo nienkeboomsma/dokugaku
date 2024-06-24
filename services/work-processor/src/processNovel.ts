@@ -6,7 +6,6 @@ import { novelTextExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
   divideTextJsonIntoParagraphs,
-  getTimeEstimate,
   runIchiranOnEachParagraph,
   saveHtmlAsJson,
   stripAndCombineFiles,
@@ -34,14 +33,12 @@ export async function processNovel(
   stripAndCombineFiles(fullPath, req.body.title)
   const novelTextJson = await saveHtmlAsJson(fullPath)
 
-  const { paragraphs, totalChars } = divideTextJsonIntoParagraphs(novelTextJson)
+  const { paragraphs } = divideTextJsonIntoParagraphs(novelTextJson)
   const numberOfParagraphs = paragraphs.length
 
-  const { estimatedDuration, timeWhenFinished } = getTimeEstimate(totalChars)
   res.status(200).json({
     id: folderName,
-    estimatedDurationInMin: estimatedDuration / 1000 / 60,
-    estimatedFinishTime: timeWhenFinished,
+    success: true,
   })
 
   try {

@@ -28,5 +28,5 @@ export async function insertKnownWordsIntoDatabase(
     SET known = true;
   `
 
-  console.log('Updated user_word table')
+  console.log('Known words ・ ✅ Known words successfully updated ✅')
 }

@@ -1,3 +1,5 @@
+import cliProgress from 'cli-progress'
+
 import { runIchiran } from './utils.js'
 
 export function divideWordsStringIntoChunks(
@@ -10,37 +12,43 @@ export function divideWordsStringIntoChunks(
   const numberOfChunks = Math.ceil(totalChars / charsPerChunk)
   const wordsPerChunk = Math.ceil(words.length / numberOfChunks)
 
-  console.table({
-    totalChars,
-    numberOfChunks,
-    numberOfWords: words.length,
-    wordsPerChunk,
-  })
-
   const chunks = Array.from({ length: numberOfChunks }, (_, index) => {
     const firstIndex = index * wordsPerChunk
     const lastIndex = (index + 1) * wordsPerChunk
     return words.slice(firstIndex, lastIndex).join(',')
   })
 
-  return { chunks, totalChars }
+  return { chunks }
 }
 
 export async function runIchiranOnEachChunk(chunks: string[]) {
-  const timeTaken = `Time to run Ichiran on ${chunks.length} chunks`
-  console.time(timeTaken)
+  const progressBar = new cliProgress.SingleBar(
+    {
+      format: `Known words ・ {bar} ・ {percentage}% ・ {value}/{total} ・ {eta_formatted} to go`,
+      noTTYOutput: true,
+      notTTYSchedule: 10000,
+    },
+    cliProgress.Presets.shades_classic
+  )
+  progressBar.start(chunks.length, 0)
 
-  const allWordIds: Set<number> = new Set()
+  try {
+    const allWordIds: Set<number> = new Set()
 
-  for (const [index, chunk] of chunks.entries()) {
-    console.log(`Running Ichiran on chunk ${index + 1} of ${chunks.length}`)
-    const wordIds = await runIchiran(chunk, 'idsOnly')
+    for (const [index, chunk] of chunks.entries()) {
+      const wordIds = await runIchiran(chunk, 'idsOnly', 3)
+      if (!wordIds)
+        throw new Error('Known words ・ Unable to complete segmentation')
 
-    for (const wordId of wordIds) {
-      allWordIds.add(wordId)
+      progressBar.update(index + 1)
+
+      for (const wordId of wordIds) {
+        allWordIds.add(wordId)
+      }
     }
-  }
 
-  console.timeEnd(timeTaken)
-  return allWordIds
+    return allWordIds
+  } finally {
+    progressBar.stop()
+  }
 }
