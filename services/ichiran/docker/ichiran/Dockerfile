@@ -2,7 +2,7 @@ FROM node:21.7-alpine3.19 AS turbo-base
 
 RUN apk add --no-cache libc6-compat && \
     apk update && \
-    yarn global add turbo
+    yarn global add turbo@1.13.3
 
 WORKDIR /app
 

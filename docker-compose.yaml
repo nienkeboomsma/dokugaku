@@ -1,4 +1,4 @@
-version: '3.8'
+# TODO: easier toggling between dev and prod
 
 services:
   db:
@@ -117,6 +117,8 @@ services:
     restart: always
     volumes:
       - files:/dokugaku
+      # for dev use only ###
+      # - ./apps/web/src:/app/apps/web/src
   work-processor:
     container_name: work-processor
     build:
