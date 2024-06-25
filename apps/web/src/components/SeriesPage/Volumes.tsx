@@ -37,7 +37,7 @@ export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
         ?.querySelectorAll('a')
         ?.[
           volumeIndexToScrollTo
-        ]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }),
+        ]?.scrollIntoView({ block: 'nearest', inline: 'center' }),
     []
   )
 
