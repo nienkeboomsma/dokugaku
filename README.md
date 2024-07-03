@@ -1,8 +1,8 @@
 # What is it?
 
-Dokugaku is a tool to help Japanese learners read manga and novels.
+Dokugaku (読学) is a tool to help Japanese learners read manga and novels.
 
-You upload the manga and novels you want to read and it will show you (1) what percentage of the words in that work you already know and (2) what words are most common in that particular work, in the series it belongs to or across all uploaded works. This way you can make an informed decision about what works to read first and what words would be most useful to learn.
+You upload the manga and novels you want to read and it will show you (1) what percentage of the words in that work you already know and (2) what words are most common in that particular work, in the series it belongs to or across all uploaded works. This way you can make an informed decision about what works to read first and what words would be most useful to learn. It also includes a manga reader and novel reader with support for third-party tools such as Yomitan.
 
 # Scope of this project
 
@@ -49,7 +49,7 @@ The alphabetically first image will be used as the cover image.
 
 ### Pre-mokuro'd manga
 
-It probably makes more sense to run Mokuro on your host machine instead of leaving it to the Mokuro container, [especially if you are using Apple Silicon](https://github.com/sonoisa/arm64-docker-pytorch-tensorflow/issues/1#issuecomment-1382653203). In that case, check the relevant checkbox and upload the `.json` files along with the images.
+It probably makes more sense to run Mokuro (the OCR processor) on your host machine instead of leaving it to the Mokuro container, [especially if you are using Apple Silicon](https://github.com/sonoisa/arm64-docker-pytorch-tensorflow/issues/1#issuecomment-1382653203). In that case, check the relevant checkbox and upload the `.json` files along with the images.
 
 ## Novels
 
@@ -121,6 +121,25 @@ On the 'known words' page there is an option to mark words as known in bulk by u
 4. remove all columns except for the one that represents the Japanese headword with kanji and without furigana syntax
 5. Export the remaining column as a `.csv` file.
 6. If you open this file in a text editor, you will be able to copy/paste the contents into the upload form.
+
+# Reading manga
+
+## Overlapping text boxes
+
+Sometimes Mokuro (the OCR engine) determines text box boundaries incorrectly, causing text boxes to overlap and making it impossible to scan the affected characters with Yomitan or other dictionary tools. To prevent this, it is possible to 'lock' a text box so that it will always remain visible and on top of the other text boxes. Simply click on a text box to lock it and click it again to unlock it.
+
+## Keyboard shortcuts
+
+| Key | Description              |
+| --- | ------------------------ |
+| `←` | Go to next page          |
+| `[` | Go to last page          |
+| `→` | Go to previous page      |
+| `]` | Go to first page         |
+| `0` | Reset zoom level         |
+| `1` | Enable single plage mode |
+| `2` | Enable double page mode  |
+| `F` | Enable fullscreen mode   |
 
 # Roadmap
 

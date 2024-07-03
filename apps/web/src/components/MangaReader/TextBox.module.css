@@ -1,37 +1,37 @@
 .hoverArea {
+  --background-color: white;
+
+  background-color: var(--background-color);
   box-sizing: initial;
-  border: var(--border-width) solid white;
-  background-color: white;
+  border: var(--border-width) solid var(--background-color);
   height: var(--hover-area-height);
   left: var(--left);
-  opacity: 0;
-  /* The children can be bigger than the parent, causing the hover area */
-  /* to become unexpectedly large; this prevents that. */
-  overflow: hidden;
+  opacity: var(--opacity);
+  outline: var(--outline);
+  overflow: var(--overflow);
   position: absolute;
   top: var(--top);
   width: var(--hover-area-width);
+  z-index: var(--z-index);
 
   @mixin hover {
     opacity: 1;
     overflow: visible;
+
+    .textBox {
+      opacity: 1;
+    }
   }
 }
 
 .textBox {
-  background-color: white;
+  background-color: var(--background-color);
   display: flex;
   flex-direction: var(--flex-direction);
   height: var(--text-box-height);
   justify-content: space-around;
   position: relative;
-  z-index: 1;
   width: var(--text-box-width);
-
-  @mixin hover {
-    opacity: 1;
-    overflow: visible;
-  }
 }
 
 .line {
