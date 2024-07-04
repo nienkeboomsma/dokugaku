@@ -44,4 +44,8 @@
   user-select: text;
   white-space: nowrap;
   writing-mode: var(--writing-mode);
+
+  &::selection {
+    background-color: var(--mantine-color-blue-1);
+  }
 }
