@@ -126,7 +126,7 @@ On the 'known words' page there is an option to mark words as known in bulk by u
 
 ## Overlapping text boxes
 
-Sometimes Mokuro (the OCR engine) determines text box boundaries incorrectly, causing text boxes to overlap and making it impossible to scan the affected characters with Yomitan or other dictionary tools. To prevent this, it is possible to 'lock' a text box so that it will always remain visible and on top of the other text boxes. Simply click on a text box to lock it and click it again to unlock it.
+Sometimes Mokuro (the OCR engine) determines text box boundaries incorrectly, causing text boxes to overlap and making it impossible to scan the affected characters with Yomitan or other dictionary tools. To prevent this, it is possible to 'lock' a text box so that it will always remain visible and on top of the other text boxes. Simply hold `Shift` and click on a text box to lock it and `Shift`-click it again to unlock it.
 
 ## Keyboard shortcuts
 

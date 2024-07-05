@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { MouseEvent, useState } from 'react'
 import { rem } from '@mantine/core'
 
 import classes from './TextBox.module.css'
@@ -47,7 +47,8 @@ export default function TextBox({
 }) {
   const [keepVisible, setKeepVisible] = useState(false)
 
-  const handleClick = () => {
+  const handleClick = (e: MouseEvent) => {
+    if (!e.shiftKey) return
     setKeepVisible((prev) => !prev)
   }
 
@@ -61,14 +62,14 @@ export default function TextBox({
   const textBoxBorderWidth = imageWidth / 150
 
   const hoverAreaStyles = {
-    '--outline': keepVisible
-      ? '3px solid var(--mantine-color-blue-text)'
-      : 'none',
     '--border-width': textBoxBorderWidth + 'px',
     '--hover-area-height': height + 'px',
     '--hover-area-width': width + 'px',
     '--left': left + 'px',
     '--opacity': keepVisible ? 1 : 0,
+    '--outline': keepVisible
+      ? '3px solid var(--mantine-color-blue-text)'
+      : 'none',
     // The text box can be bigger than the hover area, causing the hover area
     // to become unexpectedly large; overflow: hidden prevents that.
     '--overflow': keepVisible ? 'visible' : 'hidden',
