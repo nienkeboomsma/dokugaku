@@ -1,5 +1,9 @@
-.progress {
+.progressRoot {
   direction: ltr;
   position: fixed;
   width: 100%;
+}
+
+.progressSection {
+  background-color: var(--mantine-color-blue-light-color);
 }

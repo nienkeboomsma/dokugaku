@@ -4,8 +4,12 @@
   height: 100%;
 }
 
-.progress {
+.progressRoot {
   background-color: transparent;
+}
+
+.progressSection {
+  background-color: var(--mantine-color-blue-light-color);
 }
 
 .controls {

@@ -37,7 +37,10 @@ export default function NovelReader({
   return (
     <>
       <Progress
-        classNames={{ root: classes.progress }}
+        classNames={{
+          root: classes.progressRoot,
+          section: classes.progressSection,
+        }}
         radius={0}
         size='xs'
         value={getPercentage(progress, maxProgress)}

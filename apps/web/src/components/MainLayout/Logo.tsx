@@ -6,7 +6,7 @@ export default function Logo() {
     <Link href='/' style={{ textDecoration: 'none' }}>
       <Title
         order={1}
-        c={'var(--mantine-primary-color-filled)'}
+        c={'var(--mantine-color-blue-text)'}
         size={'h2'}
         fw={600}
         ff="'Hiragino Sans','Meiryo','Hiragino Kaku Gothic ProN',sans-serif"
