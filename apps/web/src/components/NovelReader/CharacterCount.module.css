@@ -1,0 +1,12 @@
+.charCount {
+  background-color: var(--mantine-color-blue-light-color);
+  bottom: 1rem;
+  color: light-dark(white, var(--mantine-color-dark-8));
+  direction: ltr;
+  left: 0;
+  margin-inline: auto;
+  position: fixed;
+  right: 0;
+  user-select: none;
+  width: fit-content;
+}
