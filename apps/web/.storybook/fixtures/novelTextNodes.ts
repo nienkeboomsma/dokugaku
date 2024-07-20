@@ -78,7 +78,54 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
   { type: 'hr' },
   {
     type: 'p',
-    content: ['「いいえ、私、一人でいいんです」'],
+    content: [
+      'κα',
+      {
+        type: 'img',
+        attributes: { src: '00004.webp', alt: '', title: 'inline' },
+      },
+      ' σ',
+      {
+        type: 'img',
+        attributes: { src: '00005.webp', alt: '', title: 'inline' },
+      },
+      ' τ',
+      {
+        type: 'img',
+        attributes: { src: '00006.webp', alt: '', title: 'inline' },
+      },
+      'κνον;',
+    ],
+  },
+  {
+    type: 'p',
+    content: [
+      {
+        type: 'img',
+        attributes: { src: '00003.webp', alt: '', title: 'block' },
+      },
+    ],
+  },
+  {
+    type: 'p',
+    content: [
+      '「現代のおしゃべり」と「古典」というのは、全然関係ないと思っている人は多いと思います。ところが、そうではないのです。「おしゃべり」とか「話し言葉」なんかとはまったく関係なくて無縁だと思われてる「昔の古典」が、じつは、「現代の言葉」と大きな関係を持っているのです。そういうことを忘れてしまっているから、話し言葉の混乱だって起こる。そんなことだってあるのです。',
+    ],
+  },
+  {
+    type: 'blockquote',
+    content: [
+      {
+        type: 'p',
+        content: ['「いいえ、私、一人でいいんです」'],
+      },
+    ],
+  },
+  {
+    type: 'p',
+    content: [
+      '　しかし、それだけではありません。ラテン語はみなさんが想像しているより広い分野で、より長い期間にわたって使われているのです。',
+    ],
   },
   {
     type: 'h2',
@@ -90,7 +137,12 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
   },
   {
     type: 'h4',
-    content: ['これは例の文章です'],
+    content: [
+      'これは',
+      // @ts-expect-error: Invalid element
+      { type: 'a', content: ['例の文章'], attributes: { href: 'test' } },
+      'です',
+    ],
   },
   {
     type: 'p',
