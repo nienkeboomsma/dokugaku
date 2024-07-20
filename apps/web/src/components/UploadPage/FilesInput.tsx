@@ -12,7 +12,7 @@ const getAcceptedExtensions = (
     return `.png, .jpg, .jpeg, .webp${form.values.mokuro ? ', .json' : ''}`
   }
   if (workType === GQL_WorkType.Novel) {
-    return '.html, .md, .txt'
+    return '.png, .jpg, .jpeg, .webp, .html, .md, .txt'
   }
 }
 
