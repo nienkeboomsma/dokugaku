@@ -7,6 +7,12 @@ const meta: Meta<typeof NovelReader> = {
   title: 'Novel reader/Novel reader',
   component: NovelReader,
   parameters: {
+    backgrounds: {
+      values: [
+        { name: 'light', value: 'white' },
+        { name: 'dark', value: '#1f1f1f' },
+      ],
+    },
     layout: 'fullscreen',
   },
 }
