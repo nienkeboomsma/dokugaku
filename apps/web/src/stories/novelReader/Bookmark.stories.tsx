@@ -9,6 +9,14 @@ import { rtl } from '../../../.storybook/decorators/rtl'
 const meta: Meta<typeof Bookmark> = {
   title: 'Novel reader/Bookmark',
   component: Bookmark,
+  parameters: {
+    backgrounds: {
+      values: [
+        { name: 'light', value: 'white' },
+        { name: 'dark', value: '#1f1f1f' },
+      ],
+    },
+  },
   decorators: [
     ApolloMockedProvider([updateWorkProgress]),
     rtl,

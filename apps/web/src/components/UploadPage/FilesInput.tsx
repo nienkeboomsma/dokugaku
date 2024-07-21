@@ -8,12 +8,19 @@ const getAcceptedExtensions = (
   form: WorkUploadForm,
   workType: GQL_WorkType
 ) => {
+  // TODO: these should be in a package so work-processor can also use them
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp']
+  const mangaExtensions = [...imageExtensions, '.json']
+  const novelTextExtensions = ['.html', '.md', '.txt']
+
   if (workType === GQL_WorkType.Manga) {
-    return `.png, .jpg, .jpeg, .webp${form.values.mokuro ? ', .json' : ''}`
+    return form.values.mokuro ? mangaExtensions : imageExtensions
   }
   if (workType === GQL_WorkType.Novel) {
-    return '.html, .md, .txt'
+    return [...novelTextExtensions, ...imageExtensions]
   }
+
+  return workType satisfies never
 }
 
 const getLabel = (workType: GQL_WorkType) => {
@@ -43,7 +50,7 @@ export default function FilesInput({
 }) {
   return (
     <FileInput
-      accept={getAcceptedExtensions(form, workType)}
+      accept={getAcceptedExtensions(form, workType).join(',')}
       clearable
       label={getLabel(workType)}
       rightSection={<RightSection workType={workType} />}

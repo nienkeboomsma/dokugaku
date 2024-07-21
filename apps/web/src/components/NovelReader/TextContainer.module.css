@@ -1,148 +1,201 @@
 .outerContainer {
-  --base-text-size: 1.5rem;
   --outer-container-padding: 4rem;
 
   direction: ltr;
   padding: var(--outer-container-padding);
 
-  & p {
-    font-size: var(--base-text-size);
+  p {
     font-family: 'Hiragino Sans', sans-serif;
     font-weight: 200;
     letter-spacing: 0.05em;
+    word-wrap: break-word;
   }
 
-  & em {
+  a {
+    color: var(--mantine-color-blue-light-color);
+  }
+
+  /* The last child is always the bookmark button; this makes sure it is
+     displayed inline with the last paragraph of text. */
+  blockquote {
+    margin-inline: 4em;
+
+    > p:nth-last-child(2) {
+      display: inline;
+    }
+  }
+
+  em {
     font-style: normal;
   }
 
-  & hr {
+  hr {
     visibility: hidden;
   }
 
-  & h1 {
-    font-size: calc(var(--base-text-size) * 1.8);
+  h1 {
+    font-size: 1.8em;
     line-height: 2;
   }
 
-  & h2 {
-    font-size: calc(var(--base-text-size) * 1.4);
+  h2 {
+    font-size: 1.5em;
     line-height: 2;
   }
 
-  & h3 {
-    font-size: calc(var(--base-text-size) * 1.2);
+  h3 {
+    font-size: 1.2em;
     line-height: 2;
   }
 
-  & h4 {
-    font-size: calc(var(--base-text-size) * 1.1);
+  h4 {
+    font-size: 1.1em;
     font-weight: 400;
     line-height: 2;
+  }
+
+  /* Disable unique classnames */
+  :global {
+    /* Block images */
+    img.block {
+      display: block;
+      margin-block: 1em;
+      margin-inline: auto;
+      max-inline-size: 100%;
+    }
+
+    /* Inline images */
+    img.inline {
+      /* TODO: check what multiplier gets the best result across various works
+             and across various kinds of glyphs (Japanese, Latin, Greek). */
+      max-block-size: calc(var(--base-text-size) * 1.2);
+      max-inline-size: calc(var(--base-text-size) * 1.2);
+    }
   }
 }
 
 .containerHorizontal {
+  --base-text-size: 1.3rem;
+
+  font-size: var(--base-text-size);
+  line-height: 1.8;
   margin-inline: auto;
   max-inline-size: calc(var(--base-text-size) * 35);
 
-  & p {
-    line-height: 1.8;
-    margin-block-end: 1rem;
-    margin-block-start: 0;
+  p,
+  blockquote {
+    margin-block: 1em;
   }
 
-  & em {
+  em {
     text-emphasis: filled circle;
   }
 
-  & hr {
-    block-size: 3.6rem;
+  hr {
+    block-size: 3em;
   }
 
-  & h1 {
-    margin-block-end: calc(var(--base-text-size) * 4);
+  h1 {
+    margin-block-end: 2em;
   }
 
-  & h2 {
-    margin-block: calc(var(--base-text-size) * 2);
+  h2 {
+    margin-block: 1.5em;
   }
 
-  & h2:has(+ h3) {
-    margin-block-end: calc(var(--base-text-size) * 1.25);
+  h2:has(+ h3) {
+    margin-block-end: 0.75em;
   }
 
-  & h3 {
-    margin-block: calc(var(--base-text-size) * 1.25);
+  h3 {
+    margin-block: 1em;
   }
 
-  & h4 {
-    margin-block: calc(var(--base-text-size) * 0.75);
+  h4 {
+    margin-block: 1.5em;
   }
 
-  & p + h2 {
-    margin-block-start: calc(var(--base-text-size) * 6);
+  p + h2 {
+    margin-block-start: 4em;
   }
 
-  & p + h3,
-  & p + h4 {
-    margin-block-start: calc(var(--base-text-size) * 3);
+  p + h3,
+  p + h4 {
+    margin-block-start: 2.5em;
   }
 
-  & button {
+  button {
     top: 0.075em;
+  }
+
+  /* Disable unique classnames */
+  :global {
+    /* Inline images */
+    img.inline {
+      vertical-align: sub;
+    }
   }
 }
 
 .containerVertical {
+  --base-text-size: 1.5rem;
   --max-inline-content-size: calc(var(--base-text-size) * 38);
   --inline-size: min(
     var(--max-inline-content-size),
     calc(100vh - 2 * var(--outer-container-padding))
   );
 
+  font-size: var(--base-text-size);
+  inline-size: var(--inline-size);
+  line-height: 2;
   margin-inline: calc(
     ((100vh - var(--inline-size)) - (2 * var(--outer-container-padding))) / 2
   );
-  inline-size: var(--inline-size);
+  text-orientation: upright;
 
   & p {
-    line-height: 2;
     margin-block: 0;
   }
 
-  & em {
+  & blockquote {
+    margin-block: calc(var(--base-text-size) * 1);
+  }
+
+  em {
     text-emphasis: filled sesame;
   }
 
-  & hr {
-    block-size: 2rem;
+  hr {
+    block-size: calc(var(--base-text-size) * 2);
   }
 
-  & h1 {
+  /* Vertical Japanese text typically looks better when spacing is in multiples
+     of the character size. */
+
+  h1 {
     margin-block-end: calc(var(--base-text-size) * 3);
     margin-inline-start: calc(var(--base-text-size) * 1);
   }
 
-  & h2 {
+  h2 {
     margin-block-start: calc(var(--base-text-size) * 8);
     margin-block-end: calc(var(--base-text-size) * 2.5);
     margin-inline-start: calc(var(--base-text-size) * 1);
   }
 
-  & h3 {
+  h3 {
     margin-block-start: calc(var(--base-text-size) * 2.5);
     margin-block-end: calc(var(--base-text-size) * 2.5);
     margin-inline-start: calc(var(--base-text-size) * 2);
   }
 
-  & h4 {
+  h4 {
     margin-block-start: calc(var(--base-text-size) * 2.5);
     margin-block-end: calc(var(--base-text-size) * 2.5);
     margin-inline-start: calc(var(--base-text-size) * 3);
   }
 
-  & p + h3 {
+  p + h3 {
     margin-block-start: calc(var(--base-text-size) * 6);
   }
 }

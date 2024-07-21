@@ -58,7 +58,7 @@ export const processNovelFiles: RequestHandler = multer({
     }
 
     if (file.fieldname === 'files') {
-      const allowedExtensions = novelTextExtensions
+      const allowedExtensions = [...novelTextExtensions, ...imageExtensions]
       if (allowedExtensions.includes(extension)) return cb(null, true)
     }
 

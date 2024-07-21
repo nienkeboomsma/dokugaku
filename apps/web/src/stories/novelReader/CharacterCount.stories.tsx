@@ -7,6 +7,12 @@ const meta: Meta<typeof CharacterCount> = {
   title: 'Novel reader/Character count',
   component: CharacterCount,
   parameters: {
+    backgrounds: {
+      values: [
+        { name: 'light', value: 'white' },
+        { name: 'dark', value: '#1f1f1f' },
+      ],
+    },
     layout: 'fullscreen',
   },
 }

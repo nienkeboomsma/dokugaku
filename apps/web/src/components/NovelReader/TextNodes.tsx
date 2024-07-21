@@ -2,9 +2,9 @@
 
 import {
   type Dispatch,
-  Fragment,
   type ReactNode,
   type SetStateAction,
+  Fragment,
   memo,
   useCallback,
 } from 'react'
@@ -18,10 +18,43 @@ import Bookmark from './Bookmark'
 // renders, so each component will have the same key on each render.
 let uniqueKey: number
 
+const validTags: Array<keyof JSX.IntrinsicElements> = [
+  'blockquote',
+  'em',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'hr',
+  'img',
+  'p',
+  'ruby',
+  'rt',
+]
+
+const elementContainsBlockImage = (element: string | NovelJSONContent) => {
+  if (typeof element === 'string') return false
+
+  if (element.type === 'img' && element.attributes?.title !== 'inline')
+    return true
+
+  if (!element.content || typeof element.content === 'string') return false
+
+  for (const child of element.content) {
+    if (elementContainsBlockImage(child)) {
+      return true
+    }
+  }
+
+  return false
+}
+
 const ContentNodes = memo(function ContentNodes({
   children,
+  fileDir,
 }: {
   children: NovelJSONContent['content']
+  fileDir: string
 }) {
   if (!children) return
 
@@ -30,38 +63,40 @@ const ContentNodes = memo(function ContentNodes({
       return <Fragment key={uniqueKey++}>{child}</Fragment>
     }
 
-    return <ParentNode key={uniqueKey++} node={child} />
+    return <ParentNode key={uniqueKey++} node={child} fileDir={fileDir} />
   })
 })
 
 function ParentNode({
   children,
   node,
+  fileDir,
 }: {
   children?: ReactNode
   node: NovelJSONContent
+  fileDir: string
 }) {
-  const tags: Array<keyof JSX.IntrinsicElements> = [
-    'em',
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'hr',
-    'p',
-    'ruby',
-    'rt',
-  ]
+  const Component = validTags.includes(node.type) ? node.type : 'span'
 
-  const voidTags: Array<keyof JSX.IntrinsicElements> = ['hr']
+  if (Component === 'hr') return <Component />
 
-  const Component = tags.includes(node.type) ? node.type : 'span'
+  if (Component === 'img') {
+    if (!node.attributes || !('src' in node.attributes)) return
 
-  if (voidTags.includes(Component)) return <Component />
+    const isInlineImage = node.attributes.title === 'inline'
+
+    return (
+      <Component
+        alt={node.attributes.alt}
+        className={isInlineImage ? 'inline' : 'block'}
+        src={`${fileDir}/${node.attributes.src}`}
+      />
+    )
+  }
 
   return (
     <Component>
-      <ContentNodes>{node.content}</ContentNodes>
+      <ContentNodes fileDir={fileDir}>{node.content}</ContentNodes>
       {children}
     </Component>
   )
@@ -72,11 +107,13 @@ export default function TextNodes({
   setProgress,
   textNodes,
   updateProgress,
+  fileDir,
 }: {
   progress: number
   setProgress: Dispatch<SetStateAction<number>>
   textNodes: NovelJSONContent[]
   updateProgress: (newProgress: number) => Promise<number>
+  fileDir: string
 }) {
   uniqueKey = 0
 
@@ -90,7 +127,6 @@ export default function TextNodes({
         const updatedProgress = await updateProgress(newProgress)
         setProgress(updatedProgress)
       } catch {
-        console.log('catch')
         notifications.show({
           title: 'Something went wrong',
           message: 'Please try again later',
@@ -100,8 +136,12 @@ export default function TextNodes({
     }, [paragraphNumber, isCurrentProgress])
 
     return (
-      <ParentNode key={`paragraph-${paragraphNumber}`} node={parentNode}>
-        {parentNode.type !== 'hr' && (
+      <ParentNode
+        key={`paragraph-${paragraphNumber}`}
+        node={parentNode}
+        fileDir={fileDir}
+      >
+        {parentNode.content && !elementContainsBlockImage(parentNode) && (
           <Bookmark
             isCurrentProgress={isCurrentProgress}
             key={`bookmark-${paragraphNumber}`}

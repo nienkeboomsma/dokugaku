@@ -16,9 +16,43 @@ import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
 import { novelTextExtensions } from './constants.js'
 import type { NovelTextJsonNode, NovelTextJsonTopLevel } from './types.js'
 
+function editImageUrl(
+  url: boolean | number | string | null | undefined | Array<string | number>
+) {
+  if (typeof url !== 'string') return null
+
+  const extension = path.extname(url)
+  const filename = path.basename(url, extension)
+
+  return `${filename}.webp`
+}
+
 function markdownToHtml(markdown: string) {
   const strippedMdast = fromMarkdown(markdown)
-  const strippedHast = toHast(strippedMdast, { allowDangerousHtml: false })
+  const strippedHast = toHast(strippedMdast, {
+    allowDangerousHtml: false,
+    handlers: {
+      // @ts-expect-error
+      image(state, node) {
+        const properties = {
+          src: editImageUrl(node.url),
+          title: node.title || null,
+          alt: node.alt || null,
+        }
+
+        const result = {
+          type: 'element',
+          tagName: 'img',
+          properties,
+          children: [],
+        }
+        // @ts-expect-error
+        state.patch(node, result)
+        // @ts-expect-error
+        return state.applyData(node, result)
+      },
+    },
+  })
   return toHtml(strippedHast, { allowDangerousHtml: false })
 }
 
@@ -39,15 +73,19 @@ function stripIrrelevantHtml(cleanHtml: string) {
     handlers: {
       // @ts-expect-error
       img(state, node) {
-        /** @type {Html} */
-        const result = { type: 'html', value: '' }
+        const props = node.properties
+        const result = {
+          type: 'image',
+          url: editImageUrl(props.src),
+          title: props.title || null,
+          alt: props.alt || '',
+        }
         // @ts-expect-error
         state.patch(node, result)
         return result
       },
       // @ts-expect-error
       ruby(state, node) {
-        /** @type {Html} */
         const result = { type: 'html', value: toHtml(node) }
         // @ts-expect-error
         state.patch(node, result)

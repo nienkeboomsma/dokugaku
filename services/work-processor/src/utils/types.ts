@@ -62,6 +62,7 @@ export type NovelTextJsonTopLevel = {
 export type NovelTextJsonNode = {
   type: string
   content?: Array<string | NovelTextJsonNode>
+  attributes?: { [property: string]: string }
 }
 
 export type Word = {

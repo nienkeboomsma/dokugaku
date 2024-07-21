@@ -37,7 +37,7 @@ WORK_PROCESSOR_PORT=3004
 
 ### File formats
 
-The manga page files can be `.jpg`, `.jpeg`, `.png` and `.webp`.
+The manga page files can be `.jpg`, `.jpeg`, `.png` or `.webp`.
 
 ### Page numbers
 
@@ -55,7 +55,7 @@ It probably makes more sense to run Mokuro (the OCR processor) on your host mach
 
 ### File formats
 
-The cover image can be `.jpg`, `.jpeg`, `.png` or `.webp`. The text files can be `.html`, `.md` and `.txt`.
+The image files can be `.jpg`, `.jpeg`, `.png` or `.webp`. The text files can be `.html`, `.md` or `.txt`.
 
 ### Multiple files
 
@@ -63,27 +63,59 @@ It is possible to upload a novel across multiple files (for example, when using 
 
 ### Text formatting
 
-Uploaded texts will be converted to a barebones `.html` file containing only headers, paragraphs and ruby. There are some things to keep in mind:
+Uploaded text will be converted into basic semantic HTML. For the best result it is often necessary to make some manual adjustments to the text before uploading, especially when dealing with `.html` files that were extracted via Calibre (which have unpredictable markup).
 
-#### Title
+#### Headings
 
-An `h1` header will automatically be inserted based on the title provided in the upload form. It is therefore not necessary to include one in the uploaded text files.
+A top-level heading (`h1` or `#`) will automatically be inserted based on the title provided in the upload form. This means that headings should start at level two (`h2` or `##`).
 
 #### Paragraphs
 
-In `.html` files paragraphs can be clearly distinguished by their `p` tags. In `.md` files paragraphs must be separated by a blank line. In `.txt` files a single newline is sufficient, but a blank line works as well.
+In `.html` files paragraphs are distinguished by their `p` tags. In `.md` files paragraphs must be separated by a blank line. In `.txt` files a single newline is sufficient, but a blank line works as well.
 
 #### Blank lines
 
-Empty lines (besides those that demarcate paragraphs) are filtered out. This can be problematic if those blank lines demarcate different scenes within the same chapter. It is advisable to go through the text files before uploading them to check whether the work contains such empty lines and replace them with `hr` tags.
+Sometimes it is desirable to have extra blank lines between paragraphs. This can be accomplished in `.md` files by inserting a [thematic break](https://github.github.com/gfm/#thematic-breaks) and in `.html` files by inserting an `hr` tag.
 
 #### Emphasis dots
 
-Some works contain [emphasis dots](https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html). If they are rendered through `em` tags they will be retained, but if they are rendered by other means (such as `span` tags with a particular class) you will need to add `em` tags yourself.
+[Emphasis dots](https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html) can be added in `.md` files by wrapping the relevant text in [single asterisks or underscores](https://github.github.com/gfm/#emphasis-and-strong-emphasis) and in `.html` files by wrapping it in `em` tags.
+
+#### Indentation
+
+Blockquotes (or indentation in a more general sense) can be added in `.md` files by prefacing the relevant lines with [>](https://github.github.com/gfm/#block-quotes) and in `.html` files by wrapping the paragraph in `blockquote` tags.
 
 #### Images
 
-Any images inside of `.md` or `.html` files will be stripped during processing. This can be problematic if images are used for chapter titles (as they often are in Kindle books). In that case, be sure to manually replace the images with an appropriate text string before uploading the files.
+Images can be uploaded alongside the text file(s) and included in the text file(s) with the usual markdown or HTML syntax. Instead of supplying a relative or absolute path, supply only the filename. By default images are displayed as a block, but they can be displayed inline by adding an `"inline"` title attribute:
+
+In `.md` files:
+
+```
+![](filename.jpg)
+
+![](filename.jpg "inline")
+```
+
+In `.html` files:
+
+```
+<img src="filename.jpg" />
+
+<img src="filename.jpg" title="inline" />
+```
+
+#### Checklist for `.html` files extracted from Calibre
+
+- [ ] There is no title at the start of the work
+- [ ] Headings start at `h2`
+- [ ] Blank lines (usually `<p><br /></p>`) are replaced with `hr`
+- [ ] Text with emphasis dots (look for `text-emphasis` in the `.css` files to find the class name) is wrapped in `em` tags
+- [ ] Indented paragraphs (look for `div` with classes like `start-3em`) are wrapped in `blockquote` tags
+- [ ] SVG images (`<svg><image /></svg>`) are replaced with `img` tags
+- [ ] Images that contain only text are replaced with the appropriate text string (where possible)
+- [ ] Images that are supposed to be displayed inline contain `title="inline"`
+- [ ] Pointless elements such as empty `a` tags are removed
 
 ### 'Page numbers'
 
@@ -91,7 +123,7 @@ In the case of novels the `pageNumber` variable actually refers to the _paragrap
 
 ## Processing time estimate
 
-There is currently no way to track the processing of an uploaded work other than keeping an eye on the `work-processor` logs. When uploading a work, a toast will provide some estimate of the required processing time. This estimate is based on a few constants in `/services/work-processor/src/utils/constants.ts`. It is recommended to keep an eye on the `work-processor` logs for the first few uploads in order to provide these constants with more accurate values for your own hardware.
+There is currently no way to track the processing of an uploaded work other than keeping an eye on the `work-processor` logs, where you will find an up-to-date estimate for the segmentation stage. Unfortunately, there is currently no way to track progress within the (often lengthy!) OCR stage beyond a simple pass/fail message.
 
 # Managing vocab
 

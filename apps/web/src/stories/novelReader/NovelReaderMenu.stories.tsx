@@ -7,10 +7,21 @@ import useNovelReaderDirection from '../../hooks/useNovelReaderDirection'
 const meta: Meta<typeof NovelReaderMenu> = {
   title: 'Novel reader/Menu',
   component: NovelReaderMenu,
+  parameters: {
+    backgrounds: {
+      values: [
+        { name: 'light', value: 'white' },
+        { name: 'dark', value: '#1f1f1f' },
+      ],
+    },
+  },
   decorators: [
     rtl,
     (Story, context) => {
-      const { direction, toggleDirection } = useNovelReaderDirection('vertical')
+      const { direction, toggleDirection } = useNovelReaderDirection(
+        'vertical',
+        context.args.workId
+      )
 
       return (
         <Story
