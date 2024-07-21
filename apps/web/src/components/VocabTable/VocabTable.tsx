@@ -86,6 +86,10 @@ export default function VocabTable(props: VocabTableProps) {
   const [minPageNumber, setMinPageNumber] = useState<string | number>(
     isWork(seriesOrWork) ? seriesOrWork.progress + 1 : 1
   )
+  const [minVolumeNumber, setMinVolumeNumber] = useState<string | number>(
+    // TODO: get number of earliest unread volume
+    1
+  )
   const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
   const [listType, setListType] = useLocalStorage({
     defaultValue: ListType.Frequency,
@@ -246,11 +250,14 @@ export default function VocabTable(props: VocabTableProps) {
           (type === VocabTableType.SeriesOrWork ||
             type === VocabTableType.Recommended) && (
             <VocabFilter
+              isSeries={isSeries(seriesOrWork)}
               listType={listType}
               minFrequency={minFrequency}
               minPageNumber={minPageNumber}
+              minVolumeNumber={minVolumeNumber}
               setMinFrequency={setMinFrequency}
               setMinPageNumber={setMinPageNumber}
+              setMinVolumeNumber={setMinVolumeNumber}
               setShowIgnored={setShowIgnored}
               setShowUnignored={setShowUnignored}
               showIgnored={showIgnored}
@@ -262,8 +269,7 @@ export default function VocabTable(props: VocabTableProps) {
         searchValue={searchValue}
         setSearchValue={setSearchValue}
         sortContent={
-          type === VocabTableType.SeriesOrWork &&
-          isWork(seriesOrWork) && (
+          type === VocabTableType.SeriesOrWork && (
             <VocabSort listType={listType} setListType={setListType} />
           )
         }
