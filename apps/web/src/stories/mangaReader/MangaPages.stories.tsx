@@ -34,4 +34,11 @@ export const TwoPageLayout: Story = {
   },
 }
 
+export const DifferentImageSizes: Story = {
+  args: {
+    pages: mockMangaPages.slice(6, 8),
+    showTwoPages: true,
+  },
+}
+
 export default meta

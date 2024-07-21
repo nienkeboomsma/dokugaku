@@ -42,10 +42,12 @@ export const Default: Story = {
   args: {
     getPageData: async (pageNumbers) =>
       pageNumbers.map((pageNumber) =>
-        mockMangaPages.find((page) => page.pageNumber === pageNumber)
+        mockMangaPages
+          .slice(0, 6)
+          .find((page) => page.pageNumber === pageNumber)
       ),
     initialPageNumber: 1,
-    maxPageNumber: mockMangaPages.length,
+    maxPageNumber: mockMangaPages.slice(0, 6).length,
     updateProgress: async (newProgress) => newProgress,
   },
 }

@@ -2020,4 +2020,39 @@ export const mockMangaPages: Page[] = [
       ],
     },
   },
+  {
+    imageSrc: '/assets/20dd83f3-cfce-498e-b8f9-64562a7f1384/img0007.webp',
+    pageNumber: 7,
+    textJson: {
+      version: '0.1.6',
+      img_width: 1354,
+      img_height: 1920,
+      blocks: [],
+    },
+  },
+  {
+    imageSrc: '/assets/20dd83f3-cfce-498e-b8f9-64562a7f1384/img0008.webp',
+    pageNumber: 8,
+    textJson: {
+      version: '0.1.6',
+      img_width: 847,
+      img_height: 1200,
+      blocks: [
+        {
+          box: [65, 1099, 679, 1134],
+          vertical: false,
+          font_size: 35,
+          lines_coords: [
+            [
+              [65.0, 1099.0],
+              [679.0, 1099.0],
+              [679.0, 1134.0],
+              [65.0, 1134.0],
+            ],
+          ],
+          lines: ['からかい上手の高木さんの山本宗一朗'],
+        },
+      ],
+    },
+  },
 ]
