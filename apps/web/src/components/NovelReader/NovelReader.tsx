@@ -14,18 +14,23 @@ import TextContainer from './TextContainer'
 import TextNodes from './TextNodes'
 
 export default function NovelReader({
+  fileDir,
   initialProgress,
   textNodes,
   updateProgress,
   workId,
 }: {
+  fileDir: string
   initialProgress: number
   textNodes: NovelJSONContent[]
   updateProgress: (newProgress: number) => Promise<number>
   workId: string
 }) {
   const [progress, setProgress] = useState(initialProgress)
-  const { direction, toggleDirection } = useNovelReaderDirection('vertical')
+  const { direction, toggleDirection } = useNovelReaderDirection(
+    'vertical',
+    workId
+  )
   const charCount = useCharacterCount()
   const maxProgress = textNodes.length
 
@@ -62,6 +67,7 @@ export default function NovelReader({
           setProgress={setProgress}
           textNodes={textNodes}
           updateProgress={updateProgress}
+          fileDir={fileDir}
         />
       </TextContainer>
     </>

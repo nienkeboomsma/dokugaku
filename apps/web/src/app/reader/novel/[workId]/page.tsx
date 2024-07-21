@@ -49,6 +49,7 @@ export default function NovelReaderPage({
 
   return (
     <NovelReader
+      fileDir={`/assets/${params.workId}/`}
       initialProgress={data.work.progress}
       updateProgress={(newProgress) =>
         updateProgress(newProgress, params.workId)
