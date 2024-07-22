@@ -4,7 +4,7 @@ import path from 'node:path'
 import sharp from 'sharp'
 
 import { type IchiranData } from './types.js'
-import { mokuroExtensions } from './constants.js'
+import { imageExtensions } from './constants.js'
 
 export function getAllFilesByExtension(fullPath: string, extensions: string[]) {
   const allFiles = fs.readdirSync(fullPath)
@@ -94,7 +94,7 @@ export function concatToJson(
 }
 
 export async function convertImagesToWebP(fullPath: string, title: string) {
-  const images = getAllFilesByExtension(fullPath, mokuroExtensions)
+  const images = getAllFilesByExtension(fullPath, imageExtensions)
 
   for (const inputFile of images) {
     const inputPath = path.join(fullPath, inputFile)

@@ -5,7 +5,7 @@ import cliProgress from 'cli-progress'
 
 import { type MokuroData } from './types.js'
 import { concatToJson, getAllFilesByExtension, runIchiran } from './utils.js'
-import { mokuroExtensions } from './constants.js'
+import { imageExtensions } from './constants.js'
 
 export async function runMokuro(folderName: string, title: string) {
   console.log(`${title} ・ Starting Mokuro`)
@@ -69,7 +69,7 @@ export async function runIchiranOnEachPage(fullPath: string, title: string) {
 }
 
 export function createCoverImage(fullPath: string, title: string) {
-  const images = getAllFilesByExtension(fullPath, mokuroExtensions)
+  const images = getAllFilesByExtension(fullPath, imageExtensions)
   const [firstPage] = images.sort()
 
   if (!firstPage) {

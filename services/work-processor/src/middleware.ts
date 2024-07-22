@@ -1,7 +1,7 @@
 import type { Express, Response, NextFunction } from 'express'
 import path from 'node:path'
 
-import { mokuroExtensions } from './utils/constants.js'
+import { imageExtensions } from './utils/constants.js'
 import {
   type MangaUploadRequest,
   type NovelUploadRequest,
@@ -82,7 +82,7 @@ export function validateWorkMetadata(
 export function mokurodFilesAreValid(files: Express.Multer.File[]) {
   const images = files.filter((file) => {
     const fileExtension = path.extname(file.originalname)
-    return mokuroExtensions.includes(fileExtension)
+    return imageExtensions.includes(fileExtension)
   })
 
   const jsons = files.filter((file) => {
