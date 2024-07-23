@@ -50,10 +50,12 @@ export default function MangaPages({
           wrapperClass={classes.transform}
         >
           <div className={classes.container} id='pagesContainer'>
+            {/* The manga page on the right should be loaded first, but
+                displayed second, hence flex-direction: row-reverse */}
+            <MangaPage key={pages[0]?.pageNumber} page={pages[0]} />
             {showTwoPages && (
               <MangaPage key={pages[1]?.pageNumber} page={pages[1]} />
             )}
-            <MangaPage key={pages[0]?.pageNumber} page={pages[0]} />
           </div>
         </TransformComponent>
       </TransformWrapper>
