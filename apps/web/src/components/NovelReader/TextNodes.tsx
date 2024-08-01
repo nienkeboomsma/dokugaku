@@ -30,6 +30,7 @@ const validTags: Array<keyof JSX.IntrinsicElements> = [
   'p',
   'ruby',
   'rt',
+  'strong',
 ]
 
 const elementContainsBlockImage = (element: string | NovelJSONContent) => {
