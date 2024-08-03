@@ -63,6 +63,7 @@ export type NovelTextJsonNode = {
   type: string
   content?: Array<string | NovelTextJsonNode>
   attributes?: { [property: string]: string }
+  paragraphNumber?: number
 }
 
 export type Word = {

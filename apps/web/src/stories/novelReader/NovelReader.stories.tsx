@@ -23,6 +23,7 @@ export const Default: Story = {
   args: {
     fileDir: '/assets/03b16794-4472-4ac3-b018-537398f83332/',
     initialProgress: 3,
+    maxProgress: 15,
     textNodes: mockNovelTextNodes,
     updateProgress: async (newProgress) => newProgress,
     workId: '03b16794-4472-4ac3-b018-537398f83332',

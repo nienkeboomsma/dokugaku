@@ -16,12 +16,14 @@ import TextNodes from './TextNodes'
 export default function NovelReader({
   fileDir,
   initialProgress,
+  maxProgress,
   textNodes,
   updateProgress,
   workId,
 }: {
   fileDir: string
   initialProgress: number
+  maxProgress: number
   textNodes: NovelJSONContent[]
   updateProgress: (newProgress: number) => Promise<number>
   workId: string
@@ -32,7 +34,6 @@ export default function NovelReader({
     workId
   )
   const charCount = useCharacterCount()
-  const maxProgress = textNodes.length
 
   useEffect(() => {
     const bodyElement = document.body.querySelector(`#bookmark-${progress}`)

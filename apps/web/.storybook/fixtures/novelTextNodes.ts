@@ -1,8 +1,8 @@
 import { NovelJSONContent } from '../../src/types/NovelJSONContent'
 
 export const mockNovelTextNodes: NovelJSONContent[] = [
-  { type: 'h1', content: ['セーラー服と機関銃'] },
-  { type: 'h2', content: ['プロローグ'] },
+  { type: 'h1', content: ['セーラー服と機関銃'], paragraphNumber: 1 },
+  { type: 'h2', content: ['プロローグ'], paragraphNumber: 2 },
   {
     type: 'p',
     content: [
@@ -51,6 +51,7 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       },
       'とさえ言える。',
     ],
+    paragraphNumber: 3,
   },
   {
     type: 'p',
@@ -74,8 +75,9 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       },
       'だった。',
     ],
+    paragraphNumber: 4,
   },
-  { type: 'hr' },
+  { type: 'hr', paragraphNumber: 5 },
   {
     type: 'p',
     content: [
@@ -96,6 +98,7 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       },
       'κνον;',
     ],
+    paragraphNumber: 6,
   },
   {
     type: 'p',
@@ -105,19 +108,29 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
         attributes: { src: '00003.webp', alt: '', title: 'block' },
       },
     ],
+    paragraphNumber: 7,
   },
   {
     type: 'p',
     content: [
       '「現代のおしゃべり」と「古典」というのは、全然関係ないと思っている人は多いと思います。ところが、そうではないのです。「おしゃべり」とか「話し言葉」なんかとはまったく関係なくて無縁だと思われてる「昔の古典」が、じつは、「現代の言葉」と大きな関係を持っているのです。そういうことを忘れてしまっているから、話し言葉の混乱だって起こる。そんなことだってあるのです。',
     ],
+    paragraphNumber: 8,
   },
   {
     type: 'blockquote',
     content: [
       {
         type: 'p',
-        content: ['「いいえ、私、一人でいいんです」'],
+        content: ['　後鳥羽上皇の歌みたいのは、「帝王ぶり」と言うんです。'],
+        paragraphNumber: 9,
+      },
+      {
+        type: 'p',
+        content: [
+          '　「少しふざけたかもしれないので、ちょっとまじめにしめます。」',
+        ],
+        paragraphNumber: 10,
       },
     ],
   },
@@ -126,14 +139,17 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
     content: [
       '　しかし、それだけではありません。ラテン語はみなさんが想像しているより広い分野で、より長い期間にわたって使われているのです。',
     ],
+    paragraphNumber: 11,
   },
   {
     type: 'h2',
     content: ['もう一度の例'],
+    paragraphNumber: 12,
   },
   {
     type: 'h3',
     content: ['ペン'],
+    paragraphNumber: 13,
   },
   {
     type: 'h4',
@@ -143,6 +159,7 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       { type: 'a', content: ['例の文章'], attributes: { href: 'test' } },
       'です',
     ],
+    paragraphNumber: 14,
   },
   {
     type: 'p',
@@ -189,5 +206,6 @@ export const mockNovelTextNodes: NovelJSONContent[] = [
       { type: 'ruby', content: ['可愛', { type: 'rt', content: ['かわい'] }] },
       'くないこともないのだが、どこかしまらない、というか、ポサッとした感じだ。',
     ],
+    paragraphNumber: 15,
   },
 ]

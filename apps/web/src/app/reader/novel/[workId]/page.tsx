@@ -51,10 +51,11 @@ export default function NovelReaderPage({
     <NovelReader
       fileDir={`/assets/${params.workId}/`}
       initialProgress={data.work.progress}
+      maxProgress={data.work.maxProgress}
+      textNodes={textNodes}
       updateProgress={(newProgress) =>
         updateProgress(newProgress, params.workId)
       }
-      textNodes={textNodes}
       workId={params.workId}
     />
   )
