@@ -15,11 +15,11 @@
     color: var(--mantine-color-blue-light-color);
   }
 
-  /* The last child is always the bookmark button; this makes sure it is
-     displayed inline with the last paragraph of text. */
   blockquote {
-    margin-inline: 4em;
+    margin-inline: 3em;
 
+    /* The last child is always the bookmark button; this makes sure it is
+       displayed inline with the last paragraph of text. */
     > p:nth-last-child(2) {
       display: inline;
     }
