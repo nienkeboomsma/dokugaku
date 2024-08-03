@@ -117,7 +117,10 @@ export function concatToJson(
 }
 
 export async function convertImagesToWebP(fullPath: string, title: string) {
-  const images = getAllFilesByExtension(fullPath, imageExtensions)
+  const nonWebpImageExtensions = imageExtensions.filter(
+    (ext) => ext !== '.webp' && ext !== '.WEBP'
+  )
+  const images = getAllFilesByExtension(fullPath, nonWebpImageExtensions)
 
   for (const inputFile of images) {
     const inputPath = path.join(fullPath, inputFile)
