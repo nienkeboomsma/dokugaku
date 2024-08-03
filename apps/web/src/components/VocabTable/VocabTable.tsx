@@ -72,15 +72,15 @@ export default function VocabTable(props: VocabTableProps) {
 
   const [showIgnored, setShowIgnored] = useLocalStorage({
     defaultValue: false,
-    key: 'DOKUGAKU_SHOW_IGNORED',
+    key: `DOKUGAKU_SHOW_IGNORED-${seriesOrWork?.id}`,
   })
   const [showUnignored, setShowUnignored] = useLocalStorage({
     defaultValue: true,
-    key: 'DOKUGAKU_SHOW_UNIGNORED',
+    key: `DOKUGAKU_SHOW_UNIGNORED-${seriesOrWork?.id}`,
   })
   const [minFrequency, setMinFrequency] = useLocalStorage<string | number>({
     defaultValue: 1,
-    key: 'DOKUGAKU_MINIMUM_FREQUENCY',
+    key: `DOKUGAKU_MINIMUM_FREQUENCY-${seriesOrWork?.id}`,
   })
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
   const [minPageNumber, setMinPageNumber] = useState<string | number>(
