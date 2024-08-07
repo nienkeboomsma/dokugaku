@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Progress } from '@mantine/core'
 
 import classes from './NovelReader.module.css'
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
 import useNovelReaderDirection from '../../hooks/useNovelReaderDirection'
 import { useCharacterCount } from '../../hooks/useCharacterCount'
+import useScrollToBookmark from '../../hooks/useScrollToBookmark'
 import { getPercentage } from '../../util/getPercentage'
 import NovelReaderMenu from './NovelReaderMenu'
 import CharacterCount from './CharacterCount'
@@ -35,13 +36,7 @@ export default function NovelReader({
   )
   const charCount = useCharacterCount()
 
-  useEffect(() => {
-    const bodyElement = document.body.querySelector(`#bookmark-${progress}`)
-
-    if (!bodyElement) return
-
-    bodyElement.scrollIntoView({ block: 'center' })
-  }, [direction])
+  useScrollToBookmark(direction, progress)
 
   return (
     <>

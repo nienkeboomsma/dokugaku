@@ -33,6 +33,13 @@
     visibility: hidden;
   }
 
+  /* Override the width/height attributes on the img tag, which are only */
+  /* there to prevent CLS messing with the auto-scroll target. */
+  img {
+    height: auto;
+    width: auto;
+  }
+
   h1 {
     font-size: 1.8em;
     line-height: 2;
@@ -153,11 +160,11 @@
   );
   text-orientation: upright;
 
-  & p {
+  p {
     margin-block: 0;
   }
 
-  & blockquote {
+  blockquote {
     margin-block: calc(var(--base-text-size) * 1);
   }
 
