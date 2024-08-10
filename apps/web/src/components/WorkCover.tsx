@@ -36,12 +36,14 @@ export default function WorkCover({
   coverPath,
   grow,
   maxProgress,
+  priority,
   progress,
   width,
 }: {
   coverPath: string
   grow?: boolean
   maxProgress?: number
+  priority?: boolean
   progress?: number
   width?: string
 }) {
@@ -61,6 +63,7 @@ export default function WorkCover({
         alt='Cover image'
         className={classes.img}
         fill
+        priority={priority}
         src={coverPath}
         sizes={width}
       />
