@@ -18,13 +18,18 @@ export default function useScrollToBookmark(
     if (direction === 'horizontal') scrollToBookmark()
 
     // CLS interferes with the scroll target in vertical mode. Setting the
-    // width/height attributes to match the intrinsic aspect ratio of the image
+    // width/height attributes of each img to match the intrinsic aspect ratio
     // solves the issue. The width/height is subsequently overridden in CSS.
-    const imgs = document.querySelectorAll('img') as NodeListOf<
+
+    const imgs = Array.from(document.querySelectorAll('img')) as Array<
       HTMLImageElement & { error?: boolean }
     >
 
-    for (const img of imgs) {
+    // There is no need to do this if all images are already fully loaded
+    // by the time the direction changes.
+    if (imgs.every((img) => img.naturalWidth)) return scrollToBookmark()
+
+    imgs.forEach((img) => {
       img.addEventListener('error', () => {
         img.error = true
       })
@@ -40,19 +45,10 @@ export default function useScrollToBookmark(
           img.height = img.naturalHeight
         }
       }, 10)
-    }
+    })
 
     const checkReadyToScroll = setInterval(() => {
-      let allImgsHaveWidths = true
-
-      for (const img of imgs) {
-        if (!img.width && !img.error) {
-          allImgsHaveWidths = false
-          break
-        }
-      }
-
-      if (allImgsHaveWidths) {
+      if (imgs.every((img) => img.width || img.error)) {
         clearInterval(checkReadyToScroll)
         scrollToBookmark()
       }
