@@ -111,7 +111,7 @@ const ParentNode = memo(function ParentNode({
       <Component
         alt={node.attributes.alt}
         className={isInlineImage ? 'inline' : 'block'}
-        src={`${fileDir}/${node.attributes.src}`}
+        src={`${fileDir}${node.attributes.src}`}
       />
     )
   }
