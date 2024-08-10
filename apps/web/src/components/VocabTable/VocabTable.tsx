@@ -2,7 +2,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Box, List } from '@mantine/core'
+import { Box } from '@mantine/core'
 import { useDebouncedValue, useLocalStorage } from '@mantine/hooks'
 import { IconMoodSad } from '@tabler/icons-react'
 import { DataTable, DataTableColumn } from 'mantine-datatable'
@@ -20,6 +20,7 @@ import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import VocabFilter from './VocabFilter'
 import filterVocab from './filterVocab'
 import VocabSort, { ListType } from './VocabSort'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 const BATCH_SIZE = 250
 const MAX_WIDTH = '52rem'
@@ -60,6 +61,20 @@ const isWork = (
   return !isSeries(seriesOrWork)
 }
 
+const getFirstUnreadVolumeNumber = (
+  seriesOrWork: SeriesInfo | WorkInfo | undefined
+) => {
+  if (!seriesOrWork || isWork(seriesOrWork)) return undefined
+
+  const firstUnreadVolume = seriesOrWork.volumes.find(
+    (volume) =>
+      volume.status === GQL_ReadStatus.Reading ||
+      volume.status === GQL_ReadStatus.WantToRead
+  )
+
+  return firstUnreadVolume?.volumeNumber
+}
+
 export type VocabTableProps =
   | VocabTablePropsCorpus
   | VocabTablePropsSeriesOrWork
@@ -87,8 +102,7 @@ export default function VocabTable(props: VocabTableProps) {
     isWork(seriesOrWork) ? seriesOrWork.progress + 1 : 1
   )
   const [minVolumeNumber, setMinVolumeNumber] = useState<string | number>(
-    // TODO: get number of earliest unread volume
-    1
+    getFirstUnreadVolumeNumber(seriesOrWork) ?? 1
   )
   const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
   const [listType, setListType] = useLocalStorage({
