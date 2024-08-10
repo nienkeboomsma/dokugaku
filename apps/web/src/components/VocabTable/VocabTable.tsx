@@ -75,6 +75,20 @@ const getFirstUnreadVolume = (
   return firstUnreadVolume
 }
 
+const getMinPageNumber = (seriesOrWork: SeriesInfo | WorkInfo | undefined) => {
+  if (!seriesOrWork) return 1
+
+  const currentProgress = isWork(seriesOrWork)
+    ? seriesOrWork.progress
+    : getFirstUnreadVolume(seriesOrWork)?.progress
+
+  if (typeof currentProgress === 'undefined') return 1
+
+  if (currentProgress < 2) return 1
+
+  return currentProgress + 1
+}
+
 export type VocabTableProps =
   | VocabTablePropsCorpus
   | VocabTablePropsSeriesOrWork
@@ -93,28 +107,31 @@ export default function VocabTable(props: VocabTableProps) {
     defaultValue: true,
     key: `DOKUGAKU_SHOW_UNIGNORED-${seriesOrWork?.id}`,
   })
+
   const [minFrequency, setMinFrequency] = useLocalStorage<string | number>({
     defaultValue: 1,
     key: `DOKUGAKU_MINIMUM_FREQUENCY-${seriesOrWork?.id}`,
   })
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
+
   const [minPageNumber, setMinPageNumber] = useState<string | number>(
-    isWork(seriesOrWork)
-      ? seriesOrWork.progress + 1
-      : getFirstUnreadVolume(seriesOrWork)?.progress + 1 || 1
+    getMinPageNumber(seriesOrWork)
   )
   const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
+
   const [minVolumeNumber, setMinVolumeNumber] = useState<string | number>(
-    getFirstUnreadVolume(seriesOrWork)?.volumeNumber || 1
+    getFirstUnreadVolume(seriesOrWork)?.volumeNumber ?? 1
   )
   const [debouncedMinVolumeNumber] = useDebouncedValue(
     Number(minVolumeNumber),
     300
   )
+
   const [listType, setListType] = useLocalStorage({
     defaultValue: ListType.Frequency,
     key: `DOKUGAKU_LIST_TYPE-${seriesOrWork?.id}`,
   })
+
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 
@@ -139,10 +156,6 @@ export default function VocabTable(props: VocabTableProps) {
     debouncedMinPageNumber,
     debouncedMinVolumeNumber
   )
-
-  useEffect(() => {
-    if (error) console.log(error.message)
-  }, [error])
 
   const loadMoreRecords = () => {
     // TODO: loadMoreRecords continues to be triggered (and to show a spinner)
