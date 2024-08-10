@@ -61,7 +61,7 @@ const isWork = (
   return !isSeries(seriesOrWork)
 }
 
-const getFirstUnreadVolumeNumber = (
+const getFirstUnreadVolume = (
   seriesOrWork: SeriesInfo | WorkInfo | undefined
 ) => {
   if (!seriesOrWork || isWork(seriesOrWork)) return undefined
@@ -72,7 +72,7 @@ const getFirstUnreadVolumeNumber = (
       volume.status === GQL_ReadStatus.WantToRead
   )
 
-  return firstUnreadVolume?.volumeNumber
+  return firstUnreadVolume
 }
 
 export type VocabTableProps =
@@ -99,12 +99,18 @@ export default function VocabTable(props: VocabTableProps) {
   })
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
   const [minPageNumber, setMinPageNumber] = useState<string | number>(
-    isWork(seriesOrWork) ? seriesOrWork.progress + 1 : 1
-  )
-  const [minVolumeNumber, setMinVolumeNumber] = useState<string | number>(
-    getFirstUnreadVolumeNumber(seriesOrWork) ?? 1
+    isWork(seriesOrWork)
+      ? seriesOrWork.progress + 1
+      : getFirstUnreadVolume(seriesOrWork)?.progress + 1 || 1
   )
   const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
+  const [minVolumeNumber, setMinVolumeNumber] = useState<string | number>(
+    getFirstUnreadVolume(seriesOrWork)?.volumeNumber || 1
+  )
+  const [debouncedMinVolumeNumber] = useDebouncedValue(
+    Number(minVolumeNumber),
+    300
+  )
   const [listType, setListType] = useLocalStorage({
     defaultValue: ListType.Frequency,
     key: `DOKUGAKU_LIST_TYPE-${seriesOrWork?.id}`,
@@ -125,13 +131,18 @@ export default function VocabTable(props: VocabTableProps) {
     workId: isWork(seriesOrWork) ? seriesOrWork?.id : undefined,
   }
 
-  const { data, getNextBatchOfWords, loading } = useGetWordsQuery(
+  const { data, getNextBatchOfWords, loading, error } = useGetWordsQuery(
     listType,
     type,
     queryVariables,
     debouncedSearchValue,
-    debouncedMinPageNumber
+    debouncedMinPageNumber,
+    debouncedMinVolumeNumber
   )
+
+  useEffect(() => {
+    if (error) console.log(error.message)
+  }, [error])
 
   const loadMoreRecords = () => {
     // TODO: loadMoreRecords continues to be triggered (and to show a spinner)
@@ -193,6 +204,11 @@ export default function VocabTable(props: VocabTableProps) {
       render: (vocab: Word) => Meaning({ vocab }),
     },
     {
+      accessor: 'volumeNumber',
+      title: 'Volume',
+      textAlign: 'right',
+    },
+    {
       accessor: 'pageNumber',
       title: 'Page',
       textAlign: 'right',
@@ -235,7 +251,22 @@ export default function VocabTable(props: VocabTableProps) {
       return ['reading', 'meaning', 'frequency', 'actions']
     }
 
-    return ['reading', 'meaning', 'pageNumber', 'frequency', 'actions']
+    if (
+      type === VocabTableType.SeriesOrWork &&
+      listType === ListType.Glossary &&
+      isWork(seriesOrWork)
+    ) {
+      return ['reading', 'meaning', 'pageNumber', 'frequency', 'actions']
+    }
+
+    return [
+      'reading',
+      'meaning',
+      'volumeNumber',
+      'pageNumber',
+      'frequency',
+      'actions',
+    ]
   }
 
   const selectColumns = (type: VocabTableType, listType: ListType) => {
@@ -247,8 +278,13 @@ export default function VocabTable(props: VocabTableProps) {
   }
 
   const idAccessor = (word: Word) => {
-    if (word.pageNumber && word.sentenceNumber && word.entryNumber) {
-      return `${word.id}-${word.pageNumber}-${word.sentenceNumber}-${word.entryNumber}`
+    if (
+      word.volumeNumber &&
+      word.pageNumber &&
+      word.sentenceNumber &&
+      word.entryNumber
+    ) {
+      return `${word.id}-${word.volumeNumber}-${word.pageNumber}-${word.sentenceNumber}-${word.entryNumber}`
     }
 
     return word.id

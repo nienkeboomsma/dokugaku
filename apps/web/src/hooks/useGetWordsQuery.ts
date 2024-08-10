@@ -19,9 +19,10 @@ import {
 
 type Variables = {
   isPartOfSeries: boolean
-  isSeries?: boolean
+  isSeries: boolean
   limit: number
   minPageNumber?: number
+  minVolumeNumber?: number
   offset: number
   seriesId?: string
   workId?: string
@@ -32,7 +33,8 @@ export const useGetWordsQuery = (
   kind: VocabTableType,
   variables: Variables,
   searchString: string,
-  minPageNumber: number
+  minPageNumber: number,
+  minVolumeNumber: number
 ) => {
   if (kind === VocabTableType.Excluded) {
     const { data, error, fetchMore, loading } =
@@ -215,8 +217,10 @@ export const useGetWordsQuery = (
           variables: {
             input: {
               isPartOfSeries: variables.isPartOfSeries,
+              isSeries: variables.isSeries,
               limit: variables.limit,
               minPageNumber,
+              minVolumeNumber,
               offset: variables.offset,
               searchString,
               seriesId: variables.seriesId,
@@ -231,6 +235,7 @@ export const useGetWordsQuery = (
           variables: {
             input: {
               isPartOfSeries: variables.isPartOfSeries,
+              isSeries: variables.isSeries,
               limit: variables.limit,
               minPageNumber,
               offset: nextOffset,
