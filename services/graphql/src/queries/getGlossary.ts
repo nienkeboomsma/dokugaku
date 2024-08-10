@@ -56,22 +56,13 @@ export function getGlossary(params: GetGlossaryParams) {
             `
         }
 
-          ${
-            params.isSeries
-              ? sql`
-          FROM series
-          
-          JOIN work
-            ON work.series_id = series.id
-            AND series.id = ${params.seriesId}
-        `
-              : sql`
-          FROM work
-        `
-          }
+      FROM work
 
-            JOIN word_work 
-      ON word_work.work_id = work.id
+      JOIN word_work 
+        ON word_work.work_id = work.id
+
+      JOIN word 
+        ON word_work.word_id = word.id
 
       ${
         params.isSeries || params.isPartOfSeries
@@ -89,9 +80,6 @@ export function getGlossary(params: GetGlossaryParams) {
           `
       }
 
-      JOIN word 
-        ON word_work.word_id = word.id
-      
       LEFT JOIN user_word 
         ON word.id = user_word.word_id
         AND user_word.user_id = ${params.userId}
@@ -103,16 +91,17 @@ export function getGlossary(params: GetGlossaryParams) {
         FROM (
           SELECT word_id
           FROM word_work
-          JOIN work ON work.id = word_work.work_id
-                ${
-                  params.isSeries
-                    ? sql`
-                        WHERE work.series_id = ${params.seriesId}
-          `
-                    : sql`
-                    WHERE work.id = ${params.workId}
-                    `
-                }
+          JOIN work 
+            ON work.id = word_work.work_id
+            ${
+              params.isSeries
+                ? sql`
+                  AND work.series_id = ${params.seriesId}
+                `
+                : sql`
+                  AND work.id = ${params.workId}
+                `
+            }
         )
         GROUP BY word_id
       ) AS word_frequency 
@@ -120,13 +109,15 @@ export function getGlossary(params: GetGlossaryParams) {
 
       WHERE COALESCE(user_word.excluded, false) = false
         AND COALESCE(user_word.known, false) = false
-              ${
-                !params.isSeries
-                  ? sql`
-            AND work.id = ${params.workId}
-          `
-                  : sql``
-              }
+        ${
+          params.isSeries
+            ? sql`
+              AND work.series_id = ${params.seriesId}
+            `
+            : sql`
+              AND work.id = ${params.workId}
+            `
+        }
         ${
           params.searchString
             ? sql`
@@ -135,19 +126,24 @@ export function getGlossary(params: GetGlossaryParams) {
             : sql``
         }
         ${
-          params.minPageNumber
+          !params.isSeries && params.minPageNumber
             ? sql`
               AND word_work.page_number >= ${params.minPageNumber}
             `
             : sql``
         }
-                ${
-                  params.minVolumeNumber
-                    ? sql`
-              AND word_work.volume_number >= ${params.minVolumeNumber}
+        ${
+          params.isSeries && params.minVolumeNumber && params.minPageNumber
+            ? sql`
+              AND ( word_work.volume_number > ${params.minVolumeNumber}
+                OR (
+                  word_work.volume_number = ${params.minVolumeNumber}
+                  AND word_work.page_number >= ${params.minPageNumber}
+                )
+              )
             `
-                    : sql``
-                }
+            : sql``
+        }
 
       ORDER BY
         word_work.volume_number ASC,
