@@ -4,24 +4,36 @@ import { type GlossaryModel } from '../models/GlossaryModel'
 type GetGlossaryParamsCommon = {
   limit?: number
   minPageNumber?: number
+  minVolumeNumber?: number
   offset?: number
   searchString?: string
   userId: string
 }
 
+type GetGlossaryParamsSeries = {
+  isSeries: true
+  seriesId: string
+}
+
 type GetGlossaryParamsWorkInSeries = {
+  isSeries: false
   isPartOfSeries: true
   seriesId: string
   workId: string
 }
 
 type GetGlossaryParamsWorkNotInSeries = {
+  isSeries: false
   isPartOfSeries: false
   workId: string
 }
 
 type GetGlossaryParams = GetGlossaryParamsCommon &
-  (GetGlossaryParamsWorkInSeries | GetGlossaryParamsWorkNotInSeries)
+  (
+    | GetGlossaryParamsSeries
+    | GetGlossaryParamsWorkInSeries
+    | GetGlossaryParamsWorkNotInSeries
+  )
 
 export function getGlossary(params: GetGlossaryParams) {
   return sql<GlossaryModel[]>`
@@ -35,7 +47,7 @@ export function getGlossary(params: GetGlossaryParams) {
         word_work.entry_number AS "entryNumber",
         word_work.component_number AS "componentNumber",
         ${
-          params.isPartOfSeries
+          params.isSeries || params.isPartOfSeries
             ? sql`
               COALESCE(ignored_in_series.ignored, false) AS "ignored"
             `
@@ -44,10 +56,25 @@ export function getGlossary(params: GetGlossaryParams) {
             `
         }
 
-      FROM word_work
+          ${
+            params.isSeries
+              ? sql`
+          FROM series
+          
+          JOIN work
+            ON work.series_id = series.id
+            AND series.id = ${params.seriesId}
+        `
+              : sql`
+          FROM work
+        `
+          }
+
+            JOIN word_work 
+      ON word_work.work_id = work.id
 
       ${
-        params.isPartOfSeries
+        params.isSeries || params.isPartOfSeries
           ? sql`
             LEFT JOIN ignored_in_series 
               ON ignored_in_series.word_id = word_work.word_id
@@ -76,7 +103,16 @@ export function getGlossary(params: GetGlossaryParams) {
         FROM (
           SELECT word_id
           FROM word_work
-          WHERE work_id = ${params.workId}
+          JOIN work ON work.id = word_work.work_id
+                ${
+                  params.isSeries
+                    ? sql`
+                        WHERE work.series_id = ${params.seriesId}
+          `
+                    : sql`
+                    WHERE work.id = ${params.workId}
+                    `
+                }
         )
         GROUP BY word_id
       ) AS word_frequency 
@@ -84,7 +120,13 @@ export function getGlossary(params: GetGlossaryParams) {
 
       WHERE COALESCE(user_word.excluded, false) = false
         AND COALESCE(user_word.known, false) = false
-        AND word_work.work_id = ${params.workId}
+              ${
+                !params.isSeries
+                  ? sql`
+            AND work.id = ${params.workId}
+          `
+                  : sql``
+              }
         ${
           params.searchString
             ? sql`
@@ -99,6 +141,13 @@ export function getGlossary(params: GetGlossaryParams) {
             `
             : sql``
         }
+                ${
+                  params.minVolumeNumber
+                    ? sql`
+              AND word_work.volume_number >= ${params.minVolumeNumber}
+            `
+                    : sql``
+                }
 
       ORDER BY
         word_work.volume_number ASC,

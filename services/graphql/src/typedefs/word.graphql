@@ -40,6 +40,9 @@ input CorpusScopedInput {
 }
 
 input FrequencyListInput {
+  """
+  If true, seriesId must be supplied.
+  """
   isPartOfSeries: Boolean
   """
   If true, seriesId must be supplied; if false, isPartOfSeries and workId must be supplied.
@@ -56,13 +59,18 @@ input GlossaryInput {
   """
   If true, seriesId must be supplied.
   """
-  isPartOfSeries: Boolean!
+  isPartOfSeries: Boolean
+  """
+  If true, seriesId must be supplied; if false, isPartOfSeries and workId must be supplied.
+  """
+  isSeries: Boolean!
   limit: Int
   minPageNumber: Int
+  minVolumeNumber: Int
   offset: Int
   searchString: String
   seriesId: String
-  workId: String!
+  workId: String
 }
 
 extend type Query {

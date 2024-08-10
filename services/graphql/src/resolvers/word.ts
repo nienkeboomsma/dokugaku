@@ -29,17 +29,37 @@ const resolvers: GQL_Resolvers = {
         userId,
       })
     },
-    glossary: (_, { input }, { userId, dataSources: { word } }) => {
-      if (input.isPartOfSeries && !input.seriesId) {
-        throw new Error('If isPartOfSeries is true, seriedId must be supplied')
-      }
+    glossary:
+      // async
+      (_, { input }, { userId, dataSources: { word } }) => {
+        if (input.isSeries && !input.seriesId) {
+          throw new Error('If isSeries is true, seriedId must be supplied')
+        }
 
-      // @ts-expect-error (isPartOfSeries takes a union of true and false, ergo boolean)
-      return word.getGlossary({
-        ...input,
-        userId,
-      })
-    },
+        if (
+          !input.isSeries &&
+          (typeof input.isPartOfSeries === 'undefined' || !input.workId)
+        ) {
+          throw new Error(
+            'If isSeries is false, isPartOfSeries and workId must be supplied'
+          )
+        }
+
+        // const test = await word.getGlossary({
+        //   ...input,
+        //   userId,
+        // })
+
+        // console.log(test.slice(0, 5))
+
+        // return test
+
+        // @ts-expect-error (isPartOfSeries takes a union of true and false, ergo boolean)
+        return word.getGlossary({
+          ...input,
+          userId,
+        })
+      },
     knownWords: (_, { input }, { userId, dataSources: { word } }) => {
       return word.getKnownOrExcludedWords({
         ...input,
