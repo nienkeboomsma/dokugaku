@@ -52,7 +52,7 @@ export const useGetWordsQuery = (
     const getNextBatchOfWords = (nextOffset: number) => {
       fetchMore({
         variables: {
-          input: { limit: variables.limit, offset: nextOffset },
+          input: { limit: variables.limit, offset: nextOffset, searchString },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           const newExcludedWords = prev.excludedWords.concat(
@@ -93,7 +93,7 @@ export const useGetWordsQuery = (
     const getNextBatchOfWords = (nextOffset: number) => {
       fetchMore({
         variables: {
-          input: { limit: variables.limit, offset: nextOffset },
+          input: { limit: variables.limit, offset: nextOffset, searchString },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           const newKnownWords = prev.knownWords.concat(
@@ -133,7 +133,7 @@ export const useGetWordsQuery = (
     const getNextBatchOfWords = (nextOffset: number) => {
       fetchMore({
         variables: {
-          input: { limit: variables.limit, offset: nextOffset },
+          input: { limit: variables.limit, offset: nextOffset, searchString },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           const newRecommendedWords = prev.recommendedWords.concat(
@@ -183,6 +183,7 @@ export const useGetWordsQuery = (
               isSeries: variables.isSeries,
               limit: variables.limit,
               offset: nextOffset,
+              searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },
@@ -238,7 +239,9 @@ export const useGetWordsQuery = (
               isSeries: variables.isSeries,
               limit: variables.limit,
               minPageNumber,
+              minVolumeNumber,
               offset: nextOffset,
+              searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },

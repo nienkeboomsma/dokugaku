@@ -148,7 +148,7 @@ export default function VocabTable(props: VocabTableProps) {
     workId: isWork(seriesOrWork) ? seriesOrWork?.id : undefined,
   }
 
-  const { data, getNextBatchOfWords, loading, error } = useGetWordsQuery(
+  const { data, getNextBatchOfWords, loading } = useGetWordsQuery(
     listType,
     type,
     queryVariables,
@@ -165,6 +165,7 @@ export default function VocabTable(props: VocabTableProps) {
     //       trigger anymore, even though there are more records it could fetch
     // ----> maybe fetch BATCH_SIZE + 1 rows, using that last row to determine
     //       the required info without forwarding it to the frontend?
+
     getNextBatchOfWords(vocab.length)
   }
 
