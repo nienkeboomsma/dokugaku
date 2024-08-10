@@ -7,7 +7,8 @@ import SectionHeading from '../PaperContainer/SectionHeading'
 import Volume from './Volume'
 import { GQL_ReadStatus } from '@repo/graphql-types'
 
-const indicatorSize = '1.4rem'
+const MAX_WORKS_VISIBLE = 7
+const INDICATOR_SIZE = '1.4rem'
 
 const getVolumeIndexToScrollTo = (volumes: VolumeInfo[]) => {
   const statusPriorities = [
@@ -30,6 +31,7 @@ const getVolumeIndexToScrollTo = (volumes: VolumeInfo[]) => {
 export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const volumeIndexToScrollTo = getVolumeIndexToScrollTo(volumes)
+  const booksInViewBeforeAndAfter = (MAX_WORKS_VISIBLE - 1) / 2
 
   useEffect(
     () =>
@@ -54,10 +56,14 @@ export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
         viewportRef={viewportRef}
       >
         <div className={classes.volumesContainer}>
-          {volumes.map((volume) => (
+          {volumes.map((volume, index) => (
             <Volume
-              indicatorSize={indicatorSize}
+              indicatorSize={INDICATOR_SIZE}
               key={volume.id}
+              priority={
+                index <= volumeIndexToScrollTo + booksInViewBeforeAndAfter &&
+                index >= volumeIndexToScrollTo - booksInViewBeforeAndAfter
+              }
               volume={volume}
             />
           ))}

@@ -5,6 +5,8 @@ import ScaleLink from '../ScaleLink'
 import WorkCover from '../WorkCover'
 import { ScrollArea } from '@mantine/core'
 
+const MAX_WORKS_VISIBLE = 6
+
 export default function CurrentWorks({ works }: { works?: CurrentWork[] }) {
   // TODO: add a placeholder
   if (!works) return 'Oops'
@@ -20,11 +22,12 @@ export default function CurrentWorks({ works }: { works?: CurrentWork[] }) {
         scrollbarSize={8}
       >
         <div className={classes.worksContainer}>
-          {works.map((work) => (
+          {works.map((work, index) => (
             <ScaleLink href={`/works/${work.id}`} key={work.id}>
               <WorkCover
                 coverPath={`/assets/${work.id}/cover.webp`}
                 maxProgress={work.maxProgress}
+                priority={index + 1 <= MAX_WORKS_VISIBLE}
                 progress={work.progress}
                 width='8rem'
               />

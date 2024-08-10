@@ -7,7 +7,6 @@ import { IconBook2 } from '@tabler/icons-react'
 import {
   GQL_ReadStatus,
   GQL_UpdateWorkReadStatusMutation,
-  GQL_WorkType,
 } from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
 import { notifications } from '@mantine/notifications'
@@ -88,6 +87,7 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
           <WorkCover
             coverPath={`/assets/${work.id}/cover.webp`}
             maxProgress={work.maxProgress}
+            priority
             progress={work.progress}
             width={COVER_WIDTH}
           />

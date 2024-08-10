@@ -10,9 +10,11 @@ const MIN_WIDTH = '7.5rem'
 
 export default function Volume({
   indicatorSize,
+  priority,
   volume,
 }: {
   indicatorSize: string
+  priority?: boolean
   volume: SeriesInfo['volumes'][number]
 }) {
   return (
@@ -23,6 +25,7 @@ export default function Volume({
             coverPath={`/assets/${volume.id}/cover.webp`}
             grow
             maxProgress={volume.maxProgress}
+            priority={priority}
             progress={volume.progress}
           />
         </Indicator>
