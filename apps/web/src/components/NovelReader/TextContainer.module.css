@@ -102,6 +102,10 @@
     block-size: 3em;
   }
 
+  img {
+    max-block-size: 80vh;
+  }
+
   h1 {
     margin-block-end: 2em;
   }
@@ -174,6 +178,10 @@
 
   hr {
     block-size: calc(var(--base-text-size) * 2);
+  }
+
+  img {
+    max-block-size: 80vw;
   }
 
   /* Vertical Japanese text typically looks better when spacing is in multiples
