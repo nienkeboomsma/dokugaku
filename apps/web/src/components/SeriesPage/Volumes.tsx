@@ -45,7 +45,10 @@ export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
     <div>
       <SectionHeading>Volumes</SectionHeading>
       <ScrollArea
-        className={classes.scrollArea}
+        classNames={{
+          root: classes.scrollArea,
+          viewport: classes.scrollAreaViewport,
+        }}
         offsetScrollbars
         scrollbarSize={8}
         viewportRef={viewportRef}
