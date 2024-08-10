@@ -4,6 +4,63 @@ Dokugaku (読学) is a tool to help Japanese learners read manga and novels.
 
 You upload the manga and novels you want to read and it will show you (1) what percentage of the words in that work you already know and (2) what words are most common in that particular work, in the series it belongs to or across all uploaded works. This way you can make an informed decision about what works to read first and what words would be most useful to learn. It also includes a manga reader and novel reader with support for third-party tools such as Yomitan.
 
+**Upload your manga and novels**
+
+- Auto-fill the volume number, title and author so it is easier to upload the next volume in a series.
+- Skip the Mokuro (OCR) step if your host computer can get it done faster.
+<p align="center"><img alt="upload" src="https://github.com/user-attachments/assets/c29adc1b-eb90-4b4d-84ef-6f32844cbef1" width="80%"/></p><br/>
+
+**Browse your manga and novels**
+
+- Choose your next work based on the percentage of vocab you already know.
+- Filter the results by title, author and read status.
+<p align="center"><img alt="browse" src="https://github.com/user-attachments/assets/fb7b5845-98fd-446b-a56c-ae6515774b06" width="80%"/></p><br/>
+
+**Manage your progress**
+
+- Keep track of your progress in the works you are currently reading.
+- Choose the next words to learn based on their frequency across all your unread works.
+<p align="center"><img alt="dashboard" src="https://github.com/user-attachments/assets/62023e2c-ff9f-4e8f-9380-39187464ef01" width="80%"/></p><br/>
+
+**Get frequency lists**
+
+- View the most frequent unknown vocab in a particular work or in an entire series.
+- Mark words as known, ignored (within that specific work/series) or excluded (everywhere).
+- Search for a specific word or filter vocab by minimum frequency or ignored status.
+- Automatically save your filters per work or series.
+<p align="center"><img alt="frequency list" src="https://github.com/user-attachments/assets/1002ad24-8197-4d37-b053-4bef28c96a7d" width="80%"/></p><br/>
+
+**Get glossaries**
+
+- View the unknown vocab for the pages you are reading next in order of their occurrence.
+- Check the frequency score for each word to decide if it's worth making a flashcard for.
+<p align="center"><img alt="glossary" src="https://github.com/user-attachments/assets/674aa7ed-d1bf-495f-abf6-a0caf289bdcb" width="80%"/></p><br/>
+
+**Read your manga with dictionary lookups**
+
+- Use tools such as Yomitan to look up vocab in the OCR'd text bubbles.
+- Lock overlapping text boxes for easier lookups.
+- Show one page or two pages at a time.
+- Show the manga in fullscreen mode.
+- Navigate between pages and view modes with keyboard shortcuts.
+- Automatically save your progress on every page change.
+<p align="center"><img alt="manga reader" src="https://github.com/user-attachments/assets/f26f565a-3dd8-4ad6-bddf-3e812b770593" width="80%"/></p>
+<p align="center"><img alt="manga lookup with yomitan" src="https://github.com/user-attachments/assets/5cc09c11-16cc-45ff-a958-3ff4c3c64fe1" width="80%"/></p><br/>
+
+**Read your novels with dictionary lookups**
+
+- Read your novels vertically or horizontally.
+- Automatically save your reading direction preference per work.
+- Save your progress by clicking the bookmark buttons.
+- Select text to get a character count.
+<p align="center"><img alt="vertical novel with yomitan lookup" src="https://github.com/user-attachments/assets/6bc4aeb0-e239-489f-bff7-89f70cbb6821" width="80%"/></p>
+<p align="center"><img alt="horizontal novel" src="https://github.com/user-attachments/assets/80eda724-9182-4f18-a6da-a0bd81764b31" width="80%"/></p><br/>
+
+**Upload your known vocab**
+
+- Mark thousands of words as known in one go.
+<p align="center"><img alt="upload known words" src="https://github.com/user-attachments/assets/ece4c383-2a98-4127-8123-8add5cb9fe7e" width="80%"/></p>
+
 # Scope of this project
 
 This project is expressly intended to be used locally by a single user (it is called *Doku*gaku after all). While the backend has been designed with multiple users in mind, I would strongly advise against it due to the risk of copyright infringement.

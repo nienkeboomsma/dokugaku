@@ -167,10 +167,12 @@ export async function saveHtmlAsJson(fullPath: string) {
 }
 
 export function divideTextJsonIntoParagraphs(
-  novelTextJson: NovelTextJsonTopLevel
+  novelTextJson: NovelTextJsonTopLevel,
+  fullPath: string
 ) {
   const content = novelTextJson.content
 
+  let paragraphNumber = 0
   let paragraphs: string[] = []
 
   const processParagraphNode = (paragraphNode: NovelTextJsonNode) => {
@@ -200,9 +202,31 @@ export function divideTextJsonIntoParagraphs(
     paragraphs.push(paragraph)
   }
 
-  content.forEach((paragraphNode) => processParagraphNode(paragraphNode))
+  content.forEach((paragraphNode) => {
+    // Blockquotes can contain multiple paragraphs, which should be processed
+    // separately.
+    if (paragraphNode.type === 'blockquote' && paragraphNode.content) {
+      paragraphNode.content.forEach((subParagraphNode) => {
+        if (typeof subParagraphNode !== 'string') {
+          paragraphNumber++
+          subParagraphNode.paragraphNumber = paragraphNumber
+          processParagraphNode(subParagraphNode)
+        }
+      })
+    } else {
+      paragraphNumber++
+      paragraphNode.paragraphNumber = paragraphNumber
+      processParagraphNode(paragraphNode)
+    }
+  })
 
-  return { paragraphs }
+  fs.writeFileSync(
+    path.join(fullPath, 'text.json'),
+    JSON.stringify(novelTextJson),
+    'utf8'
+  )
+
+  return paragraphs
 }
 
 export async function runIchiranOnEachParagraph(

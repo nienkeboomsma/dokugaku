@@ -30,9 +30,10 @@ const validTags: Array<keyof JSX.IntrinsicElements> = [
   'p',
   'ruby',
   'rt',
+  'strong',
 ]
 
-const elementContainsBlockImage = (element: string | NovelJSONContent) => {
+const elementIsOrContainsBlockImage = (element: string | NovelJSONContent) => {
   if (typeof element === 'string') return false
 
   if (element.type === 'img' && element.attributes?.title !== 'inline')
@@ -41,7 +42,7 @@ const elementContainsBlockImage = (element: string | NovelJSONContent) => {
   if (!element.content || typeof element.content === 'string') return false
 
   for (const child of element.content) {
-    if (elementContainsBlockImage(child)) {
+    if (elementIsOrContainsBlockImage(child)) {
       return true
     }
   }
@@ -50,31 +51,52 @@ const elementContainsBlockImage = (element: string | NovelJSONContent) => {
 }
 
 const ContentNodes = memo(function ContentNodes({
-  children,
   fileDir,
+  nodes,
+  progress,
+  setProgress,
+  updateProgress,
 }: {
-  children: NovelJSONContent['content']
   fileDir: string
+  nodes: NovelJSONContent['content']
+  progress: number
+  setProgress: Dispatch<SetStateAction<number>>
+  updateProgress: (newProgress: number) => Promise<number>
 }) {
-  if (!children) return
+  if (!nodes) return
 
-  return children.map((child) => {
-    if (typeof child === 'string') {
-      return <Fragment key={uniqueKey++}>{child}</Fragment>
+  return nodes.map((node) => {
+    if (typeof node === 'string') {
+      return <Fragment key={uniqueKey++}>{node}</Fragment>
     }
 
-    return <ParentNode key={uniqueKey++} node={child} fileDir={fileDir} />
+    return (
+      <RenderNode
+        key={uniqueKey++}
+        node={node}
+        fileDir={fileDir}
+        progress={progress}
+        setProgress={setProgress}
+        updateProgress={updateProgress}
+      />
+    )
   })
 })
 
-function ParentNode({
+const ParentNode = memo(function ParentNode({
   children,
   node,
   fileDir,
+  progress,
+  setProgress,
+  updateProgress,
 }: {
   children?: ReactNode
   node: NovelJSONContent
   fileDir: string
+  progress: number
+  setProgress: Dispatch<SetStateAction<number>>
+  updateProgress: (newProgress: number) => Promise<number>
 }) {
   const Component = validTags.includes(node.type) ? node.type : 'span'
 
@@ -89,18 +111,87 @@ function ParentNode({
       <Component
         alt={node.attributes.alt}
         className={isInlineImage ? 'inline' : 'block'}
-        src={`${fileDir}/${node.attributes.src}`}
+        src={`${fileDir}${node.attributes.src}`}
       />
     )
   }
 
   return (
     <Component>
-      <ContentNodes fileDir={fileDir}>{node.content}</ContentNodes>
+      <ContentNodes
+        fileDir={fileDir}
+        nodes={node.content}
+        progress={progress}
+        setProgress={setProgress}
+        updateProgress={updateProgress}
+      />
       {children}
     </Component>
   )
-}
+})
+
+const RenderNode = memo(function RenderNode({
+  node,
+  fileDir,
+  progress,
+  setProgress,
+  updateProgress,
+}: {
+  node: NovelJSONContent
+  fileDir: string
+  progress: number
+  setProgress: Dispatch<SetStateAction<number>>
+  updateProgress: (newProgress: number) => Promise<number>
+}) {
+  const paragraphNumber = node.paragraphNumber
+
+  if (!paragraphNumber) {
+    return (
+      <ParentNode
+        node={node}
+        fileDir={fileDir}
+        progress={progress}
+        setProgress={setProgress}
+        updateProgress={updateProgress}
+      />
+    )
+  }
+
+  const isCurrentProgress = progress === paragraphNumber
+
+  const memoizedUpdateProgress = useCallback(async () => {
+    try {
+      const newProgress = !isCurrentProgress ? paragraphNumber : 0
+      const updatedProgress = await updateProgress(newProgress)
+      setProgress(updatedProgress)
+    } catch {
+      notifications.show({
+        title: 'Something went wrong',
+        message: 'Please try again later',
+        style: { direction: 'ltr' },
+      })
+    }
+  }, [paragraphNumber, isCurrentProgress])
+
+  return (
+    <ParentNode
+      node={node}
+      fileDir={fileDir}
+      progress={progress}
+      setProgress={setProgress}
+      updateProgress={updateProgress}
+    >
+      {node.type !== 'hr' && !elementIsOrContainsBlockImage(node) && (
+        <Bookmark
+          isCurrentProgress={isCurrentProgress}
+          key={`bookmark-${paragraphNumber}`}
+          paragraphNumber={paragraphNumber}
+          updateProgress={memoizedUpdateProgress}
+        />
+      )}
+    </ParentNode>
+  )
+})
 
 export default function TextNodes({
   progress,
@@ -117,39 +208,14 @@ export default function TextNodes({
 }) {
   uniqueKey = 0
 
-  return textNodes.map((parentNode, index) => {
-    const paragraphNumber = index + 1
-    const isCurrentProgress = progress === paragraphNumber
-
-    const memoizedUpdateProgress = useCallback(async () => {
-      try {
-        const newProgress = !isCurrentProgress ? paragraphNumber : 0
-        const updatedProgress = await updateProgress(newProgress)
-        setProgress(updatedProgress)
-      } catch {
-        notifications.show({
-          title: 'Something went wrong',
-          message: 'Please try again later',
-          style: { direction: 'ltr' },
-        })
-      }
-    }, [paragraphNumber, isCurrentProgress])
-
-    return (
-      <ParentNode
-        key={`paragraph-${paragraphNumber}`}
-        node={parentNode}
-        fileDir={fileDir}
-      >
-        {parentNode.content && !elementContainsBlockImage(parentNode) && (
-          <Bookmark
-            isCurrentProgress={isCurrentProgress}
-            key={`bookmark-${paragraphNumber}`}
-            paragraphNumber={paragraphNumber}
-            updateProgress={memoizedUpdateProgress}
-          />
-        )}
-      </ParentNode>
-    )
-  })
+  return textNodes.map((node) => (
+    <RenderNode
+      key={uniqueKey++}
+      node={node}
+      fileDir={fileDir}
+      progress={progress}
+      setProgress={setProgress}
+      updateProgress={updateProgress}
+    />
+  ))
 }

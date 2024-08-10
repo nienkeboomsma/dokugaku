@@ -2,7 +2,7 @@ import type { NextFunction, Response } from 'express'
 import path from 'node:path'
 
 import type { MangaUploadRequest } from './utils/types.js'
-import { mokuroExtensions, volumePath } from './utils/constants.js'
+import { imageExtensions, volumePath } from './utils/constants.js'
 import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
   createCoverImage,
@@ -32,7 +32,7 @@ export async function processManga(
 
   const numberOfImages = renameFilesSequentially(
     fullPath,
-    mokuroExtensions,
+    imageExtensions,
     'img'
   )
   if (filesAreMokurod) renameFilesSequentially(fullPath, ['.json'], 'img')

@@ -33,7 +33,7 @@ export async function processNovel(
   stripAndCombineFiles(fullPath, req.body.title)
   const novelTextJson = await saveHtmlAsJson(fullPath)
 
-  const { paragraphs } = divideTextJsonIntoParagraphs(novelTextJson)
+  const paragraphs = divideTextJsonIntoParagraphs(novelTextJson, fullPath)
   const numberOfParagraphs = paragraphs.length
 
   res.status(200).json({

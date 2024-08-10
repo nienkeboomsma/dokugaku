@@ -13,6 +13,20 @@ import useFullscreen from '../../hooks/useFullscreen'
 import MangaReaderHeader from './MangaReaderHeader'
 import MangaPages from './MangaPages'
 
+const determineCurrentPageNumber = (
+  pageNumber: number,
+  twoPageLayout: boolean
+) => {
+  if (!twoPageLayout) return pageNumber
+
+  const isCover = pageNumber === 1
+  const isEvenPage = pageNumber % 2 === 0
+
+  if (isEvenPage || isCover) return pageNumber
+
+  return pageNumber - 1
+}
+
 export default function MangaReader({
   getPageData,
   initialPageNumber,
@@ -28,17 +42,19 @@ export default function MangaReader({
   updateProgress: (newProgress: number) => Promise<number>
   workId: string
 }) {
-  const [currentPageNumber, setCurrentPageNumber] = useState(initialPageNumber)
-  const [debouncedCurrentPageNumber] = useDebouncedValue(
-    currentPageNumber,
-    1000
-  )
-  const [pages, setPages] = useState<Array<Page | undefined>>([])
   const [twoPageLayout, setTwoPageLayout] = useLocalStorage({
     defaultValue: true,
     getInitialValueInEffect: false,
     key: `DOKUGAKU_TWO_PAGE_LAYOUT-${workId}`,
   })
+  const [currentPageNumber, setCurrentPageNumber] = useState(
+    determineCurrentPageNumber(initialPageNumber, twoPageLayout)
+  )
+  const [debouncedCurrentPageNumber] = useDebouncedValue(
+    currentPageNumber,
+    1000
+  )
+  const [pages, setPages] = useState<Array<Page | undefined>>([])
 
   const showTwoPages = getShowTwoPages(
     currentPageNumber,
@@ -47,21 +63,12 @@ export default function MangaReader({
   )
 
   useEffect(() => {
-    if (!twoPageLayout) return
-
-    const isCover = currentPageNumber === 1
-    const isEvenPage = currentPageNumber % 2 === 0
-
-    if (isEvenPage || isCover) return
-
-    setCurrentPageNumber(currentPageNumber - 1)
+    setCurrentPageNumber((prev) =>
+      determineCurrentPageNumber(prev, twoPageLayout)
+    )
   }, [twoPageLayout])
 
   useEffect(() => {
-    // TODO: When showTwoPages changes value between rerenders it briefly
-    //       displays the pages incorrectly; use a ref to compare values and
-    //       adjust accordingly...?
-
     const pageNumbers = showTwoPages
       ? [currentPageNumber, currentPageNumber + 1]
       : [currentPageNumber]

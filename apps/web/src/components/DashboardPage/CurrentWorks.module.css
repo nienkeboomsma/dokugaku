@@ -1,5 +1,22 @@
+.scrollArea {
+  --leeway-for-hover-transform: 0.25rem;
+  --scrollbar-padding: 0.75rem;
+
+  --offset: var(--leeway-for-hover-transform);
+  --offset-bottom: calc(
+    var(--leeway-for-hover-transform) + var(--scrollbar-padding)
+  );
+
+  margin-top: calc(var(--offset) * -1);
+  margin-bottom: calc(var(--offset-bottom) * -1);
+}
+
+.scrollAreaViewport {
+  padding: var(--offset);
+  padding-bottom: var(--offset-bottom);
+}
+
 .worksContainer {
   display: flex;
-  flex-wrap: wrap;
   gap: var(--mantine-spacing-lg);
 }

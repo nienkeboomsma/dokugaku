@@ -4,7 +4,8 @@ import path from 'node:path'
 import sharp from 'sharp'
 
 import { type IchiranData } from './types.js'
-import { mokuroExtensions } from './constants.js'
+import { imageExtensions } from './constants.js'
+import { divideWordsStringIntoChunks } from './known-words-utils.js'
 
 export function getAllFilesByExtension(fullPath: string, extensions: string[]) {
   const allFiles = fs.readdirSync(fullPath)
@@ -36,6 +37,18 @@ export function renameFilesSequentially(
   return sortedFiles.length
 }
 
+async function keepTrying(callback: () => Promise<any>, maxTries?: number) {
+  let count = 0
+
+  while (count++ < (maxTries ?? 1)) {
+    try {
+      return await callback()
+    } catch (err) {
+      if (count === maxTries) throw err
+    }
+  }
+}
+
 export async function runIchiran(
   string: string,
   endpoint: 'idsOnly',
@@ -51,23 +64,33 @@ export async function runIchiran(
   endpoint: 'idsOnly' | 'processedSegmentation',
   maxTries?: number
 ): Promise<number[] | IchiranData | undefined> {
+  const MAX_STRING_LENGTH = 2500
   const url = `http://ichiran:${process.env.ICHIRAN_PORT}/${endpoint}`
-  let count = 0
 
-  while (count++ < (maxTries ?? 1)) {
-    try {
-      const res = await axios.post(
-        url,
-        { string },
-        // TODO: use Redis to track Ichiran progress instead
-        { timeout: 1000 * 60 * 60 }
-      )
+  const getIchiranData = async (string: string) => {
+    const res = await axios.post(
+      url,
+      { string },
+      // TODO: use Redis to track Ichiran progress instead
+      { timeout: 1000 * 60 * 60 }
+    )
 
-      return res.data
-    } catch (err) {
-      if (count === maxTries) throw err
-    }
+    return res.data
   }
+
+  if (string.length < MAX_STRING_LENGTH) {
+    return keepTrying(() => getIchiranData(string), maxTries)
+  }
+
+  const { chunks } = divideWordsStringIntoChunks(string, MAX_STRING_LENGTH)
+  const totals = []
+
+  for (const chunk of chunks) {
+    const ichiranData = await keepTrying(() => getIchiranData(chunk), maxTries)
+    totals.push(...ichiranData)
+  }
+
+  return totals
 }
 
 export function concatToJson(
@@ -94,7 +117,10 @@ export function concatToJson(
 }
 
 export async function convertImagesToWebP(fullPath: string, title: string) {
-  const images = getAllFilesByExtension(fullPath, mokuroExtensions)
+  const nonWebpImageExtensions = imageExtensions.filter(
+    (ext) => ext !== '.webp' && ext !== '.WEBP'
+  )
+  const images = getAllFilesByExtension(fullPath, nonWebpImageExtensions)
 
   for (const inputFile of images) {
     const inputPath = path.join(fullPath, inputFile)

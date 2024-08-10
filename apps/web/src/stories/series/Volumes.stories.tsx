@@ -7,7 +7,7 @@ import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
 const meta = {
   title: 'Series/Volumes',
   component: Volumes,
-  decorators: [resizer({ padding: '1rem', width: '30rem' })],
+  decorators: [resizer({ padding: '1rem', width: '40rem' })],
 } satisfies Meta<typeof Volumes>
 
 type Story = StoryObj<typeof meta>

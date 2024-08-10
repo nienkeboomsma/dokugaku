@@ -15,11 +15,11 @@
     color: var(--mantine-color-blue-light-color);
   }
 
-  /* The last child is always the bookmark button; this makes sure it is
-     displayed inline with the last paragraph of text. */
   blockquote {
-    margin-inline: 4em;
+    margin-inline: 3em;
 
+    /* The last child is always the bookmark button; this makes sure it is
+       displayed inline with the last paragraph of text. */
     > p:nth-last-child(2) {
       display: inline;
     }
@@ -31,6 +31,13 @@
 
   hr {
     visibility: hidden;
+  }
+
+  /* Override the width/height attributes on the img tag, which are only */
+  /* there to prevent CLS messing with the auto-scroll target. */
+  img {
+    height: auto;
+    width: auto;
   }
 
   h1 {
@@ -95,6 +102,10 @@
     block-size: 3em;
   }
 
+  img {
+    max-block-size: 80vh;
+  }
+
   h1 {
     margin-block-end: 2em;
   }
@@ -153,11 +164,11 @@
   );
   text-orientation: upright;
 
-  & p {
+  p {
     margin-block: 0;
   }
 
-  & blockquote {
+  blockquote {
     margin-block: calc(var(--base-text-size) * 1);
   }
 
@@ -167,6 +178,10 @@
 
   hr {
     block-size: calc(var(--base-text-size) * 2);
+  }
+
+  img {
+    max-block-size: 80vw;
   }
 
   /* Vertical Japanese text typically looks better when spacing is in multiples
