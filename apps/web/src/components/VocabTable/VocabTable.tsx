@@ -42,10 +42,13 @@ type VocabTablePropsCorpus = {
 
 type VocabTablePropsSeriesOrWork = {
   furigana?: boolean
-  progress?: number
   seriesOrWork: SeriesInfo | WorkInfo
   type: VocabTableType.SeriesOrWork
 }
+
+export type VocabTableProps =
+  | VocabTablePropsCorpus
+  | VocabTablePropsSeriesOrWork
 
 const isSeries = (
   seriesOrWork: SeriesInfo | WorkInfo | undefined
@@ -88,10 +91,6 @@ const getMinPageNumber = (seriesOrWork: SeriesInfo | WorkInfo | undefined) => {
 
   return currentProgress + 1
 }
-
-export type VocabTableProps =
-  | VocabTablePropsCorpus
-  | VocabTablePropsSeriesOrWork
 
 export default function VocabTable(props: VocabTableProps) {
   const { furigana, type } = props
@@ -219,7 +218,7 @@ export default function VocabTable(props: VocabTableProps) {
     },
     {
       accessor: 'volumeNumber',
-      title: 'Volume',
+      title: 'Vol.',
       textAlign: 'right',
     },
     {

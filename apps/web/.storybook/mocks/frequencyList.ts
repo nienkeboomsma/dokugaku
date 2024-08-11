@@ -8,15 +8,22 @@ export const frequencyList = {
   variableMatcher: () => true,
   result: {
     data: {
-      frequencyList: mockVocab.map((vocab) => {
-        return {
-          __typename: 'FrequencyListWord',
-          id: vocab.id,
-          info: vocab.info,
-          ignored: vocab.ignored,
-          frequency: vocab.frequency,
-        }
-      }),
+      frequencyList: mockVocab
+        .map((vocab) => {
+          return {
+            __typename: 'FrequencyListWord',
+            id: vocab.id,
+            info: vocab.info,
+            frequency: vocab.frequency,
+            ignored: vocab.ignored,
+          }
+        })
+        .sort((vocabA, vocabB) => {
+          if (vocabA.frequency && vocabB.frequency) {
+            return vocabB.frequency - vocabA.frequency
+          }
+          return 0
+        }),
     },
   },
 }
