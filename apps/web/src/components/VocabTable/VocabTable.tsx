@@ -291,16 +291,7 @@ export default function VocabTable(props: VocabTableProps) {
   }
 
   const idAccessor = (word: Word) => {
-    if (
-      word.volumeNumber &&
-      word.pageNumber &&
-      word.sentenceNumber &&
-      word.entryNumber
-    ) {
-      return `${word.id}-${word.volumeNumber}-${word.pageNumber}-${word.sentenceNumber}-${word.entryNumber}`
-    }
-
-    return word.id
+    return `${word.id}-${word.volumeNumber}-${word.pageNumber}-${word.sentenceNumber}-${word.entryNumber}`
   }
 
   return (
