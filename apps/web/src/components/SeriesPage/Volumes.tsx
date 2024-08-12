@@ -33,6 +33,15 @@ export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
   const volumeIndexToScrollTo = getVolumeIndexToScrollTo(volumes)
   const booksInViewBeforeAndAfter = (MAX_WORKS_VISIBLE - 1) / 2
 
+  const determinePriority = (index: number) => {
+    if (volumeIndexToScrollTo < 0) return index < MAX_WORKS_VISIBLE
+
+    return (
+      index <= volumeIndexToScrollTo + booksInViewBeforeAndAfter &&
+      index >= volumeIndexToScrollTo - booksInViewBeforeAndAfter
+    )
+  }
+
   useEffect(
     () =>
       viewportRef.current
@@ -60,10 +69,7 @@ export default function Volumes({ volumes }: { volumes: VolumeInfo[] }) {
             <Volume
               indicatorSize={INDICATOR_SIZE}
               key={volume.id}
-              priority={
-                index <= volumeIndexToScrollTo + booksInViewBeforeAndAfter &&
-                index >= volumeIndexToScrollTo - booksInViewBeforeAndAfter
-              }
+              priority={determinePriority(index)}
               volume={volume}
             />
           ))}

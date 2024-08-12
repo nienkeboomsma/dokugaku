@@ -26,7 +26,7 @@ export default function CurrentWorks({ works }: { works?: CurrentWork[] }) {
               <WorkCover
                 coverPath={`/assets/${work.id}/cover.webp`}
                 maxProgress={work.maxProgress}
-                priority={index + 1 <= MAX_WORKS_VISIBLE}
+                priority={index < MAX_WORKS_VISIBLE}
                 progress={work.progress}
                 width='8rem'
               />
