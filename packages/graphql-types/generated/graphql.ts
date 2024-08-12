@@ -47,6 +47,7 @@ export type GQL_ExcludedWord = {
 };
 
 export type GQL_FrequencyListInput = {
+  /** If true, seriesId must be supplied. */
   isPartOfSeries?: InputMaybe<Scalars['Boolean']['input']>;
   /** If true, seriesId must be supplied; if false, isPartOfSeries and workId must be supplied. */
   isSeries: Scalars['Boolean']['input'];
@@ -67,13 +68,16 @@ export type GQL_FrequencyListWord = {
 
 export type GQL_GlossaryInput = {
   /** If true, seriesId must be supplied. */
-  isPartOfSeries: Scalars['Boolean']['input'];
+  isPartOfSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  /** If true, seriesId must be supplied; if false, isPartOfSeries and workId must be supplied. */
+  isSeries: Scalars['Boolean']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   minPageNumber?: InputMaybe<Scalars['Int']['input']>;
+  minVolumeNumber?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   searchString?: InputMaybe<Scalars['String']['input']>;
   seriesId?: InputMaybe<Scalars['String']['input']>;
-  workId: Scalars['String']['input'];
+  workId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type GQL_GlossaryWord = {
@@ -374,13 +378,6 @@ export type GQL_WorkInfoQueryVariables = Exact<{
 
 export type GQL_WorkInfoQuery = { __typename?: 'Query', work?: { __typename?: 'Work', id: string, maxProgress: number, progress: number, status: GQL_ReadStatus, title: string, type: GQL_WorkType, volumeNumber?: number | null | undefined, authors: Array<{ __typename?: 'Author', id: string, name: string }>, series?: { __typename?: 'Series', id: string, title: string, volumes: Array<{ __typename?: 'Work', id: string, volumeNumber?: number | null | undefined }> } | null | undefined } | null | undefined };
 
-export type GQL_WorkProgressQueryVariables = Exact<{
-  workInput: GQL_WorkInput;
-}>;
-
-
-export type GQL_WorkProgressQuery = { __typename?: 'Query', work?: { __typename?: 'Work', maxProgress: number, progress: number } | null | undefined };
-
 export type GQL_UpdateSeriesReadStatusMutationVariables = Exact<{
   input: GQL_UpdateSeriesReadStatusInput;
 }>;
@@ -457,6 +454,13 @@ export type GQL_UpdateKnownStatusMutationVariables = Exact<{
 
 
 export type GQL_UpdateKnownStatusMutation = { __typename?: 'Mutation', updateKnownStatus: { __typename?: 'UpdateWordStatusResponse', success: boolean } };
+
+export type GQL_WorkProgressQueryVariables = Exact<{
+  workInput: GQL_WorkInput;
+}>;
+
+
+export type GQL_WorkProgressQuery = { __typename?: 'Query', work?: { __typename?: 'Work', maxProgress: number, progress: number } | null | undefined };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
 export type ResolversObject<TObject> = WithIndex<TObject>;

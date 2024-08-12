@@ -234,7 +234,6 @@ Sometimes Mokuro (the OCR engine) determines text box boundaries incorrectly, ca
 
 ## New features
 
-- [ ] series glossaries (filterable by volume)
 - [ ] word search across the entire corpus, linking to the appropriate page or paragraph
 - [ ] dashboard to track the processing status of uploaded works
 - [ ] removing works and series

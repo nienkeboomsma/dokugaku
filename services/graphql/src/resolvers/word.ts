@@ -30,8 +30,17 @@ const resolvers: GQL_Resolvers = {
       })
     },
     glossary: (_, { input }, { userId, dataSources: { word } }) => {
-      if (input.isPartOfSeries && !input.seriesId) {
-        throw new Error('If isPartOfSeries is true, seriedId must be supplied')
+      if (input.isSeries && !input.seriesId) {
+        throw new Error('If isSeries is true, seriedId must be supplied')
+      }
+
+      if (
+        !input.isSeries &&
+        (typeof input.isPartOfSeries === 'undefined' || !input.workId)
+      ) {
+        throw new Error(
+          'If isSeries is false, isPartOfSeries and workId must be supplied'
+        )
       }
 
       // @ts-expect-error (isPartOfSeries takes a union of true and false, ergo boolean)

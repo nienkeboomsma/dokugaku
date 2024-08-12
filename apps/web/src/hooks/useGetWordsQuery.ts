@@ -19,9 +19,10 @@ import {
 
 type Variables = {
   isPartOfSeries: boolean
-  isSeries?: boolean
+  isSeries: boolean
   limit: number
   minPageNumber?: number
+  minVolumeNumber?: number
   offset: number
   seriesId?: string
   workId?: string
@@ -32,7 +33,8 @@ export const useGetWordsQuery = (
   kind: VocabTableType,
   variables: Variables,
   searchString: string,
-  minPageNumber: number
+  minPageNumber: number,
+  minVolumeNumber: number
 ) => {
   if (kind === VocabTableType.Excluded) {
     const { data, error, fetchMore, loading } =
@@ -50,7 +52,7 @@ export const useGetWordsQuery = (
     const getNextBatchOfWords = (nextOffset: number) => {
       fetchMore({
         variables: {
-          input: { limit: variables.limit, offset: nextOffset },
+          input: { limit: variables.limit, offset: nextOffset, searchString },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           const newExcludedWords = prev.excludedWords.concat(
@@ -91,7 +93,7 @@ export const useGetWordsQuery = (
     const getNextBatchOfWords = (nextOffset: number) => {
       fetchMore({
         variables: {
-          input: { limit: variables.limit, offset: nextOffset },
+          input: { limit: variables.limit, offset: nextOffset, searchString },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           const newKnownWords = prev.knownWords.concat(
@@ -131,7 +133,7 @@ export const useGetWordsQuery = (
     const getNextBatchOfWords = (nextOffset: number) => {
       fetchMore({
         variables: {
-          input: { limit: variables.limit, offset: nextOffset },
+          input: { limit: variables.limit, offset: nextOffset, searchString },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           const newRecommendedWords = prev.recommendedWords.concat(
@@ -181,6 +183,7 @@ export const useGetWordsQuery = (
               isSeries: variables.isSeries,
               limit: variables.limit,
               offset: nextOffset,
+              searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },
@@ -215,8 +218,10 @@ export const useGetWordsQuery = (
           variables: {
             input: {
               isPartOfSeries: variables.isPartOfSeries,
+              isSeries: variables.isSeries,
               limit: variables.limit,
               minPageNumber,
+              minVolumeNumber,
               offset: variables.offset,
               searchString,
               seriesId: variables.seriesId,
@@ -231,9 +236,12 @@ export const useGetWordsQuery = (
           variables: {
             input: {
               isPartOfSeries: variables.isPartOfSeries,
+              isSeries: variables.isSeries,
               limit: variables.limit,
               minPageNumber,
+              minVolumeNumber,
               offset: nextOffset,
+              searchString,
               seriesId: variables.seriesId,
               workId: variables.workId,
             },

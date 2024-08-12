@@ -49,19 +49,7 @@ export function getFrequencyList(params: GetFrequencyListParams) {
           `
       }
 
-    ${
-      params.isSeries
-        ? sql`
-          FROM series
-          
-          JOIN work
-            ON work.series_id = series.id
-            AND series.id = ${params.seriesId}
-        `
-        : sql`
-          FROM work
-        `
-    }
+    FROM WORK
 
     JOIN word_work 
       ON word_work.work_id = work.id
@@ -92,11 +80,13 @@ export function getFrequencyList(params: GetFrequencyListParams) {
     WHERE COALESCE(user_word.known, false) = false
       AND COALESCE(user_word.excluded, false) = false
       ${
-        !params.isSeries
+        params.isSeries
           ? sql`
+            AND work.series_id = ${params.seriesId}
+          `
+          : sql`
             AND work.id = ${params.workId}
           `
-          : sql``
       }
       ${
         params.searchString
