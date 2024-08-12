@@ -23,7 +23,7 @@
     "@graphql-tools/merge": "^9.0.3",
     "express": "^4.19.1",
     "graphql": "^16.8.1",
-    "graphql-type-json": "^0.3.2",
+    "graphql-scalars": "^1.23.0",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
