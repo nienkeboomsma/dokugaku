@@ -4,6 +4,7 @@ type Work {
   id: ID!
   learnableWords: Int!
   maxProgress: Int!
+  modified: Float!
   numberInSeries: Int
   progress: Int!
   series: Series
@@ -12,6 +13,11 @@ type Work {
   totalWords: Int!
   type: WorkType!
   uniqueWords: Int!
+}
+
+enum SortOrder {
+  modified
+  title
 }
 
 input WorkInput {
@@ -28,6 +34,7 @@ input WorkListInput {
   Get only those works that are not part of a series.
   """
   excludeVolumesInSeries: Boolean
+  sortOrder: SortOrder
   status: ReadStatus
   workIds: [String!]
 }

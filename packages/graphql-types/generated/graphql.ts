@@ -247,6 +247,11 @@ export type GQL_SeriesListInput = {
   status?: InputMaybe<GQL_ReadStatus>;
 };
 
+export enum GQL_SortOrder {
+  Modified = 'modified',
+  Title = 'title'
+}
+
 export type GQL_UpdateExcludedStatusInput = {
   excluded: Scalars['Boolean']['input'];
   id: Scalars['ID']['input'];
@@ -311,6 +316,7 @@ export type GQL_Work = {
   id: Scalars['ID']['output'];
   learnableWords: Scalars['Int']['output'];
   maxProgress: Scalars['Int']['output'];
+  modified: Scalars['Float']['output'];
   numberInSeries?: Maybe<Scalars['Int']['output']>;
   progress: Scalars['Int']['output'];
   series?: Maybe<GQL_Series>;
@@ -331,6 +337,7 @@ export type GQL_WorkInput = {
 export type GQL_WorkListInput = {
   /** Get only those works that are not part of a series. */
   excludeVolumesInSeries?: InputMaybe<Scalars['Boolean']['input']>;
+  sortOrder?: InputMaybe<GQL_SortOrder>;
   status?: InputMaybe<GQL_ReadStatus>;
   workIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -345,7 +352,7 @@ export type GQL_CurrentWorksQueryVariables = Exact<{
 }>;
 
 
-export type GQL_CurrentWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string, maxProgress: number, progress: number }> };
+export type GQL_CurrentWorksQuery = { __typename?: 'Query', workList: Array<{ __typename?: 'Work', id: string, maxProgress: number, modified: number, progress: number }> };
 
 export type GQL_ExistingAuthorsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -540,6 +547,7 @@ export type GQL_ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CorpusScopedInput: GQL_CorpusScopedInput;
   ExcludedWord: ResolverTypeWrapper<GQL_ExcludedWord>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FrequencyListInput: GQL_FrequencyListInput;
   FrequencyListWord: ResolverTypeWrapper<GQL_FrequencyListWord>;
   GlossaryInput: GQL_GlossaryInput;
@@ -555,6 +563,7 @@ export type GQL_ResolversTypes = ResolversObject<{
   Series: ResolverTypeWrapper<SeriesModel>;
   SeriesInput: GQL_SeriesInput;
   SeriesListInput: GQL_SeriesListInput;
+  SortOrder: GQL_SortOrder;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   UpdateExcludedStatusInput: GQL_UpdateExcludedStatusInput;
   UpdateIgnoredStatusInput: GQL_UpdateIgnoredStatusInput;
@@ -579,6 +588,7 @@ export type GQL_ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
   CorpusScopedInput: GQL_CorpusScopedInput;
   ExcludedWord: GQL_ExcludedWord;
+  Float: Scalars['Float']['output'];
   FrequencyListInput: GQL_FrequencyListInput;
   FrequencyListWord: GQL_FrequencyListWord;
   GlossaryInput: GQL_GlossaryInput;
@@ -723,6 +733,7 @@ export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
   learnableWords?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   maxProgress?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  modified?: Resolver<GQL_ResolversTypes['Float'], ParentType, ContextType>;
   numberInSeries?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
   progress?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   series?: Resolver<Maybe<GQL_ResolversTypes['Series']>, ParentType, ContextType>;

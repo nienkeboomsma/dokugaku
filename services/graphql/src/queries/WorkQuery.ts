@@ -1,4 +1,4 @@
-import { GQL_ReadStatus } from '@repo/graphql-types'
+import { GQL_ReadStatus, GQL_SortOrder } from '@repo/graphql-types'
 import sql from '../data/sql.js'
 import { WorkModel } from '../models/WorkModel.js'
 
@@ -18,6 +18,7 @@ type ReturnAll = {
 
 type QueryParamsCommon = {
   excludeVolumesInSeries?: boolean
+  sortOrder?: GQL_SortOrder
   status?: GQL_ReadStatus
   userId: string
 }
@@ -74,6 +75,17 @@ class WorkQuery {
     return sql``
   }
 
+  orderBy() {
+    switch (this.params.sortOrder) {
+      case GQL_SortOrder.Title:
+        return sql`ORDER BY work.title ASC`
+      case GQL_SortOrder.Modified:
+        return sql`ORDER BY user_work.modified DESC`
+      default:
+        return sql``
+    }
+  }
+
   runQuery() {
     return sql<WorkModel[]>`
       SELECT
@@ -92,6 +104,7 @@ class WorkQuery {
         work.hapax_legomenon_count AS "hapaxLegomena",
         work.total_word_count AS "totalWords",
         work.unique_word_count AS "uniqueWords",
+        user_work.modified,
         COALESCE (user_work.current_progress, 0) AS progress,
         COALESCE (user_work.status, 'new') AS status
       FROM work
@@ -111,9 +124,9 @@ class WorkQuery {
         work.type,
         work.volume_number,
         status,
-        progress
-      ORDER BY
-        work.title ASC;
+        progress,
+        user_work.modified
+      ${this.orderBy()};
     `
   }
 }

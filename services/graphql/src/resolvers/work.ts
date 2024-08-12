@@ -5,7 +5,7 @@ const resolvers: GQL_Resolvers = {
     work: (_, { input }, { userId, dataSources: { work } }) => {
       return work.getWork({ ...input, userId })
     },
-    workList: async (_, { input }, { userId, dataSources: { work } }) => {
+    workList: (_, { input }, { userId, dataSources: { work } }) => {
       return work.getWorks({ ...input, userId })
     },
   },
@@ -68,7 +68,7 @@ const resolvers: GQL_Resolvers = {
     },
   },
   Work: {
-    learnableWords: async (parent, _, { userId, dataSources: { word } }) => {
+    learnableWords: (parent, _, { userId, dataSources: { word } }) => {
       // @ts-expect-error (isPartOfSeries takes a union of true and false, ergo boolean)
       return word.getLearnableWordCount({
         isPartOfSeries: !!parent.seriesId,
@@ -78,19 +78,13 @@ const resolvers: GQL_Resolvers = {
         workId: parent.id,
       })
     },
+    modified: (parent) => {
+      return parent.modified.valueOf()
+    },
     series: (parent, _, { userId, dataSources: { series } }) => {
       if (!parent.seriesId) return null
       return series.getSeries({ seriesId: parent.seriesId, userId })
     },
-
-    // words: (parent, { input }, { userId, dataSources: { word } }) => {
-    //   return word.getWords({
-    //     ...input,
-    //     userId,
-    //     workIdInWhichIgnored: parent.id,
-    //     workIds: [parent.id],
-    //   })
-    // },
   },
 }
 

@@ -7,6 +7,7 @@ export type WorkModel = {
   hapaxLegomena: number
   id: string
   maxProgress: number
+  modified: Date
   numberInSeries: number | null
   progress: number
   seriesId: string | null

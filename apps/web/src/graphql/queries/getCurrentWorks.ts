@@ -3,6 +3,7 @@ import {
   type GQL_CurrentWorksQuery,
   type GQL_CurrentWorksQueryVariables,
   GQL_ReadStatus,
+  GQL_SortOrder,
 } from '@repo/graphql-types'
 
 import { getClient } from '../client/ApolloClient'
@@ -20,6 +21,7 @@ const CURRENT_WORKS = gql`
 
 const variables: GQL_CurrentWorksQueryVariables = {
   input: {
+    sortOrder: GQL_SortOrder.Modified,
     status: GQL_ReadStatus.Reading,
   },
 }
@@ -31,7 +33,7 @@ export const getCurrentWorks = async () => {
       variables,
       context: {
         fetchOptions: {
-          cache: 'no-store'
+          cache: 'no-store',
         },
       },
     })

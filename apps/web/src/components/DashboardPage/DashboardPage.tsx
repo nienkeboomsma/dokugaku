@@ -18,10 +18,7 @@ export default function DashboardPage({ works }: { works?: CurrentWork[] }) {
         maxWidth: `calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding} )`,
       }}
     >
-      {
-        // TODO: separate error display for !works
-        !works || (works.length > 0 && <CurrentWorks works={works} />)
-      }
+      <CurrentWorks works={works} />
       <PaperContainer
         heading='Recommended vocab'
         maxContentWidth={VocabTableMaxWidth}

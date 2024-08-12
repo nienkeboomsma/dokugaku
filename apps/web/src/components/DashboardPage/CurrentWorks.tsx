@@ -8,8 +8,7 @@ import { ScrollArea } from '@mantine/core'
 const MAX_WORKS_VISIBLE = 6
 
 export default function CurrentWorks({ works }: { works?: CurrentWork[] }) {
-  // TODO: add a placeholder
-  if (!works) return 'Oops'
+  if (!works || !works.length) return
 
   return (
     <PaperContainer heading='Currently reading' maxWidth='100%'>
