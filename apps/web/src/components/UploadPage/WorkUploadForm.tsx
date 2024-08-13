@@ -124,7 +124,7 @@ export default function WorkUploadForm({
       updateExistingAuthors(values)
       updateExistingSeries(values)
       // TODO: the image file uploads are cleared, but APPEAR like they still
-      // have a selection (not a problem with text upload for novels though)
+      // have a selection (same problem with the cover upload for novels)
       form.reset()
       notifications.show({
         title: `${values.title} uploaded successfully`,

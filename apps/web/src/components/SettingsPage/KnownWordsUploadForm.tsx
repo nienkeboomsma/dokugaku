@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button, Fieldset, Textarea, Title } from '@mantine/core'
+import { Button, Fieldset, Textarea } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
 import classes from './KnownWordsUploadForm.module.css'

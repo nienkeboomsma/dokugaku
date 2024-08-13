@@ -14,13 +14,10 @@ import { cache } from '../cache/cache'
 const isServer = () => typeof window === `undefined`
 
 export function makeClient() {
+  // TODO: do this via env variable
   const adjustedUri = isServer()
-    ? // TODO: do this via env variable
-      // 'http://graphql:3001'
-      'http://localhost:3001'
-    : // 'http://graphql:3001'
-      'http://localhost:3001'
-  // 'http://host.docker.internal:3001'
+    ? 'http://graphql:3001'
+    : 'http://localhost:3001'
 
   const httpLink = createHttpLink({
     uri: adjustedUri,

@@ -12,6 +12,9 @@ export async function updateWordWorkTable(
   const wordsJson = fs.readFileSync(ichiranFile).toString()
   const words: Word[] = JSON.parse(wordsJson)
 
+  if (!words.length)
+    throw new Error('Something went wrong with loading ichiran.json')
+
   const columns = [
     'word_id',
     'work_id',
