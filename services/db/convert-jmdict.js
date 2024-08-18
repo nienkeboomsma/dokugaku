@@ -1,6 +1,13 @@
+const { StringDecoder } = require('node:string_decoder')
+const decoder = new StringDecoder('utf8')
+
 async function main() {
   let originalJmdict = ''
-  for await (const chunk of process.stdin) originalJmdict += chunk.toString()
+
+  for await (const chunk of process.stdin) {
+    originalJmdict += decoder.write(chunk)
+  }
+
   const data = JSON.parse(originalJmdict)
 
   const csv = data.words.reduce((csv, word) => {
