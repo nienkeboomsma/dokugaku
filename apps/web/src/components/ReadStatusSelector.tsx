@@ -16,7 +16,6 @@ export default function ReadStatusSelector({
 }: {
   loading: boolean
   status: GQL_ReadStatus
-  // eslint-disable-next-line no-unused-vars
   updateStatus: (status: GQL_ReadStatus) => void
 }) {
   const combobox = useCombobox({

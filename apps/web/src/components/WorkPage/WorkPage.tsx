@@ -133,7 +133,6 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
             <SectionHeading>Vocab</SectionHeading>
             <VocabTable
               furigana
-              progress={work.progress}
               seriesOrWork={work}
               type={VocabTableType.SeriesOrWork}
             />

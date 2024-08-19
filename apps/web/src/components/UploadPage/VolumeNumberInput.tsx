@@ -7,7 +7,6 @@ export default function VolumeNumberInput({
   findVolumeNumberBySeriesTitle,
   form,
 }: {
-  // eslint-disable-next-line no-unused-vars
   findVolumeNumberBySeriesTitle: (seriesTitle: string) => string
   form: WorkUploadForm
 }) {

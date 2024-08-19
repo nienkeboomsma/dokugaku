@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Radio, Stack } from '@mantine/core'
 import { Dispatch, SetStateAction } from 'react'
 

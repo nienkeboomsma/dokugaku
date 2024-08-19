@@ -10,7 +10,6 @@ export default function AuthorsInput({
   form,
 }: {
   existingAuthors: ExistingAuthors
-  // eslint-disable-next-line no-unused-vars
   findAuthorsBySeriesTitle: (seriesTitle: string) => string[] | []
   form: WorkUploadForm
 }) {
