@@ -1,7 +1,7 @@
-export function isNumber(param: any): param is number {
+export function isNumber(param: unknown): param is number {
   return typeof param === 'number'
 }
 
-export function isUndefined(param: any): param is undefined {
+export function isUndefined(param: unknown): param is undefined {
   return typeof param === 'undefined'
 }

@@ -1,11 +1,12 @@
 import { type ApolloCache } from '@apollo/client'
+import { cache as _cache } from '../cache/cache'
 
 type ItemToEvict =
   | { __typename: string; id: string }
   | { id?: string; fieldName: string }
 
 export const evictFromCache = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<typeof _cache>,
   itemsToEvict: ItemToEvict[]
 ) => {
   for (const item of itemsToEvict) {

@@ -37,7 +37,7 @@ export function renameFilesSequentially(
   return sortedFiles.length
 }
 
-async function keepTrying(callback: () => Promise<any>, maxTries?: number) {
+async function keepTrying<T>(callback: () => Promise<T>, maxTries?: number) {
   let count = 0
 
   while (count++ < (maxTries ?? 1)) {
@@ -95,7 +95,7 @@ export async function runIchiran(
 
 export function concatToJson(
   outputFilePath: string,
-  parsedJson: {},
+  parsedJson: object,
   isFirstPass: boolean,
   isLastPass: boolean
 ) {
@@ -116,7 +116,7 @@ export function concatToJson(
   }
 }
 
-export async function convertImagesToWebP(fullPath: string, title: string) {
+export async function convertImagesToWebP(fullPath: string) {
   const nonWebpImageExtensions = imageExtensions.filter(
     (ext) => ext !== '.webp' && ext !== '.WEBP'
   )

@@ -46,7 +46,7 @@ export async function processManga(
     if (!filesAreMokurod) await runMokuro(folderName, title)
     await runIchiranOnEachPage(fullPath, title)
     createCoverImage(fullPath, title)
-    await convertImagesToWebP(fullPath, title)
+    await convertImagesToWebP(fullPath)
 
     await insertWorkIntoDatabase(
       {

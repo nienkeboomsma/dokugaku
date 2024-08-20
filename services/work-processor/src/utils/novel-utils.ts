@@ -173,7 +173,7 @@ export function divideTextJsonIntoParagraphs(
   const content = novelTextJson.content
 
   let paragraphNumber = 0
-  let paragraphs: string[] = []
+  const paragraphs: string[] = []
 
   const processParagraphNode = (paragraphNode: NovelTextJsonNode) => {
     const paragraphStrings: string[] = []
@@ -251,7 +251,7 @@ export async function runIchiranOnEachParagraph(
 
       progressBar.update(index + 1)
 
-      for (let word of words) {
+      for (const word of words) {
         const paragraphNumber = index + 1
         word.pageNumber = paragraphNumber
       }

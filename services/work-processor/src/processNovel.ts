@@ -43,7 +43,7 @@ export async function processNovel(
 
   try {
     await runIchiranOnEachParagraph(paragraphs, fullPath, title)
-    await convertImagesToWebP(fullPath, title)
+    await convertImagesToWebP(fullPath)
     await insertWorkIntoDatabase(
       {
         authors: authors,

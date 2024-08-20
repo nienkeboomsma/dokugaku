@@ -17,7 +17,7 @@ const getVolumeIndexToScrollTo = (volumes: VolumeInfo[]) => {
     GQL_ReadStatus.New,
   ]
 
-  for (let statusPriority of statusPriorities) {
+  for (const statusPriority of statusPriorities) {
     const earliestIndex = volumes.findIndex(
       (volume) => volume.status === statusPriority
     )

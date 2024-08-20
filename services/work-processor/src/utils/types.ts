@@ -1,9 +1,8 @@
 import type { Request } from 'express'
 
 declare global {
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
-    // eslint-disable-next-line no-unused-vars
     interface Request {
       folderName?: string
     }
@@ -100,10 +99,10 @@ export const isPartOfSeries = (
   return false
 }
 
-export const isString = (param: any): param is string => {
+export const isString = (param: unknown): param is string => {
   return typeof param === 'string'
 }
 
-export const isNumber = (param: any): param is number => {
+export const isNumber = (param: unknown): param is number => {
   return typeof param === 'number'
 }

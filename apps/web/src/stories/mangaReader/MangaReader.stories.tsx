@@ -53,7 +53,7 @@ export const Default: Story = {
 export const MutationError: Story = {
   args: {
     ...Default.args,
-    updateProgress: async (newProgress) => {
+    updateProgress: async () => {
       throw Error
     },
   },

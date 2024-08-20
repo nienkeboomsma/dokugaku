@@ -52,7 +52,7 @@ export async function runIchiranOnEachPage(fullPath: string, title: string) {
 
       progressBar.update(index + 1)
 
-      for (let word of words) {
+      for (const word of words) {
         const pageNumber = Number(path.parse(page).name.slice(-4))
         word.pageNumber = pageNumber
       }

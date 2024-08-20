@@ -9,6 +9,7 @@ export function errorHandler(
   err: Error,
   req: UploadRequest,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) {
   const { title } = req.body

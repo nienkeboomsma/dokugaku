@@ -5,10 +5,11 @@ import type {
   GQL_UpdateKnownStatusMutation,
 } from '@repo/graphql-types'
 
+import { cache as _cache } from '../cache/cache'
 import { evictFromCache } from '../util/evictFromCache'
 
 export const updateCacheOnExcluded = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<typeof _cache>,
   data: GQL_UpdateExcludedStatusMutation | null | undefined,
   wordId: string
 ) => {
@@ -33,7 +34,7 @@ export const updateCacheOnExcluded = (
 }
 
 export const updateCacheOnUnexcluded = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<typeof _cache>,
   data: GQL_UpdateExcludedStatusMutation | null | undefined,
   wordId: string
 ) => {
@@ -62,7 +63,7 @@ export const updateCacheOnUnexcluded = (
 }
 
 export const updateCacheOnKnown = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<typeof _cache>,
   data: GQL_UpdateKnownStatusMutation | null | undefined,
   wordId: string
 ) => {
@@ -87,7 +88,7 @@ export const updateCacheOnKnown = (
 }
 
 export const updateCacheOnUnknown = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<typeof _cache>,
   data: GQL_UpdateKnownStatusMutation | null | undefined,
   wordId: string
 ) => {
@@ -116,7 +117,7 @@ export const updateCacheOnUnknown = (
 }
 
 export const updateCacheOnIgnored = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<typeof _cache>,
   data: GQL_UpdateIgnoredStatusMutation | null | undefined,
   wordId: string
 ) => {
@@ -150,7 +151,7 @@ export const updateCacheOnIgnored = (
 }
 
 export const updateCacheOnUnignored = (
-  cache: ApolloCache<any>,
+  cache: ApolloCache<typeof _cache>,
   data: GQL_UpdateIgnoredStatusMutation | null | undefined,
   wordId: string
 ) => {
