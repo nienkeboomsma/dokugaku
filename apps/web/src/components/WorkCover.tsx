@@ -16,12 +16,14 @@ const getCSSVariables = (
 ) => {
   const variables = {} as CSSVariables
 
-  // When progress is 1 it does not necessarily mean that page 1 has been read;
-  // it could also mean that the work has merely been opened. Therefore it is
-  // not included in the progress gauge.
-  if (isNumber(progress) && progress > 1 && isNumber(maxProgress)) {
+  if (isNumber(progress) && isNumber(maxProgress)) {
+    // When progress is 1 it does not necessarily mean that page 1 has been read;
+    // it could also mean that the work has merely been opened. Therefore 1 is
+    // considered to be the same as 0.
+    const displayProgress = progress > 1 ? progress : 0
+
     variables['--unread-width'] =
-      `calc(100% - ${getPercentage(progress, maxProgress)}%)`
+      `calc(100% - ${getPercentage(displayProgress, maxProgress)}%)`
   }
 
   if (!grow && width) {
