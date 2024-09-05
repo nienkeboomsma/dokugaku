@@ -86,8 +86,13 @@ const getInitialMinPageNumber = (
   const currentProgress = isWork(seriesOrWork)
     ? seriesOrWork.progress
     : getFirstUnreadVolume(seriesOrWork)?.progress
+  const maxProgress = isWork(seriesOrWork)
+    ? seriesOrWork.maxProgress
+    : getFirstUnreadVolume(seriesOrWork)?.maxProgress
 
   if (typeof currentProgress === 'undefined') return 1
+
+  if (currentProgress === maxProgress) return 1
 
   if (currentProgress < 2) return 1
 
