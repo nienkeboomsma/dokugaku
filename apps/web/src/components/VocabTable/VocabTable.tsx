@@ -78,7 +78,9 @@ const getFirstUnreadVolume = (
   return firstUnreadVolume
 }
 
-const getMinPageNumber = (seriesOrWork: SeriesInfo | WorkInfo | undefined) => {
+const getInitialMinPageNumber = (
+  seriesOrWork: SeriesInfo | WorkInfo | undefined
+) => {
   if (!seriesOrWork) return 1
 
   const currentProgress = isWork(seriesOrWork)
@@ -90,6 +92,20 @@ const getMinPageNumber = (seriesOrWork: SeriesInfo | WorkInfo | undefined) => {
   if (currentProgress < 2) return 1
 
   return currentProgress + 1
+}
+
+const getInitialListType = (
+  seriesOrWork: SeriesInfo | WorkInfo | undefined
+) => {
+  if (!seriesOrWork) return ListType.Frequency
+
+  const readStatus = isWork(seriesOrWork)
+    ? seriesOrWork.status
+    : getFirstUnreadVolume(seriesOrWork)?.status
+
+  if (readStatus === GQL_ReadStatus.Reading) return ListType.Glossary
+
+  return ListType.Frequency
 }
 
 export default function VocabTable(props: VocabTableProps) {
@@ -114,7 +130,7 @@ export default function VocabTable(props: VocabTableProps) {
   const [debouncedMinFrequency] = useDebouncedValue(minFrequency, 300)
 
   const [minPageNumber, setMinPageNumber] = useState<string | number>(
-    getMinPageNumber(seriesOrWork)
+    getInitialMinPageNumber(seriesOrWork)
   )
   const [debouncedMinPageNumber] = useDebouncedValue(Number(minPageNumber), 300)
 
@@ -126,10 +142,7 @@ export default function VocabTable(props: VocabTableProps) {
     300
   )
 
-  const [listType, setListType] = useLocalStorage({
-    defaultValue: ListType.Frequency,
-    key: `DOKUGAKU_LIST_TYPE-${seriesOrWork?.id}`,
-  })
+  const [listType, setListType] = useState(getInitialListType(seriesOrWork))
 
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
