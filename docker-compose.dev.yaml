@@ -28,6 +28,7 @@ services:
     build:
       context: .
       dockerfile: ./services/graphql/Dockerfile
+    command: npm run dev
     environment:
       ALLOW_OTHER_DEVICES: ${ALLOW_OTHER_DEVICES}
       GRAPHQL_PORT: ${GRAPHQL_PORT}
@@ -37,11 +38,14 @@ services:
     ports:
       - '${GRAPHQL_PORT}:${GRAPHQL_PORT}'
     restart: always
+    volumes:
+      - ./services/graphql/src:/app/services/graphql/src
   ichiran:
     container_name: ichiran
     build:
       context: .
       dockerfile: ./services/ichiran/docker/ichiran/Dockerfile
+    command: npm run dev
     depends_on:
       ichiran-db:
         condition: service_healthy
@@ -55,6 +59,8 @@ services:
     expose:
       - '${ICHIRAN_PORT}'
     restart: always
+    volumes:
+      - ./services/ichiran/src:/app/services/ichiran/src
   ichiran-db:
     container_name: ichiran-db
     build:
@@ -82,6 +88,7 @@ services:
     build:
       context: .
       dockerfile: ./services/mokuro/Dockerfile
+    command: npm run dev
     environment:
       MOKURO_PORT: ${MOKURO_PORT}
     networks:
@@ -92,6 +99,7 @@ services:
     restart: always
     volumes:
       - files:/dokugaku
+      - ./services/mokuro/src:/app/services/mokuro/src
   web:
     container_name: web
     build:
@@ -102,7 +110,7 @@ services:
         NEXT_PUBLIC_WORK_PROCESSOR_PORT: ${WORK_PROCESSOR_PORT}
         WEB_PORT: ${WEB_PORT}
       context: .
-      dockerfile: ./apps/web/Dockerfile
+      dockerfile: ./apps/web/Dockerfile.dev
     networks:
       - backend
     ports:
@@ -111,11 +119,13 @@ services:
     restart: always
     volumes:
       - files:/dokugaku
+      - ./apps/web/src:/app/apps/web/src
   work-processor:
     container_name: work-processor
     build:
       context: .
       dockerfile: ./services/work-processor/Dockerfile
+    command: npm run dev
     environment:
       ALLOW_OTHER_DEVICES: ${ALLOW_OTHER_DEVICES}
       ICHIRAN_PORT: ${ICHIRAN_PORT}
@@ -130,6 +140,7 @@ services:
     restart: always
     volumes:
       - files:/dokugaku
+      - ./services/work-processor/src:/app/services/work-processor/src
 
 networks:
   backend:

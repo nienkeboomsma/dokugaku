@@ -38,6 +38,6 @@ app.post('/knownWords', validateKnownWords, processKnownWords)
 
 app.use(errorHandler)
 
-const port = process.env.WORK_PROCESSOR_PORT
+const port = Number(process.env.WORK_PROCESSOR_PORT)
 app.listen(port)
 console.log(`Listening on port ${port}`)

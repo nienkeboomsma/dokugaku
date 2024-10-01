@@ -34,6 +34,6 @@ app.use((err) => {
   process.exit(1)
 })
 
-const port = process.env.ICHIRAN_PORT
+const port = Number(process.env.ICHIRAN_PORT)
 app.listen(port)
 console.log(`Listening on port ${port}`)
