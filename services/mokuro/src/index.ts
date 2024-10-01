@@ -32,6 +32,6 @@ app.use((err) => {
   process.exit(1)
 })
 
-const port = process.env.MOKURO_PORT
+const port = Number(process.env.MOKURO_PORT)
 app.listen(port)
 console.log(`Listening on port ${port}`)

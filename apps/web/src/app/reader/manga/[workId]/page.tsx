@@ -15,8 +15,7 @@ const getImageSrc = (pageNumber: number, workId: string) => {
 
 const getTextJsonUrl = (pageNumber: number, workId: string) => {
   const paddedPageNumber = pageNumber.toString().padStart(4, '0')
-  // TODO: env
-  return `http://localhost:3000/assets/${workId}/img${paddedPageNumber}.json`
+  return `/assets/${workId}/img${paddedPageNumber}.json`
 }
 
 const getPageData = async (pageNumbers: number[], workId: string) => {
