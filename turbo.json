@@ -1,9 +1,24 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDotEnv": [".env"],
-  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "ALLOW_OTHER_DEVICES",
+    "DB_PG_PASSWORD",
+    "ICHIRAN_PG_PASSWORD",
+    "ICHIRAN_PORT",
+    "GRAPHQL_PORT",
+    "HOST_IP",
+    "MOKURO_PORT",
+    "NEXT_PUBLIC_ALLOW_OTHER_DEVICES",
+    "NEXT_PUBLIC_GRAPHQL_PORT",
+    "NEXT_PUBLIC_HOST_IP",
+    "NEXT_PUBLIC_WORK_PROCESSOR_PORT",
+    "POSTGRES_PASSWORD",
+    "WEB_PORT",
+    "WORK_PROCESSOR_PORT"
+  ],
   "pipeline": {
     "build": {
+      "inputs": [".env"],
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },

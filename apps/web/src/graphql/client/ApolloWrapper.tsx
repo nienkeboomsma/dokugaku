@@ -9,15 +9,20 @@ import {
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr'
 
+import getHost from '../../util/getHost'
 import { cache } from '../cache/cache'
 
 const isServer = () => typeof window === `undefined`
 
+const getGraphQLHost = () => {
+  if (isServer()) return 'graphql'
+  return getHost()
+}
+
 export function makeClient() {
-  // TODO: do this via env variable
-  const adjustedUri = isServer()
-    ? 'http://graphql:3001'
-    : 'http://localhost:3001'
+  const host = getGraphQLHost()
+  const port = process.env.NEXT_PUBLIC_GRAPHQL_PORT
+  const adjustedUri = `http://${host}:${port}`
 
   const httpLink = createHttpLink({
     uri: adjustedUri,

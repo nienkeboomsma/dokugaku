@@ -71,11 +71,14 @@ This project is expressly intended to be used locally by a single user (it is ca
 
 2. Click on the green 'Code' button in the top right and download the ZIP file.
 
-3. Use your text editor of choice to create a file named `.env` inside of the `dokugaku` folder you just unzipped. It should contain the following information (except you replace `password` with your own unique passwords of course!):
+3. Use your text editor of choice to create a file named `.env` inside of the `dokugaku` folder you just unzipped. It should contain the following variables:
 
 ```
-DB_PG_PASSWORD=password
-ICHIRAN_PG_PASSWORD=password
+DB_PG_PASSWORD=***
+ICHIRAN_PG_PASSWORD=***
+
+ALLOW_OTHER_DEVICES=***
+HOST_IP=***
 
 WEB_PORT=3000
 GRAPHQL_PORT=3001
@@ -84,9 +87,13 @@ MOKURO_PORT=3003
 WORK_PROCESSOR_PORT=3004
 ```
 
+For `DB_PG_PASSWORD` and `ICHIRAN_PG_PASSWORD` supply a password of your own choosing.
+
+If you want to use Dokugaku on this device only, set `ALLOW_OTHER_DEVICES=0` and `HOST_IP=localhost`; if you want to use Dokugaku on multiple devices _within your local network_, set `ALLOW_OTHER_DEVICES=1` and set `HOST_IP` to [the _local_ IP address](https://www.whatismybrowser.com/detect/what-is-my-local-ip-address/) of the device that is running Dokugaku. You'll want to make sure this is a [static IP](https://www.pcmag.com/how-to/how-to-set-up-a-static-ip-address).
+
 4. Use your terminal of choice to navigate to the `dokugaku` folder and run `docker compose up`.
 
-5. Go to `http://localhost:3000` in your browser.
+5. Go to `http://localhost:3000` in your browser. If `ALLOW_OTHER_DEVICES` was set to 1, you can access Dokugaku by going to the IP you entered for `HOST_IP` with `:3000` added at the end (e.g. 192.168.0.0:3000).
 
 # Uploading files
 

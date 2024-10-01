@@ -15,9 +15,11 @@ async function main() {
     resolvers,
   })
 
+  const port = Number(process.env.GRAPHQL_PORT)
+
   const { url } = await startStandaloneServer<GQL_Context>(server, {
     context: createContext,
-    listen: { port: Number(process.env.GRAPHQL_PORT) },
+    listen: { port },
   })
   console.log(`Server ready at: ${url}`)
 }

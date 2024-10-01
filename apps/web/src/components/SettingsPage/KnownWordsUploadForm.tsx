@@ -5,6 +5,7 @@ import { Button, Fieldset, Textarea } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
 import classes from './KnownWordsUploadForm.module.css'
+import getHost from '../../util/getHost'
 
 export default function KnownWordsUploadForm() {
   const [words, setWords] = useState('')
@@ -27,21 +28,20 @@ export default function KnownWordsUploadForm() {
     setLoading(true)
 
     try {
-      const res = await fetch(
-        // TODO: do this via env variable
-        `http://localhost:3004/knownWords`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // TODO: userId should be supplied via env variable and set in an auth header
-          body: JSON.stringify({
-            userId: '6e41e9fd-c813-40e9-91fd-c51e47efab42',
-            words,
-          }),
-        }
-      )
+      const host = getHost()
+      const port = process.env.NEXT_PUBLIC_WORK_PROCESSOR_PORT
+
+      const res = await fetch(`http://${host}:${port}/knownWords`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // TODO: userId should be supplied via env variable and set in an auth header
+        body: JSON.stringify({
+          userId: '6e41e9fd-c813-40e9-91fd-c51e47efab42',
+          words,
+        }),
+      })
       const data = await res.json()
 
       if (data.error) {

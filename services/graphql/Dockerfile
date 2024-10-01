@@ -32,8 +32,4 @@ COPY --from=build-server /app /app
 
 WORKDIR /app/services/graphql
 
-# production
 CMD node dist/index.js
-
-# development
-# CMD npm run dev

@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { type UseFormReturnType, useForm } from '@mantine/form'
 import { GQL_WorkType } from '@repo/graphql-types'
 
+import getHost from '../util/getHost'
+
 export type FormValues = {
   series: string
   volumeNumber?: string
@@ -117,14 +119,13 @@ export default function useWorkUploadForm(type: GQL_WorkType) {
     // TODO: userId should be supplied via env variable and set in an auth header
     formData.append('userId', '6e41e9fd-c813-40e9-91fd-c51e47efab42')
 
-    const res = await fetch(
-      // TODO: do this via env variable
-      `http://localhost:3004/process${type}`,
-      {
-        method: 'POST',
-        body: formData,
-      }
-    )
+    const host = getHost()
+    const port = process.env.NEXT_PUBLIC_WORK_PROCESSOR_PORT
+
+    const res = await fetch(`http://${host}:${port}/process${type}`, {
+      method: 'POST',
+      body: formData,
+    })
     const data = await res.json()
     return data
   }

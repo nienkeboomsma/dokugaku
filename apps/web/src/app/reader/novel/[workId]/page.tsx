@@ -19,10 +19,7 @@ export default function NovelReaderPage({
   const [textNodes, setTextNodes] = useState<NovelJSONContent[]>()
 
   useEffect(() => {
-    fetch(
-      // TODO: env
-      `http://localhost:3000/assets/${params.workId}/text.json`
-    )
+    fetch(`/assets/${params.workId}/text.json`)
       .then((data) => data.json())
       .then((json) => {
         setTextNodes(json.content)
