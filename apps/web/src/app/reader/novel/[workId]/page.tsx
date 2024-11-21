@@ -1,59 +1,23 @@
-'use client'
+import { Metadata } from 'next'
+import { getWorkProgress } from '../../../../graphql/queries/getWorkProgress'
+import NovelReaderPage from '../../../../components/NovelReader/NovelReaderPage'
 
-import { useEffect, useState } from 'react'
-import { useQuery } from '@apollo/client'
-import type { GQL_WorkProgressQuery } from '@repo/graphql-types'
-import { LoadingOverlay } from '@mantine/core'
+export const metadata: Metadata = {
+  icons:
+    'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>',
+}
 
-import type { NovelJSONContent } from '../../../../types/NovelJSONContent'
-import { WORK_PROGRESS } from '../../../../graphql/queries/workProgress'
-import { useUpdateWorkProgress } from '../../../../hooks/useUpdateWorkProgress'
-import NovelReader from '../../../../components/NovelReader/NovelReader'
-
-export default function NovelReaderPage({
+export default async function NovelReader({
   params,
 }: {
   params: { workId: string }
 }) {
-  const [textNodesLoading, setTextNodesLoading] = useState(true)
-  const [textNodes, setTextNodes] = useState<NovelJSONContent[]>()
-
-  useEffect(() => {
-    fetch(`/assets/${params.workId}/text.json`)
-      .then((data) => data.json())
-      .then((json) => {
-        setTextNodes(json.content)
-        setTextNodesLoading(false)
-      })
-  }, [])
-
-  const { data, loading: progressLoading } = useQuery<GQL_WorkProgressQuery>(
-    WORK_PROGRESS,
-    {
-      variables: {
-        workInput: {
-          workId: params.workId,
-        },
-      },
-      fetchPolicy: 'no-cache',
-    }
-  )
-
-  const updateProgress = useUpdateWorkProgress()
-
-  if (textNodesLoading || progressLoading || !textNodes || !data || !data.work)
-    return <LoadingOverlay visible />
+  const workProgress = await getWorkProgress(params.workId)
 
   return (
-    <NovelReader
-      fileDir={`/assets/${params.workId}/`}
-      initialProgress={data.work.progress}
-      maxProgress={data.work.maxProgress}
-      textNodes={textNodes}
-      updateProgress={(newProgress) =>
-        updateProgress(newProgress, params.workId)
-      }
-      workId={params.workId}
-    />
+    <>
+      {workProgress && <title>{workProgress.title}</title>}
+      <NovelReaderPage workProgress={workProgress} />
+    </>
   )
 }
