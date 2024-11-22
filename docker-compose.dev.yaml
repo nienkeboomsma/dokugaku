@@ -45,7 +45,11 @@ services:
     build:
       context: .
       dockerfile: ./services/ichiran/docker/ichiran/Dockerfile
-    command: npm run dev
+    command: >
+      sh -c "
+      sh init.sh &&
+      npm run dev
+      "
     depends_on:
       ichiran-db:
         condition: service_healthy
