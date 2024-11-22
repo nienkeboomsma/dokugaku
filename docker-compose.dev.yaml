@@ -39,6 +39,7 @@ services:
       - '${GRAPHQL_PORT}:${GRAPHQL_PORT}'
     restart: always
     volumes:
+      - files:/dokugaku
       - ./services/graphql/src:/app/services/graphql/src
   ichiran:
     container_name: ichiran

@@ -1,4 +1,8 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { type GQL_Resolvers } from '@repo/graphql-types'
+
+import { volumePath } from '../utils/constants'
 
 const resolvers: GQL_Resolvers = {
   Query: {
@@ -12,10 +16,24 @@ const resolvers: GQL_Resolvers = {
   Mutation: {
     deleteSeries: async (_, { input }, { userId, dataSources: { series } }) => {
       try {
+        const res = await series.getSeries({
+          userId,
+          seriesId: input.seriesId,
+        })
+
+        const workIds = res?.workIds
+        if (!workIds)
+          throw new Error('Unable to retrieve workIds for file removal')
+
         await series.deleteSeries({
           userId,
           seriesId: input.seriesId,
         })
+
+        for (const workId of workIds) {
+          const fullPath = path.join(volumePath, workId)
+          fs.rmSync(fullPath, { recursive: true, force: true })
+        }
 
         return {
           code: 204,

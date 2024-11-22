@@ -55,7 +55,7 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
       notifications.show({
         message: `Deleted ${seriesOrWork.title}`,
       })
-      router.back()
+      router.push('/browse')
     } catch {
       close()
       notifications.show({

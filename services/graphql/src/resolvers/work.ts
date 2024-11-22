@@ -1,4 +1,8 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { type GQL_Resolvers } from '@repo/graphql-types'
+
+import { volumePath } from '../utils/constants'
 
 const resolvers: GQL_Resolvers = {
   Query: {
@@ -16,6 +20,9 @@ const resolvers: GQL_Resolvers = {
           userId,
           workId: input.workId,
         })
+
+        const fullPath = path.join(volumePath, input.workId)
+        fs.rmSync(fullPath, { recursive: true, force: true })
 
         return {
           code: 204,
