@@ -19,6 +19,15 @@
   max-width: 100%;
 }
 
+.titleContainer {
+  align-items: center;
+  display: flex;
+
+  h1 {
+    margin-right: 0.5rem;
+  }
+}
+
 .author {
   font-size: rem(15);
 }

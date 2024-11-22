@@ -10,6 +10,27 @@ const resolvers: GQL_Resolvers = {
     },
   },
   Mutation: {
+    deleteWork: async (_, { input }, { userId, dataSources: { work } }) => {
+      try {
+        await work.deleteWork({
+          userId,
+          workId: input.workId,
+        })
+
+        return {
+          code: 204,
+          success: true,
+          message: 'Work has successfully been deleted',
+        }
+      } catch (err) {
+        console.log(err, typeof err)
+        return {
+          code: 500,
+          success: false,
+          message: 'Unable to delete work',
+        }
+      }
+    },
     updateWorkProgress: async (
       _,
       { input },

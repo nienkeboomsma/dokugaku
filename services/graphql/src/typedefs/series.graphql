@@ -20,6 +20,10 @@ input SeriesListInput {
   status: ReadStatus
 }
 
+input DeleteSeriesInput {
+  seriesId: String!
+}
+
 input UpdateSeriesReadStatusInput {
   seriesId: String!
   status: ReadStatus!
@@ -31,6 +35,7 @@ extend type Query {
 }
 
 extend type Mutation {
+  deleteSeries(input: DeleteSeriesInput!): DeleteResponse!
   updateSeriesReadStatus(
     input: UpdateSeriesReadStatusInput!
   ): UpdateReadStatusResponse!

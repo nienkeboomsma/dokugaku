@@ -39,6 +39,7 @@
 }
 
 .titleAndAuthors {
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
@@ -47,6 +48,15 @@
   @media (max-width: 47em) {
     align-items: center;
     text-align: center;
+  }
+}
+
+.titleContainer {
+  align-items: center;
+  display: flex;
+
+  h1 {
+    margin-right: 0.5rem;
   }
 }
 

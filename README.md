@@ -91,7 +91,9 @@ For `DB_PG_PASSWORD` and `ICHIRAN_PG_PASSWORD` supply a password of your own cho
 
 If you want to use Dokugaku on this device only, set `ALLOW_OTHER_DEVICES=0` and `HOST_IP=localhost`; if you want to use Dokugaku on multiple devices _within your local network_, set `ALLOW_OTHER_DEVICES=1` and set `HOST_IP` to [the _local_ IP address](https://www.whatismybrowser.com/detect/what-is-my-local-ip-address/) of the device that is running Dokugaku. You'll want to make sure this is a [static IP](https://www.pcmag.com/how-to/how-to-set-up-a-static-ip-address).
 
-4. Use your terminal of choice to navigate to the `dokugaku` folder and run `docker compose up`.
+Upon naming the file `.env` and saving it, it might disappear in your file manager if you are using macOS or Linux. This is standard behaviour for files starting with a dot. On macOS you can show them like [this](https://www.graphpad.com/support/faq/how-to-view-files-on-your-mac-that-are-normally-invisible/).
+
+4. In your terminal of choice, type `cd ` (including the space), drag and drop the Dokugaku folder into the terminal window and hit enter. Then type `docker compose up` and hit enter.
 
 5. Go to `http://localhost:3000` in your browser. If `ALLOW_OTHER_DEVICES` was set to 1, you can access Dokugaku by going to the IP you entered for `HOST_IP` with `:3000` added at the end (e.g. 192.168.0.0:3000).
 

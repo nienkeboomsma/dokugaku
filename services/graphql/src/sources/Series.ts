@@ -4,6 +4,15 @@ import sql from '../data/sql'
 import SeriesQuery from '../queries/SeriesQuery'
 
 class Series {
+  // TODO: Currently any user can delete any work; when using this for multiple
+  // users it'd be wise to implement user roles and limit this to admins.
+  async deleteSeries(input: { seriesId: string; userId: string }) {
+    return sql<[{ progress: number }]>`
+    DELETE FROM series
+    WHERE id = ${input.seriesId};
+  `
+  }
+
   async getSeries(input: {
     seriesId: string
     status?: GQL_ReadStatus

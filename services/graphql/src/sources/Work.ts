@@ -4,6 +4,15 @@ import sql from '../data/sql'
 import WorkQuery from '../queries/WorkQuery'
 
 class Work {
+  // TODO: Currently any user can delete any work; when using this for multiple
+  // users it'd be wise to implement user roles and limit this to admins.
+  async deleteWork(input: { userId: string; workId: string }) {
+    return sql<[{ progress: number }]>`
+    DELETE FROM work
+    WHERE id = ${input.workId};
+  `
+  }
+
   async getWork(input: {
     excludeVolumesInSeries?: boolean
     status?: GQL_ReadStatus

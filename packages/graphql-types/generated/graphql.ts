@@ -40,6 +40,21 @@ export type GQL_CorpusScopedInput = {
   searchString?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type GQL_DeleteResponse = {
+  __typename?: 'DeleteResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+export type GQL_DeleteSeriesInput = {
+  seriesId: Scalars['String']['input'];
+};
+
+export type GQL_DeleteWorkInput = {
+  workId: Scalars['String']['input'];
+};
+
 export type GQL_ExcludedWord = {
   __typename?: 'ExcludedWord';
   id: Scalars['ID']['output'];
@@ -101,12 +116,24 @@ export type GQL_KnownWord = {
 
 export type GQL_Mutation = {
   __typename?: 'Mutation';
+  deleteSeries: GQL_DeleteResponse;
+  deleteWork: GQL_DeleteResponse;
   updateExcludedStatus: GQL_UpdateWordStatusResponse;
   updateIgnoredStatus: GQL_UpdateWordStatusResponse;
   updateKnownStatus: GQL_UpdateWordStatusResponse;
   updateSeriesReadStatus: GQL_UpdateReadStatusResponse;
   updateWorkProgress: GQL_UpdateWorkProgressResponse;
   updateWorkReadStatus: GQL_UpdateReadStatusResponse;
+};
+
+
+export type GQL_MutationDeleteSeriesArgs = {
+  input: GQL_DeleteSeriesInput;
+};
+
+
+export type GQL_MutationDeleteWorkArgs = {
+  input: GQL_DeleteWorkInput;
 };
 
 
@@ -413,6 +440,20 @@ export type GQL_UpdateWorkProgressMutationVariables = Exact<{
 
 export type GQL_UpdateWorkProgressMutation = { __typename?: 'Mutation', updateWorkProgress: { __typename?: 'UpdateWorkProgressResponse', progress?: number | null | undefined, success: boolean } };
 
+export type GQL_DeleteSeriesMutationVariables = Exact<{
+  input: GQL_DeleteSeriesInput;
+}>;
+
+
+export type GQL_DeleteSeriesMutation = { __typename?: 'Mutation', deleteSeries: { __typename?: 'DeleteResponse', success: boolean } };
+
+export type GQL_DeleteWorkMutationVariables = Exact<{
+  input: GQL_DeleteWorkInput;
+}>;
+
+
+export type GQL_DeleteWorkMutation = { __typename?: 'Mutation', deleteWork: { __typename?: 'DeleteResponse', success: boolean } };
+
 export type GQL_ExcludedWordsQueryVariables = Exact<{
   input?: InputMaybe<GQL_CorpusScopedInput>;
 }>;
@@ -546,6 +587,9 @@ export type GQL_ResolversTypes = ResolversObject<{
   AuthorListInput: GQL_AuthorListInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CorpusScopedInput: GQL_CorpusScopedInput;
+  DeleteResponse: ResolverTypeWrapper<GQL_DeleteResponse>;
+  DeleteSeriesInput: GQL_DeleteSeriesInput;
+  DeleteWorkInput: GQL_DeleteWorkInput;
   ExcludedWord: ResolverTypeWrapper<GQL_ExcludedWord>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FrequencyListInput: GQL_FrequencyListInput;
@@ -587,6 +631,9 @@ export type GQL_ResolversParentTypes = ResolversObject<{
   AuthorListInput: GQL_AuthorListInput;
   Boolean: Scalars['Boolean']['output'];
   CorpusScopedInput: GQL_CorpusScopedInput;
+  DeleteResponse: GQL_DeleteResponse;
+  DeleteSeriesInput: GQL_DeleteSeriesInput;
+  DeleteWorkInput: GQL_DeleteWorkInput;
   ExcludedWord: GQL_ExcludedWord;
   Float: Scalars['Float']['output'];
   FrequencyListInput: GQL_FrequencyListInput;
@@ -621,6 +668,13 @@ export type GQL_ResolversParentTypes = ResolversObject<{
 export type GQL_AuthorResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Author'] = GQL_ResolversParentTypes['Author']> = ResolversObject<{
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type GQL_DeleteResponseResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['DeleteResponse'] = GQL_ResolversParentTypes['DeleteResponse']> = ResolversObject<{
+  code?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -662,6 +716,8 @@ export type GQL_KnownWordResolvers<ContextType = GQL_Context, ParentType extends
 }>;
 
 export type GQL_MutationResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['Mutation'] = GQL_ResolversParentTypes['Mutation']> = ResolversObject<{
+  deleteSeries?: Resolver<GQL_ResolversTypes['DeleteResponse'], ParentType, ContextType, RequireFields<GQL_MutationDeleteSeriesArgs, 'input'>>;
+  deleteWork?: Resolver<GQL_ResolversTypes['DeleteResponse'], ParentType, ContextType, RequireFields<GQL_MutationDeleteWorkArgs, 'input'>>;
   updateExcludedStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateExcludedStatusArgs, 'input'>>;
   updateIgnoredStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateIgnoredStatusArgs, 'input'>>;
   updateKnownStatus?: Resolver<GQL_ResolversTypes['UpdateWordStatusResponse'], ParentType, ContextType, RequireFields<GQL_MutationUpdateKnownStatusArgs, 'input'>>;
@@ -747,6 +803,7 @@ export type GQL_WorkResolvers<ContextType = GQL_Context, ParentType extends GQL_
 
 export type GQL_Resolvers<ContextType = GQL_Context> = ResolversObject<{
   Author?: GQL_AuthorResolvers<ContextType>;
+  DeleteResponse?: GQL_DeleteResponseResolvers<ContextType>;
   ExcludedWord?: GQL_ExcludedWordResolvers<ContextType>;
   FrequencyListWord?: GQL_FrequencyListWordResolvers<ContextType>;
   GlossaryWord?: GQL_GlossaryWordResolvers<ContextType>;

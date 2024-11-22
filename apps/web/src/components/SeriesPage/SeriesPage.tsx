@@ -2,15 +2,18 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import {
+import type {
   GQL_ReadStatus,
   GQL_UpdateSeriesReadStatusMutation,
 } from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
 import { notifications } from '@mantine/notifications'
+import { ActionIcon } from '@mantine/core'
+import { IconPencil, IconTrash } from '@tabler/icons-react'
 
 import classes from './SeriesPage.module.css'
-import { type SeriesInfo } from '../../types/SeriesInfo'
+import type { SeriesInfo } from '../../types/SeriesInfo'
+import { useDeleteWorkOrSeries } from '../../hooks/useDeleteWorkOrSeries'
 import { UPDATE_SERIES_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import PaperContainer, {
   PaperContainerPadding,
@@ -32,9 +35,7 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
   const [seriesStatus, setSeriesStatus] = useState(series.status)
   const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
 
-  // TODO: not necessary once using useQuery with no-cache
-  const router = useRouter()
-
+  const { ConfirmDeleteModal, open } = useDeleteWorkOrSeries(series)
   const [updateSeriesStatus] = useMutation<GQL_UpdateSeriesReadStatusMutation>(
     UPDATE_SERIES_READ_STATUS
   )
@@ -54,7 +55,6 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
       if (!success || !newStatus) throw Error('Something went wrong')
 
       setSeriesStatus(newStatus)
-      router.refresh()
     } catch {
       notifications.show({
         title: 'Something went wrong',
@@ -66,41 +66,52 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
   }
 
   return (
-    <PaperContainer
-      maxWidth={`calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding})`}
-    >
-      <div className={classes.contentContainer}>
-        <div className={classes.seriesInfo}>
-          <div className={classes.titleAndAuthors}>
-            <WorkTitle order={1} size='h3'>
-              {series.title}
-            </WorkTitle>
-            <AuthorList
-              authors={series.authors}
-              classNames={{ author: classes.author }}
-            />
+    <>
+      <ConfirmDeleteModal />
+      <PaperContainer
+        maxWidth={`calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding})`}
+      >
+        <div className={classes.contentContainer}>
+          <div className={classes.seriesInfo}>
+            <div className={classes.titleAndAuthors}>
+              <span className={classes.titleContainer}>
+                <WorkTitle order={1} size='h3'>
+                  {series.title}
+                </WorkTitle>
+                {/* <ActionIcon variant='subtle'>
+                <IconPencil size='70%' stroke={1.5} />
+              </ActionIcon> */}
+                <ActionIcon color='red' onClick={open} variant='subtle'>
+                  <IconTrash size='70%' stroke={1.5} />
+                </ActionIcon>
+              </span>
+              <AuthorList
+                authors={series.authors}
+                classNames={{ author: classes.author }}
+              />
+            </div>
+
+            <div>
+              <ReadStatusSelector
+                loading={seriesStatusLoading}
+                status={seriesStatus}
+                updateStatus={seriesStatusHandler}
+              />
+            </div>
           </div>
+
+          <Volumes volumes={series.volumes} />
 
           <div>
-            <ReadStatusSelector
-              loading={seriesStatusLoading}
-              status={seriesStatus}
-              updateStatus={seriesStatusHandler}
+            <SectionHeading>Vocab</SectionHeading>
+            <VocabTable
+              furigana
+              seriesOrWork={series}
+              type={VocabTableType.SeriesOrWork}
             />
           </div>
         </div>
-
-        <Volumes volumes={series.volumes} />
-
-        <div>
-          <SectionHeading>Vocab</SectionHeading>
-          <VocabTable
-            furigana
-            seriesOrWork={series}
-            type={VocabTableType.SeriesOrWork}
-          />
-        </div>
-      </div>
-    </PaperContainer>
+      </PaperContainer>
+    </>
   )
 }

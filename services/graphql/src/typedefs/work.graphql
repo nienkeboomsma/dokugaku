@@ -39,6 +39,16 @@ input WorkListInput {
   workIds: [String!]
 }
 
+input DeleteWorkInput {
+  workId: String!
+}
+
+type DeleteResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+}
+
 input UpdateWorkProgressInput {
   progress: Int!
   workId: String!
@@ -62,6 +72,7 @@ extend type Query {
 }
 
 extend type Mutation {
+  deleteWork(input: DeleteWorkInput!): DeleteResponse!
   updateWorkProgress(
     input: UpdateWorkProgressInput!
   ): UpdateWorkProgressResponse!

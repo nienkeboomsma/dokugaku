@@ -10,6 +10,27 @@ const resolvers: GQL_Resolvers = {
     },
   },
   Mutation: {
+    deleteSeries: async (_, { input }, { userId, dataSources: { series } }) => {
+      try {
+        await series.deleteSeries({
+          userId,
+          seriesId: input.seriesId,
+        })
+
+        return {
+          code: 204,
+          success: true,
+          message: 'Series has successfully been deleted',
+        }
+      } catch (err) {
+        console.log(err, typeof err)
+        return {
+          code: 500,
+          success: false,
+          message: 'Unable to delete series',
+        }
+      }
+    },
     updateSeriesReadStatus: async (
       _,
       { input },
