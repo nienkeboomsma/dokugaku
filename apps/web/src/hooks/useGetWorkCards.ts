@@ -1,12 +1,12 @@
-import {
+import { useQuery } from '@apollo/client'
+import type {
   GQL_WorkCardsQuery,
   GQL_WorkCardsQueryVariables,
 } from '@repo/graphql-types'
-import { useQuery } from '@apollo/client'
 
 import { getPercentage } from '../util/getPercentage'
 import { WORKCARDS } from '../graphql/queries/getWorkCards'
-import { WorkCardInfo } from '../types/WorkCardInfo'
+import type { WorkCardInfo } from '../types/WorkCardInfo'
 
 export const useGetWorkCards = () => {
   const getKnownVocab = (learnableWords: number, totalWords: number) => {

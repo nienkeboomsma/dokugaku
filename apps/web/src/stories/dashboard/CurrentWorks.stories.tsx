@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import CurrentWorks from '../../components/DashboardPage/CurrentWorks'
+import CurrentWorks from '../../components/Dashboard/CurrentWorks'
 import { mockCurrentWorks } from '../../../.storybook/fixtures/currentWorks'
 import { resizer } from '../../../.storybook/decorators/resizer'
 

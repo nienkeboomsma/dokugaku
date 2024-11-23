@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import DashboardPage from '../../components/DashboardPage/DashboardPage'
+import DashboardPage from '../../components/Dashboard/Dashboard'
 import { ApolloMockedProvider } from '../../../.storybook/decorators/mocks'
 import { recommendedWords } from '../../../.storybook/mocks/recommendedWords'
 import { updateExcludedStatus } from '../../../.storybook/mocks/updateExcludedStatus'
@@ -23,13 +23,15 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    works: mockCurrentWorks,
+    data: mockCurrentWorks,
+    loading: false,
   },
 }
 
 export const NoData: Story = {
   args: {
-    works: undefined,
+    data: undefined,
+    loading: true,
   },
 }
 

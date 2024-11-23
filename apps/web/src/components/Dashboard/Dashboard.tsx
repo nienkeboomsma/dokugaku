@@ -1,6 +1,7 @@
 'use client'
 
 import { type CurrentWork } from '../../types/CurrentWork'
+import DashboardSkeleton from './DashboardSkeleton'
 import CurrentWorks from './CurrentWorks'
 import PaperContainer, {
   PaperContainerPadding,
@@ -10,7 +11,21 @@ import VocabTable, {
   VocabTableType,
 } from '../VocabTable/VocabTable'
 
-export default function DashboardPage({ works }: { works?: CurrentWork[] }) {
+export default function Dashboard({
+  data,
+  error,
+  loading,
+}: {
+  data?: CurrentWork[]
+  error?: Error
+  loading: boolean
+}) {
+  if (error) return 'Oops'
+
+  if (!data || loading) return <DashboardSkeleton />
+
+  const works = data
+
   return (
     <div
       style={{

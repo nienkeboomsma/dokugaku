@@ -1,12 +1,12 @@
+import { useQuery } from '@apollo/client'
 import type {
   GQL_WorkInfoQuery,
   GQL_WorkInfoQueryVariables,
 } from '@repo/graphql-types'
-import { useQuery } from '@apollo/client'
 
 import { isNumber } from '../types/utility'
-import type { WorkInfo } from '../types/WorkInfo'
 import { WORK_INFO } from '../graphql/queries/getWorkInfo'
+import type { WorkInfo } from '../types/WorkInfo'
 
 type VolumeInfo = {
   id: string

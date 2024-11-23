@@ -1,12 +1,12 @@
+import { useQuery } from '@apollo/client'
 import type {
   GQL_SeriesInfoQuery,
   GQL_SeriesInfoQueryVariables,
 } from '@repo/graphql-types'
-import { useQuery } from '@apollo/client'
 
-import type { SeriesInfo, VolumeInfo } from '../types/SeriesInfo'
 import { isNumber } from '../types/utility'
 import { SERIES_INFO } from '../graphql/queries/getSeriesInfo'
+import type { SeriesInfo, VolumeInfo } from '../types/SeriesInfo'
 
 type VolumeInfoWithNull = {
   id: string

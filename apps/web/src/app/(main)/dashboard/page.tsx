@@ -1,13 +1,15 @@
-import { Metadata } from 'next'
-import DashboardPage from '../../../components/DashboardPage/DashboardPage'
-import { getCurrentWorks } from '../../../graphql/queries/getCurrentWorks'
+'use client'
 
-export const metadata: Metadata = {
-  title: 'Dashboard',
-}
+import Dashboard from '../../../components/Dashboard/Dashboard'
+import { useGetCurrentWorks } from '../../../hooks/useGetCurrentWorks'
 
-export default async function Dashboard() {
-  const currentWorks = await getCurrentWorks()
+export default function BrowsePage() {
+  const { data, error, loading } = useGetCurrentWorks()
 
-  return <DashboardPage works={currentWorks} />
+  return (
+    <>
+      <title>Dashboard</title>
+      <Dashboard data={data} error={error} loading={loading} />
+    </>
+  )
 }
