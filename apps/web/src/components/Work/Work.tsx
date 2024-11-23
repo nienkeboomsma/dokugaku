@@ -40,22 +40,7 @@ const cssVariables = {
   '--second-column-width': 'calc(100% - var(--cover-width) - var(--gap))',
 } as React.CSSProperties
 
-export default function Work({
-  data,
-  error,
-  loading,
-}: {
-  data?: WorkInfo
-  error?: Error
-  loading: boolean
-}) {
-  // TODO: design a proper placeholder page
-  if (error) return 'Oops'
-
-  if (!data || loading) return <WorkSkeleton />
-
-  const work = data
-
+export default function Work({ work }: { work: WorkInfo }) {
   const [readStatus, setReadStatus] = useState(work.status)
   const [readStatusLoading, setReadStatusLoading] = useState(false)
 

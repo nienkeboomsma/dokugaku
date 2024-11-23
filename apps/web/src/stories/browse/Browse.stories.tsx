@@ -15,21 +15,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    data: mockWorkCards,
-    loading: false,
-  },
-  decorators: [
-    (Story, context) => (
-      <div style={{ padding: '1rem' }}>
-        <Story {...context.args} />
-      </div>
-    ),
-  ],
-}
-
-export const Loading: Story = {
-  args: {
-    loading: true,
+    allWorkCards: mockWorkCards,
   },
   decorators: [
     (Story, context) => (

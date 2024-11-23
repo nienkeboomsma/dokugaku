@@ -7,7 +7,7 @@ import {
   WorkCardMinWidthMobile,
 } from './WorkCard'
 
-export default function SkeletonWorkCard() {
+export default function WorkCardSkeleton() {
   const cssVariables = {
     '--max-width': WorkCardMaxWidth,
     '--min-width-desktop': WorkCardMinWidthDesktop,

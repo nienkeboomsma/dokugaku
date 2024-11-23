@@ -14,20 +14,15 @@ import WorkCard, {
   WorkCardMinWidthMobile,
   WorkCardMaxWidth,
 } from './WorkCard'
-import SkeletonWorkCard from './SkeletonWorkCard'
+
+const MAX_NUMBER_OF_COLUMNS = 4
 
 export default function Browse({
-  data,
-  error,
-  loading,
+  allWorkCards,
 }: {
-  data?: WorkCardInfo[]
-  error?: Error
-  loading: boolean
+  allWorkCards: WorkCardInfo[]
 }) {
-  if (error) 'Oops'
-
-  const [workCards, setWorkCards] = useState<WorkCardInfo[]>()
+  const [workCards, setWorkCards] = useState(allWorkCards)
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 
@@ -40,14 +35,10 @@ export default function Browse({
     key: 'DOKUGAKU_SHOW_ABANDONED',
   })
 
-  const maxNumberOfColumns = 4
-
   const getNumberOfColumns = () => {
-    if (!data || !workCards || loading) return maxNumberOfColumns
-
-    return workCards.length < maxNumberOfColumns
+    return workCards.length < MAX_NUMBER_OF_COLUMNS
       ? workCards.length
-      : maxNumberOfColumns
+      : MAX_NUMBER_OF_COLUMNS
   }
 
   const cssVariables = {
@@ -57,14 +48,12 @@ export default function Browse({
   } as React.CSSProperties
 
   useEffect(() => {
-    if (!data) return
-
     setWorkCards(
-      data.filter((card) =>
+      allWorkCards.filter((card) =>
         filterCards(card, debouncedSearchValue, showFinished, showAbandoned)
       )
     )
-  }, [data, debouncedSearchValue, showFinished, showAbandoned])
+  }, [allWorkCards, debouncedSearchValue, showFinished, showAbandoned])
 
   return (
     <div className={classes.container} style={cssVariables}>
@@ -82,19 +71,17 @@ export default function Browse({
         setSearchValue={setSearchValue}
       />
       <div className={classes.worksContainer}>
-        {!workCards || loading
-          ? Array(50)
-              .fill(undefined)
-              .map(() => <SkeletonWorkCard />)
-          : workCards.map((card) => (
-              <ScaleLink
-                href={`/${card.isSeries ? 'series' : 'works'}/${card.id}`}
-                key={card.id}
-              >
-                <WorkCard workCardInfo={card} />
-              </ScaleLink>
-            ))}
+        {workCards.map((card) => (
+          <ScaleLink
+            href={`/${card.isSeries ? 'series' : 'works'}/${card.id}`}
+            key={card.id}
+          >
+            <WorkCard workCardInfo={card} />
+          </ScaleLink>
+        ))}
       </div>
     </div>
   )
 }
+
+export const maxNumberOfColumns = MAX_NUMBER_OF_COLUMNS

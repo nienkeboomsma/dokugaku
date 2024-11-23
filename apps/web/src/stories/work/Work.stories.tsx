@@ -1,18 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import Series from '../../components/Series/Series'
+import Work from '../../components/Work/Work'
 import { ApolloMockedProvider } from '../../../.storybook/decorators/mocks'
 import { frequencyList } from '../../../.storybook/mocks/frequencyList'
 import { glossary } from '../../../.storybook/mocks/glossary'
 import { updateExcludedStatus } from '../../../.storybook/mocks/updateExcludedStatus'
 import { updateIgnoredStatus } from '../../../.storybook/mocks/updateIgnoredStatus'
 import { updateKnownStatus } from '../../../.storybook/mocks/updateKnownStatus'
-import { updateSeriesReadStatus } from '../../../.storybook/mocks/updateSeriesReadStatus'
-import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
+import { updateWorkReadStatus } from '../../../.storybook/mocks/updateWorkReadStatus'
+import { mockWorkInfo } from '../../../.storybook/fixtures/workInfo'
+import type { WorkInfo } from '../../types/WorkInfo'
 
 const meta = {
-  title: 'Series/Page',
-  component: Series,
+  title: 'Work/Page',
+  component: Work,
   decorators: [
     ApolloMockedProvider([
       frequencyList,
@@ -20,25 +21,22 @@ const meta = {
       updateExcludedStatus,
       updateIgnoredStatus,
       updateKnownStatus,
-      updateSeriesReadStatus,
+      updateWorkReadStatus,
     ]),
   ],
-} satisfies Meta<typeof Series>
+} satisfies Meta<typeof Work>
 
 type Story = StoryObj<typeof meta>
 
-export const FewVolumes: Story = {
+export const InSeries: Story = {
   args: {
-    series: {
-      ...mockSeriesInfo,
-      volumes: mockSeriesInfo.volumes.slice(0, 3),
-    },
+    work: mockWorkInfo[0] as WorkInfo,
   },
 }
 
-export const ManyVolumes: Story = {
+export const NotInSeries: Story = {
   args: {
-    series: mockSeriesInfo,
+    work: mockWorkInfo[1] as WorkInfo,
   },
 }
 

@@ -12,7 +12,6 @@ import { IconPencil, IconTrash } from '@tabler/icons-react'
 
 import classes from './Series.module.css'
 import type { SeriesInfo } from '../../types/SeriesInfo'
-import SeriesSkeleton from './SeriesSkeleton'
 import { useDeleteWorkOrSeries } from '../../hooks/useDeleteWorkOrSeries'
 import { UPDATE_SERIES_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import { updateCacheOnSeriesStateChange } from '../../graphql/cache/updateSeriesCache'
@@ -29,23 +28,8 @@ import VocabTable, {
   VocabTableType,
 } from '../VocabTable/VocabTable'
 
-export default function Series({
-  data,
-  error,
-  loading,
-}: {
-  data?: SeriesInfo
-  error?: Error
-  loading: boolean
-}) {
-  // TODO: design a proper placeholder page
-  if (error) return 'Oops'
-
-  if (!data || loading) return <SeriesSkeleton />
-
-  const series = data
-
-  const [seriesStatus, setSeriesStatus] = useState(data.status)
+export default function Series({ series }: { series: SeriesInfo }) {
+  const [seriesStatus, setSeriesStatus] = useState(series.status)
   const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
 
   const { ConfirmDeleteModal, open } = useDeleteWorkOrSeries(series)

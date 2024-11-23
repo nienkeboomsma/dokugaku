@@ -1,7 +1,6 @@
 'use client'
 
 import { type CurrentWork } from '../../types/CurrentWork'
-import DashboardSkeleton from './DashboardSkeleton'
 import CurrentWorks from './CurrentWorks'
 import PaperContainer, {
   PaperContainerPadding,
@@ -12,20 +11,10 @@ import VocabTable, {
 } from '../VocabTable/VocabTable'
 
 export default function Dashboard({
-  data,
-  error,
-  loading,
+  currentWorks,
 }: {
-  data?: CurrentWork[]
-  error?: Error
-  loading: boolean
+  currentWorks?: CurrentWork[]
 }) {
-  if (error) return 'Oops'
-
-  if (!data || loading) return <DashboardSkeleton />
-
-  const works = data
-
   return (
     <div
       style={{
@@ -33,7 +22,7 @@ export default function Dashboard({
         maxWidth: `calc(${VocabTableMaxWidth} + 2 * ${PaperContainerPadding} )`,
       }}
     >
-      <CurrentWorks works={works} />
+      <CurrentWorks works={currentWorks} />
       <PaperContainer
         heading='Recommended vocab'
         maxContentWidth={VocabTableMaxWidth}

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import Series from '../../components/Series/Series'
+import SeriesSkeleton from '../../components/Series/SeriesSkeleton'
 import { ApolloMockedProvider } from '../../../.storybook/decorators/mocks'
 import { frequencyList } from '../../../.storybook/mocks/frequencyList'
 import { glossary } from '../../../.storybook/mocks/glossary'
@@ -8,11 +8,10 @@ import { updateExcludedStatus } from '../../../.storybook/mocks/updateExcludedSt
 import { updateIgnoredStatus } from '../../../.storybook/mocks/updateIgnoredStatus'
 import { updateKnownStatus } from '../../../.storybook/mocks/updateKnownStatus'
 import { updateSeriesReadStatus } from '../../../.storybook/mocks/updateSeriesReadStatus'
-import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
 
 const meta = {
-  title: 'Series/Page',
-  component: Series,
+  title: 'Series/Page skeleton',
+  component: SeriesSkeleton,
   decorators: [
     ApolloMockedProvider([
       frequencyList,
@@ -23,23 +22,10 @@ const meta = {
       updateSeriesReadStatus,
     ]),
   ],
-} satisfies Meta<typeof Series>
+} satisfies Meta<typeof SeriesSkeleton>
 
 type Story = StoryObj<typeof meta>
 
-export const FewVolumes: Story = {
-  args: {
-    series: {
-      ...mockSeriesInfo,
-      volumes: mockSeriesInfo.volumes.slice(0, 3),
-    },
-  },
-}
-
-export const ManyVolumes: Story = {
-  args: {
-    series: mockSeriesInfo,
-  },
-}
+export const Default: Story = {}
 
 export default meta
