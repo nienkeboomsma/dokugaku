@@ -53,14 +53,20 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
       }
 
       notifications.show({
-        message: `Deleted ${seriesOrWork.title}`,
+        title: `Deleted ${seriesOrWork.title}`,
+        message: 'Going back to the previous page',
       })
-      router.push('/browse')
+      router.back()
     } catch {
       close()
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: `Unable to delete ${seriesOrWork.title}`,
+        message: (
+          <span>
+            Are the <code>db</code> and <code>graphql</code>containers running?
+          </span>
+        ),
+        color: 'red',
       })
     }
   }

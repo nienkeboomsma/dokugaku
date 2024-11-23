@@ -166,8 +166,13 @@ const RenderNode = memo(function RenderNode({
       setProgress(updatedProgress)
     } catch {
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: 'Unable to save progress',
+        message: (
+          <span>
+            Are the <code>graphql</code> and <code>db</code> containers running?
+          </span>
+        ),
+        color: 'red',
         style: { direction: 'ltr' },
       })
     }

@@ -44,25 +44,24 @@ export default function KnownWordsUploadForm() {
       })
       const data = await res.json()
 
-      if (data.error) {
-        notifications.show({
-          title: `Unable to process known words`,
-          message: data.error,
-        })
-        return setLoading(false)
-      }
+      if (!data || data.error) throw Error
 
       setWords('')
       notifications.show({
         title: `Known words uploaded successfully`,
-        message: 'Processing can be monitored in the work-processor logs',
+        message: (
+          <span>
+            Processing can be monitored in the <code>work-processor</code> logs
+          </span>
+        ),
       })
-      setLoading(false)
     } catch {
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: 'Unable to upload known words',
+        message: '(Re)start all containers and try again',
+        color: 'red',
       })
+    } finally {
       setLoading(false)
     }
   }

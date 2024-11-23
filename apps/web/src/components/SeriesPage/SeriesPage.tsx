@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type {
   GQL_ReadStatus,
@@ -9,7 +8,7 @@ import type {
 import { useMutation } from '@apollo/client'
 import { notifications } from '@mantine/notifications'
 import { ActionIcon } from '@mantine/core'
-import { IconPencil, IconTrash } from '@tabler/icons-react'
+import { IconTrash } from '@tabler/icons-react'
 
 import classes from './SeriesPage.module.css'
 import type { SeriesInfo } from '../../types/SeriesInfo'
@@ -48,17 +47,23 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
         variables: { input: { seriesId: series.id, status } },
       })
 
-      if (!data) throw Error('Something went wrong')
+      if (
+        !data ||
+        !data.updateSeriesReadStatus.success ||
+        !data.updateSeriesReadStatus.status
+      )
+        throw Error
 
-      const { status: newStatus, success } = data.updateSeriesReadStatus
-
-      if (!success || !newStatus) throw Error('Something went wrong')
-
-      setSeriesStatus(newStatus)
+      setSeriesStatus(data.updateSeriesReadStatus.status)
     } catch {
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: 'Unable to update reading status',
+        message: (
+          <span>
+            Are the <code>db</code> and <code>graphql</code>containers running?
+          </span>
+        ),
+        color: 'red',
       })
     } finally {
       setSeriesStatusLoading(false)

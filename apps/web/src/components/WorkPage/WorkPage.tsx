@@ -1,9 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ActionIcon, Button } from '@mantine/core'
-import { IconBook2, IconPencil, IconTrash } from '@tabler/icons-react'
+import { IconBook2, IconTrash } from '@tabler/icons-react'
 import type {
   GQL_ReadStatus,
   GQL_UpdateWorkReadStatusMutation,
@@ -59,17 +58,23 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
         variables: { input: { status, workId: work.id } },
       })
 
-      if (!data) throw Error('Something went wrong')
+      if (
+        !data ||
+        !data.updateWorkReadStatus.success ||
+        !data.updateWorkReadStatus.status
+      )
+        throw Error
 
-      const { status: newStatus, success } = data.updateWorkReadStatus
-
-      if (!success || !newStatus) throw Error('Something went wrong')
-
-      setReadStatus(newStatus)
+      setReadStatus(data.updateWorkReadStatus.status)
     } catch {
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: 'Unable to update reading status',
+        message: (
+          <span>
+            Are the <code>db</code> and <code>graphql</code>containers running?
+          </span>
+        ),
+        color: 'red',
       })
     } finally {
       setReadStatusLoading(false)

@@ -113,27 +113,27 @@ export default function WorkUploadForm({
     try {
       const data = await sendFormData(values, event)
 
-      if (data.error) {
-        notifications.show({
-          title: `Unable to process ${values.title}`,
-          message: data.error,
-        })
-        return setLoading(false)
-      }
+      if (!data || data.error) throw Error
 
       updateExistingAuthors(values)
       updateExistingSeries(values)
+
       // TODO: the image file uploads are cleared, but APPEAR like they still
       // have a selection (same problem with the cover upload for novels)
       form.reset()
       notifications.show({
         title: `${values.title} uploaded successfully`,
-        message: 'Processing can be monitored in the work-processor logs',
+        message: (
+          <span>
+            Processing can be monitored in the <code>work-processor</code> logs
+          </span>
+        ),
       })
     } catch {
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: `Unable to upload ${values.title}`,
+        message: '(Re)start all containers and try again',
+        color: 'red',
       })
     } finally {
       setLoading(false)

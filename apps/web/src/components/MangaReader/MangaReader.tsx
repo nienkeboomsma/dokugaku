@@ -1,6 +1,9 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import { useDebouncedValue, useHotkeys, useLocalStorage } from '@mantine/hooks'
 import { AppShell, rem } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
 
 import classes from './MangaReader.module.css'
 import type { Page } from '../../types/MangaPage'
@@ -77,8 +80,26 @@ export default function MangaReader({
   }, [currentPageNumber, twoPageLayout])
 
   useEffect(() => {
-    const newProgress = showTwoPages ? currentPageNumber + 1 : currentPageNumber
-    updateProgress(newProgress)
+    const sendData = async () => {
+      try {
+        const newProgress = showTwoPages
+          ? currentPageNumber + 1
+          : currentPageNumber
+        await updateProgress(newProgress)
+      } catch {
+        notifications.show({
+          title: 'Unable to save progress',
+          message: (
+            <span>
+              Are the <code>db</code> and <code>graphql</code>containers
+              running?
+            </span>
+          ),
+          color: 'red',
+        })
+      }
+    }
+    sendData()
   }, [debouncedCurrentPageNumber])
 
   useHotkeys([
