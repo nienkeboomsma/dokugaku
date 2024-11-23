@@ -20,7 +20,7 @@ export const useGetWorkCards = () => {
     },
   }
 
-  let {
+  const {
     data: rawData,
     error,
     loading,

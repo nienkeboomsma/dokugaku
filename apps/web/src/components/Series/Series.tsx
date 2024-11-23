@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type {
   GQL_ReadStatus,
@@ -11,8 +10,9 @@ import { notifications } from '@mantine/notifications'
 import { ActionIcon } from '@mantine/core'
 import { IconPencil, IconTrash } from '@tabler/icons-react'
 
-import classes from './SeriesPage.module.css'
+import classes from './Series.module.css'
 import type { SeriesInfo } from '../../types/SeriesInfo'
+import SeriesSkeleton from './SeriesSkeleton'
 import { useDeleteWorkOrSeries } from '../../hooks/useDeleteWorkOrSeries'
 import { UPDATE_SERIES_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import PaperContainer, {
@@ -28,11 +28,23 @@ import VocabTable, {
   VocabTableType,
 } from '../VocabTable/VocabTable'
 
-export default function SeriesPage({ series }: { series?: SeriesInfo }) {
+export default function Series({
+  data,
+  error,
+  loading,
+}: {
+  data?: SeriesInfo
+  error?: Error
+  loading: boolean
+}) {
   // TODO: design a proper placeholder page
-  if (!series) return 'Oops'
+  if (error) return 'Oops'
 
-  const [seriesStatus, setSeriesStatus] = useState(series.status)
+  if (!data || loading) return <SeriesSkeleton />
+
+  const series = data
+
+  const [seriesStatus, setSeriesStatus] = useState(data.status)
   const [seriesStatusLoading, setSeriesStatusLoading] = useState(false)
 
   const { ConfirmDeleteModal, open } = useDeleteWorkOrSeries(series)
@@ -79,8 +91,8 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
                   {series.title}
                 </WorkTitle>
                 {/* <ActionIcon variant='subtle'>
-                <IconPencil size='70%' stroke={1.5} />
-              </ActionIcon> */}
+                        <IconPencil size='70%' stroke={1.5} />
+                      </ActionIcon> */}
                 <ActionIcon color='red' onClick={open} variant='subtle'>
                   <IconTrash size='70%' stroke={1.5} />
                 </ActionIcon>

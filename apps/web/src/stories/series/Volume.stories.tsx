@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import Volume, { VolumeMinWidth } from '../../components/SeriesPage/Volume'
+import Volume, { VolumeMinWidth } from '../../components/Series/Volume'
 import { resizer } from '../../../.storybook/decorators/resizer'
 import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
 import { type VolumeInfo } from '../../types/SeriesInfo'

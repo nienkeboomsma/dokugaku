@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { ScrollArea } from '@mantine/core'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 import classes from './Volumes.module.css'
-import { type VolumeInfo } from '../../types/SeriesInfo'
+import type { VolumeInfo } from '../../types/SeriesInfo'
 import SectionHeading from '../PaperContainer/SectionHeading'
 import Volume from './Volume'
-import { GQL_ReadStatus } from '@repo/graphql-types'
 
 const MAX_WORKS_VISIBLE = 7
 const INDICATOR_SIZE = '1.4rem'

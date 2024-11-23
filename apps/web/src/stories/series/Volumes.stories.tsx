@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import Volumes from '../../components/SeriesPage/Volumes'
+import Volumes from '../../components/Series/Volumes'
 import { resizer } from '../../../.storybook/decorators/resizer'
 import { mockSeriesInfo } from '../../../.storybook/fixtures/seriesInfo'
 
