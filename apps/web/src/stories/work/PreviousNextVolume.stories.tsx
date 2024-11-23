@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import PreviousNextVolumes from '../../components/WorkPage/PreviousNextVolumes'
+import PreviousNextVolumes from '../../components/Work/PreviousNextVolumes'
 import { resizer } from '../../../.storybook/decorators/resizer'
 
 const meta: Meta<typeof PreviousNextVolumes> = {

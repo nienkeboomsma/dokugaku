@@ -1,19 +1,18 @@
-import { Metadata } from 'next'
-import WorkPage from '../../../../components/WorkPage/WorkPage'
-import { getWorkInfo } from '../../../../graphql/queries/getWorkInfo'
+'use client'
 
-export const metadata: Metadata = {
-  icons:
-    'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>',
-}
+import { useParams } from 'next/navigation'
 
-export default async function Work({ params }: { params: { workId: string } }) {
-  const workInfo = await getWorkInfo(params.workId)
+import { useGetWorkInfo } from '../../../../hooks/useGetWorkInfo'
+import Work from '../../../../components/Work/Work'
+
+export default function WorkPage() {
+  const { workId } = useParams()
+  const { data, error, loading } = useGetWorkInfo(workId as string)
 
   return (
     <>
-      {workInfo && <title>{workInfo.title}</title>}
-      <WorkPage work={workInfo} />
+      {data && <title>{data.title}</title>}
+      <Work data={data} error={error} loading={loading} />
     </>
   )
 }

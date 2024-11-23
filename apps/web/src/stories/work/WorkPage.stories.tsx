@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import WorkPage from '../../components/WorkPage/WorkPage'
+import WorkPage from '../../components/Work/Work'
 import { ApolloMockedProvider } from '../../../.storybook/decorators/mocks'
 import { frequencyList } from '../../../.storybook/mocks/frequencyList'
 import { glossary } from '../../../.storybook/mocks/glossary'

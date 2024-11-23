@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ActionIcon, Button } from '@mantine/core'
 import { IconBook2, IconPencil, IconTrash } from '@tabler/icons-react'
@@ -12,8 +11,9 @@ import { useMutation } from '@apollo/client'
 import { notifications } from '@mantine/notifications'
 import Link from 'next/link'
 
-import classes from './WorkPage.module.css'
+import classes from './Work.module.css'
 import type { WorkInfo } from '../../types/WorkInfo'
+import WorkSkeleton from './WorkSkeleton'
 import { useDeleteWorkOrSeries } from '../../hooks/useDeleteWorkOrSeries'
 import { UPDATE_WORK_READ_STATUS } from '../../graphql/queries/updateReadStatus'
 import PaperContainer, {
@@ -39,9 +39,21 @@ const cssVariables = {
   '--second-column-width': 'calc(100% - var(--cover-width) - var(--gap))',
 } as React.CSSProperties
 
-export default function WorkPage({ work }: { work?: WorkInfo }) {
+export default function Work({
+  data,
+  error,
+  loading,
+}: {
+  data?: WorkInfo
+  error?: Error
+  loading: boolean
+}) {
   // TODO: design a proper placeholder page
-  if (!work) return 'Oops'
+  if (error) return 'Oops'
+
+  if (!data || loading) return <WorkSkeleton />
+
+  const work = data
 
   const [readStatus, setReadStatus] = useState(work.status)
   const [readStatusLoading, setReadStatusLoading] = useState(false)
@@ -151,3 +163,5 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
     </>
   )
 }
+
+export const coverWidth = COVER_WIDTH
