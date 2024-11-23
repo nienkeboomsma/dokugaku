@@ -41,6 +41,7 @@ export function makeClient() {
 
   return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(cache),
+    connectToDevTools: true,
     link: isServer()
       ? ApolloLink.from([
           new SSRMultipartLink({
@@ -50,7 +51,12 @@ export function makeClient() {
         ])
       : authLink.concat(httpLink),
     ssrMode: isServer(),
-    connectToDevTools: true,
+    defaultOptions: {
+      query: { fetchPolicy: 'cache-first' },
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+      },
+    },
   })
 }
 

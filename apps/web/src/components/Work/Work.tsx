@@ -16,6 +16,7 @@ import type { WorkInfo } from '../../types/WorkInfo'
 import WorkSkeleton from './WorkSkeleton'
 import { useDeleteWorkOrSeries } from '../../hooks/useDeleteWorkOrSeries'
 import { UPDATE_WORK_READ_STATUS } from '../../graphql/queries/updateReadStatus'
+import { updateCacheOnWorkStateChange } from '../../graphql/cache/updateWorkCache'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
@@ -69,6 +70,8 @@ export default function Work({
     try {
       const { data } = await updateReadStatus({
         variables: { input: { status, workId: work.id } },
+        update: (cache, { data }) =>
+          updateCacheOnWorkStateChange(cache, data, work.id, status),
       })
 
       if (!data) throw Error('Something went wrong')

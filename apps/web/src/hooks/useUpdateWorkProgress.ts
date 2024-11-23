@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client'
 import { type GQL_UpdateWorkProgressMutation } from '@repo/graphql-types'
 
 import { UPDATE_WORK_PROGRESS } from '../graphql/queries/updateWorkProgress'
+import { updateCacheOnWorkProgressChange } from '../graphql/cache/updateWorkCache'
 import { isNumber } from '../types/utility'
 
 export const useUpdateWorkProgress = () => {
@@ -11,6 +12,8 @@ export const useUpdateWorkProgress = () => {
   const updateProgress = async (newProgress: number, workId: string) => {
     const { data } = await updateProgressMutation({
       variables: { input: { progress: newProgress, workId } },
+      update: (cache, { data }) =>
+        updateCacheOnWorkProgressChange(cache, data, workId, newProgress),
     })
 
     if (!data) throw Error('Something went wrong')

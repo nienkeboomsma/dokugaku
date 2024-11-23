@@ -30,11 +30,6 @@ export const useGetSeriesInfo = (seriesId: string) => {
     error,
     loading,
   } = useQuery<GQL_SeriesInfoQuery>(SERIES_INFO, {
-    context: {
-      fetchOptions: {
-        cache: 'no-store',
-      },
-    },
     variables,
   })
 

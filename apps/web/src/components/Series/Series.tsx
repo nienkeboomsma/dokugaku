@@ -15,6 +15,7 @@ import type { SeriesInfo } from '../../types/SeriesInfo'
 import SeriesSkeleton from './SeriesSkeleton'
 import { useDeleteWorkOrSeries } from '../../hooks/useDeleteWorkOrSeries'
 import { UPDATE_SERIES_READ_STATUS } from '../../graphql/queries/updateReadStatus'
+import { updateCacheOnSeriesStateChange } from '../../graphql/cache/updateSeriesCache'
 import PaperContainer, {
   PaperContainerPadding,
 } from '../PaperContainer/PaperContainer'
@@ -58,6 +59,8 @@ export default function Series({
     try {
       const { data } = await updateSeriesStatus({
         variables: { input: { seriesId: series.id, status } },
+        update: (cache, { data }) =>
+          updateCacheOnSeriesStateChange(cache, data, series.id, status),
       })
 
       if (!data) throw Error('Something went wrong')

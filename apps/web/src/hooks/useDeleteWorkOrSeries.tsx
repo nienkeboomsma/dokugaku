@@ -13,6 +13,8 @@ import {
   DELETE_SERIES,
   DELETE_WORK,
 } from '../graphql/queries/updateWorkSeriesInfo'
+import { updateCacheOnSeriesDeletion } from '../graphql/cache/updateSeriesCache'
+import { updateCacheOnWorkDeletion } from '../graphql/cache/updateWorkCache'
 import type { SeriesInfo } from '../types/SeriesInfo'
 import type { WorkInfo } from '../types/WorkInfo'
 
@@ -26,6 +28,8 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
         seriesId: seriesOrWork.id,
       },
     },
+    update: (cache, { data }) =>
+      updateCacheOnSeriesDeletion(cache, data, seriesOrWork.id),
   })
 
   const [deleteWork] = useMutation<GQL_DeleteWorkMutation>(DELETE_WORK, {
@@ -34,6 +38,8 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
         workId: seriesOrWork.id,
       },
     },
+    update: (cache, { data }) =>
+      updateCacheOnWorkDeletion(cache, data, seriesOrWork.id),
   })
 
   const deleteHandler = async () => {
@@ -55,7 +61,7 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
       notifications.show({
         message: `Deleted ${seriesOrWork.title}`,
       })
-      router.push('/browse')
+      router.back()
     } catch {
       close()
       notifications.show({

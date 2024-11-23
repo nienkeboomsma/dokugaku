@@ -15,21 +15,3 @@ export const DELETE_WORK = gql`
     }
   }
 `
-
-export const UPDATE_SERIES = gql`
-  mutation UpdateSeriesReadStatus($input: UpdateSeriesReadStatusInput!) {
-    updateSeriesReadStatus(input: $input) {
-      status
-      success
-    }
-  }
-`
-
-export const UPDATE_WORK = gql`
-  mutation UpdateWorkReadStatus($input: UpdateWorkReadStatusInput!) {
-    updateWorkReadStatus(input: $input) {
-      status
-      success
-    }
-  }
-`

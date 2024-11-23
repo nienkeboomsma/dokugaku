@@ -33,11 +33,6 @@ export const useGetWorkInfo = (workId: string) => {
     error,
     loading,
   } = useQuery<GQL_WorkInfoQuery>(WORK_INFO, {
-    context: {
-      fetchOptions: {
-        cache: 'no-store',
-      },
-    },
     variables,
   })
 

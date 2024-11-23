@@ -25,11 +25,6 @@ export const useGetWorkCards = () => {
     error,
     loading,
   } = useQuery<GQL_WorkCardsQuery>(WORKCARDS, {
-    context: {
-      fetchOptions: {
-        cache: 'no-store',
-      },
-    },
     variables,
   })
 
