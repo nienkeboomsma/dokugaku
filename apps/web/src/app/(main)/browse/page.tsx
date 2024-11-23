@@ -1,16 +1,18 @@
-import { Metadata } from 'next'
-import BrowsePage from '../../../components/BrowsePage/BrowsePage'
-import { getWorkCards } from '../../../graphql/queries/getWorkCards'
+'use client'
+
+import { useGetWorkCards } from '../../../hooks/useGetWorkCards'
+import Browse from '../../../components/Browse/Browse'
 
 // TODO: if necessary: cache the knownVocab value
 // TODO: add pagination
 
-export const metadata: Metadata = {
-  title: 'Browse',
-}
+export default function BrowsePage() {
+  const { data, error, loading } = useGetWorkCards()
 
-export default async function Browse() {
-  const initialWorkCards = await getWorkCards()
-
-  return <BrowsePage initialWorkCards={initialWorkCards} />
+  return (
+    <>
+      <title>Browse</title>
+      <Browse data={data} error={error} loading={loading} />
+    </>
+  )
 }

@@ -4,7 +4,7 @@ import classes from './Volume.module.css'
 import { type SeriesInfo } from '../../types/SeriesInfo'
 import ScaleLink from '../ScaleLink'
 import WorkCover from '../WorkCover'
-import WorkStatusBadge from '../BrowsePage/WorkStatusBadge'
+import WorkStatusBadge from '../Browse/WorkStatusBadge'
 
 const MIN_WIDTH = '7.5rem'
 

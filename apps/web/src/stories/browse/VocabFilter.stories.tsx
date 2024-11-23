@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useArgs } from '@storybook/preview-api'
 
-import WorkCardFilter from '../../components/BrowsePage/WorkCardFilter'
+import WorkCardFilter from '../../components/Browse/WorkCardFilter'
 
 const meta = {
   title: 'Browse/Work card filter',

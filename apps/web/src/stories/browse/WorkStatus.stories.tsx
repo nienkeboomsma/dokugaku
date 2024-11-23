@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { GQL_ReadStatus } from '@repo/graphql-types'
 
-import WorkStatusBadge from '../../components/BrowsePage/WorkStatusBadge'
+import WorkStatusBadge from '../../components/Browse/WorkStatusBadge'
 
 const meta = {
   title: 'Browse/Work status badge',

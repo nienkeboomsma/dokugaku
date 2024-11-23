@@ -1,6 +1,7 @@
-import { Switch } from '@mantine/core'
-import classes from './WorkCardFilter.module.css'
 import { Dispatch, SetStateAction } from 'react'
+import { Switch } from '@mantine/core'
+
+import classes from './WorkCardFilter.module.css'
 
 export default function WorkCardFilter({
   showFinished,

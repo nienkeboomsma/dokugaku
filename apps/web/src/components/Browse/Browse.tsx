@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useDebouncedValue, useLocalStorage } from '@mantine/hooks'
 
-import classes from './BrowsePage.module.css'
-import { type WorkCardInfo } from '../../types/WorkCardInfo'
+import classes from './Browse.module.css'
+import type { WorkCardInfo } from '../../types/WorkCardInfo'
 import filterCards from './filterCards'
 import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import WorkCardFilter from './WorkCardFilter'
@@ -14,13 +14,20 @@ import WorkCard, {
   WorkCardMinWidthMobile,
   WorkCardMaxWidth,
 } from './WorkCard'
+import SkeletonWorkCard from './SkeletonWorkCard'
 
-export default function BrowsePage({
-  initialWorkCards,
+export default function Browse({
+  data,
+  error,
+  loading,
 }: {
-  initialWorkCards: WorkCardInfo[]
+  data?: WorkCardInfo[]
+  error?: Error
+  loading: boolean
 }) {
-  const [workCards, setWorkCards] = useState(initialWorkCards)
+  if (error) 'Oops'
+
+  const [workCards, setWorkCards] = useState<WorkCardInfo[]>()
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 
@@ -33,26 +40,31 @@ export default function BrowsePage({
     key: 'DOKUGAKU_SHOW_ABANDONED',
   })
 
-  useEffect(() => {
-    setWorkCards(
-      initialWorkCards.filter((card) =>
-        filterCards(card, debouncedSearchValue, showFinished, showAbandoned)
-      )
-    )
-  }, [debouncedSearchValue, showFinished, showAbandoned])
-
   const maxNumberOfColumns = 4
 
-  const numberOfColumns =
-    workCards.length < maxNumberOfColumns
+  const getNumberOfColumns = () => {
+    if (!data || !workCards || loading) return maxNumberOfColumns
+
+    return workCards.length < maxNumberOfColumns
       ? workCards.length
       : maxNumberOfColumns
+  }
 
   const cssVariables = {
     '--column-min-width-desktop': WorkCardMinWidthDesktop,
     '--column-min-width-mobile': WorkCardMinWidthMobile,
-    '--grid-width': `calc(${numberOfColumns} * ${WorkCardMaxWidth} + (${numberOfColumns - 1} * var(--mantine-spacing-lg))`,
+    '--grid-width': `calc(${getNumberOfColumns()} * ${WorkCardMaxWidth} + (${getNumberOfColumns() - 1} * var(--mantine-spacing-lg))`,
   } as React.CSSProperties
+
+  useEffect(() => {
+    if (!data) return
+
+    setWorkCards(
+      data.filter((card) =>
+        filterCards(card, debouncedSearchValue, showFinished, showAbandoned)
+      )
+    )
+  }, [data, debouncedSearchValue, showFinished, showAbandoned])
 
   return (
     <div className={classes.container} style={cssVariables}>
@@ -70,16 +82,18 @@ export default function BrowsePage({
         setSearchValue={setSearchValue}
       />
       <div className={classes.worksContainer}>
-        {workCards.map((card) => {
-          return (
-            <ScaleLink
-              href={`/${card.isSeries ? 'series' : 'works'}/${card.id}`}
-              key={card.id}
-            >
-              <WorkCard workCardInfo={card} />
-            </ScaleLink>
-          )
-        })}
+        {!workCards || loading
+          ? Array(50)
+              .fill(undefined)
+              .map(() => <SkeletonWorkCard />)
+          : workCards.map((card) => (
+              <ScaleLink
+                href={`/${card.isSeries ? 'series' : 'works'}/${card.id}`}
+                key={card.id}
+              >
+                <WorkCard workCardInfo={card} />
+              </ScaleLink>
+            ))}
       </div>
     </div>
   )

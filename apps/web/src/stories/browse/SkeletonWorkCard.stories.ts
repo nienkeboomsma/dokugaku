@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import WorkCard, {
+import SkeletonWorkCard from '../../components/Browse/SkeletonWorkCard'
+import {
   WorkCardMaxWidth,
   WorkCardMinWidthMobile,
 } from '../../components/Browse/WorkCard'
@@ -8,8 +9,8 @@ import { mockWorkCards } from '../../../.storybook/fixtures/workCards'
 import { resizer } from '../../../.storybook/decorators/resizer'
 
 const meta = {
-  title: 'Browse/Work card',
-  component: WorkCard,
+  title: 'Browse/Skeleton work card',
+  component: SkeletonWorkCard,
   decorators: [
     resizer({
       contentMinWidth: WorkCardMinWidthMobile,
@@ -17,7 +18,7 @@ const meta = {
       padding: '1rem',
     }),
   ],
-} satisfies Meta<typeof WorkCard>
+} satisfies Meta<typeof SkeletonWorkCard>
 
 type Story = StoryObj<typeof meta>
 
