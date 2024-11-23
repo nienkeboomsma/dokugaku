@@ -1,4 +1,4 @@
-FROM node:21.7-alpine3.19 AS turbo-base
+FROM node:20-alpine3.19 AS turbo-base
 
 RUN apk add --no-cache libc6-compat && \
     apk update && \
@@ -26,7 +26,7 @@ COPY turbo.json turbo.json
 
 RUN turbo build --filter=work-processor...
 
-FROM node:21.7-alpine3.19 AS run-server
+FROM node:20-alpine3.19 AS run-server
     
 COPY --from=build-server /app /app
 

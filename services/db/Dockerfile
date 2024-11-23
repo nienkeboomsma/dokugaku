@@ -1,4 +1,4 @@
-FROM node:alpine3.19 AS import-jmdict
+FROM node:20-alpine3.19 AS import-jmdict
 
 ARG DB_JMDICT
 

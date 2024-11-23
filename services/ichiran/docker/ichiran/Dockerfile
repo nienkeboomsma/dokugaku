@@ -1,4 +1,4 @@
-FROM node:21.7-alpine3.19 AS turbo-base
+FROM node:20-alpine3.19 AS turbo-base
 
 RUN apk add --no-cache libc6-compat && \
     apk update && \
