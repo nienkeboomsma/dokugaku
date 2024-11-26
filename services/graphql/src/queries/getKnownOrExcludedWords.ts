@@ -11,7 +11,8 @@ export function getKnownOrExcludedWords(params: {
   return sql<KnownOrExcludedWordModel[]>`
     SELECT 
       word.id,
-      word.info
+      word.info,
+      word.jlpt
     FROM
       word
     JOIN

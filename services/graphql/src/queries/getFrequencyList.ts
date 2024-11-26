@@ -38,6 +38,7 @@ export function getFrequencyList(params: GetFrequencyListParams) {
     SELECT
       word.id,
       word.info,
+      word.jlpt,
       COUNT(*) AS "frequency",
       ${
         params.isSeries || params.isPartOfSeries
@@ -99,6 +100,7 @@ export function getFrequencyList(params: GetFrequencyListParams) {
     GROUP BY
       word.id,
       word.info,
+      word.jlpt,
       ignored
 
     ORDER BY

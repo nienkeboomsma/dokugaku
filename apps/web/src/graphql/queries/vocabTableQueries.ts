@@ -5,6 +5,7 @@ export const EXCLUDED_WORDS = gql`
     excludedWords(input: $input) {
       id
       info
+      jlpt
     }
   }
 `
@@ -14,6 +15,7 @@ export const FREQUENCY_LIST = gql`
     frequencyList(input: $input) {
       id
       info
+      jlpt
       frequency
       ignored
     }
@@ -25,6 +27,7 @@ export const GLOSSARY = gql`
     glossary(input: $input) {
       id
       info
+      jlpt
       frequency
       ignored
       volumeNumber
@@ -41,6 +44,7 @@ export const KNOWN_WORDS = gql`
     knownWords(input: $input) {
       id
       info
+      jlpt
     }
   }
 `
@@ -50,6 +54,7 @@ export const RECOMMENDED_WORDS = gql`
     recommendedWords(input: $input) {
       id
       info
+      jlpt
       frequency
     }
   }

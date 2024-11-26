@@ -1,4 +1,6 @@
 const { StringDecoder } = require('node:string_decoder')
+const jlptData = require('./jlpt.json')
+
 const decoder = new StringDecoder('utf8')
 
 async function main() {
@@ -18,8 +20,10 @@ async function main() {
       sense.gloss.map((gloss) => gloss.text)
     )
     const info = { kanji, kana, meaning: glosses }
-    return csv.concat(`${id}\t${JSON.stringify(info)}\n`)
-  }, 'id\tinfo\n')
+    const jlptEntry = jlptData.find((item) => item.id === Number(id))
+    const jlpt = jlptEntry ? jlptEntry.jlpt : ''
+    return csv.concat(`${id}\t${JSON.stringify(info)}\t${jlpt}\n`)
+  }, 'id\tinfo\tjlpt\n')
 
   process.stdout.write(csv)
 }

@@ -3,14 +3,15 @@ FROM node:20-alpine3.19 AS import-jmdict
 ARG DB_JMDICT
 
 COPY ./services/db/convert-jmdict.js .
+COPY ./services/db/jlpt.json .
 
 RUN apk add --no-cache wget && \
     wget $DB_JMDICT -O originalJmdict.zip && \
     unzip originalJmdict.zip && \
-    mv *.json originalJmdict.json &&\
+    mv jmdict-eng-*.json originalJmdict.json &&\
     node convert-jmdict.js < originalJmdict.json > processedJmdict.csv
     
-FROM postgres:16.2-bullseye as postgres
+FROM postgres:16.2-bullseye AS postgres
 
 RUN apt update && \
     apt install -y locales && \

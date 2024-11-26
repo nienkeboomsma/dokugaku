@@ -59,6 +59,7 @@ export type GQL_ExcludedWord = {
   __typename?: 'ExcludedWord';
   id: Scalars['ID']['output'];
   info: Scalars['JSON']['output'];
+  jlpt?: Maybe<Scalars['String']['output']>;
 };
 
 export type GQL_FrequencyListInput = {
@@ -79,6 +80,7 @@ export type GQL_FrequencyListWord = {
   id: Scalars['ID']['output'];
   ignored: Scalars['Boolean']['output'];
   info: Scalars['JSON']['output'];
+  jlpt?: Maybe<Scalars['String']['output']>;
 };
 
 export type GQL_GlossaryInput = {
@@ -103,6 +105,7 @@ export type GQL_GlossaryWord = {
   id: Scalars['ID']['output'];
   ignored: Scalars['Boolean']['output'];
   info: Scalars['JSON']['output'];
+  jlpt?: Maybe<Scalars['String']['output']>;
   pageNumber: Scalars['Int']['output'];
   sentenceNumber: Scalars['Int']['output'];
   volumeNumber?: Maybe<Scalars['Int']['output']>;
@@ -112,6 +115,7 @@ export type GQL_KnownWord = {
   __typename?: 'KnownWord';
   id: Scalars['ID']['output'];
   info: Scalars['JSON']['output'];
+  jlpt?: Maybe<Scalars['String']['output']>;
 };
 
 export type GQL_Mutation = {
@@ -249,6 +253,7 @@ export type GQL_RecommendedWord = {
   frequency: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   info: Scalars['JSON']['output'];
+  jlpt?: Maybe<Scalars['String']['output']>;
 };
 
 export type GQL_Series = {
@@ -459,35 +464,35 @@ export type GQL_ExcludedWordsQueryVariables = Exact<{
 }>;
 
 
-export type GQL_ExcludedWordsQuery = { __typename?: 'Query', excludedWords: Array<{ __typename?: 'ExcludedWord', id: string, info: any }> };
+export type GQL_ExcludedWordsQuery = { __typename?: 'Query', excludedWords: Array<{ __typename?: 'ExcludedWord', id: string, info: any, jlpt?: string | null | undefined }> };
 
 export type GQL_FrequencyListQueryVariables = Exact<{
   input: GQL_FrequencyListInput;
 }>;
 
 
-export type GQL_FrequencyListQuery = { __typename?: 'Query', frequencyList: Array<{ __typename?: 'FrequencyListWord', id: string, info: any, frequency: number, ignored: boolean }> };
+export type GQL_FrequencyListQuery = { __typename?: 'Query', frequencyList: Array<{ __typename?: 'FrequencyListWord', id: string, info: any, jlpt?: string | null | undefined, frequency: number, ignored: boolean }> };
 
 export type GQL_GlossaryQueryVariables = Exact<{
   input: GQL_GlossaryInput;
 }>;
 
 
-export type GQL_GlossaryQuery = { __typename?: 'Query', glossary: Array<{ __typename?: 'GlossaryWord', id: string, info: any, frequency: number, ignored: boolean, volumeNumber?: number | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
+export type GQL_GlossaryQuery = { __typename?: 'Query', glossary: Array<{ __typename?: 'GlossaryWord', id: string, info: any, jlpt?: string | null | undefined, frequency: number, ignored: boolean, volumeNumber?: number | null | undefined, pageNumber: number, sentenceNumber: number, entryNumber: number, componentNumber?: number | null | undefined }> };
 
 export type GQL_KnownWordsQueryVariables = Exact<{
   input?: InputMaybe<GQL_CorpusScopedInput>;
 }>;
 
 
-export type GQL_KnownWordsQuery = { __typename?: 'Query', knownWords: Array<{ __typename?: 'KnownWord', id: string, info: any }> };
+export type GQL_KnownWordsQuery = { __typename?: 'Query', knownWords: Array<{ __typename?: 'KnownWord', id: string, info: any, jlpt?: string | null | undefined }> };
 
 export type GQL_RecommendedWordsQueryVariables = Exact<{
   input?: InputMaybe<GQL_CorpusScopedInput>;
 }>;
 
 
-export type GQL_RecommendedWordsQuery = { __typename?: 'Query', recommendedWords: Array<{ __typename?: 'RecommendedWord', id: string, info: any, frequency: number }> };
+export type GQL_RecommendedWordsQuery = { __typename?: 'Query', recommendedWords: Array<{ __typename?: 'RecommendedWord', id: string, info: any, jlpt?: string | null | undefined, frequency: number }> };
 
 export type GQL_UpdateExcludedStatusMutationVariables = Exact<{
   input: GQL_UpdateExcludedStatusInput;
@@ -681,6 +686,7 @@ export type GQL_DeleteResponseResolvers<ContextType = GQL_Context, ParentType ex
 export type GQL_ExcludedWordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['ExcludedWord'] = GQL_ResolversParentTypes['ExcludedWord']> = ResolversObject<{
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
   info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  jlpt?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -689,6 +695,7 @@ export type GQL_FrequencyListWordResolvers<ContextType = GQL_Context, ParentType
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
   ignored?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
   info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  jlpt?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -699,6 +706,7 @@ export type GQL_GlossaryWordResolvers<ContextType = GQL_Context, ParentType exte
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
   ignored?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
   info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  jlpt?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
   pageNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   sentenceNumber?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   volumeNumber?: Resolver<Maybe<GQL_ResolversTypes['Int']>, ParentType, ContextType>;
@@ -712,6 +720,7 @@ export interface GQL_JsonScalarConfig extends GraphQLScalarTypeConfig<GQL_Resolv
 export type GQL_KnownWordResolvers<ContextType = GQL_Context, ParentType extends GQL_ResolversParentTypes['KnownWord'] = GQL_ResolversParentTypes['KnownWord']> = ResolversObject<{
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
   info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  jlpt?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -744,6 +753,7 @@ export type GQL_RecommendedWordResolvers<ContextType = GQL_Context, ParentType e
   frequency?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<GQL_ResolversTypes['ID'], ParentType, ContextType>;
   info?: Resolver<GQL_ResolversTypes['JSON'], ParentType, ContextType>;
+  jlpt?: Resolver<Maybe<GQL_ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

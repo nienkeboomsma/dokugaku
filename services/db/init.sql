@@ -1,5 +1,3 @@
--- word
-
 CREATE OR REPLACE FUNCTION update_modified_column() 
 RETURNS TRIGGER AS $$
 BEGIN
@@ -8,12 +6,15 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- word
+
 CREATE TABLE word (
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  info jsonb NOT NULL
+  info jsonb NOT NULL,
+  jlpt text NULL
 );
 
-COPY word(id, info)
+COPY word(id, info, jlpt)
 FROM '/processedJmdict.csv'
 QUOTE E'\x01'
 DELIMITER E'\t'

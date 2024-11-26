@@ -40,6 +40,7 @@ export function getGlossary(params: GetGlossaryParams) {
     SELECT
       word.id,
       word.info,
+      word.jlpt,
       word_frequency.frequency,
       word_work.volume_number AS "volumeNumber",
       word_work.page_number AS "pageNumber",

@@ -2,7 +2,7 @@
 FROM node:18-alpine AS alpine
 
 # Set up pnpm on the alpine base
-FROM alpine as base
+FROM alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable && \

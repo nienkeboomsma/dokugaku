@@ -16,6 +16,7 @@ export function getRecommendedWords({
     SELECT 
       word.id,
       word.info,
+      word.jlpt,
       COUNT(*) AS "frequency"
     FROM word_work
     JOIN user_work 

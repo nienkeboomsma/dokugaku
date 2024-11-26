@@ -1,5 +1,5 @@
 .logo {
-  color: var(--mantine-color-blue-text);
+  color: var(--mantine-primary-color-filled);
   font-family: 'Hiragino Sans', 'Meiryo', 'Hiragino Kaku Gothic ProN',
     sans-serif;
   font-weight: 600;

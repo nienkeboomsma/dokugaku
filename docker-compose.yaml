@@ -51,11 +51,11 @@ services:
     environment:
       ICHIRAN_PORT: ${ICHIRAN_PORT}
       POSTGRES_PASSWORD: ${ICHIRAN_PG_PASSWORD}
+    expose:
+      - '${ICHIRAN_PORT}'
     networks:
       - backend
       - ichiran
-    expose:
-      - '${ICHIRAN_PORT}'
     restart: always
   ichiran-db:
     container_name: ichiran-db
