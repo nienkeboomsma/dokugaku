@@ -14,6 +14,7 @@ export const glossary = {
             __typename: 'GlossaryWord',
             id: vocab.id,
             info: vocab.info,
+            jlpt: vocab.jlpt,
             ignored: vocab.ignored,
             frequency: vocab.frequency,
             volumeNumber: vocab.volumeNumber,

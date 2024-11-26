@@ -47,18 +47,21 @@ export const WithFurigana: Story = {
 
 export const WithoutFurigana: Story = {
   args: {
+    furigana: false,
     seriesOrWork: mockSeriesInfo,
     type: VocabTableType.SeriesOrWork,
   },
 }
 export const KnownVocab: Story = {
   args: {
+    furigana: false,
     type: VocabTableType.Known,
   },
 }
 
 export const ExcludedEverywhere: Story = {
   args: {
+    furigana: false,
     type: VocabTableType.Excluded,
   },
 }

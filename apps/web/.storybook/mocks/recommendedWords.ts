@@ -13,6 +13,7 @@ export const recommendedWords = {
           __typename: 'RecommendedWord',
           id: vocab.id,
           info: vocab.info,
+          jlpt: vocab.jlpt,
           frequency: vocab.frequency,
         }
       }),

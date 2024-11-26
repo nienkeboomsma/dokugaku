@@ -13,6 +13,7 @@ export const knownWords = {
           __typename: 'KnownWord',
           id: vocab.id,
           info: vocab.info,
+          jlpt: vocab.jlpt,
         }
       }),
     },

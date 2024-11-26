@@ -1,4 +1,4 @@
-.containerWithFurigana {
+.containerWithSuperscriptFurigana {
   align-items: baseline;
   display: flex;
   gap: 0.5rem;
@@ -6,6 +6,16 @@
   & > div {
     position: relative;
     top: 0.03125rem;
+  }
+}
+
+.containerWithBracketedFurigana {
+  align-items: baseline;
+  display: flex;
+
+  & > div {
+    position: relative;
+    bottom: 0.15rem;
   }
 }
 

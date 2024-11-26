@@ -14,6 +14,7 @@ export const frequencyList = {
             __typename: 'FrequencyListWord',
             id: vocab.id,
             info: vocab.info,
+            jlpt: vocab.jlpt,
             frequency: vocab.frequency,
             ignored: vocab.ignored,
           }

@@ -13,6 +13,7 @@ export const excludedWords = {
           __typename: 'ExcludedWord',
           id: vocab.id,
           info: vocab.info,
+          jlpt: vocab.jlpt,
         }
       }),
     },
