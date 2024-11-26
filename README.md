@@ -245,11 +245,9 @@ Sometimes Mokuro (the OCR engine) determines text box boundaries incorrectly, ca
 
 - [ ] word search across the entire corpus, linking to the appropriate page or paragraph
 - [ ] dashboard to track the processing status of uploaded works
-- [ ] removing works and series
 
 ## Improvements
 
-- [ ] replace RSC GraphQL queries with hooks, implement loading skeletons and finetune caching
 - [ ] improve vocab pagination (specifically when there are no more records to load)
 - [ ] improve the management of common environment variables between backend and frontend
 - [ ] optimise the performance of Docker images
