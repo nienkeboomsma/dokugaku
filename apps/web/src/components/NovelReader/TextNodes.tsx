@@ -8,6 +8,7 @@ import {
   memo,
   useCallback,
 } from 'react'
+import { useRouter } from 'next/navigation'
 import { notifications } from '@mantine/notifications'
 
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
@@ -159,17 +160,21 @@ const RenderNode = memo(function RenderNode({
 
   const isCurrentProgress = progress === paragraphNumber
 
+  const router = useRouter()
   const memoizedUpdateProgress = useCallback(async () => {
     try {
       const newProgress = !isCurrentProgress ? paragraphNumber : 0
       const updatedProgress = await updateProgress(newProgress)
       setProgress(updatedProgress)
+
+      // This flushes the NextJS router cache
+      router.refresh()
     } catch {
       notifications.show({
         title: 'Unable to save progress',
         message: (
           <span>
-            Are the <code>graphql</code> and <code>db</code> containers running?
+            Are the <code>db</code> and <code>graphql</code> containers running?
           </span>
         ),
         color: 'red',

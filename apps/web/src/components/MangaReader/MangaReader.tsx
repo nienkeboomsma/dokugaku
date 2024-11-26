@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useDebouncedValue, useHotkeys, useLocalStorage } from '@mantine/hooks'
+import { useRouter } from 'next/navigation'
 import { AppShell, rem } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
@@ -79,6 +80,7 @@ export default function MangaReader({
     getPageData(pageNumbers).then((data) => setPages(data))
   }, [currentPageNumber, twoPageLayout])
 
+  const router = useRouter()
   useEffect(() => {
     const sendData = async () => {
       try {
@@ -86,12 +88,16 @@ export default function MangaReader({
           ? currentPageNumber + 1
           : currentPageNumber
         await updateProgress(newProgress)
-      } catch {
+
+        // This flushes the NextJS router cache
+        router.refresh()
+      } catch (error) {
+        console.log(error)
         notifications.show({
           title: 'Unable to save progress',
           message: (
             <span>
-              Are the <code>db</code> and <code>graphql</code>containers
+              Are the <code>db</code> and <code>graphql</code> containers
               running?
             </span>
           ),

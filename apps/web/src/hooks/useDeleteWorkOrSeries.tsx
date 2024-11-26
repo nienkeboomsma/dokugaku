@@ -1,12 +1,12 @@
 import { useDisclosure } from '@mantine/hooks'
-import { Button, Modal } from '@mantine/core'
-import { useRouter } from 'next/navigation'
-import { notifications } from '@mantine/notifications'
 import type {
   GQL_DeleteSeriesMutation,
   GQL_DeleteWorkMutation,
 } from '@repo/graphql-types'
+import { useRouter } from 'next/navigation'
+import { notifications } from '@mantine/notifications'
 import { useMutation } from '@apollo/client'
+import { Button, Modal } from '@mantine/core'
 
 import classes from './useDeleteWorkOrSeries.module.css'
 import {
@@ -18,7 +18,6 @@ import type { WorkInfo } from '../types/WorkInfo'
 
 export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
   const [opened, { open, close }] = useDisclosure(false)
-  const router = useRouter()
 
   const [deleteSeries] = useMutation<GQL_DeleteSeriesMutation>(DELETE_SERIES, {
     variables: {
@@ -36,6 +35,7 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
     },
   })
 
+  const router = useRouter()
   const deleteHandler = async () => {
     try {
       if (seriesOrWork.isSeries) {
@@ -56,6 +56,9 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
         title: `Deleted ${seriesOrWork.title}`,
         message: 'Going back to the previous page',
       })
+
+      // This flushes the NextJS router cache
+      router.refresh()
       router.back()
     } catch {
       close()
@@ -63,7 +66,7 @@ export const useDeleteWorkOrSeries = (seriesOrWork: SeriesInfo | WorkInfo) => {
         title: `Unable to delete ${seriesOrWork.title}`,
         message: (
           <span>
-            Are the <code>db</code> and <code>graphql</code>containers running?
+            Are the <code>db</code> and <code>graphql</code> containers running?
           </span>
         ),
         color: 'red',

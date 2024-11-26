@@ -1,14 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { ActionIcon, Button } from '@mantine/core'
-import { IconBook2, IconTrash } from '@tabler/icons-react'
+import { useRouter } from 'next/navigation'
 import type {
   GQL_ReadStatus,
   GQL_UpdateWorkReadStatusMutation,
 } from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
 import { notifications } from '@mantine/notifications'
+import { ActionIcon, Button } from '@mantine/core'
+import { IconBook2, IconTrash } from '@tabler/icons-react'
 import Link from 'next/link'
 
 import classes from './WorkPage.module.css'
@@ -50,6 +51,7 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
     UPDATE_WORK_READ_STATUS
   )
 
+  const router = useRouter()
   const readStatusHandler = async (status: GQL_ReadStatus) => {
     setReadStatusLoading(true)
 
@@ -66,12 +68,15 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
         throw Error
 
       setReadStatus(data.updateWorkReadStatus.status)
+
+      // This flushes the NextJS router cache
+      router.refresh()
     } catch {
       notifications.show({
         title: 'Unable to update reading status',
         message: (
           <span>
-            Are the <code>db</code> and <code>graphql</code>containers running?
+            Are the <code>db</code> and <code>graphql</code> containers running?
           </span>
         ),
         color: 'red',

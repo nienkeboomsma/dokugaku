@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type {
   GQL_ReadStatus,
   GQL_UpdateSeriesReadStatusMutation,
@@ -39,6 +40,7 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
     UPDATE_SERIES_READ_STATUS
   )
 
+  const router = useRouter()
   const seriesStatusHandler = async (status: GQL_ReadStatus) => {
     setSeriesStatusLoading(true)
 
@@ -55,12 +57,15 @@ export default function SeriesPage({ series }: { series?: SeriesInfo }) {
         throw Error
 
       setSeriesStatus(data.updateSeriesReadStatus.status)
+
+      // This flushes the NextJS router cache
+      router.refresh()
     } catch {
       notifications.show({
         title: 'Unable to update reading status',
         message: (
           <span>
-            Are the <code>db</code> and <code>graphql</code>containers running?
+            Are the <code>db</code> and <code>graphql</code> containers running?
           </span>
         ),
         color: 'red',
