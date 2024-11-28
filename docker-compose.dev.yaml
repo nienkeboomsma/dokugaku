@@ -19,6 +19,8 @@ services:
       start_period: 10s
     networks:
       - backend
+    ports:
+      - '5432:5432'
     restart: always
     shm_size: 1gb
     volumes:
@@ -61,8 +63,8 @@ services:
     networks:
       - backend
       - ichiran
-    expose:
-      - '${ICHIRAN_PORT}'
+    ports:
+      - '${ICHIRAN_PORT}:${ICHIRAN_PORT}'
     restart: always
     volumes:
       - ./services/ichiran/src:/app/services/ichiran/src
@@ -98,8 +100,8 @@ services:
       MOKURO_PORT: ${MOKURO_PORT}
     networks:
       - backend
-    expose:
-      - '${MOKURO_PORT}'
+    ports:
+      - '${MOKURO_PORT}:${MOKURO_PORT}'
     privileged: true
     restart: always
     volumes:
