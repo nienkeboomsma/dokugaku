@@ -2,10 +2,12 @@ import { Dispatch, SetStateAction } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useArgs } from '@storybook/preview-api'
 
-import VocabSort, { ListType } from '../../components/VocabTable/VocabSort'
+import VocabSort, {
+  ListType,
+} from '../../../components/VocabTable/VocabFilter/VocabSort'
 
 const meta = {
-  title: 'Vocab/Vocab sort',
+  title: 'Vocab/Filter/Vocab sort',
   component: VocabSort,
 } satisfies Meta<typeof VocabSort>
 

@@ -8,7 +8,7 @@ import type {
 } from '@repo/graphql-types'
 
 import { VocabTableType } from '../components/VocabTable/VocabTable'
-import { ListType } from '../components/VocabTable/VocabSort'
+import { ListType } from '../components/VocabTable/VocabFilter/VocabSort'
 import {
   EXCLUDED_WORDS,
   FREQUENCY_LIST,
