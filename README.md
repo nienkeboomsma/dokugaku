@@ -26,7 +26,7 @@ You upload the manga and novels you want to read and it will show you (1) what p
 
 - View the most frequent unknown vocab in a particular work or in an entire series.
 - Mark words as known, ignored (within that specific work/series) or excluded (everywhere).
-- Search for a specific word or filter vocab by minimum frequency or ignored status.
+- Search for a specific word or filter vocab by minimum frequency, ignored status or JLPT level.
 - Automatically save your filters per work or series.
 <p align="center"><img alt="frequency list" src="https://github.com/user-attachments/assets/1002ad24-8197-4d37-b053-4bef28c96a7d" width="80%"/></p><br/>
 
@@ -53,6 +53,7 @@ You upload the manga and novels you want to read and it will show you (1) what p
 - Automatically save your reading direction preference per work.
 - Save your progress by clicking the bookmark buttons.
 - Select text to get a character count.
+- Hover on a bookmark to see the paragraph number
 <p align="center"><img alt="vertical novel with yomitan lookup" src="https://github.com/user-attachments/assets/6bc4aeb0-e239-489f-bff7-89f70cbb6821" width="80%"/></p>
 <p align="center"><img alt="horizontal novel" src="https://github.com/user-attachments/assets/80eda724-9182-4f18-a6da-a0bd81764b31" width="80%"/></p><br/>
 
