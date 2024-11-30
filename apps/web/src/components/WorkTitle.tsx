@@ -13,7 +13,7 @@ export default function WorkTitle({
 }) {
   return (
     <TruncateToSingleLine>
-      <Title order={order} size={size}>
+      <Title className='japanese' order={order} size={size} fw={600}>
         {children}
       </Title>
     </TruncateToSingleLine>

@@ -15,7 +15,7 @@ export default function Reading({
 
   if (kanji.length === 0) {
     return (
-      <span className={classes.containerWithoutFurigana}>
+      <span className={`${classes.container} ${classes.noFurigana} japanese`}>
         {kana[0]}
         {isJLPT(jlpt) && <JLPTLabel jlpt={jlpt} />}
       </span>
@@ -25,7 +25,9 @@ export default function Reading({
   if (kanji.length > 0) {
     if (furigana) {
       return (
-        <span className={classes.containerWithSuperscriptFurigana}>
+        <span
+          className={`${classes.container} ${classes.superscriptFurigana} japanese`}
+        >
           <ruby style={{ position: 'relative', top: '0.1875em' }}>
             {kanji[0]}
             <rt>{kana[0]}</rt>
@@ -36,7 +38,9 @@ export default function Reading({
     }
 
     return (
-      <span className={classes.containerWithBracketedFurigana}>
+      <span
+        className={`${classes.container} ${classes.bracketedFurigana} japanese`}
+      >
         {`${kanji[0]}【${kana[0]}】`}
         {isJLPT(jlpt) && <JLPTLabel jlpt={jlpt} />}
       </span>

@@ -1,31 +1,30 @@
-.containerWithSuperscriptFurigana {
+.container {
   align-items: baseline;
   display: flex;
-  gap: 0.5rem;
 
   & > div {
     position: relative;
+  }
+}
+
+.superscriptFurigana {
+  gap: 0.5rem;
+
+  & > div {
     top: 0.03125rem;
   }
 }
 
-.containerWithBracketedFurigana {
-  align-items: baseline;
-  display: flex;
-
+.bracketedFurigana {
   & > div {
-    position: relative;
     bottom: 0.15rem;
   }
 }
 
-.containerWithoutFurigana {
-  align-items: baseline;
-  display: flex;
+.noFurigana {
   gap: 0.5rem;
 
   & > div {
-    position: relative;
     bottom: 0.15rem;
   }
 }

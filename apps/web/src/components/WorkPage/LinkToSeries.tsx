@@ -13,7 +13,7 @@ export default function LinkToSeries({
   return (
     <TruncateToSingleLine>
       <Link href={`/series/${seriesId}`}>
-        <Anchor component='span' lh={1} underline='hover'>
+        <Anchor className='japanese' component='span' lh={1} underline='hover'>
           {seriesTitle}
         </Anchor>
       </Link>

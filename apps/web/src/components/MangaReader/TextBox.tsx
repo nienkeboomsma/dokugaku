@@ -104,7 +104,7 @@ export default function TextBox({
       onClick={handleClick}
       style={hoverAreaStyles}
     >
-      <div className={`${classes.textBox} textBox`} style={textBoxStyles}>
+      <div className={`${classes.textBox}`} style={textBoxStyles}>
         {lines.map((line, index) => (
           <p
             className={classes.line}

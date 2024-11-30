@@ -1,3 +1,7 @@
+.container {
+  width: min(35rem, 65vw);
+}
+
 .input {
   height: 10rem;
 }

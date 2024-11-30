@@ -29,7 +29,9 @@ export default function AuthorList({
   if (authors.length === 1) {
     return (
       <TruncateToSingleLine dotColor='var(--mantine-color-dimmed)'>
-        <Author className={classNames?.author}>{authors[0]}</Author>
+        <Author className={`${classNames?.author} japanese`}>
+          {authors[0]}
+        </Author>
       </TruncateToSingleLine>
     )
   }

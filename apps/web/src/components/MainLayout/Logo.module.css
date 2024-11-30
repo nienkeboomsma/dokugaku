@@ -1,7 +1,5 @@
 .logo {
   color: var(--mantine-color-anchor);
-  font-family: 'Hiragino Sans', 'Meiryo', 'Hiragino Kaku Gothic ProN',
-    sans-serif;
   font-weight: 600;
   user-select: none;
 }

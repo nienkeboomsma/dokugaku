@@ -67,7 +67,7 @@ export default function KnownWordsUploadForm() {
   }
 
   return (
-    <Fieldset legend='Upload known words'>
+    <Fieldset className={classes.container} legend='Upload known words'>
       <form onSubmit={handleSubmit}>
         <Textarea
           aria-label='Known words'
@@ -76,7 +76,6 @@ export default function KnownWordsUploadForm() {
           onChange={(event) => setWords(event.currentTarget.value)}
           placeholder='A (white)space-separated or comma-separated list'
           value={words}
-          w={400}
           withAsterisk
         />
         <Button

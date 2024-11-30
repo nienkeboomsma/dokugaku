@@ -22,7 +22,10 @@ export default function TextContainer({
     direction === 'horizontal' ? 'horizontal-tb' : 'vertical-rl'
 
   return (
-    <div className={classes.outerContainer} style={{ writingMode }}>
+    <div
+      className={`${classes.outerContainer} japanese`}
+      style={{ writingMode }}
+    >
       <div className={className}>{children}</div>
     </div>
   )

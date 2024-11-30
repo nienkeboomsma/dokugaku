@@ -5,3 +5,8 @@ a {
 rt {
   user-select: none;
 }
+
+.japanese {
+  font-family: 'Hiragino Sans', 'Meiryo', 'Hiragino Kaku Gothic ProN',
+    sans-serif;
+}
