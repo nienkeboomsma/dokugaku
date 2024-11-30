@@ -1,3 +1,4 @@
 .dropdown {
+  direction: ltr;
   padding: var(--mantine-spacing-md);
 }

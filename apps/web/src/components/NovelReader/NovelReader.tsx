@@ -13,6 +13,7 @@ import NovelReaderMenu from './NovelReaderMenu'
 import CharacterCount from './CharacterCount'
 import TextContainer from './TextContainer'
 import TextNodes from './TextNodes'
+import { useLocalStorage } from '@mantine/hooks'
 
 export default function NovelReader({
   fileDir,
@@ -34,6 +35,15 @@ export default function NovelReader({
     'vertical',
     workId
   )
+
+  const [fontSizeMultiplier, setFontSizeMultiplier] = useLocalStorage({
+    defaultValue: 1,
+    key: 'DOKUGAKU_FONT_SIZE',
+  })
+  const [lineHeightMultiplier, setLineHeightMultiplier] = useLocalStorage({
+    defaultValue: 1,
+    key: 'DOKUGAKU_LINE_HEIGHT',
+  })
   const charCount = useCharacterCount()
 
   useScrollToBookmark(direction, progress)
@@ -51,13 +61,21 @@ export default function NovelReader({
       />
       <NovelReaderMenu
         direction={direction}
+        fontSizeMultiplier={fontSizeMultiplier}
+        lineHeightMultiplier={lineHeightMultiplier}
         maxProgress={maxProgress}
         progress={progress}
+        setFontSizeMultiplier={setFontSizeMultiplier}
+        setLineHeightMultiplier={setLineHeightMultiplier}
         toggleDirection={toggleDirection}
         workId={workId}
       />
       <CharacterCount charCount={charCount} hideBelow={10} />
-      <TextContainer direction={direction}>
+      <TextContainer
+        direction={direction}
+        fontSizeMultiplier={fontSizeMultiplier}
+        lineHeightMultiplier={lineHeightMultiplier}
+      >
         <TextNodes
           progress={progress}
           setProgress={setProgress}

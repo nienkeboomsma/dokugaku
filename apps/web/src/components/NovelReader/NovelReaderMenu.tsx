@@ -1,25 +1,37 @@
+import type { Dispatch, SetStateAction } from 'react'
 import { ActionIcon } from '@mantine/core'
 import Link from 'next/link'
 import {
   IconArrowAutofitDown,
   IconArrowAutofitRight,
   IconChevronsLeft,
+  IconTypography,
 } from '@tabler/icons-react'
 
 import classes from './NovelReaderMenu.module.css'
 import type { Direction } from '../../hooks/useNovelReaderDirection'
 import { getPercentage } from '../../util/getPercentage'
+import PopoverButton from '../SearchFilterSort/PopoverButton'
+import TypographyOptions from './TypographyOptions'
 
 export default function NovelReaderMenu({
   direction,
+  fontSizeMultiplier,
+  lineHeightMultiplier,
   maxProgress,
   progress,
+  setFontSizeMultiplier,
+  setLineHeightMultiplier,
   toggleDirection,
   workId,
 }: {
   direction: Direction
+  fontSizeMultiplier: number
+  lineHeightMultiplier: number
   maxProgress: number
   progress: number
+  setFontSizeMultiplier: Dispatch<SetStateAction<number>>
+  setLineHeightMultiplier: Dispatch<SetStateAction<number>>
   toggleDirection: () => void
   workId: string
 }) {
@@ -48,6 +60,22 @@ export default function NovelReaderMenu({
       >
         <IconChevronsLeft size='100%' stroke={1.5} />
       </ActionIcon>
+      <PopoverButton
+        buttonIcon={IconTypography}
+        buttonLabel='Typography options'
+        buttonSize='2rem'
+        buttonVariant='subtle'
+        iconSize='70%'
+        position={direction === 'horizontal' ? 'right' : 'bottom'}
+        strokeSize={1.8}
+      >
+        <TypographyOptions
+          fontSizeMultiplier={fontSizeMultiplier}
+          lineHeightMultiplier={lineHeightMultiplier}
+          setFontSizeMultiplier={setFontSizeMultiplier}
+          setLineHeightMultiplier={setLineHeightMultiplier}
+        />
+      </PopoverButton>
       <ActionIcon
         aria-label={ariabLabel}
         onClick={toggleDirection}

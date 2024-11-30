@@ -81,10 +81,11 @@
 }
 
 .containerHorizontal {
-  --base-text-size: 1.3rem;
+  --base-text-size: calc(1.3rem * var(--font-size-multiplier));
+  --line-height: calc(2.4rem * var(--line-height-multiplier));
 
   font-size: var(--base-text-size);
-  line-height: 1.8;
+  line-height: var(--line-height);
   margin-inline: auto;
   max-inline-size: calc(var(--base-text-size) * 35);
 
@@ -148,7 +149,8 @@
 }
 
 .containerVertical {
-  --base-text-size: 1.5rem;
+  --base-text-size: calc(1.5rem * var(--font-size-multiplier));
+  --line-height: calc(3rem * var(--line-height-multiplier));
   --max-inline-content-size: calc(var(--base-text-size) * 38);
   --inline-size: min(
     var(--max-inline-content-size),
@@ -157,7 +159,7 @@
 
   font-size: var(--base-text-size);
   inline-size: var(--inline-size);
-  line-height: 2;
+  line-height: var(--line-height);
   margin-inline: calc(
     ((100vh - var(--inline-size)) - (2 * var(--outer-container-padding))) / 2
   );

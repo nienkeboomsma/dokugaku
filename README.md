@@ -51,6 +51,7 @@ You upload the manga and novels you want to read and it will show you (1) what p
 
 - Read your novels vertically or horizontally.
 - Automatically save your reading direction preference per work.
+- Customise the font size and line height.
 - Save your progress by clicking the bookmark buttons.
 - Select text to get a character count.
 - Hover on a bookmark to see the paragraph number

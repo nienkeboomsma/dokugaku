@@ -26,13 +26,29 @@ export default function SearchFilterSort({
       <Search searchValue={searchValue} setSearchValue={setSearchValue} />
 
       {filterContent && (
-        <PopoverButton buttonIcon={IconFilter} buttonLabel='Filter'>
+        <PopoverButton
+          buttonIcon={IconFilter}
+          buttonLabel='Filter'
+          buttonSize='input-xs'
+          buttonVariant='filled'
+          iconSize='60%'
+          position='bottom'
+          strokeSize={1.5}
+        >
           {filterContent}
         </PopoverButton>
       )}
 
       {sortContent && (
-        <PopoverButton buttonIcon={IconArrowsSort} buttonLabel='Sort'>
+        <PopoverButton
+          buttonIcon={IconArrowsSort}
+          buttonLabel='Sort'
+          buttonSize='input-xs'
+          buttonVariant='filled'
+          iconSize='60%'
+          position='bottom'
+          strokeSize={1.5}
+        >
           {sortContent}
         </PopoverButton>
       )}

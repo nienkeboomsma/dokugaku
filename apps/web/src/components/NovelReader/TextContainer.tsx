@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 import classes from './TextContainer.module.css'
 import type { Direction } from '../../hooks/useNovelReaderDirection'
@@ -8,11 +8,14 @@ import type { Direction } from '../../hooks/useNovelReaderDirection'
 export default function TextContainer({
   children,
   direction,
+  fontSizeMultiplier,
+  lineHeightMultiplier,
 }: {
   children: ReactNode
   direction: Direction
+  fontSizeMultiplier: number
+  lineHeightMultiplier: number
 }) {
-  // TODO: allow user to change line height, font size etc. in settings?
   const className =
     direction === 'horizontal'
       ? classes.containerHorizontal
@@ -21,11 +24,14 @@ export default function TextContainer({
   const writingMode =
     direction === 'horizontal' ? 'horizontal-tb' : 'vertical-rl'
 
+  const style = {
+    '--font-size-multiplier': fontSizeMultiplier,
+    '--line-height-multiplier': lineHeightMultiplier,
+    writingMode,
+  } as React.CSSProperties
+
   return (
-    <div
-      className={`${classes.outerContainer} japanese`}
-      style={{ writingMode }}
-    >
+    <div className={`${classes.outerContainer} japanese`} style={style}>
       <div className={className}>{children}</div>
     </div>
   )
