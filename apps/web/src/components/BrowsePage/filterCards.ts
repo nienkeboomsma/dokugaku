@@ -1,11 +1,11 @@
 import { type WorkCardInfo } from '../../types/WorkCardInfo'
+import type { StatusOptions } from './BrowsePage'
 import { normalise } from '../../util/normaliseString'
 
 export default function filterCards(
   card: WorkCardInfo,
   debouncedSearchValue: string,
-  showFinished: boolean,
-  showAbandoned: boolean
+  showStatusOptions: StatusOptions
 ) {
   const { title, authors, status = '' } = card
 
@@ -20,12 +20,12 @@ export default function filterCards(
     return false
   }
 
-  if (!showFinished && status === 'read') {
-    return false
-  }
+  const readStatuses = Object.entries(showStatusOptions)
 
-  if (!showAbandoned && status === 'abandoned') {
-    return false
+  for (const [optionStatus, options] of readStatuses) {
+    if (status === optionStatus && !options.checked) {
+      return false
+    }
   }
 
   return true

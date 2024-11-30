@@ -2,17 +2,20 @@ import { Dispatch, SetStateAction } from 'react'
 
 import classes from './CheckboxGroup.module.css'
 import Checkbox from './Checkbox'
-import { Option } from './VocabFilter'
 
+export type Option = { checked: boolean; label?: string }
 export type Options = Record<string, Option>
 
 export default function CheckboxGroup<T extends Options>({
   options,
+  parentLabel,
   setOptions,
 }: {
   options: T
+  parentLabel?: string
   setOptions: Dispatch<SetStateAction<T>>
 }) {
+  console.log('options:', options)
   const allChecked = Object.values(options).every((option) => option.checked)
   const indeterminate =
     !allChecked && Object.values(options).some((option) => option.checked)
@@ -43,7 +46,7 @@ export default function CheckboxGroup<T extends Options>({
         isChildLevel={false}
         value={allChecked}
         indeterminate={indeterminate}
-        label='Show all'
+        label={parentLabel ?? 'Show all'}
         onChange={() =>
           setOptions((prev) => {
             const nextValue = { ...prev }

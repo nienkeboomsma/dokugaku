@@ -1,29 +1,23 @@
-import { Switch } from '@mantine/core'
+import type { Dispatch, SetStateAction } from 'react'
+
 import classes from './WorkCardFilter.module.css'
-import { Dispatch, SetStateAction } from 'react'
+import type { StatusOptions } from './BrowsePage'
+import CheckboxGroup from '../SearchFilterSort/CheckboxGroup'
 
 export default function WorkCardFilter({
-  showFinished,
-  setShowFinished,
-  showAbandoned,
-  setShowAbandoned,
+  setShowStatusOptions,
+  showStatusOptions,
 }: {
-  showFinished: boolean
-  setShowFinished: Dispatch<SetStateAction<boolean>>
-  showAbandoned: boolean
-  setShowAbandoned: Dispatch<SetStateAction<boolean>>
+  setShowStatusOptions: Dispatch<SetStateAction<StatusOptions>>
+  showStatusOptions: StatusOptions
 }) {
+  console.log('showStatusOptions', showStatusOptions)
   return (
     <div className={classes.filters}>
-      <Switch
-        checked={showFinished}
-        label='Show finished'
-        onChange={(event) => setShowFinished(event.currentTarget.checked)}
-      />
-      <Switch
-        checked={showAbandoned}
-        label='Show abandoned'
-        onChange={(event) => setShowAbandoned(event.currentTarget.checked)}
+      <CheckboxGroup
+        options={showStatusOptions}
+        parentLabel='Show all statuses'
+        setOptions={setShowStatusOptions}
       />
     </div>
   )

@@ -25,7 +25,7 @@ export default function Checkbox({
       indeterminate={indeterminate}
       key={id}
       label={label}
-      ml={isChildLevel ? 33 : ''}
+      ml={isChildLevel ? 28 : ''}
       mt={isChildLevel ? 'xs' : ''}
       onChange={onChange}
       size='xs'

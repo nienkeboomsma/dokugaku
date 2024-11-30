@@ -3,10 +3,10 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import CheckboxGroup, {
   type Options,
-} from '../../../components/VocabTable/VocabFilter/CheckboxGroup'
+} from '../../components/SearchFilterSort/CheckboxGroup'
 
 const meta = {
-  title: 'Vocab/Filter/Checkbox group',
+  title: 'Search/Checkbox group',
   component: CheckboxGroup,
 } satisfies Meta<typeof CheckboxGroup>
 

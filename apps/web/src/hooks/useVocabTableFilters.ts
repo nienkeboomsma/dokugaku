@@ -13,6 +13,7 @@ import { getSeriesOrWork, isWork } from '../components/VocabTable/utils'
 import {
   IgnoredOptions,
   JlptOptions,
+  MinimumValues,
 } from '../components/VocabTable/VocabFilter/VocabFilter'
 
 const getLocalStorageKeySuffix = (props: VocabTableProps) => {
@@ -105,7 +106,7 @@ export default function useVocabTableFilters(props: VocabTableProps) {
     key: `DOKUGAKU_SHOW_JLPT-${getLocalStorageKeySuffix(props)}`,
   })
 
-  const [minimumValues, setMinimumValues] = useLocalStorage({
+  const [minimumValues, setMinimumValues] = useLocalStorage<MinimumValues>({
     defaultValue: {
       volume: getFirstUnreadVolume(seriesOrWork)?.volumeNumber ?? 1,
       page: getInitialMinPageNumber(seriesOrWork),

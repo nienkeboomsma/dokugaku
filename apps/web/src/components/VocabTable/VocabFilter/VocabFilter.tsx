@@ -4,10 +4,11 @@ import { Box } from '@mantine/core'
 import classes from './VocabFilter.module.css'
 import { VocabTableType } from '../VocabTable'
 import { ListType } from './VocabSort'
-import CheckboxGroup, { Options } from './CheckboxGroup'
+import CheckboxGroup, {
+  Option,
+  Options,
+} from './../../SearchFilterSort/CheckboxGroup'
 import MinimumValueFilters from './MinimumValueFilters'
-
-export type Option = { checked: boolean; label?: string }
 
 export interface IgnoredOptions extends Options {
   ignored: Option
