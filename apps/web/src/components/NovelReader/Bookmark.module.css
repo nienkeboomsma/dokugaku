@@ -1,10 +1,39 @@
-.button {
+.container {
+  display: inline;
+  font-size: inherit;
+  position: relative;
+
   h1 > &,
   h2 > &,
   h3 > &,
   h4 > & {
     margin-inline-start: 0.625em;
   }
+}
 
+.button {
   font-size: inherit;
+}
+
+.paragraphBadge {
+  left: 50%;
+  top: calc(100% + 0.5rem);
+  opacity: 0;
+  position: absolute;
+  transform: translateX(-50%);
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  transition-delay: 300ms;
+  visibility: hidden;
+  writing-mode: horizontal-tb;
+
+  .container:hover > & {
+    opacity: 1;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
+    transition-delay: 1000ms;
+    visibility: visible;
+  }
 }

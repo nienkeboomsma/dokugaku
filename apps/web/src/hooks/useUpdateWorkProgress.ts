@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client'
 import { type GQL_UpdateWorkProgressMutation } from '@repo/graphql-types'
 
 import { UPDATE_WORK_PROGRESS } from '../graphql/queries/updateWorkProgress'
+import { isNumber } from '../types/utility'
 
 export const useUpdateWorkProgress = () => {
   const [updateProgressMutation] =
@@ -15,7 +16,7 @@ export const useUpdateWorkProgress = () => {
     if (
       !data ||
       !data.updateWorkProgress.success ||
-      !data.updateWorkProgress.progress
+      !isNumber(data.updateWorkProgress.progress)
     )
       throw Error
 

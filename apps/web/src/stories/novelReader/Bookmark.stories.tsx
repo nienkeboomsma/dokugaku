@@ -27,12 +27,23 @@ const meta: Meta<typeof Bookmark> = {
       }
 
       return (
-        <Story
-          args={{
-            ...context.args,
-            updateProgress: clickHandler,
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            fontSize: '1rem',
+            justifyContent: 'center',
+            height: '200px',
+            width: '200px',
           }}
-        />
+        >
+          <Story
+            args={{
+              ...context.args,
+              updateProgress: clickHandler,
+            }}
+          />
+        </div>
       )
     },
   ],
