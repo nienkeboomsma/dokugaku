@@ -1,5 +1,6 @@
 .container {
   display: inline;
+  font-family: var(--mantine-font-family);
   font-size: inherit;
   position: relative;
 

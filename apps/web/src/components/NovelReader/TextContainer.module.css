@@ -2,10 +2,11 @@
   --outer-container-padding: 4rem;
 
   direction: ltr;
+  font-family: 'Hiragino Sans', 'Meiryo', 'Hiragino Kaku Gothic ProN',
+    sans-serif;
   padding: var(--outer-container-padding);
 
   p {
-    font-family: 'Hiragino Sans', sans-serif;
     font-weight: 200;
     letter-spacing: 0.05em;
     word-wrap: break-word;
