@@ -4,14 +4,16 @@ import { Direction } from './useNovelReaderDirection'
 
 export default function useScrollToBookmark(
   direction: Direction,
+  fontSizeMultiplier: number,
+  lineHeightMultiplier: number,
   progress: number
 ) {
   const scrollToBookmark = () => {
-    const bodyElement = document.body.querySelector(`#bookmark-${progress}`)
+    const bookmarkElement = document.body.querySelector(`#bookmark-${progress}`)
 
-    if (!bodyElement) return
+    if (!bookmarkElement) return
 
-    bodyElement.scrollIntoView({ block: 'center' })
+    bookmarkElement.scrollIntoView({ block: 'center' })
   }
 
   // CLS interferes with the scroll target in vertical mode. Setting the
@@ -24,9 +26,10 @@ export default function useScrollToBookmark(
       HTMLImageElement & { error?: boolean }
     >
 
-    // There is no need to do this if all images are already fully loaded
-    // by the time the direction changes.
-    if (imgs.every((img) => img.naturalWidth)) return scrollToBookmark()
+    // There is no need to do this if there are no images or if all images are
+    // already fully loaded by the time the direction changes.
+    if (imgs.length === 0 || imgs.every((img) => img.naturalWidth))
+      return scrollToBookmark()
 
     const errorListenerCleanups: Array<() => void> = []
     const checkNaturalWidthCleanups: Array<() => void> = []
@@ -72,5 +75,5 @@ export default function useScrollToBookmark(
     }
 
     return effectCleanup
-  }, [direction])
+  }, [direction, fontSizeMultiplier, lineHeightMultiplier])
 }

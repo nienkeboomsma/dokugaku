@@ -46,7 +46,12 @@ export default function NovelReader({
   })
   const charCount = useCharacterCount()
 
-  useScrollToBookmark(direction, progress)
+  useScrollToBookmark(
+    direction,
+    fontSizeMultiplier,
+    lineHeightMultiplier,
+    progress
+  )
 
   return (
     <>
