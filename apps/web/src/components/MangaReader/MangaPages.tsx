@@ -1,6 +1,7 @@
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 
 import classes from './MangaPages.module.css'
+import textBoxClasses from './TextBox.module.css'
 import type { Page } from '../../types/MangaPage'
 import useMangaPagesScaling from '../../hooks/useMangaPagesScaling'
 import MangaPage from './MangaPage'
@@ -31,7 +32,7 @@ export default function MangaPages({
         minScale={0.2}
         onZoomStop={() => setDblClickAction('zoomOut')}
         panning={{
-          excluded: ['textBox'],
+          excluded: [textBoxClasses.hoverArea ?? ''],
           wheelPanning: true,
         }}
         pinch={{

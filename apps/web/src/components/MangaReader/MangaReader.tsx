@@ -51,7 +51,7 @@ export default function MangaReader({
     getInitialValueInEffect: false,
     key: `DOKUGAKU_TWO_PAGE_LAYOUT-${workId}`,
   })
-  const [currentPageNumber, setCurrentPageNumber] = useState(
+  const [currentPageNumber, setCurrentPageNumber] = useState(() =>
     determineCurrentPageNumber(initialPageNumber, twoPageLayout)
   )
   const [debouncedCurrentPageNumber] = useDebouncedValue(
