@@ -18,7 +18,7 @@ export default function filterVocab({
 }) {
   if (
     type === VocabTableType.SeriesOrWork &&
-    !showIgnoredOptions.ignored &&
+    !showIgnoredOptions.ignored.checked &&
     word.ignored
   ) {
     return false
@@ -26,7 +26,7 @@ export default function filterVocab({
 
   if (
     type === VocabTableType.SeriesOrWork &&
-    !showIgnoredOptions.unignored &&
+    !showIgnoredOptions.unignored.checked &&
     !word.ignored
   ) {
     return false
