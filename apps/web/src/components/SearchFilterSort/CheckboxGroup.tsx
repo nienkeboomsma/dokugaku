@@ -15,7 +15,6 @@ export default function CheckboxGroup<T extends Options>({
   parentLabel?: string
   setOptions: Dispatch<SetStateAction<T>>
 }) {
-  console.log('options:', options)
   const allChecked = Object.values(options).every((option) => option.checked)
   const indeterminate =
     !allChecked && Object.values(options).some((option) => option.checked)
@@ -23,7 +22,7 @@ export default function CheckboxGroup<T extends Options>({
   const items = Object.entries(options).map(([key, value]) => (
     <Checkbox
       isChildLevel
-      id={key}
+      key={key}
       label={value.label ?? key}
       onChange={() =>
         setOptions((prev) => {
