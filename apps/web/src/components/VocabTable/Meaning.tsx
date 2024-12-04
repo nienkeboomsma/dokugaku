@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 import classes from './Meaning.module.css'
 import { type Word } from '../../types/Word'
 import InlineUnorderedList from '../InlineUnorderedList'
@@ -14,7 +16,7 @@ function MeaningsList({ meanings }: { meanings: string[][] }) {
   )
 }
 
-export default function Meaning({ vocab }: { vocab: Word }) {
+function Meaning({ vocab }: { vocab: Word }) {
   const meanings = vocab.info.meaning
 
   if (vocab.info.meaning.length === 1) {
@@ -24,3 +26,5 @@ export default function Meaning({ vocab }: { vocab: Word }) {
 
   return <MeaningsList meanings={meanings} />
 }
+
+export default memo(Meaning)

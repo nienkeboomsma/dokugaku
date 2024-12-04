@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { Box } from '@mantine/core'
 import { DataTable, DataTableColumn } from 'mantine-datatable'
 import { IconMoodSad } from '@tabler/icons-react'
@@ -91,11 +91,11 @@ export default function VocabTable(props: VocabTableProps) {
     {
       accessor: 'reading',
       noWrap: true,
-      render: (vocab: Word) => Reading({ vocab, furigana }),
+      render: (vocab: Word) => <Reading vocab={vocab} furigana={furigana} />,
     },
     {
       accessor: 'meaning',
-      render: (vocab: Word) => Meaning({ vocab }),
+      render: (vocab: Word) => <Meaning vocab={vocab} />,
     },
     {
       accessor: 'volumeNumber',
@@ -116,20 +116,48 @@ export default function VocabTable(props: VocabTableProps) {
       accessor: 'actions',
       title: '',
       textAlign: 'right',
-      render: (wordInRow: Word) =>
-        ActionButtons({
-          // TODO: show a toast if it doesn't work?
-          onExcludeWord: () => handleExcludeWord(wordInRow.id),
-          onUnexcludeWord: () => handleUnexcludeWord(wordInRow.id),
-          onIgnoreWord: () => handleIgnoredWord(wordInRow.id),
-          onUnignoreWord: () => handleUnignoredWord(wordInRow.id),
-          onMarkWordAsKnown: () => handleKnownWord(wordInRow.id),
-          onMarkWordAsUnknown: () => handleUnknownWord(wordInRow.id),
-          isPartOfSeries: isPartOfSeries(seriesOrWork),
-          isSeries: isSeries(seriesOrWork),
-          vocabTableType: type,
-          wordInRow,
-        }),
+      render: (wordInRow: Word) => {
+        const memoizedHandleExcludeWord = useCallback(
+          () => handleExcludeWord(wordInRow.id),
+          [wordInRow]
+        )
+        const memoizedHandleUnexcludeWord = useCallback(
+          () => handleUnexcludeWord(wordInRow.id),
+          [wordInRow]
+        )
+        const memoizedHandleIgnoredWord = useCallback(
+          () => handleIgnoredWord(wordInRow.id),
+          [wordInRow]
+        )
+        const memoizedHandleUnignoredWord = useCallback(
+          () => handleUnignoredWord(wordInRow.id),
+          [wordInRow]
+        )
+        const memoizedHandleKnownWord = useCallback(
+          () => handleKnownWord(wordInRow.id),
+          [wordInRow]
+        )
+        const memoizedHandleUnknownWord = useCallback(
+          () => handleUnknownWord(wordInRow.id),
+          [wordInRow]
+        )
+
+        return (
+          <ActionButtons
+            // TODO: show a toast if it doesn't work?
+            onExcludeWord={memoizedHandleExcludeWord}
+            onUnexcludeWord={memoizedHandleUnexcludeWord}
+            onIgnoreWord={memoizedHandleIgnoredWord}
+            onUnignoreWord={memoizedHandleUnignoredWord}
+            onMarkWordAsKnown={memoizedHandleKnownWord}
+            onMarkWordAsUnknown={memoizedHandleUnknownWord}
+            isPartOfSeries={isPartOfSeries(seriesOrWork)}
+            isSeries={isSeries(seriesOrWork)}
+            vocabTableType={type}
+            wordInRow={wordInRow}
+          />
+        )
+      },
     },
   ]
 

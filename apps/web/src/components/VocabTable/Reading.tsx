@@ -1,14 +1,10 @@
+import { memo } from 'react'
+
 import classes from './Reading.module.css'
 import { isJLPT, type Word } from '../../types/Word'
 import JLPTLabel from './JLPTLabel'
 
-export default function Reading({
-  vocab,
-  furigana,
-}: {
-  vocab: Word
-  furigana?: boolean
-}) {
+function Reading({ vocab, furigana }: { vocab: Word; furigana?: boolean }) {
   const kanji = vocab.info.kanji
   const kana = vocab.info.kana
   const jlpt = vocab.jlpt
@@ -47,3 +43,5 @@ export default function Reading({
     )
   }
 }
+
+export default memo(Reading)

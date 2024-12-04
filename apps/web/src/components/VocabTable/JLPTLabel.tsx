@@ -1,9 +1,10 @@
+import { memo } from 'react'
 import { Badge, useMantineTheme } from '@mantine/core'
 
 import { JLPT } from '../../types/Word'
 import { Color, getOffsetThemeColor } from '../../util/getOffsetThemeColor'
 
-export default function JLPTLabel({ jlpt }: { jlpt: JLPT }) {
+function JLPTLabel({ jlpt }: { jlpt: JLPT }) {
   const theme = useMantineTheme()
 
   const colorsMap: Record<JLPT, string> = {
@@ -26,3 +27,5 @@ export default function JLPTLabel({ jlpt }: { jlpt: JLPT }) {
     </Badge>
   )
 }
+
+export default memo(JLPTLabel)

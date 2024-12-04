@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { ActionIcon, MantineColor, Tooltip } from '@mantine/core'
 
-export default function ActionButton({
+function ActionButton({
   icon: Icon,
   iconColor,
   onClick,
@@ -25,3 +26,5 @@ export default function ActionButton({
     </Tooltip>
   )
 }
+
+export default memo(ActionButton)

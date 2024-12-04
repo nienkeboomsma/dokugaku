@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import {
   IconCheck,
   IconEye,
@@ -27,7 +28,7 @@ type ActionButtonsProps = {
   wordInRow: Word
 }
 
-export default function ActionButtons(props: ActionButtonsProps) {
+function ActionButtons(props: ActionButtonsProps) {
   return (
     <div className={classes.container}>
       {(props.vocabTableType === VocabTableType.SeriesOrWork ||
@@ -85,3 +86,5 @@ export default function ActionButtons(props: ActionButtonsProps) {
     </div>
   )
 }
+
+export default memo(ActionButtons)
