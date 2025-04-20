@@ -5,6 +5,7 @@ import { type SeriesInfo } from '../../types/SeriesInfo'
 import ScaleLink from '../ScaleLink'
 import WorkCover from '../WorkCover'
 import WorkStatusBadge from '../BrowsePage/WorkStatusBadge'
+import { GQL_ReadStatus } from '@repo/graphql-types'
 
 const MIN_WIDTH = '7.5rem'
 
@@ -26,7 +27,11 @@ export default function Volume({
             grow
             maxProgress={volume.maxProgress}
             priority={priority}
-            progress={volume.progress}
+            progress={
+              volume.status === GQL_ReadStatus.Read
+                ? volume.maxProgress
+                : volume.progress
+            }
           />
         </Indicator>
         <WorkStatusBadge

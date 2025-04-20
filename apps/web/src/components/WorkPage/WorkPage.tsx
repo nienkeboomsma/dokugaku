@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type {
+import {
   GQL_ReadStatus,
-  GQL_UpdateWorkReadStatusMutation,
+  type GQL_UpdateWorkReadStatusMutation,
 } from '@repo/graphql-types'
 import { useMutation } from '@apollo/client'
 import { notifications } from '@mantine/notifications'
@@ -98,7 +98,11 @@ export default function WorkPage({ work }: { work?: WorkInfo }) {
               coverPath={`/assets/${work.id}/cover.webp`}
               maxProgress={work.maxProgress}
               priority
-              progress={work.progress}
+              progress={
+                work.status === GQL_ReadStatus.Read
+                  ? work.maxProgress
+                  : work.progress
+              }
               width={COVER_WIDTH}
             />
             <ReadStatusSelector
