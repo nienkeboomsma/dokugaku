@@ -12,6 +12,7 @@ import { processManga } from './processManga.js'
 import { processNovel } from './processNovel.js'
 import { processKnownWords } from './processKnownWords.js'
 import { errorHandler } from './errorHandler.js'
+import { searchCorpus } from './searchCorpus.js'
 
 const app: Express = express()
 
@@ -35,6 +36,8 @@ app.post(
 )
 
 app.post('/knownWords', validateKnownWords, processKnownWords)
+
+app.post('/searchCorpus', searchCorpus)
 
 app.use(errorHandler)
 

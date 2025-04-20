@@ -120,9 +120,11 @@ services:
       dockerfile: ./services/work-processor/Dockerfile
     environment:
       ALLOW_OTHER_DEVICES: ${ALLOW_OTHER_DEVICES}
+      HOST_IP: ${HOST_IP}
       ICHIRAN_PORT: ${ICHIRAN_PORT}
       MOKURO_PORT: ${MOKURO_PORT}
       POSTGRES_PASSWORD: ${DB_PG_PASSWORD}
+      WEB_PORT: ${WEB_PORT}
       WORK_PROCESSOR_PORT: ${WORK_PROCESSOR_PORT}
     networks:
       - backend
