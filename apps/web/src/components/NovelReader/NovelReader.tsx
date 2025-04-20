@@ -7,7 +7,7 @@ import classes from './NovelReader.module.css'
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
 import useNovelReaderDirection from '../../hooks/useNovelReaderDirection'
 import { useCharacterCount } from '../../hooks/useCharacterCount'
-import useScrollToBookmark from '../../hooks/useScrollToBookmark'
+import useScrollToParagraph from '../../hooks/useScrollToParagraph'
 import { getPercentage } from '../../util/getPercentage'
 import NovelReaderMenu from './NovelReaderMenu'
 import CharacterCount from './CharacterCount'
@@ -19,6 +19,7 @@ export default function NovelReader({
   fileDir,
   initialProgress,
   maxProgress,
+  scrollToParagraph,
   textNodes,
   updateProgress,
   workId,
@@ -26,6 +27,7 @@ export default function NovelReader({
   fileDir: string
   initialProgress: number
   maxProgress: number
+  scrollToParagraph?: number
   textNodes: NovelJSONContent[]
   updateProgress: (newProgress: number) => Promise<number>
   workId: string
@@ -46,11 +48,11 @@ export default function NovelReader({
   })
   const charCount = useCharacterCount()
 
-  useScrollToBookmark(
+  useScrollToParagraph(
     direction,
     fontSizeMultiplier,
     lineHeightMultiplier,
-    progress
+    scrollToParagraph || progress
   )
 
   return (

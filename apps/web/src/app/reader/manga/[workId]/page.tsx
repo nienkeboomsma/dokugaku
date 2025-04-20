@@ -9,15 +9,20 @@ export const metadata: Metadata = {
 
 export default async function MangaReader({
   params,
+  searchParams,
 }: {
   params: { workId: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
   const workProgress = await getWorkProgress(params.workId)
+  const openAtPage = Array.isArray(searchParams.page)
+    ? 0
+    : Number(searchParams.page)
 
   return (
     <>
       {workProgress && <title>{workProgress.title}</title>}
-      <MangaReaderPage workProgress={workProgress} />
+      <MangaReaderPage openAtPage={openAtPage} workProgress={workProgress} />
     </>
   )
 }

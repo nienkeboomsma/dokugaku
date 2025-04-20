@@ -9,15 +9,23 @@ export const metadata: Metadata = {
 
 export default async function NovelReader({
   params,
+  searchParams,
 }: {
   params: { workId: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
   const workProgress = await getWorkProgress(params.workId)
+  const scrollToParagraph = Array.isArray(searchParams.paragraph)
+    ? 0
+    : Number(searchParams.paragraph)
 
   return (
     <>
       {workProgress && <title>{workProgress.title}</title>}
-      <NovelReaderPage workProgress={workProgress} />
+      <NovelReaderPage
+        scrollToParagraph={scrollToParagraph}
+        workProgress={workProgress}
+      />
     </>
   )
 }

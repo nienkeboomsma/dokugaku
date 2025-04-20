@@ -2,18 +2,21 @@ import { useEffect } from 'react'
 
 import { Direction } from './useNovelReaderDirection'
 
-export default function useScrollToBookmark(
+export default function useScrollToParagraph(
   direction: Direction,
   fontSizeMultiplier: number,
   lineHeightMultiplier: number,
-  progress: number
+  paragraph: number
 ) {
   const scrollToBookmark = () => {
-    const bookmarkElement = document.body.querySelector(`#bookmark-${progress}`)
+    const paragraphElement = document.body.querySelector(
+      `p:has(#bookmark-${paragraph})`
+    ) as HTMLParagraphElement | undefined
 
-    if (!bookmarkElement) return
+    if (!paragraphElement) return
 
-    bookmarkElement.scrollIntoView({ block: 'center' })
+    paragraphElement.style.outlineWidth = '1.5px'
+    paragraphElement.scrollIntoView({ block: 'center' })
   }
 
   // CLS interferes with the scroll target in vertical mode. Setting the
