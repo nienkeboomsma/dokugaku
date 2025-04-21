@@ -17,7 +17,7 @@ export default function HitsPagination({
   onChange: (hit: number) => void
   setCurrentHitIndex: Dispatch<SetStateAction<number>>
 }) {
-  if (hits.length <= 0) return
+  if (hits.length <= 1) return
 
   if (!onChange) {
     onChange = () => {}
