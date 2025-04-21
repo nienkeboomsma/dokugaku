@@ -1,17 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Indicator } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
+import { notifications } from '@mantine/notifications'
 
 import classes from './SearchCorpusPage.module.css'
+import { queryWorkProcessor } from '../../util/queryWorkprocessor'
 import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import ScaleLink from '../ScaleLink'
-import {
-  WorkCardMinWidthDesktop,
-  WorkCardMinWidthMobile,
-  WorkCardMaxWidth,
-} from '../BrowsePage/WorkCard'
-import { queryWorkProcessor } from '../../util/queryWorkprocessor'
+import WorkCover from '../WorkCover'
 
 type CorpusSearchResult = {
   hitCount: number
@@ -26,24 +24,34 @@ export default function SearchCorpusPage() {
   const [searchValue, setSearchValue] = useState('')
   const [debouncedSearchValue] = useDebouncedValue(searchValue, 500)
 
+  console.table({ hits, noHits })
+
   useEffect(() => {
-    if (!debouncedSearchValue) return
-
     const effect = async () => {
-      const data = await queryWorkProcessor('searchCorpus', {
-        query: debouncedSearchValue,
-      })
+      try {
+        if (debouncedSearchValue === '') {
+          setNoHits(false)
+          setHits([])
+          return
+        }
 
-      if (!data) throw Error
+        const data = await queryWorkProcessor('searchCorpus', {
+          query: debouncedSearchValue,
+        })
 
-      const { hits } = data
+        if (!data) throw Error
 
-      if (hits.length < 1) {
-        setNoHits(true)
+        const { hits } = data
+
+        setNoHits(hits.length <= 0)
+        setHits(hits)
+      } catch {
+        notifications.show({
+          title: 'Unable to search corpus',
+          message: '(Re)start all containers and try again',
+          color: 'red',
+        })
       }
-
-      setNoHits(false)
-      setHits(data.hits)
     }
 
     effect()
@@ -55,9 +63,8 @@ export default function SearchCorpusPage() {
     hits.length < maxNumberOfColumns ? hits.length : maxNumberOfColumns
 
   const cssVariables = {
-    '--column-min-width-desktop': WorkCardMinWidthDesktop,
-    '--column-min-width-mobile': WorkCardMinWidthMobile,
-    '--grid-width': `calc(${numberOfColumns} * ${WorkCardMaxWidth} + (${numberOfColumns - 1} * var(--mantine-spacing-lg))`,
+    '--column-width': '7.5rem',
+    '--grid-width': `calc(${numberOfColumns} * var('--column-width') + (${numberOfColumns - 1} * var(--mantine-spacing-lg))`,
   } as React.CSSProperties
 
   return (
@@ -67,16 +74,21 @@ export default function SearchCorpusPage() {
         searchValue={searchValue}
         setSearchValue={setSearchValue}
       />
-      <div className={classes.worksContainer}>
-        {hits.map((hit) => {
-          return (
-            <ScaleLink href={hit.url} key={hit.id}>
-              {/* <WorkCard workCardInfo={hit} /> */}
-              {`(${hit.hitCount})   ${hit.title}`}
-            </ScaleLink>
-          )
-        })}
-      </div>
+      {noHits ? (
+        'No results'
+      ) : (
+        <div className={classes.worksContainer}>
+          {hits.map((hit) => {
+            return (
+              <ScaleLink href={hit.url} key={hit.id}>
+                <Indicator label={hit.hitCount} offset={5} size={'1.4rem'}>
+                  <WorkCover coverPath={`/assets/${hit.id}/cover.webp`} grow />
+                </Indicator>
+              </ScaleLink>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
