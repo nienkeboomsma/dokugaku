@@ -37,7 +37,9 @@ export async function searchCorpus(
 
   body.hits = hits
     .map<Hit>((hit) => {
-      const uniqueHitPageNumbers = [...new Set(hit.pageNumbers)].sort()
+      const uniqueHitPageNumbers = [...new Set(hit.pageNumbers)].sort(
+        (a, b) => a - b
+      )
       let readPageNumbers: number[] = []
 
       switch (hit.status) {
