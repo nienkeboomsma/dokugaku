@@ -7,6 +7,7 @@ import { findWordsInWorks } from './db/words/findWordsInWorks.js'
 
 type Hit = {
   id: string
+  hitCount: number
   title: string
   url: string
 }
@@ -50,15 +51,13 @@ export async function searchCorpus(
       }
 
       return {
+        hitCount: readPageNumbers.length,
         id: hit.id,
         title: hit.title,
-        url:
-          readPageNumbers.length > 0
-            ? `http://${process.env.HOST_IP}:${process.env.WEB_PORT}/reader/${hit.workType}/${hit.id}?hits=${readPageNumbers.join(',')}`
-            : '',
+        url: `http://${process.env.HOST_IP}:${process.env.WEB_PORT}/reader/${hit.workType}/${hit.id}?hits=${readPageNumbers.join(',')}`,
       }
     })
-    .filter((hit) => hit.url)
+    .filter((hit) => hit.hitCount > 0)
 
   return res.status(200).json(body)
 }
