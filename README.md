@@ -8,19 +8,19 @@ You upload the manga and novels you want to read and it will show you (1) what p
 
 - Auto-fill the volume number, title and author so it is easier to upload the next volume in a series.
 - Skip the Mokuro (OCR) step if your host computer can get it done faster.
-<p align="center"><img alt="upload" src="https://github.com/user-attachments/assets/b8448ba8-8cd3-4a61-a129-6f1d3067e4df" width="80%"/></p><br/>
+<p align="center"><img alt="upload" src="https://github.com/user-attachments/assets/f4532c10-0541-47e3-bf3c-d8e7986c032c" width="80%"/></p><br/>
 
 **Browse your manga and novels**
 
 - Choose your next work based on the percentage of vocab you already know.
 - Filter the results by title, author and read status.
-<p align="center"><img alt="browse" src="https://github.com/user-attachments/assets/5658b6f3-b6c2-41ae-89ad-4d58cd26d3f4" width="80%"/></p><br/>
+<p align="center"><img alt="browse" src="https://github.com/user-attachments/assets/25a5286e-38e0-4a2c-b017-97d508e9f9bd" width="80%"/></p><br/>
 
 **Manage your progress**
 
 - Keep track of your progress in the works you are currently reading.
 - Choose the next words to learn based on their frequency across all your unread works.
-<p align="center"><img alt="dashboard" src="https://github.com/user-attachments/assets/053dde08-474e-477d-a02f-57d3f1722741" width="80%"/></p><br/>
+<p align="center"><img alt="dashboard" src="https://github.com/user-attachments/assets/3502c7c1-b94b-4ab8-8d4c-f4951736d812" width="80%"/></p><br/>
 
 **Get frequency lists**
 
@@ -28,13 +28,13 @@ You upload the manga and novels you want to read and it will show you (1) what p
 - Mark words as known, ignored (within that specific work/series) or excluded (everywhere).
 - Search for a specific word or filter vocab by minimum frequency, ignored status or JLPT level.
 - Automatically save your filters per work or series.
-<p align="center"><img alt="frequency list" src="https://github.com/user-attachments/assets/12865e23-70b8-4907-aa77-a3f5a6c04f59" width="80%"/></p><br/>
+<p align="center"><img alt="frequency list" src="https://github.com/user-attachments/assets/c8d8ab4a-240e-4f7a-835c-acf8a58110be" width="80%"/></p><br/>
 
 **Get glossaries**
 
 - View the unknown vocab for the pages you are reading next in order of their occurrence.
 - Check the frequency score for each word to decide if it's worth making a flashcard for.
-<p align="center"><img alt="glossary" src="https://github.com/user-attachments/assets/b82cc4d4-0cbd-4298-bb16-7abd2cbd2546" width="80%"/></p><br/>
+<p align="center"><img alt="glossary" src="https://github.com/user-attachments/assets/70c7c99e-305e-4cae-b84e-c1f9bfaa0c64" width="80%"/></p><br/>
 
 **Read your manga with dictionary lookups**
 
@@ -63,14 +63,14 @@ You upload the manga and novels you want to read and it will show you (1) what p
 - Find examples of how particular vocabulary is used across your uploaded works.
 - Search only the sentences you have already read or search the entire corpus.
 - Sort by title or by number of hits.
-<p align="center"><img alt="corpus search page" src="https://github.com/user-attachments/assets/ec95a2af-9875-461f-95d5-ccacd191830c" width="80%"/></p>
+<p align="center"><img alt="corpus search page" src="https://github.com/user-attachments/assets/4028c838-9163-4bd2-aa1a-48aea17eacca" width="80%"/></p>
 <p align="center"><img alt="view results in manga reader" src="https://github.com/user-attachments/assets/8c25eed6-71fe-492c-bee5-b5234cbc3097" width="80%"/></p>
 <p align="center"><img alt="view results in novel reader" src="https://github.com/user-attachments/assets/94827d04-6f34-48ce-9579-19701f8f1f52" width="80%"/></p>
 
 **Upload your known vocab**
 
 - Mark thousands of words as known in one go.
-<p align="center"><img alt="upload known words" src="https://github.com/user-attachments/assets/333fc7a4-5b8a-4acd-ad76-164ecb951208" width="80%"/></p>
+<p align="center"><img alt="upload known words" src="https://github.com/user-attachments/assets/81ff47da-0ce2-4bf8-a064-3ef8bc8ef133" width="80%"/></p>
 
 # Scope of this project
 
