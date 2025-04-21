@@ -4,7 +4,10 @@
 }
 
 .root {
-  background-color: var(--mantine-color-body);
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-7)
+  );
   border: solid 1px
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-6));
   border-radius: var(--mantine-radius-default);

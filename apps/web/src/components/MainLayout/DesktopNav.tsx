@@ -8,7 +8,7 @@ import AvatarMenu from './AvatarMenu'
 const links = [
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Browse', href: '/browse' },
-  { label: 'Seach corpus', href: '/search-corpus' },
+  { label: 'Search corpus', href: '/search-corpus' },
   { label: 'Upload', href: '/upload' },
 ]
 
@@ -27,13 +27,13 @@ export default function DesktopNav({ visibleFrom }: { visibleFrom: string }) {
       ))}
       <AvatarMenu>
         <ActionIcon
-          aria-label='User settings'
-          ml='md'
-          radius='xl'
-          size='lg'
-          variant='light'
+          aria-label="User settings"
+          ml="md"
+          radius="xl"
+          size="lg"
+          variant="light"
         >
-          <IconUserCircle size='70%' stroke={1.5} />
+          <IconUserCircle size="70%" stroke={1.5} />
         </ActionIcon>
       </AvatarMenu>
     </Box>
