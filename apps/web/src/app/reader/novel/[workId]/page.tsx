@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { getWorkProgress } from '../../../../graphql/queries/getWorkProgress'
 import NovelReaderPage from '../../../../components/NovelReader/NovelReaderPage'
+import { getHits } from '../../../../util/getHits'
 
 export const metadata: Metadata = {
   icons:
@@ -12,20 +13,15 @@ export default async function NovelReader({
   searchParams,
 }: {
   params: { workId: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const workProgress = await getWorkProgress(params.workId)
-  const scrollToParagraph = Array.isArray(searchParams.paragraph)
-    ? 0
-    : Number(searchParams.paragraph)
+  const hits = getHits(await searchParams)
 
   return (
     <>
       {workProgress && <title>{workProgress.title}</title>}
-      <NovelReaderPage
-        scrollToParagraph={scrollToParagraph}
-        workProgress={workProgress}
-      />
+      <NovelReaderPage hits={hits} workProgress={workProgress} />
     </>
   )
 }

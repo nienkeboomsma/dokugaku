@@ -14,25 +14,28 @@ import CharacterCount from './CharacterCount'
 import TextContainer from './TextContainer'
 import TextNodes from './TextNodes'
 import { useLocalStorage } from '@mantine/hooks'
+import HitsPagination from '../HitsPagination'
+import { scrollToParagraph } from '../../util/scrollToParagraph'
 
 export default function NovelReader({
   fileDir,
+  hits,
   initialProgress,
   maxProgress,
-  scrollToParagraph,
   textNodes,
   updateProgress,
   workId,
 }: {
   fileDir: string
+  hits: number[]
   initialProgress: number
   maxProgress: number
-  scrollToParagraph?: number
   textNodes: NovelJSONContent[]
   updateProgress: (newProgress: number) => Promise<number>
   workId: string
 }) {
   const [progress, setProgress] = useState(initialProgress)
+  const [currentHitIndex, setCurrentHitIndex] = useState(0)
   const { direction, toggleDirection } = useNovelReaderDirection(
     'vertical',
     workId
@@ -52,7 +55,8 @@ export default function NovelReader({
     direction,
     fontSizeMultiplier,
     lineHeightMultiplier,
-    scrollToParagraph || progress
+    hits.length > 0 ? hits[currentHitIndex]! : progress,
+    hits.length > 0
   )
 
   return (
@@ -91,6 +95,13 @@ export default function NovelReader({
           fileDir={fileDir}
         />
       </TextContainer>
+      <HitsPagination
+        currentHitIndex={currentHitIndex}
+        direction={direction == 'vertical' ? 'rtl' : 'ltr'}
+        hits={hits}
+        onChange={(value) => scrollToParagraph(value, true)}
+        setCurrentHitIndex={setCurrentHitIndex}
+      />
     </>
   )
 }

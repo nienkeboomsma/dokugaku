@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useDebouncedValue, useHotkeys, useLocalStorage } from '@mantine/hooks'
 import { useRouter } from 'next/navigation'
-import { AppShell, rem } from '@mantine/core'
+import { AppShell, Pagination, rem } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
 import classes from './MangaReader.module.css'
@@ -16,6 +16,7 @@ import {
 import useFullscreen from '../../hooks/useFullscreen'
 import MangaReaderHeader from './MangaReaderHeader'
 import MangaPages from './MangaPages'
+import HitsPagination from '../HitsPagination'
 
 const determineCurrentPageNumber = (
   pageNumber: number,
@@ -33,6 +34,7 @@ const determineCurrentPageNumber = (
 
 export default function MangaReader({
   getPageData,
+  hits,
   initialPageNumber,
   maxPageNumber,
   updateProgress,
@@ -41,6 +43,7 @@ export default function MangaReader({
   // TODO: decouple json from img; allow img to start loading before json
   //       arrives; filling in the textBoxes later is fine
   getPageData: (pageNumbers: number[]) => Promise<Array<Page | undefined>>
+  hits: number[]
   initialPageNumber: number
   maxPageNumber: number
   updateProgress: (newProgress: number) => Promise<number>
@@ -58,6 +61,7 @@ export default function MangaReader({
     currentPageNumber,
     1000
   )
+  const [currentHitIndex, setCurrentHitIndex] = useState(0)
   const [pages, setPages] = useState<Array<Page | undefined>>([])
 
   const showTwoPages = getShowTwoPages(
@@ -150,10 +154,7 @@ export default function MangaReader({
 
   return (
     <AppShell
-      classNames={{
-        header: classes.header,
-        main: classes.main,
-      }}
+      classNames={classes}
       header={fullscreen ? undefined : { height: headerHeight }}
     >
       {!fullscreen && (
@@ -173,6 +174,13 @@ export default function MangaReader({
       )}
       <AppShell.Main style={{ '--header-height': headerHeight }}>
         <MangaPages pages={pages} showTwoPages={showTwoPages} />
+        <HitsPagination
+          currentHitIndex={currentHitIndex}
+          direction='rtl'
+          hits={hits}
+          onChange={setCurrentPageNumber}
+          setCurrentHitIndex={setCurrentHitIndex}
+        />
       </AppShell.Main>
     </AppShell>
   )

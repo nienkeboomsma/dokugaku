@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { getWorkProgress } from '../../../../graphql/queries/getWorkProgress'
 import MangaReaderPage from '../../../../components/MangaReader/MangaReaderPage'
+import { getHits } from '../../../../util/getHits'
 
 export const metadata: Metadata = {
   icons:
@@ -12,17 +13,15 @@ export default async function MangaReader({
   searchParams,
 }: {
   params: { workId: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const workProgress = await getWorkProgress(params.workId)
-  const openAtPage = Array.isArray(searchParams.page)
-    ? 0
-    : Number(searchParams.page)
+  const hits = getHits(await searchParams)
 
   return (
     <>
       {workProgress && <title>{workProgress.title}</title>}
-      <MangaReaderPage openAtPage={openAtPage} workProgress={workProgress} />
+      <MangaReaderPage hits={hits} workProgress={workProgress} />
     </>
   )
 }

@@ -9,10 +9,10 @@ import { LoadingOverlay } from '@mantine/core'
 import NovelReader from './NovelReader'
 
 export default function NovelReaderPage({
-  scrollToParagraph,
+  hits,
   workProgress,
 }: {
-  scrollToParagraph?: number
+  hits: number[]
   workProgress?: Pick<WorkInfo, 'id' | 'maxProgress' | 'progress' | 'title'>
 }) {
   if (!workProgress) return 'Oops'
@@ -38,9 +38,9 @@ export default function NovelReaderPage({
       {workProgress.title && <title>{workProgress.title}</title>}
       <NovelReader
         fileDir={`/assets/${workProgress.id}/`}
+        hits={hits}
         initialProgress={workProgress.progress}
         maxProgress={workProgress.maxProgress}
-        scrollToParagraph={scrollToParagraph}
         textNodes={textNodes}
         updateProgress={(newProgress) =>
           updateProgress(newProgress, workProgress.id)
