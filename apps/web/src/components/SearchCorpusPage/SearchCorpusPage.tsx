@@ -26,6 +26,24 @@ type CorpusSearchResult = {
   }
 }
 
+const sortHits(hits: CorpusSearchResult[], includeUnread: boolean, sortOrder: SortOrder): CorpusSearchResult[] => {
+  let visibleHits = [...hits]
+
+  if (!includeUnread) {
+    visibleHits = visibleHits.filter((hit) => hit.readHits.hitCount > 0)
+  }
+
+  if (sortOrder === SortOrder.HitCount) {
+    visibleHits.sort((a, b) =>
+      includeUnread
+        ? b.allHits.hitCount - a.allHits.hitCount
+        : b.readHits.hitCount - a.readHits.hitCount
+    )
+  }
+
+  return visibleHits
+}
+
 export default function SearchCorpusPage() {
   const [noHits, setNoHits] = useState(false)
   const [hits, setHits] = useState<CorpusSearchResult[]>([])
@@ -60,6 +78,7 @@ export default function SearchCorpusPage() {
 
         setNoHits(hits.length <= 0)
         setHits(hits)
+        setVisibleHits(sortHits(hits, includeUnread, sortOrder))
       } catch {
         notifications.show({
           title: 'Unable to search corpus',
@@ -73,22 +92,8 @@ export default function SearchCorpusPage() {
   }, [debouncedSearchValue])
 
   useEffect(() => {
-    let visibleHits = [...hits]
-
-    if (!includeUnread) {
-      visibleHits = visibleHits.filter((hit) => hit.readHits.hitCount > 0)
-    }
-
-    if (sortOrder === SortOrder.HitCount) {
-      visibleHits.sort((a, b) =>
-        includeUnread
-          ? b.allHits.hitCount - a.allHits.hitCount
-          : b.readHits.hitCount - a.readHits.hitCount
-      )
-    }
-
-    return setVisibleHits(visibleHits)
-  }, [hits, includeUnread, sortOrder])
+    setVisibleHits(sortHits(hits, includeUnread, sortOrder))
+  }, [includeUnread, sortOrder])
 
   const maxNumberOfColumns = 4
 
