@@ -8,7 +8,7 @@ import { findWordsInWorks } from './db/words/findWordsInWorks.js'
 type Hit = {
   id: string
   title: string
-  URLs: string[]
+  url: string
 }
 
 type ResponseBody = {
@@ -36,31 +36,29 @@ export async function searchCorpus(
 
   body.hits = hits
     .map<Hit>((hit) => {
-      let urls: string[] = []
+      const uniqueHitPageNumbers = [...new Set(hit.pageNumbers)].sort()
+      let readPageNumbers: number[] = []
 
       switch (hit.status) {
         case 'read':
-          urls = hit.pageNumbers.map(
-            (pageNumber) =>
-              `http://${process.env.HOST_IP}/reader/${hit.workType}/${hit.id}`
-          )
+          readPageNumbers = uniqueHitPageNumbers
         case 'reading':
         case 'abandoned':
-          urls = hit.pageNumbers
-            .filter((pageNumber) => pageNumber <= hit.progress)
-            .map(
-              (pageNumber) =>
-                `http://${process.env.HOST_IP}:${process.env.WEB_PORT}/reader/${hit.workType}/${hit.id}?${hit.workType === 'manga' ? 'page' : 'paragraph'}=${pageNumber}`
-            )
+          readPageNumbers = uniqueHitPageNumbers.filter(
+            (pageNumber) => pageNumber <= hit.progress
+          )
       }
 
       return {
         id: hit.id,
         title: hit.title,
-        URLs: urls,
+        url:
+          readPageNumbers.length > 0
+            ? `http://${process.env.HOST_IP}:${process.env.WEB_PORT}/reader/${hit.workType}/${hit.id}?hits=${readPageNumbers.join(',')}`
+            : '',
       }
     })
-    .filter((hit) => hit.URLs.length > 0)
+    .filter((hit) => hit.url)
 
   return res.status(200).json(body)
 }
