@@ -2,14 +2,19 @@ import { NextFunction, Response } from 'express'
 
 import { SearchCorpusRequest } from './utils/types.js'
 import { runIchiran } from './utils/utils.js'
-import sql from './db/sql.js'
 import { findWordsInWorks } from './db/words/findWordsInWorks.js'
 
 type Hit = {
   id: string
-  hitCount: number
   title: string
-  url: string
+  allHits: {
+    hitCount: number
+    url: string
+  }
+  readHits: {
+    hitCount: number
+    url: string
+  }
 }
 
 type ResponseBody = {
@@ -35,31 +40,40 @@ export async function searchCorpus(
 
   const hits = await findWordsInWorks(userId, new Set(wordIds))
 
-  body.hits = hits
-    .map<Hit>((hit) => {
-      const uniqueHitPageNumbers = [...new Set(hit.pageNumbers)].sort(
-        (a, b) => a - b
-      )
-      let readPageNumbers: number[] = []
+  body.hits = hits.map<Hit>((hit) => {
+    const baseURL = `http://${process.env.HOST_IP}:${process.env.WEB_PORT}/reader/${hit.workType}/${hit.id}?hits=`
+    const uniquePageNumbers = [...new Set(hit.pageNumbers)].sort(
+      (a, b) => a - b
+    )
+    let readPageNumbers: number[] = []
 
-      switch (hit.status) {
-        case 'read':
-          readPageNumbers = uniqueHitPageNumbers
-        case 'reading':
-        case 'abandoned':
-          readPageNumbers = uniqueHitPageNumbers.filter(
-            (pageNumber) => pageNumber <= hit.progress
-          )
-      }
+    switch (hit.status) {
+      case 'read':
+        readPageNumbers = uniquePageNumbers
+      case 'reading':
+      case 'abandoned':
+        readPageNumbers = uniquePageNumbers.filter(
+          (pageNumber) => pageNumber <= hit.progress
+        )
+    }
 
-      return {
+    return {
+      id: hit.id,
+      title: hit.title,
+      allHits: {
+        hitCount: uniquePageNumbers.length,
+        url:
+          uniquePageNumbers.length > 0
+            ? baseURL + uniquePageNumbers.join(',')
+            : '',
+      },
+      readHits: {
         hitCount: readPageNumbers.length,
-        id: hit.id,
-        title: hit.title,
-        url: `http://${process.env.HOST_IP}:${process.env.WEB_PORT}/reader/${hit.workType}/${hit.id}?hits=${readPageNumbers.join(',')}`,
-      }
-    })
-    .filter((hit) => hit.hitCount > 0)
+        url:
+          readPageNumbers.length > 0 ? baseURL + readPageNumbers.join(',') : '',
+      },
+    }
+  })
 
   return res.status(200).json(body)
 }
