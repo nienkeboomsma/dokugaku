@@ -8,6 +8,7 @@ import AvatarMenu from './AvatarMenu'
 const links = [
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Browse', href: '/browse' },
+  { label: 'Seach corpus', href: '/search-corpus' },
   { label: 'Upload', href: '/upload' },
 ]
 

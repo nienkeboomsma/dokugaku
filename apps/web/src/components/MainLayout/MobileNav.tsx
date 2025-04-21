@@ -4,6 +4,7 @@ import Link from 'next/link'
 const links = [
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Browse', href: '/browse' },
+  { label: 'Seach corpus', href: '/search-corpus' },
   { label: 'Upload', href: '/upload' },
   { label: 'Known words', href: '/user/known-words' },
   { label: 'Excluded words', href: '/user/excluded-words' },
