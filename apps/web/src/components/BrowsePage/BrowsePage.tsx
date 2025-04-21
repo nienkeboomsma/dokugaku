@@ -45,7 +45,6 @@ export default function BrowsePage({
       },
       key: 'DOKUGAKU_SHOW_STATUS',
     })
-  console.log('showStatusOptions where its defined:', showStatusOptions)
 
   useEffect(() => {
     setWorkCards(

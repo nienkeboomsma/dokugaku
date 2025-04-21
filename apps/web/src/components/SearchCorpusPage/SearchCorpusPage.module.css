@@ -1,0 +1,24 @@
+.container {
+  --gap: var(--mantine-spacing-lg);
+
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.worksContainer {
+  container-type: inline-size;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, var(--column-width));
+  justify-content: center;
+  margin: 0 auto;
+  max-width: var(--grid-width);
+  width: 100%;
+
+  &::after {
+    content: '';
+    grid-column: 1 / -1;
+  }
+}

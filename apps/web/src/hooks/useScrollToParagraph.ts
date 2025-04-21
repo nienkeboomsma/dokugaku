@@ -1,26 +1,20 @@
 import { useEffect } from 'react'
 
 import { Direction } from './useNovelReaderDirection'
+import { scrollToParagraph } from '../util/scrollToParagraph'
 
-export default function useScrollToBookmark(
+export default function useScrollToParagraph(
   direction: Direction,
   fontSizeMultiplier: number,
   lineHeightMultiplier: number,
-  progress: number
+  paragraph: number,
+  setOutline: boolean
 ) {
-  const scrollToBookmark = () => {
-    const bookmarkElement = document.body.querySelector(`#bookmark-${progress}`)
-
-    if (!bookmarkElement) return
-
-    bookmarkElement.scrollIntoView({ block: 'center' })
-  }
-
   // CLS interferes with the scroll target in vertical mode. Setting the
   // width/height attributes of each img to match the intrinsic aspect ratio
   // solves the issue. The width/height is subsequently overridden in CSS.
   useEffect(() => {
-    if (direction === 'horizontal') scrollToBookmark()
+    if (direction === 'horizontal') scrollToParagraph(paragraph, setOutline)
 
     const imgs = Array.from(document.querySelectorAll('img')) as Array<
       HTMLImageElement & { error?: boolean }
@@ -29,7 +23,7 @@ export default function useScrollToBookmark(
     // There is no need to do this if there are no images or if all images are
     // already fully loaded by the time the direction changes.
     if (imgs.length === 0 || imgs.every((img) => img.naturalWidth))
-      return scrollToBookmark()
+      return scrollToParagraph(paragraph, setOutline)
 
     const errorListenerCleanups: Array<() => void> = []
     const checkNaturalWidthCleanups: Array<() => void> = []
@@ -64,7 +58,7 @@ export default function useScrollToBookmark(
     const checkReadyToScroll = setInterval(() => {
       if (imgs.every((img) => img.width || img.error)) {
         clearInterval(checkReadyToScroll)
-        scrollToBookmark()
+        scrollToParagraph(paragraph, setOutline)
       }
     }, 10)
 

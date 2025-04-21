@@ -7,16 +7,19 @@ import classes from './NovelReader.module.css'
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
 import useNovelReaderDirection from '../../hooks/useNovelReaderDirection'
 import { useCharacterCount } from '../../hooks/useCharacterCount'
-import useScrollToBookmark from '../../hooks/useScrollToBookmark'
+import useScrollToParagraph from '../../hooks/useScrollToParagraph'
 import { getPercentage } from '../../util/getPercentage'
 import NovelReaderMenu from './NovelReaderMenu'
 import CharacterCount from './CharacterCount'
 import TextContainer from './TextContainer'
 import TextNodes from './TextNodes'
 import { useLocalStorage } from '@mantine/hooks'
+import HitsPagination from '../HitsPagination'
+import { scrollToParagraph } from '../../util/scrollToParagraph'
 
 export default function NovelReader({
   fileDir,
+  hits,
   initialProgress,
   maxProgress,
   textNodes,
@@ -24,6 +27,7 @@ export default function NovelReader({
   workId,
 }: {
   fileDir: string
+  hits: number[]
   initialProgress: number
   maxProgress: number
   textNodes: NovelJSONContent[]
@@ -31,6 +35,7 @@ export default function NovelReader({
   workId: string
 }) {
   const [progress, setProgress] = useState(initialProgress)
+  const [currentHitIndex, setCurrentHitIndex] = useState(0)
   const { direction, toggleDirection } = useNovelReaderDirection(
     'vertical',
     workId
@@ -46,11 +51,12 @@ export default function NovelReader({
   })
   const charCount = useCharacterCount()
 
-  useScrollToBookmark(
+  useScrollToParagraph(
     direction,
     fontSizeMultiplier,
     lineHeightMultiplier,
-    progress
+    hits.length > 0 ? hits[currentHitIndex]! : progress,
+    hits.length > 0
   )
 
   return (
@@ -89,6 +95,13 @@ export default function NovelReader({
           fileDir={fileDir}
         />
       </TextContainer>
+      <HitsPagination
+        currentHitIndex={currentHitIndex}
+        direction={direction == 'vertical' ? 'rtl' : 'ltr'}
+        hits={hits}
+        onChange={(value) => scrollToParagraph(value, true)}
+        setCurrentHitIndex={setCurrentHitIndex}
+      />
     </>
   )
 }

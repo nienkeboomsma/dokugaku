@@ -36,12 +36,15 @@ const getPageData = async (pageNumbers: number[], workId: string) => {
 }
 
 export default function MangaReaderPage({
+  hits,
   workProgress,
 }: {
+  hits: number[]
   workProgress?: Pick<WorkInfo, 'id' | 'maxProgress' | 'progress' | 'title'>
 }) {
   if (!workProgress) return 'Oops'
 
+  const initialPageNumber = hits[0] || workProgress.progress || 1
   const updateProgress = useUpdateWorkProgress()
 
   return (
@@ -49,7 +52,8 @@ export default function MangaReaderPage({
       getPageData={(pageNumbers: number[]) =>
         getPageData(pageNumbers, workProgress.id)
       }
-      initialPageNumber={workProgress.progress || 1}
+      hits={hits}
+      initialPageNumber={initialPageNumber}
       maxPageNumber={workProgress.maxProgress}
       updateProgress={(newProgress) =>
         updateProgress(newProgress, workProgress.id)

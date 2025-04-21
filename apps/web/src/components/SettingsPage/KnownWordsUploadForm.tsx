@@ -5,7 +5,7 @@ import { Button, Fieldset, Textarea } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 
 import classes from './KnownWordsUploadForm.module.css'
-import getHost from '../../util/getHost'
+import { queryWorkProcessor } from '../../util/queryWorkprocessor'
 
 export default function KnownWordsUploadForm() {
   const [words, setWords] = useState('')
@@ -28,21 +28,7 @@ export default function KnownWordsUploadForm() {
     setLoading(true)
 
     try {
-      const host = getHost()
-      const port = process.env.NEXT_PUBLIC_WORK_PROCESSOR_PORT
-
-      const res = await fetch(`http://${host}:${port}/knownWords`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // TODO: userId should be supplied via env variable and set in an auth header
-        body: JSON.stringify({
-          userId: '6e41e9fd-c813-40e9-91fd-c51e47efab42',
-          words,
-        }),
-      })
-      const data = await res.json()
+      const data = await queryWorkProcessor('knownWords', { words })
 
       if (!data || data.error) throw Error
 

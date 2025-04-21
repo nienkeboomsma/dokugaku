@@ -1,8 +1,13 @@
 .outerContainer {
-  --outer-container-padding: 4rem;
+  --highlight-color: var(--mantine-primary-color-light-color);
+  --outer-container-padding: 5.5rem;
 
   direction: ltr;
   padding: var(--outer-container-padding);
+
+  *:has(span > button[id|='bookmark']) {
+    outline: solid 1.5px transparent;
+  }
 
   p {
     font-weight: 200;
@@ -90,6 +95,19 @@
   max-inline-size: calc(var(--base-text-size) * 35);
 
   p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    border-radius: 0.1rem;
+    margin-left: -0.4rem;
+    outline-offset: 0.4rem;
+    padding-left: 0.4rem;
+  }
+
+  p,
   blockquote {
     margin-block: 1em;
   }
@@ -164,6 +182,21 @@
     ((100vh - var(--inline-size)) - (2 * var(--outer-container-padding))) / 2
   );
   text-orientation: upright;
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    border-radius: 0.5rem;
+    margin-bottom: -0.3rem;
+    margin-top: -0.7rem;
+    outline-offset: -0.1rem;
+    padding-bottom: -0.3rem;
+    padding-top: 0.7rem;
+  }
 
   p {
     margin-block: 0;

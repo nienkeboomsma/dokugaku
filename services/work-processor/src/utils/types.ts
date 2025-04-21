@@ -32,6 +32,11 @@ export type KnownWordsRequest = TypedRequest<{
   words: string
 }>
 
+export type SearchCorpusRequest = TypedRequest<{
+  query: string
+  userId: string
+}>
+
 type LineCoordinates = [
   [number, number],
   [number, number],
