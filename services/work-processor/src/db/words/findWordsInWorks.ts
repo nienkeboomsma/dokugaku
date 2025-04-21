@@ -25,11 +25,14 @@ export async function findWordsInWorks(userId: string, wordIds: Set<number>) {
       ON w.id = ww.work_id
     JOIN user_work uw
       ON w.id = uw.work_id
+    LEFT JOIN series s
+      ON s.id = w.series_id
     WHERE word_id IN ${sql([...wordIds])}
       AND uw.user_id = ${userId}
     GROUP BY
-      w.id, uw.current_progress, uw.status
+      w.id, s.title, w.volume_number, uw.current_progress, uw.status
     ORDER BY
-      w.title ASC;
+      COALESCE(s.title, w.title) ASC,
+      CASE WHEN s.title IS NOT NULL THEN w.volume_number ELSE NULL END ASC;
   `
 }
