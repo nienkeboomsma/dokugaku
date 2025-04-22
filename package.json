@@ -11,19 +11,19 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/typescript": "4.0.6",
-    "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@graphql-codegen/typescript-operations": "^4.6.0",
     "@graphql-codegen/typescript-resolvers": "4.0.6",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "prettier": "^3.2.5",
+    "prettier": "^3.5.3",
     "turbo": "1.13.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
-    "graphql": "^16.8.1",
-    "graphql-config": "^5.0.3"
+    "graphql": "^16.10.0",
+    "graphql-config": "^5.1.4"
   }
 }

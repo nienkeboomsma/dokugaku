@@ -18,12 +18,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.8",
+    "axios": "^1.8.4",
     "cli-progress": "^3.12.0",
     "cors": "^2.8.5",
-    "dompurify": "^3.0.11",
-    "express": "^4.19.1",
-    "fast-xml-parser": "^4.3.6",
+    "dompurify": "^3.2.5",
+    "express": "^4.21.2",
+    "fast-xml-parser": "^4.5.3",
     "hast-util-from-html": "^2.0.1",
     "hast-util-to-html": "^9.0.0",
     "hast-util-to-mdast": "^10.1.0",
@@ -47,8 +47,8 @@
     "@types/multer": "^1.4.11",
     "@types/node": "^20.12.8",
     "@types/pg": "^8.11.4",
-    "eslint": "^8.57.0",
-    "tsup": "^8.0.2",
+    "eslint": "^8.57.1",
+    "tsup": "^8.4.0",
     "typescript": "^5.4.3"
   }
 }
