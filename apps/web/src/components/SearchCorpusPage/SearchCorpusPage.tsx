@@ -26,7 +26,11 @@ type CorpusSearchResult = {
   }
 }
 
-const sortHits(hits: CorpusSearchResult[], includeUnread: boolean, sortOrder: SortOrder): CorpusSearchResult[] => {
+const sortHits = (
+  hits: CorpusSearchResult[],
+  includeUnread: boolean,
+  sortOrder: SortOrder
+): CorpusSearchResult[] => {
   let visibleHits = [...hits]
 
   if (!includeUnread) {
@@ -123,6 +127,8 @@ export default function SearchCorpusPage() {
       />
       {noHits ? (
         'No results'
+      ) : !includeUnread && visibleHits.length === 0 && hits.length > 0 ? (
+        `No results in read sentences. ${hits.length} ${hits.length === 1 ? 'result' : 'results'} in unread sentences.`
       ) : (
         <div className={classes.worksContainer}>
           {visibleHits.map((hit) => {
