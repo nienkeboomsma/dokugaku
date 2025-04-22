@@ -27,14 +27,15 @@ out/
 build
 dist
 
-
 # Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Storybook
+*storybook.log
+
 # Misc
 .DS_Store
 *.pem
-
-*storybook.log
+n5.js
