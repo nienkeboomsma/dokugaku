@@ -155,7 +155,11 @@ export default function MangaReader({
   return (
     <AppShell
       classNames={classes}
-      header={fullscreen ? undefined : { height: headerHeight }}
+      header={
+        fullscreen
+          ? { collapsed: true, height: headerHeight }
+          : { height: headerHeight }
+      }
     >
       {!fullscreen && (
         <AppShell.Header>
