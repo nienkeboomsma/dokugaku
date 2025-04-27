@@ -1,8 +1,8 @@
 import { memo } from 'react'
-import { ActionIcon, Badge, NumberFormatter } from '@mantine/core'
-import { IconBookmark, IconBookmarkFilled } from '@tabler/icons-react'
+import { Badge, NumberFormatter } from '@mantine/core'
 
 import classes from './NovelBookmark.module.css'
+import Bookmark from '../Bookmark'
 
 const NovelBookmark = memo(function NovelBookmark({
   isCurrentProgress,
@@ -16,20 +16,15 @@ const NovelBookmark = memo(function NovelBookmark({
   const ariaLabel = isCurrentProgress
     ? `Paragraph ${paragraphNumber} is bookmarked`
     : `Bookmark paragraph ${paragraphNumber}`
-  const Icon = isCurrentProgress ? IconBookmarkFilled : IconBookmark
 
   return (
     <span className={classes.container}>
-      <ActionIcon
-        aria-label={ariaLabel}
-        classNames={{ root: classes.button }}
+      <Bookmark
+        ariaLabel={ariaLabel}
         id={`bookmark-${paragraphNumber}`}
-        onClick={updateProgress}
-        size="1em"
-        variant="subtle"
-      >
-        <Icon size="100%" stroke={1.5} />
-      </ActionIcon>
+        isCurrentProgress={isCurrentProgress}
+        updateProgress={updateProgress}
+      />
       <Badge classNames={{ root: classes.paragraphBadge }} component="span">
         <NumberFormatter thousandSeparator value={paragraphNumber} />
       </Badge>
