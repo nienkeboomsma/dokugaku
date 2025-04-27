@@ -44,9 +44,20 @@ export const Default: Story = {
       pageNumbers.map((pageNumber) =>
         mockMangaPages.find((page) => page.pageNumber === pageNumber)
       ),
+    hits: [],
     initialPageNumber: 1,
+    initialProgress: 0,
     maxPageNumber: mockMangaPages.length,
     updateProgress: async (newProgress) => newProgress,
+    workId: '20dd83f3-cfce-498e-b8f9-64562a7f1384/img0001.webp',
+  },
+}
+
+export const WithHits: Story = {
+  args: {
+    ...Default.args,
+    hits: [2, 6],
+    initialPageNumber: 2,
   },
 }
 

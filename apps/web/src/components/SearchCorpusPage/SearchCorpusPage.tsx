@@ -100,14 +100,16 @@ export default function SearchCorpusPage() {
     setVisibleHits(sortHits(hits, includeUnread, sortOrder))
   }, [includeUnread, sortOrder])
 
-  const maxNumberOfColumns = 4
+  const maxNumberOfColumns = 10
 
   const numberOfColumns =
-    hits.length < maxNumberOfColumns ? hits.length : maxNumberOfColumns
+    visibleHits.length < maxNumberOfColumns
+      ? visibleHits.length
+      : maxNumberOfColumns
 
   const cssVariables = {
     '--column-width': '7.5rem',
-    '--grid-width': `calc(${numberOfColumns} * var('--column-width') + (${numberOfColumns - 1} * var(--mantine-spacing-lg))`,
+    '--grid-width': `calc(${numberOfColumns} * var(--column-width) + (${numberOfColumns - 1} * var(--mantine-spacing-lg)))`,
   } as React.CSSProperties
 
   return (

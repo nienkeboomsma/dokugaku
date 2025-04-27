@@ -1,14 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { useArgs } from '@storybook/preview-api'
+import { useArgs, useState } from '@storybook/preview-api'
 
-import Bookmark from '../../components/NovelReader/Bookmark'
-import { ApolloMockedProvider } from '../../../.storybook/decorators/mocks'
-import { updateWorkProgress } from '../../../.storybook/mocks/updateWorkProgress'
+import NovelBookmark from '../../components/NovelReader/NovelBookmark'
 import { rtl } from '../../../.storybook/decorators/rtl'
 
-const meta: Meta<typeof Bookmark> = {
-  title: 'Novel reader/Bookmark',
-  component: Bookmark,
+const meta: Meta<typeof NovelBookmark> = {
+  title: 'Novel reader/Novel bookmark',
+  component: NovelBookmark,
   parameters: {
     backgrounds: {
       values: [
@@ -18,20 +16,16 @@ const meta: Meta<typeof Bookmark> = {
     },
   },
   decorators: [
-    ApolloMockedProvider([updateWorkProgress]),
     rtl,
     (Story, context) => {
-      const [, updateArgs] = useArgs()
-      const clickHandler = () => {
-        updateArgs({ isCurrentProgress: !context.args.isCurrentProgress })
-      }
+      const [isSavedBookmark, setIsSavedBookmark] = useState(false)
 
       return (
         <div
           style={{
             alignItems: 'center',
             display: 'flex',
-            fontSize: '1rem',
+            fontSize: '1.5rem',
             justifyContent: 'center',
             height: '200px',
             width: '200px',
@@ -40,7 +34,8 @@ const meta: Meta<typeof Bookmark> = {
           <Story
             args={{
               ...context.args,
-              updateProgress: clickHandler,
+              isSavedBookmark: isSavedBookmark,
+              saveBookmark: () => setIsSavedBookmark(!isSavedBookmark),
             }}
           />
         </div>
@@ -53,8 +48,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    isCurrentProgress: false,
-    paragraphNumber: 123,
+    paragraphNumber: 3456,
   },
 }
 

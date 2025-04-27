@@ -24,21 +24,21 @@ type Story = StoryObj<typeof meta>
 export const WantToRead: Story = {
   args: {
     indicatorSize,
-    volume: mockSeriesInfo.volumes[6] as VolumeInfo,
+    volume: mockSeriesInfo.volumes[4] as VolumeInfo,
   },
 }
 
 export const Reading: Story = {
   args: {
     indicatorSize,
-    volume: mockSeriesInfo.volumes[5] as VolumeInfo,
+    volume: mockSeriesInfo.volumes[3] as VolumeInfo,
   },
 }
 
 export const Read: Story = {
   args: {
     indicatorSize,
-    volume: mockSeriesInfo.volumes[4] as VolumeInfo,
+    volume: mockSeriesInfo.volumes[2] as VolumeInfo,
   },
 }
 

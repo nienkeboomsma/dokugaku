@@ -22,7 +22,7 @@ export default function Settings({
   currentPageNumber: number
   isSavedBookmark: boolean
   fullscreen: boolean
-  saveBookmark: () => {}
+  saveBookmark: () => void
   setTwoPageLayout: Dispatch<SetStateAction<boolean>>
   toggleFullscreen: () => void
   twoPageLayout: boolean
