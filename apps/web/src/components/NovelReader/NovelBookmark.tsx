@@ -5,15 +5,15 @@ import classes from './NovelBookmark.module.css'
 import Bookmark from '../Bookmark'
 
 const NovelBookmark = memo(function NovelBookmark({
-  isCurrentProgress,
+  isSavedBookmark,
   paragraphNumber,
-  updateProgress,
+  saveBookmark,
 }: {
-  isCurrentProgress: boolean
+  isSavedBookmark: boolean
   paragraphNumber: number
-  updateProgress: () => void
+  saveBookmark: () => void
 }) {
-  const ariaLabel = isCurrentProgress
+  const ariaLabel = isSavedBookmark
     ? `Paragraph ${paragraphNumber} is bookmarked`
     : `Bookmark paragraph ${paragraphNumber}`
 
@@ -22,8 +22,9 @@ const NovelBookmark = memo(function NovelBookmark({
       <Bookmark
         ariaLabel={ariaLabel}
         id={`bookmark-${paragraphNumber}`}
-        isCurrentProgress={isCurrentProgress}
-        updateProgress={updateProgress}
+        isSavedBookmark={isSavedBookmark}
+        size="1em"
+        saveBookmark={saveBookmark}
       />
       <Badge classNames={{ root: classes.paragraphBadge }} component="span">
         <NumberFormatter thousandSeparator value={paragraphNumber} />

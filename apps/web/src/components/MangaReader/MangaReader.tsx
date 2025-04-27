@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useDebouncedValue, useHotkeys, useLocalStorage } from '@mantine/hooks'
+import { useHotkeys, useLocalStorage } from '@mantine/hooks'
 import { useRouter } from 'next/navigation'
 import { AppShell, Pagination, rem } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
@@ -36,6 +36,7 @@ export default function MangaReader({
   getPageData,
   hits,
   initialPageNumber,
+  initialProgress,
   maxPageNumber,
   updateProgress,
   workId,
@@ -45,10 +46,12 @@ export default function MangaReader({
   getPageData: (pageNumbers: number[]) => Promise<Array<Page | undefined>>
   hits: number[]
   initialPageNumber: number
+  initialProgress: number
   maxPageNumber: number
   updateProgress: (newProgress: number) => Promise<number>
   workId: string
 }) {
+  const [progress, setProgress] = useState(initialProgress)
   const [twoPageLayout, setTwoPageLayout] = useLocalStorage({
     defaultValue: true,
     getInitialValueInEffect: false,
@@ -56,10 +59,6 @@ export default function MangaReader({
   })
   const [currentPageNumber, setCurrentPageNumber] = useState(() =>
     determineCurrentPageNumber(initialPageNumber, twoPageLayout)
-  )
-  const [debouncedCurrentPageNumber] = useDebouncedValue(
-    currentPageNumber,
-    1000
   )
   const [currentHitIndex, setCurrentHitIndex] = useState(0)
   const [pages, setPages] = useState<Array<Page | undefined>>([])
@@ -84,33 +83,38 @@ export default function MangaReader({
     getPageData(pageNumbers).then((data) => setPages(data))
   }, [currentPageNumber, twoPageLayout])
 
+  const isSavedBookmark = twoPageLayout
+    ? currentPageNumber == progress || currentPageNumber + 1 == progress
+    : currentPageNumber == progress
+
   const router = useRouter()
-  useEffect(() => {
-    const sendData = async () => {
-      try {
-        const newProgress = showTwoPages
+  const saveBookmark = async () => {
+    try {
+      const newProgress = isSavedBookmark
+        ? 0
+        : showTwoPages
           ? currentPageNumber + 1
           : currentPageNumber
-        await updateProgress(newProgress)
 
-        // This flushes the NextJS router cache
-        router.refresh()
-      } catch (error) {
-        console.log(error)
-        notifications.show({
-          title: 'Unable to save progress',
-          message: (
-            <span>
-              Are the <code>db</code> and <code>graphql</code> containers
-              running?
-            </span>
-          ),
-          color: 'red',
-        })
-      }
+      await updateProgress(newProgress)
+
+      setProgress(newProgress)
+
+      // This flushes the NextJS router cache
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+      notifications.show({
+        title: 'Unable to save progress',
+        message: (
+          <span>
+            Are the <code>db</code> and <code>graphql</code> containers running?
+          </span>
+        ),
+        color: 'red',
+      })
     }
-    sendData()
-  }, [debouncedCurrentPageNumber])
+  }
 
   useHotkeys([
     [
@@ -166,7 +170,9 @@ export default function MangaReader({
           <MangaReaderHeader
             currentPageNumber={currentPageNumber}
             fullscreen={fullscreen}
+            isSavedBookmark={isSavedBookmark}
             maxPageNumber={maxPageNumber}
+            saveBookmark={saveBookmark}
             setCurrentPageNumber={setCurrentPageNumber}
             setTwoPageLayout={setTwoPageLayout}
             showTwoPages={showTwoPages}
@@ -180,7 +186,7 @@ export default function MangaReader({
         <MangaPages pages={pages} showTwoPages={showTwoPages} />
         <HitsPagination
           currentHitIndex={currentHitIndex}
-          direction='rtl'
+          direction="rtl"
           hits={hits}
           onChange={setCurrentPageNumber}
           setCurrentHitIndex={setCurrentHitIndex}
