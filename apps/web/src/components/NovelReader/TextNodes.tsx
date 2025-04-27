@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { notifications } from '@mantine/notifications'
 
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
-import Bookmark from './Bookmark'
+import NovelBookmark from './NovelBookmark'
 
 // Is this hacky? Yes. Does it work? Also yes.
 // None of these components will change their order or be added/removed between
@@ -192,7 +192,7 @@ const RenderNode = memo(function RenderNode({
       updateProgress={updateProgress}
     >
       {node.type !== 'hr' && !elementIsOrContainsBlockImage(node) && (
-        <Bookmark
+        <NovelBookmark
           isCurrentProgress={isCurrentProgress}
           key={`bookmark-${paragraphNumber}`}
           paragraphNumber={paragraphNumber}
