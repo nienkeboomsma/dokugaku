@@ -2,6 +2,9 @@
   --gap: var(--mantine-spacing-lg);
 
   align-items: center;
+  /* container-type can't go in .worksContainer due to a Safari bug: */
+  /* https://bugs.webkit.org/show_bug.cgi?id=256047                  */
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
@@ -10,13 +13,12 @@
 .worksContainer {
   --column-min-width: var(--column-min-width-desktop);
 
-  container-type: inline-size;
   display: grid;
   gap: var(--gap);
   grid-template-columns: repeat(
     auto-fit,
     /* max-content is less than ideal when there are few volumes (because it
-       makes column sizes inconsistent), but it provides the best balance 
+       makes column sizes inconsistent), but it provides the best balance
        between showing as many cards and as little whitespace as possible and
        allowing the cards to be bigger when there is sufficient space */
       minmax(var(--column-min-width), max-content)
@@ -28,10 +30,5 @@
 
   @media (max-width: em(359px)) {
     --column-min-width: var(--column-min-width-mobile);
-  }
-
-  &::after {
-    content: '';
-    grid-column: 1 / -1;
   }
 }

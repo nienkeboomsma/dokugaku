@@ -17,7 +17,6 @@ const getCSSVariables = (
   const variables = {} as CSSVariables
 
   if (isNumber(progress) && isNumber(maxProgress)) {
-
     variables['--unread-width'] =
       `calc(100% - ${getPercentage(progress, maxProgress)}%)`
   }
@@ -61,7 +60,7 @@ export default function WorkCover({
       }
     >
       <Image
-        alt='Cover image'
+        alt="Cover image"
         className={classes.img}
         fill
         priority={priority}

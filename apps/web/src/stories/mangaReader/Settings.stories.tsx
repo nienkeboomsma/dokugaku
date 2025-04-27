@@ -9,6 +9,7 @@ const meta: Meta<typeof Settings> = {
   component: Settings,
   decorators: [
     (Story) => {
+      const [isSavedBookmark, setIsSavedBookmark] = useState(false)
       const [twoPageLayout, setTwoPageLayout] = useState(false)
       const { fullscreen, toggleFullscreen } = useFullscreen()
 
@@ -16,6 +17,10 @@ const meta: Meta<typeof Settings> = {
         <Story
           args={{
             fullscreen,
+            isSavedBookmark,
+            saveBookmark: () => {
+              setIsSavedBookmark(!isSavedBookmark)
+            },
             setTwoPageLayout,
             toggleFullscreen,
             twoPageLayout,
