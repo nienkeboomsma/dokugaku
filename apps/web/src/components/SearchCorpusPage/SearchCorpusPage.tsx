@@ -69,6 +69,7 @@ export default function SearchCorpusPage() {
         if (debouncedSearchValue === '') {
           setNoHits(false)
           setHits([])
+          setVisibleHits([])
           return
         }
 
