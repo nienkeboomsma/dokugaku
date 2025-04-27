@@ -44,7 +44,8 @@ export default function MangaReaderPage({
 }) {
   if (!workProgress) return 'Oops'
 
-  const initialPageNumber = hits[0] || workProgress.progress || 1
+  const initialProgress = workProgress.progress
+  const initialPageNumber = hits[0] || initialProgress || 1
   const updateProgress = useUpdateWorkProgress()
 
   return (
@@ -54,6 +55,7 @@ export default function MangaReaderPage({
       }
       hits={hits}
       initialPageNumber={initialPageNumber}
+      initialProgress={initialProgress}
       maxPageNumber={workProgress.maxProgress}
       updateProgress={(newProgress) =>
         updateProgress(newProgress, workProgress.id)

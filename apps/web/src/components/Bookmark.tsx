@@ -6,27 +6,33 @@ import classes from './Bookmark.module.css'
 
 const Bookmark = memo(function Bookmark({
   ariaLabel,
+  iconSize,
   id,
-  isCurrentProgress,
-  updateProgress,
+  isSavedBookmark,
+  size,
+  stroke,
+  saveBookmark,
 }: {
   ariaLabel: string
-  id: string
-  isCurrentProgress: boolean
-  updateProgress: () => void
+  iconSize?: string
+  id?: string
+  isSavedBookmark: boolean
+  size?: string
+  stroke?: number
+  saveBookmark: () => void
 }) {
-  const Icon = isCurrentProgress ? IconBookmarkFilled : IconBookmark
+  const Icon = isSavedBookmark ? IconBookmarkFilled : IconBookmark
 
   return (
     <ActionIcon
       aria-label={ariaLabel}
       classNames={{ root: classes.button }}
       id={id}
-      onClick={updateProgress}
-      size="1em"
+      onClick={saveBookmark}
+      size={size}
       variant="subtle"
     >
-      <Icon size="100%" stroke={1.5} />
+      <Icon size={iconSize ?? '100%'} stroke={stroke ?? 1.5} />
     </ActionIcon>
   )
 })

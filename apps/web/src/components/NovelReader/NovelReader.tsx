@@ -22,16 +22,16 @@ export default function NovelReader({
   hits,
   initialProgress,
   maxProgress,
+  saveBookmark,
   textNodes,
-  updateProgress,
   workId,
 }: {
   fileDir: string
   hits: number[]
   initialProgress: number
   maxProgress: number
+  saveBookmark: (newProgress: number) => Promise<number>
   textNodes: NovelJSONContent[]
-  updateProgress: (newProgress: number) => Promise<number>
   workId: string
 }) {
   const [progress, setProgress] = useState(initialProgress)
@@ -67,7 +67,7 @@ export default function NovelReader({
           section: classes.progressSection,
         }}
         radius={0}
-        size='xs'
+        size="xs"
         value={getPercentage(progress, maxProgress)}
       />
       <NovelReaderMenu
@@ -91,7 +91,7 @@ export default function NovelReader({
           progress={progress}
           setProgress={setProgress}
           textNodes={textNodes}
-          updateProgress={updateProgress}
+          saveBookmark={saveBookmark}
           fileDir={fileDir}
         />
       </TextContainer>
