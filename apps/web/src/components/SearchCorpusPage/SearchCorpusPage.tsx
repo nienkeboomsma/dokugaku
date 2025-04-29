@@ -6,24 +6,18 @@ import { useDebouncedValue, useLocalStorage } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 
 import classes from './SearchCorpusPage.module.css'
-import { queryWorkProcessor } from '../../util/queryWorkprocessor'
+import type { CorpusSearchResult } from '../../types/CorpusSearchResult'
 import SearchFilterSort from '../SearchFilterSort/SearchFilterSort'
 import ResultsSort, { SortOrder } from './ResultsSort'
 import ResultsFilter from './ResultsFilter'
 import ScaleLink from '../ScaleLink'
 import WorkCover from '../WorkCover'
+import { queryWorkProcessor } from '../../util/queryWorkprocessor'
 
-type CorpusSearchResult = {
-  id: string
-  title: string
-  allHits: {
-    hitCount: number
-    url: string
-  }
-  readHits: {
-    hitCount: number
-    url: string
-  }
+const getHitsDefault = async (query: string) => {
+  return queryWorkProcessor('searchCorpus', {
+    query,
+  })
 }
 
 const sortHits = (
@@ -48,7 +42,11 @@ const sortHits = (
   return visibleHits
 }
 
-export default function SearchCorpusPage() {
+export default function SearchCorpusPage({
+  getHits,
+}: {
+  getHits?: (query: string) => Promise<{ hits: CorpusSearchResult[] }>
+}) {
   const [noHits, setNoHits] = useState(false)
   const [hits, setHits] = useState<CorpusSearchResult[]>([])
   const [visibleHits, setVisibleHits] = useState<CorpusSearchResult[]>([])
@@ -63,6 +61,8 @@ export default function SearchCorpusPage() {
     key: 'DOKUGAKU_CORPUS_SEARCH_SORT_ORDER',
   })
 
+  getHits = getHits ?? getHitsDefault
+
   useEffect(() => {
     const effect = async () => {
       try {
@@ -73,9 +73,7 @@ export default function SearchCorpusPage() {
           return
         }
 
-        const data = await queryWorkProcessor('searchCorpus', {
-          query: debouncedSearchValue,
-        })
+        const data = await getHits(debouncedSearchValue)
 
         if (!data) throw Error
 
