@@ -7,11 +7,14 @@ import classes from './MangaReaderHeader.module.css'
 import { getPercentage } from '../../util/getPercentage'
 import Pagination from './Pagination'
 import Settings from './Settings'
+import Bookmark from '../Bookmark'
 
 export default function MangaReaderHeader({
   currentPageNumber,
   fullscreen,
+  isSavedBookmark,
   maxPageNumber,
+  saveBookmark,
   setCurrentPageNumber,
   setTwoPageLayout,
   showTwoPages,
@@ -21,7 +24,9 @@ export default function MangaReaderHeader({
 }: {
   currentPageNumber: number
   fullscreen: boolean
+  isSavedBookmark: boolean
   maxPageNumber: number
+  saveBookmark: () => {}
   setCurrentPageNumber: Dispatch<SetStateAction<number>>
   setTwoPageLayout: Dispatch<SetStateAction<boolean>>
   showTwoPages: boolean
@@ -41,19 +46,22 @@ export default function MangaReaderHeader({
           section: classes.progressSection,
         }}
         radius={0}
-        size='xs'
+        size="xs"
         value={progress}
       />
       <div className={classes.controls}>
-        <ActionIcon
-          aria-label='Go to work page'
-          component={Link}
-          href={`/works/${workId}`}
-          size='2rem'
-          variant='subtle'
-        >
-          <IconChevronsLeft size='100%' stroke={1.5} />
-        </ActionIcon>
+        <div>
+          <ActionIcon
+            aria-label="Go to work page"
+            className={classes.back}
+            component={Link}
+            href={`/works/${workId}`}
+            size="2rem"
+            variant="subtle"
+          >
+            <IconChevronsLeft size="100%" stroke={1.5} />
+          </ActionIcon>
+        </div>
         <Pagination
           currentPageNumber={currentPageNumber}
           maxPageNumber={maxPageNumber}
@@ -62,7 +70,10 @@ export default function MangaReaderHeader({
           twoPageLayout={twoPageLayout}
         />
         <Settings
+          currentPageNumber={currentPageNumber}
+          isSavedBookmark={isSavedBookmark}
           fullscreen={fullscreen}
+          saveBookmark={saveBookmark}
           setTwoPageLayout={setTwoPageLayout}
           toggleFullscreen={toggleFullscreen}
           twoPageLayout={twoPageLayout}

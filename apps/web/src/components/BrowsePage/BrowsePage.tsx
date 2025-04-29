@@ -64,7 +64,7 @@ export default function BrowsePage({
   const cssVariables = {
     '--column-min-width-desktop': WorkCardMinWidthDesktop,
     '--column-min-width-mobile': WorkCardMinWidthMobile,
-    '--grid-width': `calc(${numberOfColumns} * ${WorkCardMaxWidth} + (${numberOfColumns - 1} * var(--mantine-spacing-lg))`,
+    '--grid-width': `calc(${numberOfColumns} * ${WorkCardMaxWidth} + (${numberOfColumns - 1} * var(--mantine-spacing-lg)))`,
   } as React.CSSProperties
 
   return (
@@ -76,7 +76,7 @@ export default function BrowsePage({
             setShowStatusOptions={setShowStatusOptions}
           />
         }
-        maxWidth='26rem'
+        maxWidth="26rem"
         searchValue={searchValue}
         setSearchValue={setSearchValue}
       />

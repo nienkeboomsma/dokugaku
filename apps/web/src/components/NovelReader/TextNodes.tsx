@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { notifications } from '@mantine/notifications'
 
 import type { NovelJSONContent } from '../../types/NovelJSONContent'
-import Bookmark from './Bookmark'
+import NovelBookmark from './NovelBookmark'
 
 // Is this hacky? Yes. Does it work? Also yes.
 // None of these components will change their order or be added/removed between
@@ -56,13 +56,13 @@ const ContentNodes = memo(function ContentNodes({
   nodes,
   progress,
   setProgress,
-  updateProgress,
+  saveBookmark,
 }: {
   fileDir: string
   nodes: NovelJSONContent['content']
   progress: number
   setProgress: Dispatch<SetStateAction<number>>
-  updateProgress: (newProgress: number) => Promise<number>
+  saveBookmark: (newProgress: number) => Promise<number>
 }) {
   if (!nodes) return
 
@@ -78,7 +78,7 @@ const ContentNodes = memo(function ContentNodes({
         fileDir={fileDir}
         progress={progress}
         setProgress={setProgress}
-        updateProgress={updateProgress}
+        saveBookmark={saveBookmark}
       />
     )
   })
@@ -90,14 +90,14 @@ const ParentNode = memo(function ParentNode({
   fileDir,
   progress,
   setProgress,
-  updateProgress,
+  saveBookmark,
 }: {
   children?: ReactNode
   node: NovelJSONContent
   fileDir: string
   progress: number
   setProgress: Dispatch<SetStateAction<number>>
-  updateProgress: (newProgress: number) => Promise<number>
+  saveBookmark: (newProgress: number) => Promise<number>
 }) {
   const Component = validTags.includes(node.type) ? node.type : 'span'
 
@@ -124,7 +124,7 @@ const ParentNode = memo(function ParentNode({
         nodes={node.content}
         progress={progress}
         setProgress={setProgress}
-        updateProgress={updateProgress}
+        saveBookmark={saveBookmark}
       />
       {children}
     </Component>
@@ -136,13 +136,13 @@ const RenderNode = memo(function RenderNode({
   fileDir,
   progress,
   setProgress,
-  updateProgress,
+  saveBookmark,
 }: {
   node: NovelJSONContent
   fileDir: string
   progress: number
   setProgress: Dispatch<SetStateAction<number>>
-  updateProgress: (newProgress: number) => Promise<number>
+  saveBookmark: (newProgress: number) => Promise<number>
 }) {
   const paragraphNumber = node.paragraphNumber
 
@@ -153,23 +153,24 @@ const RenderNode = memo(function RenderNode({
         fileDir={fileDir}
         progress={progress}
         setProgress={setProgress}
-        updateProgress={updateProgress}
+        saveBookmark={saveBookmark}
       />
     )
   }
 
-  const isCurrentProgress = progress === paragraphNumber
+  const isSavedBookmark = progress === paragraphNumber
 
   const router = useRouter()
-  const memoizedUpdateProgress = useCallback(async () => {
+  const memoizedSaveBookmark = useCallback(async () => {
     try {
-      const newProgress = !isCurrentProgress ? paragraphNumber : 0
-      const updatedProgress = await updateProgress(newProgress)
+      const newProgress = !isSavedBookmark ? paragraphNumber : 0
+      const updatedProgress = await saveBookmark(newProgress)
       setProgress(updatedProgress)
 
       // This flushes the NextJS router cache
       router.refresh()
-    } catch {
+    } catch (err) {
+      console.log(err)
       notifications.show({
         title: 'Unable to save progress',
         message: (
@@ -181,7 +182,7 @@ const RenderNode = memo(function RenderNode({
         style: { direction: 'ltr' },
       })
     }
-  }, [paragraphNumber, isCurrentProgress])
+  }, [paragraphNumber, isSavedBookmark])
 
   return (
     <ParentNode
@@ -189,14 +190,14 @@ const RenderNode = memo(function RenderNode({
       fileDir={fileDir}
       progress={progress}
       setProgress={setProgress}
-      updateProgress={updateProgress}
+      saveBookmark={saveBookmark}
     >
       {node.type !== 'hr' && !elementIsOrContainsBlockImage(node) && (
-        <Bookmark
-          isCurrentProgress={isCurrentProgress}
+        <NovelBookmark
+          isSavedBookmark={isSavedBookmark}
           key={`bookmark-${paragraphNumber}`}
           paragraphNumber={paragraphNumber}
-          updateProgress={memoizedUpdateProgress}
+          saveBookmark={memoizedSaveBookmark}
         />
       )}
     </ParentNode>
@@ -207,13 +208,13 @@ export default function TextNodes({
   progress,
   setProgress,
   textNodes,
-  updateProgress,
+  saveBookmark,
   fileDir,
 }: {
   progress: number
   setProgress: Dispatch<SetStateAction<number>>
   textNodes: NovelJSONContent[]
-  updateProgress: (newProgress: number) => Promise<number>
+  saveBookmark: (newProgress: number) => Promise<number>
   fileDir: string
 }) {
   uniqueKey = 0
@@ -225,7 +226,7 @@ export default function TextNodes({
       fileDir={fileDir}
       progress={progress}
       setProgress={setProgress}
-      updateProgress={updateProgress}
+      saveBookmark={saveBookmark}
     />
   ))
 }

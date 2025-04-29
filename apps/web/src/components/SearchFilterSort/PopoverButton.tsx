@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  ActionIconStylesNames,
   ActionIconVariant,
   FloatingPosition,
   MantineSize,
@@ -22,18 +21,18 @@ export default function PopoverButton({
 }: {
   buttonIcon: React.ElementType
   buttonLabel: string
-  buttonSize: MantineSize | string | number
-  buttonVariant: ActionIconVariant
+  buttonSize?: MantineSize | string | number
+  buttonVariant?: ActionIconVariant
   children: React.ReactNode
-  iconSize: MantineSize | string | number
+  iconSize?: MantineSize | string | number
   position?: FloatingPosition
-  strokeSize: number
+  strokeSize?: number
 }) {
   return (
     <Popover
       classNames={{ dropdown: classes.dropdown }}
       position={position}
-      shadow='md'
+      shadow="md"
       trapFocus
       withArrow
     >
@@ -43,7 +42,7 @@ export default function PopoverButton({
           size={buttonSize}
           variant={buttonVariant}
         >
-          <ButtonIcon size={iconSize} stroke={strokeSize} />
+          <ButtonIcon size={iconSize ?? 18} stroke={strokeSize ?? 1.5} />
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown>{children}</Popover.Dropdown>

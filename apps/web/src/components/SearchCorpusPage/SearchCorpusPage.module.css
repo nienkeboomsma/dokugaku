@@ -2,13 +2,15 @@
   --gap: var(--mantine-spacing-lg);
 
   align-items: center;
+  /* container-type can't go in .worksContainer due to a Safari bug: */
+  /* https://bugs.webkit.org/show_bug.cgi?id=256047                  */
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--gap);
 }
 
 .worksContainer {
-  container-type: inline-size;
   display: grid;
   gap: var(--gap);
   grid-template-columns: repeat(auto-fit, var(--column-width));
@@ -16,9 +18,4 @@
   margin: 0 auto;
   max-width: var(--grid-width);
   width: 100%;
-
-  &::after {
-    content: '';
-    grid-column: 1 / -1;
-  }
 }

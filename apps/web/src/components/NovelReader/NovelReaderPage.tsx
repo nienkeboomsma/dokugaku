@@ -41,10 +41,10 @@ export default function NovelReaderPage({
         hits={hits}
         initialProgress={workProgress.progress}
         maxProgress={workProgress.maxProgress}
-        textNodes={textNodes}
-        updateProgress={(newProgress) =>
+        saveBookmark={(newProgress) =>
           updateProgress(newProgress, workProgress.id)
         }
+        textNodes={textNodes}
         workId={workProgress.id}
       />
     </>
