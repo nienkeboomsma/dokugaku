@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Badge, useMantineTheme } from '@mantine/core'
 
+import classes from './JLPTLabel.module.css'
 import { JLPT } from '../../types/Word'
 import { Color, getOffsetThemeColor } from '../../util/getOffsetThemeColor'
 
@@ -17,11 +18,12 @@ function JLPTLabel({ jlpt }: { jlpt: JLPT }) {
 
   return (
     <Badge
+      classNames={classes}
       color={colorsMap[jlpt]}
       p={4}
-      radius='xs'
-      size='xs'
-      variant='outline'
+      radius="xs"
+      size="xs"
+      variant="outline"
     >
       {jlpt}
     </Badge>

@@ -1,0 +1,4 @@
+.root {
+  /* Prevents the badge from showing N・(where the number is cut off) */
+  min-width: fit-content;
+}
