@@ -6,6 +6,7 @@ import sharp from 'sharp'
 import { type IchiranData } from './types.js'
 import { imageExtensions } from './constants.js'
 import { divideWordsStringIntoChunks } from './known-words-utils.js'
+import { clearConfig } from 'dompurify'
 
 export function getAllFilesByExtension(fullPath: string, extensions: string[]) {
   const allFiles = fs.readdirSync(fullPath)
@@ -68,9 +69,11 @@ export async function runIchiran(
   const url = `http://ichiran:${process.env.ICHIRAN_PORT}/${endpoint}`
 
   const getIchiranData = async (string: string) => {
+    const noBackticks = string.replaceAll('`', "'")
+
     const res = await axios.post(
       url,
-      { string },
+      { string: noBackticks },
       // TODO: use Redis to track Ichiran progress instead
       { timeout: 1000 * 60 * 60 }
     )
