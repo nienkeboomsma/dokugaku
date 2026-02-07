@@ -32,7 +32,7 @@ RUN apt update && \
     apt install -y wget libgl1-mesa-glx libglib2.0-0 && \
     wget -qO- https://deb.nodesource.com/setup_21.x | bash - && \
     apt install -y nodejs && \
-    python3 -m pip install mokuro==0.1.8
+    python3 -m pip install mokuro==0.1.8 numpy==1.24.4
     
 COPY --from=build-server /app /app
 
