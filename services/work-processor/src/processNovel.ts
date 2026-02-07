@@ -3,7 +3,8 @@ import path from 'node:path'
 
 import type { NovelUploadRequest } from './utils/types.js'
 import { novelTextExtensions, volumePath } from './utils/constants.js'
-import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
+import { convertImagesToWebP } from './utils/images.js'
+import { renameFilesSequentially } from './utils/utils.js'
 import {
   divideTextJsonIntoParagraphs,
   runIchiranOnEachParagraph,
@@ -43,7 +44,7 @@ export async function processNovel(
 
   try {
     await runIchiranOnEachParagraph(paragraphs, fullPath, title)
-    await convertImagesToWebP(fullPath, title)
+    await convertImagesToWebP(fullPath)
     await insertWorkIntoDatabase(
       {
         authors: authors,

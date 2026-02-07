@@ -1,12 +1,10 @@
 import axios from 'axios'
 import fs from 'node:fs'
 import path from 'node:path'
-import sharp from 'sharp'
 
 import { type IchiranData } from './types.js'
-import { imageExtensions } from './constants.js'
+
 import { divideWordsStringIntoChunks } from './known-words-utils.js'
-import { clearConfig } from 'dompurify'
 
 export function getAllFilesByExtension(fullPath: string, extensions: string[]) {
   const allFiles = fs.readdirSync(fullPath)
@@ -116,33 +114,5 @@ export function concatToJson(
     const json = fs.readFileSync(outputFilePath).toString()
     const jsonWithoutTrailingComma = json.slice(0, -1)
     fs.writeFileSync(outputFilePath, `${jsonWithoutTrailingComma}]`, 'utf8')
-  }
-}
-
-export async function convertImagesToWebP(fullPath: string, title: string) {
-  const nonWebpImageExtensions = imageExtensions.filter(
-    (ext) => ext !== '.webp' && ext !== '.WEBP'
-  )
-  const images = getAllFilesByExtension(fullPath, nonWebpImageExtensions)
-
-  for (const inputFile of images) {
-    const inputPath = path.join(fullPath, inputFile)
-
-    const inputFileName = path.parse(inputFile).name
-    const outputFile = path.format({ name: inputFileName, ext: '.webp' })
-    const outputPath = path.join(fullPath, outputFile)
-
-    if (inputFileName === 'cover') {
-      // failOnError deals with issue #1859
-      // https://github.com/lovell/sharp/issues/1859
-      await sharp(inputPath, { failOnError: false })
-        .resize({ width: 320 })
-        .toFormat('webp')
-        .toFile(outputPath)
-    } else {
-      await sharp(inputPath).toFormat('webp').toFile(outputPath)
-    }
-
-    fs.rmSync(inputPath)
   }
 }
