@@ -72,7 +72,7 @@ services:
     container_name: ichiran-db
     build:
       args:
-        ICHIRAN_PGDUMP: https://github.com/tshatrov/ichiran/releases/download/ichiran-240107/jmdict-070124.pgdump
+        ICHIRAN_PGDUMP: https://github.com/tshatrov/ichiran/releases/download/ichiran-260118/ichiran-260118.pgdump
       context: .
       dockerfile: ./services/ichiran/docker/ichiran-db/Dockerfile
     environment:
