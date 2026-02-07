@@ -3,12 +3,13 @@ import path from 'node:path'
 
 import type { MangaUploadRequest } from './utils/types.js'
 import { imageExtensions, volumePath } from './utils/constants.js'
-import { convertImagesToWebP, renameFilesSequentially } from './utils/utils.js'
 import {
+  convertImagesToWebP,
   createCoverImage,
-  runIchiranOnEachPage,
-  runMokuro,
-} from './utils/manga-utils.js'
+  fixMismatchingImageHeights,
+} from './utils/images.js'
+import { runIchiranOnEachPage, runMokuro } from './utils/manga-utils.js'
+import { renameFilesSequentially } from './utils/utils.js'
 import { insertWorkIntoDatabase } from './db/work/insertWorkIntoDatabase.js'
 
 export async function processManga(
@@ -43,10 +44,11 @@ export async function processManga(
   })
 
   try {
+    await fixMismatchingImageHeights(fullPath)
     if (!filesAreMokurod) await runMokuro(folderName, title)
     await runIchiranOnEachPage(fullPath, title)
-    createCoverImage(fullPath, title)
-    await convertImagesToWebP(fullPath, title)
+    await createCoverImage(fullPath, title)
+    await convertImagesToWebP(fullPath)
 
     await insertWorkIntoDatabase(
       {
