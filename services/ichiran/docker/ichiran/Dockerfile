@@ -32,11 +32,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 
     # Install packages
 RUN apt update && \
-    apt install -y git locales sbcl wget && \
+    apt install -y git locales-all sbcl wget && \
     wget -qO- https://deb.nodesource.com/setup_21.x | bash -  && \
     apt install -y nodejs && \
-    # Set locale
-    localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8 && \
     # Install Quicklisp
     wget https://beta.quicklisp.org/quicklisp.lisp && \
     sbcl --load /quicklisp.lisp \
